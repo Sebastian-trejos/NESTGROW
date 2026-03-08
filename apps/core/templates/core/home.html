@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}NestGrow - ¡Aprende Inglés Jugando!{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center justify-content-center">
+      <div class="col-lg-7 text-center">
+        <div style="font-size:5rem; animation: bobble 2s infinite;">🐺</div>
+        <h1 class="hero-title">¡Aprende Inglés<br>con Milo!</h1>
+        <p class="hero-subtitle">Juegos divertidos, vocabulario y actividades interactivas para niños de primaria.</p>
+        {% if user.is_authenticated %}
+          <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-lg me-3">
+            🎮 ¡Jugar Ahora!
+          </a>
+          <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-primary btn-lg rounded-pill">
+            Mi Panel →
+          </a>
+        {% else %}
+          <a href="{% url 'accounts:registro' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-lg me-3">
+            🚀 ¡Empezar Gratis!
+          </a>
+          <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg rounded-pill">
+            Iniciar Sesión
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center font-fredoka fs-2 mb-5" style="color:var(--primary)">¿Qué puedes hacer en NestGrow?</h2>
+    <div class="row g-4">
+      {% for feature in features %}
+      {% empty %}
+      <!-- Default features -->
+      <div class="col-md-3 fade-in-up stagger-1">
+        <div class="nestgrow-card p-4 text-center h-100">
+          <div style="font-size:3rem">🖱️</div>
+          <h5 class="font-fredoka mt-2" style="color:var(--primary)">Arrastra y Suelta</h5>
+          <p class="text-muted small fw-bold">Conecta imágenes con palabras en inglés.</p>
+        </div>
+      </div>
+      <div class="col-md-3 fade-in-up stagger-2">
+        <div class="nestgrow-card p-4 text-center h-100">
+          <div style="font-size:3rem">🔍</div>
+          <h5 class="font-fredoka mt-2" style="color:var(--secondary)">Sopa de Letras</h5>
+          <p class="text-muted small fw-bold">¡Encuentra palabras escondidas en inglés!</p>
+        </div>
+      </div>
+      <div class="col-md-3 fade-in-up stagger-3">
+        <div class="nestgrow-card p-4 text-center h-100">
+          <div style="font-size:3rem">🧩</div>
+          <h5 class="font-fredoka mt-2" style="color:var(--accent)">Rompecabezas</h5>
+          <p class="text-muted small fw-bold">Arma imágenes y aprende vocabulario.</p>
+        </div>
+      </div>
+      <div class="col-md-3 fade-in-up stagger-4">
+        <div class="nestgrow-card p-4 text-center h-100">
+          <div style="font-size:3rem">🎵</div>
+          <h5 class="font-fredoka mt-2" style="color:var(--orange)">Juego de Audio</h5>
+          <p class="text-muted small fw-bold">Escucha y encuentra la palabra correcta.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Milo Section -->
+<section class="py-5" style="background: linear-gradient(135deg,#f0eeff,#ffe9e9)">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center">
+        <div style="font-size:8rem;animation:bobble 2s infinite">🐺</div>
+      </div>
+      <div class="col-md-6">
+        <h2 class="font-fredoka" style="font-size:2.2rem;color:var(--primary)">¡Hola, soy Milo!</h2>
+        <p class="fw-bold fs-5 text-muted">Soy tu compañero en NestGrow. Estoy aquí para guiarte en cada actividad, darte ánimo y celebrar tus logros. ¡Juntos vamos a aprender inglés de una forma muy divertida!</p>
+        <div class="d-flex gap-3 flex-wrap mt-3">
+          <span class="badge rounded-pill py-2 px-4 fs-6" style="background:var(--primary);color:white">🏆 Retos</span>
+          <span class="badge rounded-pill py-2 px-4 fs-6" style="background:var(--secondary);color:white">⭐ Puntos</span>
+          <span class="badge rounded-pill py-2 px-4 fs-6" style="background:var(--accent);color:white">🎉 Premios</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- For Teachers -->
+<section class="py-5">
+  <div class="container">
+    <div class="nestgrow-card p-5">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h3 class="font-fredoka fs-2" style="color:var(--primary)">👩‍🏫 ¿Eres Profesor/a?</h3>
+          <p class="fw-bold text-muted fs-5">Crea tu clase, comparte tu código y haz seguimiento al progreso de tus estudiantes en tiempo real.</p>
+        </div>
+        <div class="col-md-4 text-center mt-3 mt-md-0">
+          <a href="{% url 'accounts:registro' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-lg">
+            Crear mi clase →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

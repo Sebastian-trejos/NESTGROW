@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Vocabulario - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="milo-banner">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">📚 ¡Explora el vocabulario en inglés!</div>
+      <div class="text-muted fw-bold small">Aprende palabras nuevas en cada categoría. ¡Milo te ayuda!</div>
+    </div>
+  </div>
+
+  <h3 class="font-fredoka mb-4" style="color:var(--primary)">Categorías / Categories</h3>
+
+  <div class="row g-4">
+    {% for cat in categories %}
+    <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up">
+      <a href="{% url 'content:category_detail' cat.pk %}" class="text-decoration-none">
+        <div class="nestgrow-card p-4 text-center h-100">
+          <div style="font-size:3.5rem; margin-bottom:12px">{{ cat.icon }}</div>
+          <h5 class="font-fredoka" style="color:{{ cat.color }}">{{ cat.name_en }}</h5>
+          <div class="text-muted fw-bold small">{{ cat.name }}</div>
+          <div class="mt-2">
+            <span class="badge rounded-pill" style="background:{{ cat.color }}20;color:{{ cat.color }}">
+              {{ cat.vocabulary.count }} palabras
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <div style="font-size:4rem">🐺</div>
+      <p class="fw-bold text-muted">Aún no hay categorías de vocabulario cargadas.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

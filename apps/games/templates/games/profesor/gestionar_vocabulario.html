@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}Vocabulario: {{ categoria.name_en }} - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">
+        {{ categoria.icon }} Vocabulario — {{ categoria.name_en }}
+      </h3>
+      <div class="text-muted fw-bold small">{{ categoria.name }} · {{ vocabulario.count }} palabras</div>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'games:crear_vocabulario' categoria.pk %}" class="btn btn-nestgrow btn-primary-nestgrow">
+        ➕ Añadir Palabra
+      </a>
+      <a href="{% url 'games:gestionar_categorias' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
+        ← Categorías
+      </a>
+    </div>
+  </div>
+
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-text">
+      Añade palabras con imagen y audio para que los juegos sean más divertidos. ¡Al menos 4 palabras por categoría para que los juegos funcionen bien!
+    </div>
+  </div>
+
+  {% if vocabulario %}
+  <div class="nestgrow-card p-4">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead style="background:#f8f6ff">
+          <tr>
+            <th>Imagen</th>
+            <th>English</th>
+            <th>Español</th>
+            <th>Pista</th>
+            <th>Dificultad</th>
+            <th>Audio</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in vocabulario %}
+          <tr>
+            <td>
+              {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.word_en }}"
+                     style="width:50px;height:50px;object-fit:cover;border-radius:8px">
+              {% else %}
+                <div style="width:50px;height:50px;background:#f0eeff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem">
+                  {{ categoria.icon }}
+                </div>
+              {% endif %}
+            </td>
+            <td><span class="font-fredoka fs-5" style="color:var(--primary)">{{ item.word_en }}</span></td>
+            <td><span class="fw-bold">{{ item.word_es }}</span></td>
+            <td><span class="text-muted small">{{ item.hint|default:"—" }}</span></td>
+            <td>
+              <span class="badge badge-difficulty-{{ item.difficulty }} rounded-pill">
+                {% if item.difficulty == 1 %}⭐{% elif item.difficulty == 2 %}⭐⭐{% else %}⭐⭐⭐{% endif %}
+              </span>
+            </td>
+            <td>
+              {% if item.audio %}
+                <button class="btn btn-sm rounded-pill" style="background:#f0eeff;color:var(--primary)"
+                        onclick="new Audio('{{ item.audio.url }}').play()">🔊</button>
+              {% else %}
+                <span class="text-muted small">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.is_active %}
+                <span class="badge rounded-pill" style="background:#d4edda;color:#155724">✅</span>
+              {% else %}
+                <span class="badge rounded-pill" style="background:#f8d7da;color:#721c24">⏸</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="d-flex gap-1">
+                <a href="{% url 'games:editar_vocabulario' item.pk %}"
+                   class="btn btn-sm btn-outline-warning rounded-pill">✏️</a>
+                <a href="{% url 'games:eliminar_vocabulario' item.pk %}"
+                   class="btn btn-sm btn-outline-danger rounded-pill">🗑️</a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div style="font-size:5rem">📝</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Esta categoría está vacía!</h4>
+    <p class="text-muted fw-bold">Añade palabras en inglés con sus imágenes para que los juegos funcionen.</p>
+    <a href="{% url 'games:crear_vocabulario' categoria.pk %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
+      ➕ Añadir primera palabra
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

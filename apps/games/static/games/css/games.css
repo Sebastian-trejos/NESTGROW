@@ -1,0 +1,23 @@
+/* Game-specific additional styles */
+.option-card {
+  transition: all 0.2s ease;
+  border: 3px solid #e8e4ff !important;
+}
+.option-card:hover {
+  border-color: var(--primary) !important;
+  transform: translateY(-4px);
+}
+
+#playAudioBtn:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 15px 40px rgba(108,99,255,0.5) !important;
+}
+
+.puzzle-piece {
+  border: 3px solid var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.puzzle-piece:hover { transform: scale(1.05); }
+.puzzle-piece.selected { box-shadow: 0 0 0 4px var(--accent); }

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Juegos - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Milo Banner -->
+  <div class="milo-banner">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">🎮 ¡Elige un juego y empieza a aprender inglés!</div>
+      <div class="text-muted fw-bold small">Cada juego te da puntos ⭐ y te ayuda a mejorar.</div>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="d-flex gap-2 flex-wrap mb-4">
+    <a href="{% url 'games:game_list' %}"
+       class="btn rounded-pill fw-bold {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+      Todos
+    </a>
+    {% for cat in categories %}
+    <a href="?categoria={{ cat.id }}"
+       class="btn rounded-pill fw-bold {% if selected_category == cat.id|stringformat:'s' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+      {{ cat.icon }} {{ cat.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Games Grid -->
+  {% if games %}
+  <div class="row g-4">
+    {% for game in games %}
+    <div class="col-sm-6 col-lg-4 fade-in-up">
+      <div class="game-card h-100">
+        <div class="game-icon-big">
+          {% if game.game_type == 'drag_and_drop' %}🖱️
+          {% elif game.game_type == 'word_search' %}🔍
+          {% elif game.game_type == 'puzzle' %}🧩
+          {% else %}🎵{% endif %}
+        </div>
+        <div class="p-4">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge rounded-pill" style="background:{{ game.category.color }}20; color:{{ game.category.color }}; font-weight:700">
+              {{ game.category.icon }} {{ game.category.name }}
+            </span>
+            <span class="badge badge-difficulty-{{ game.difficulty }} rounded-pill">
+              {% if game.difficulty == 1 %}⭐ Fácil
+              {% elif game.difficulty == 2 %}⭐⭐ Medio
+              {% else %}⭐⭐⭐ Difícil{% endif %}
+            </span>
+          </div>
+          <h5 class="font-fredoka" style="color:var(--primary)">{{ game.title }}</h5>
+          <p class="text-muted small fw-bold mb-3">{{ game.description|truncatewords:15 }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-bold" style="color:var(--orange)">+{{ game.points_reward }} pts ⭐</span>
+            <a href="{{ game.get_absolute_url }}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
+              ▶ Jugar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div style="font-size:5rem">🐺</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Próximamente más juegos!</h4>
+    <p class="text-muted fw-bold">El profesor aún no ha habilitado juegos para esta categoría.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

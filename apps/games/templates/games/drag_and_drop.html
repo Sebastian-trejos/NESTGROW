@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ game.title }} - NestGrow{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'games/css/games.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🖱️ {{ game.title }}</h3>
+  </div>
+
+  <!-- Vocabulary Preview Tab -->
+  {% include 'games/includes/vocabulary_tab.html' %}
+
+  <!-- Game Section (hidden until vocab is dismissed) -->
+  <div id="gameSection" style="display:none">
+
+    <!-- Score Bar -->
+    <div class="game-score-bar">
+      <span>🎮 {{ game.title }}</span>
+      <span>Score: <strong id="scoreDisplay">0</strong> / <strong id="maxScore">0</strong></span>
+      {% if game.time_limit > 0 %}
+      <span>⏱ <span id="timerDisplay">--:--</span></span>
+      {% endif %}
+    </div>
+
+    <!-- Milo hint -->
+    <div class="milo-banner mb-4">
+      <div class="milo-banner-owl">🐺</div>
+      <div class="milo-banner-text">
+        Drag each word to the correct image! / ¡Arrastra cada palabra a la imagen correcta!
+      </div>
+    </div>
+
+    <!-- Game Board -->
+    <div class="game-area">
+      <div class="row" id="gameBoard">
+        <!-- Images (drop targets) -->
+        <div class="col-md-7">
+          <h6 class="fw-bold text-muted mb-3">🖼️ Images — Drop the word here!</h6>
+          <div class="row g-3" id="dropZones"></div>
+        </div>
+        <!-- Words (draggables) -->
+        <div class="col-md-5">
+          <h6 class="fw-bold text-muted mb-3">🔤 Words — Drag me!</h6>
+          <div id="draggables" class="d-flex flex-column gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-nestgrow btn-success-nestgrow" id="checkBtn" style="display:none">
+        ✅ Check Answers! / ¡Verificar!
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Win Overlay -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-card">
+    <div class="win-owl">🐺</div>
+    <div class="win-title">¡Excelente! / Excellent!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
+      <span id="winScore">0</span> puntos! (<span id="winPercent">0%</span>)
+    </div>
+    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
+      🔄 Play Again / Jugar de nuevo
+    </button>
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">
+      Ver más juegos →
+    </a>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'games/js/drag_and_drop.js' %}"></script>
+<script>
+const VOCABULARY = {{ vocabulary_json|safe }};
+const GAME_ID = {{ game.id }};
+const TIME_LIMIT = {{ game.time_limit }};
+const POINTS_REWARD = {{ game.points_reward }};
+initDragAndDrop(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD);
+</script>
+{% endblock %}

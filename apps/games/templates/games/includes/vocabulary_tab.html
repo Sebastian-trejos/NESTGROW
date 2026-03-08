@@ -1,0 +1,66 @@
+<!-- Vocabulary Preview Tab (included before each game) -->
+<div class="vocab-tab-container">
+  <div class="vocab-tab-title">
+    <span>📚</span>
+    <span>Vocabulary Preview — {{ game.category.name_en }}</span>
+    <span class="ms-auto badge rounded-pill" style="background:var(--primary);color:white;font-size:0.8rem">
+      {{ vocabulary.count }} words
+    </span>
+  </div>
+  <p class="text-muted small fw-bold mb-3">
+    🐺 <em>Milo dice:</em> "Before playing, let's review these words! / ¡Antes de jugar, repasemos estas palabras!"
+  </p>
+  <div class="row g-2">
+    {% for item in vocabulary|slice:":8" %}
+    <div class="col-6 col-sm-4 col-md-3">
+      <div class="vocab-card" onclick="speakWord('{{ item.word_en }}')">
+        {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.word_en }}" class="vocab-img">
+        {% else %}
+          <div style="font-size:2rem; margin-bottom:8px">📝</div>
+        {% endif %}
+        <div class="vocab-word-en">{{ item.word_en }}</div>
+        <div class="vocab-word-es">{{ item.word_es }}</div>
+        {% if item.audio %}
+          <button class="btn btn-sm mt-1 rounded-pill" style="background:#f0eeff;color:var(--primary);font-size:0.75rem"
+                  onclick="event.stopPropagation(); playAudio('{{ item.audio.url }}')">
+            🔊 Listen
+          </button>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="text-center mt-3">
+    <button class="btn btn-nestgrow btn-primary-nestgrow" id="startGameBtn">
+      🎮 ¡Start Playing! / ¡Jugar!
+    </button>
+  </div>
+</div>
+
+<script>
+function speakWord(word) {
+  if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'en-US';
+    u.rate = 0.8;
+    speechSynthesis.speak(u);
+  }
+}
+
+function playAudio(url) {
+  const audio = new Audio(url);
+  audio.play();
+}
+
+// Toggle vocabulary tab visibility
+document.getElementById('startGameBtn')?.addEventListener('click', function() {
+  const vocabContainer = this.closest('.vocab-tab-container');
+  const gameSection = document.getElementById('gameSection');
+  if (vocabContainer && gameSection) {
+    vocabContainer.style.display = 'none';
+    gameSection.style.display = 'block';
+    gameSection.classList.add('fade-in-up');
+  }
+});
+</script>

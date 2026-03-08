@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}{{ category.name_en }} - Vocabulario NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'content:category_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">{{ category.icon }} {{ category.name_en }}</h3>
+      <div class="text-muted fw-bold small">{{ category.name }}</div>
+    </div>
+  </div>
+
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-text">
+      🎵 Click on any word card to hear how it's pronounced! / ¡Haz clic en la tarjeta para escuchar la pronunciación!
+    </div>
+  </div>
+
+  <div class="row g-3">
+    {% for item in vocabulary %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="vocab-card h-100" onclick="speakAndPlay('{{ item.word_en }}', '{% if item.audio %}{{ item.audio.url }}{% endif %}')">
+        {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.word_en }}" class="vocab-img" style="width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+        {% else %}
+          <div style="height:80px;background:linear-gradient(135deg,#f0eeff,#ffe9e9);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:10px">
+            {{ category.icon }}
+          </div>
+        {% endif %}
+        <div class="vocab-word-en fs-5">{{ item.word_en }}</div>
+        <div class="vocab-word-es">{{ item.word_es }}</div>
+        {% if item.hint %}
+          <div class="text-muted mt-1" style="font-size:0.75rem;font-style:italic">💡 {{ item.hint }}</div>
+        {% endif %}
+        <div class="mt-2">
+          <span class="badge badge-difficulty-{{ item.difficulty }} rounded-pill" style="font-size:0.7rem">
+            {% if item.difficulty == 1 %}⭐ Easy{% elif item.difficulty == 2 %}⭐⭐ Medium{% else %}⭐⭐⭐ Hard{% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <div style="font-size:4rem">🐺</div>
+      <p class="fw-bold text-muted">No hay palabras en esta categoría todavía.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+function speakAndPlay(word, audioUrl) {
+  if (audioUrl) {
+    new Audio(audioUrl).play();
+  } else if ('speechSynthesis' in window) {
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'en-US'; u.rate = 0.75;
+    window.speechSynthesis.speak(u);
+  }
+}
+</script>
+{% endblock %}

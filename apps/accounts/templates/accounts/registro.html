@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registrarse - NestGrow{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card fade-in-up" style="max-width:560px">
+    <div class="text-center mb-4">
+      <div style="font-size:3rem; animation:bobble 2s infinite">🐺</div>
+      <h2 class="auth-title">¡Únete a NestGrow!</h2>
+      <p class="text-muted fw-bold">Crea tu cuenta y empieza a aprender inglés</p>
+    </div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <!-- Role Selector -->
+      <div class="mb-4">
+        <label class="form-label fw-bold fs-5">¿Quién eres?</label>
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="role-option w-100 text-center p-3 border rounded-4 cursor-pointer" for="id_role_0"
+                   style="cursor:pointer; transition: all 0.2s; border-width:3px!important">
+              <input type="radio" name="role" value="profesor" id="id_role_0" class="d-none"
+                     {% if form.role.value == 'profesor' %}checked{% endif %}>
+              <div style="font-size:2.5rem">👩‍🏫</div>
+              <div class="fw-bold mt-1">Soy Profesor</div>
+            </label>
+          </div>
+          <div class="col-6">
+            <label class="role-option w-100 text-center p-3 border rounded-4" for="id_role_1"
+                   style="cursor:pointer; transition: all 0.2s; border-width:3px!important">
+              <input type="radio" name="role" value="estudiante" id="id_role_1" class="d-none"
+                     {% if form.role.value == 'estudiante' %}checked{% endif %}>
+              <div style="font-size:2.5rem">🎒</div>
+              <div class="fw-bold mt-1">Soy Estudiante</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Nombre</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Apellido</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold">Correo electrónico</label>
+          {{ form.email }}
+          {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold">Nombre de usuario</label>
+          {{ form.username }}
+          {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Contraseña</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}<div class="text-danger small">{{ form.password1.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Confirmar contraseña</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors.0 }}</div>{% endif %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mt-4 mb-3">
+        🎉 ¡Crear mi cuenta!
+      </button>
+    </form>
+
+    <div class="text-center">
+      <p class="text-muted fw-bold mb-0">¿Ya tienes cuenta?
+        <a href="{% url 'accounts:login' %}" class="fw-bold text-decoration-none" style="color:var(--primary)">¡Inicia sesión!</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+input[type="radio"]:checked + .role-option,
+.role-option:has(input:checked) { border-color: var(--primary) !important; background: #f0eeff; }
+</style>
+<script>
+document.querySelectorAll('.role-option').forEach(label => {
+  label.addEventListener('click', () => {
+    document.querySelectorAll('.role-option').forEach(l => {
+      l.style.borderColor = '#dee2e6';
+      l.style.background = 'white';
+    });
+    label.style.borderColor = 'var(--primary)';
+    label.style.background = '#f0eeff';
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Confirmar eliminación - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width:500px">
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:4rem">⚠️</div>
+    <h3 class="font-fredoka mt-3" style="color:var(--secondary)">¿Estás seguro/a?</h3>
+    <p class="fw-bold text-muted fs-5">
+      Vas a eliminar este {{ tipo }}:<br>
+      <strong style="color:var(--primary)">{{ objeto }}</strong>
+    </p>
+    <p class="text-danger fw-bold small">Esta acción no se puede deshacer.</p>
+
+    <form method="post" class="d-flex gap-3 justify-content-center mt-4">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-nestgrow btn-danger-nestgrow">
+        🗑️ Sí, eliminar
+      </button>
+      {% if volver %}
+        <a href="{% url volver %}" class="btn btn-outline-secondary rounded-pill fw-bold">
+          Cancelar
+        </a>
+      {% elif volver_url %}
+        <a href="{{ volver_url }}" class="btn btn-outline-secondary rounded-pill fw-bold">
+          Cancelar
+        </a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

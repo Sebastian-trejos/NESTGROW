@@ -1,0 +1,29 @@
+# ============================================================
+# NESTGROW - Comandos CMD para Windows 11
+# Ejecutar EN ORDEN dentro de la carpeta del proyecto
+# ============================================================
+
+# 1. CREAR ENTORNO VIRTUAL (dentro de carpeta NESTGROW)
+python -m venv venv
+
+# 2. ACTIVAR ENTORNO VIRTUAL
+venv\Scripts\activate
+
+# 3. INSTALAR DEPENDENCIAS
+pip install -r requirements.txt
+
+# 4. APLICAR MIGRACIONES
+python manage.py makemigrations
+python manage.py migrate
+
+# 5. CARGAR DATOS INICIALES DE VOCABULARIO
+python manage.py loaddata apps/content/fixtures/initial_vocabulary.json
+
+# 6. CREAR SUPERUSUARIO (admin)
+python manage.py createsuperuser
+
+# 7. CORRER EL SERVIDOR
+python manage.py runserver
+
+# URL: http://127.0.0.1:8000/
+# ADMIN: http://127.0.0.1:8000/admin/

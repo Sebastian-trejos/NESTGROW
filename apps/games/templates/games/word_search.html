@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ game.title }} - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🔍 {{ game.title }}</h3>
+  </div>
+
+  {% include 'games/includes/vocabulary_tab.html' %}
+
+  <div id="gameSection" style="display:none">
+    <div class="game-score-bar">
+      <span>🔍 Word Search</span>
+      <span>Found: <strong id="foundCount">0</strong> / <strong id="totalWords">0</strong></span>
+      {% if game.time_limit > 0 %}<span>⏱ <span id="timerDisplay">--:--</span></span>{% endif %}
+    </div>
+
+    <div class="milo-banner mb-4">
+      <div class="milo-banner-owl">🐺</div>
+      <div class="milo-banner-text">Find all the hidden English words! / ¡Encuentra todas las palabras escondidas en inglés!</div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-8">
+        <div class="game-area p-3 text-center">
+          <div class="word-search-grid" id="wsGrid"></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="nestgrow-card p-4">
+          <h6 class="font-fredoka mb-3" style="color:var(--primary)">📋 Words to Find:</h6>
+          <div id="wordList" class="d-flex flex-column gap-2"></div>
+        </div>
+        <div class="text-center mt-4">
+          <div class="stat-card">
+            <div class="stat-number" id="scoreDisplay">0</div>
+            <div class="stat-label">Points / Puntos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="win-overlay" id="winOverlay">
+  <div class="win-card">
+    <div class="win-owl">🐺</div>
+    <div class="win-title">¡Lo encontraste todo!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
+      <span id="winScore">0</span> pts (<span id="winPercent">0%</span>)
+    </div>
+    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">🔄 Play Again</button>
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'games/js/word_search.js' %}"></script>
+<script>
+const VOCABULARY = {{ vocabulary_json|safe }};
+const GAME_ID = {{ game.id }};
+const TIME_LIMIT = {{ game.time_limit }};
+const POINTS_REWARD = {{ game.points_reward }};
+initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD);
+</script>
+{% endblock %}

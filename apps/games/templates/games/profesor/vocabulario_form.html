@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:600px">
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:gestionar_vocabulario' categoria.pk %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">📝 {{ titulo }}</h3>
+      <div class="text-muted fw-bold small">Categoría: {{ categoria.icon }} {{ categoria.name_en }}</div>
+    </div>
+  </div>
+
+  <div class="nestgrow-card p-4">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.word_en.label }}</label>
+          {{ form.word_en }}
+          {% if form.word_en.errors %}<div class="text-danger small fw-bold mt-1">{{ form.word_en.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.word_es.label }}</label>
+          {{ form.word_es }}
+          {% if form.word_es.errors %}<div class="text-danger small fw-bold mt-1">{{ form.word_es.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-8">
+          <label class="form-label fw-bold">{{ form.hint.label }}</label>
+          {{ form.hint }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.difficulty.label }}</label>
+          {{ form.difficulty }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.image.label }}</label>
+          {{ form.image }}
+          <div class="text-muted small mt-1">JPG, PNG · Recomendado: 200x200px</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.audio.label }}</label>
+          {{ form.audio }}
+          <div class="text-muted small mt-1">Archivo .mp3 con pronunciación en inglés</div>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            {{ form.is_active }}
+            <label class="form-check-label fw-bold ms-2">{{ form.is_active.label }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow">
+          📝 {{ accion }}
+        </button>
+        <a href="{% url 'games:gestionar_vocabulario' categoria.pk %}"
+           class="btn btn-outline-secondary rounded-pill fw-bold">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Gestionar Juegos - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎮 Gestionar Juegos</h3>
+      <div class="text-muted fw-bold small">Crea, edita y activa juegos para tus estudiantes</div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{% url 'games:gestionar_categorias' %}" class="btn btn-outline-primary rounded-pill fw-bold">
+        📚 Categorías
+      </a>
+      <a href="{% url 'games:crear_juego' %}" class="btn btn-nestgrow btn-primary-nestgrow">
+        ➕ Nuevo Juego
+      </a>
+      <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
+        ← Mi Panel
+      </a>
+    </div>
+  </div>
+
+  <!-- Milo Banner -->
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-text">
+      Desde aquí puedes crear y gestionar todos los juegos que verán tus estudiantes. ¡Primero crea una Categoría, luego crea el Juego!
+    </div>
+  </div>
+
+  <!-- Stats rápidas -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div style="font-size:1.8rem">🎮</div>
+        <div class="stat-number">{{ juegos.count }}</div>
+        <div class="stat-label">Total Juegos</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:var(--accent)">
+        <div style="font-size:1.8rem">✅</div>
+        <div class="stat-number" style="color:var(--accent)">{{ juegos|length }}</div>
+        <div class="stat-label">Activos</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:var(--secondary)">
+        <div style="font-size:1.8rem">📚</div>
+        <div class="stat-number" style="color:var(--secondary)">{{ categorias.count }}</div>
+        <div class="stat-label">Categorías</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:var(--orange)">
+        <div style="font-size:1.8rem">🏆</div>
+        <div class="stat-number" style="color:var(--orange)">4</div>
+        <div class="stat-label">Tipos de Juego</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Games Table -->
+  <div class="nestgrow-card p-4">
+    {% if juegos %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr style="background:#f8f6ff">
+            <th>Tipo</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Dificultad</th>
+            <th>Puntos</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for juego in juegos %}
+          <tr>
+            <td style="font-size:1.6rem">
+              {% if juego.game_type == 'drag_and_drop' %}🖱️
+              {% elif juego.game_type == 'word_search' %}🔍
+              {% elif juego.game_type == 'puzzle' %}🧩
+              {% else %}🎵{% endif %}
+            </td>
+            <td>
+              <div class="fw-bold">{{ juego.title }}</div>
+              {% if juego.title_en %}<div class="text-muted small">{{ juego.title_en }}</div>{% endif %}
+            </td>
+            <td>
+              <span class="badge rounded-pill fw-bold" style="background:{{ juego.category.color }}25;color:{{ juego.category.color }}">
+                {{ juego.category.icon }} {{ juego.category.name }}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-difficulty-{{ juego.difficulty }} rounded-pill">
+                {% if juego.difficulty == 1 %}⭐ Fácil
+                {% elif juego.difficulty == 2 %}⭐⭐ Medio
+                {% else %}⭐⭐⭐ Difícil{% endif %}
+              </span>
+            </td>
+            <td><span class="fw-bold" style="color:var(--orange)">⭐ {{ juego.points_reward }}</span></td>
+            <td>
+              <a href="{% url 'games:toggle_juego' juego.pk %}"
+                 class="badge rounded-pill text-decoration-none"
+                 style="{% if juego.is_active %}background:#d4edda;color:#155724{% else %}background:#f8d7da;color:#721c24{% endif %}">
+                {% if juego.is_active %}✅ Activo{% else %}⏸ Inactivo{% endif %}
+              </a>
+            </td>
+            <td>
+              <div class="d-flex gap-1">
+                <a href="{{ juego.get_absolute_url }}" class="btn btn-sm btn-outline-primary rounded-pill" title="Ver juego">▶</a>
+                <a href="{% url 'games:editar_juego' juego.pk %}" class="btn btn-sm btn-outline-warning rounded-pill" title="Editar">✏️</a>
+                <a href="{% url 'games:eliminar_juego' juego.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">🗑️</a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <div style="font-size:5rem">🎮</div>
+      <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Aún no hay juegos!</h4>
+      <p class="text-muted fw-bold">Primero crea una <a href="{% url 'games:gestionar_categorias' %}">categoría de vocabulario</a>, luego crea un juego.</p>
+      <a href="{% url 'games:crear_juego' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
+        ➕ Crear mi primer juego
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

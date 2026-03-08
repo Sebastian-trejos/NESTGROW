@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Mi Panel - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Milo Banner -->
+  <div class="milo-banner">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">¡Hola, {{ user.first_name }}! 🌟 ¡Sigue así, campeón!</div>
+      <div class="text-muted fw-bold small">Milo está muy orgulloso de tu progreso. ¡Tú puedes!</div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-4 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div style="font-size:2rem">⭐</div>
+        <div class="stat-number">{{ profile.puntos_totales }}</div>
+        <div class="stat-label">Puntos</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:var(--secondary)">
+        <div style="font-size:2rem">🏆</div>
+        <div class="stat-number" style="color:var(--secondary)">{{ profile.nivel }}</div>
+        <div class="stat-label">Nivel</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:var(--accent)">
+        <div style="font-size:2rem">✅</div>
+        <div class="stat-number" style="color:var(--accent)">{{ juegos_completados }}</div>
+        <div class="stat-label">Completados</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:var(--orange)">
+        <div style="font-size:2rem">🎮</div>
+        <div class="stat-number" style="color:var(--orange)">{{ progreso.count }}</div>
+        <div class="stat-label">Jugados</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level Progress -->
+  <div class="nestgrow-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="font-fredoka mb-0" style="color:var(--primary)">🚀 Tu Progreso al Siguiente Nivel</h5>
+      <span class="level-badge">Nivel {{ profile.nivel }}</span>
+    </div>
+    {% with next_target=500 %}
+    <div class="progress-bar-nestgrow">
+      <div class="progress-fill" style="width:{% widthratio profile.puntos_totales next_target 100 %}%"></div>
+    </div>
+    <div class="text-muted small fw-bold mt-1">{{ profile.puntos_totales }} / {{ next_target }} puntos</div>
+    {% endwith %}
+  </div>
+
+  <!-- Join Class / Teacher -->
+  {% if not profile.profesor %}
+  <div class="nestgrow-card p-4 mb-4" style="border: 3px dashed var(--accent)">
+    <div class="d-flex align-items-center gap-3">
+      <div style="font-size:2.5rem">🏫</div>
+      <div>
+        <div class="fw-bold fs-5">¡Únete a la clase de tu profesor!</div>
+        <div class="text-muted fw-bold small">Pídele el código de clase a tu profe.</div>
+      </div>
+      <a href="{% url 'accounts:unirse_clase' %}" class="btn btn-nestgrow btn-primary-nestgrow ms-auto">
+        Unirme →
+      </a>
+    </div>
+  </div>
+  {% else %}
+  <div class="nestgrow-card p-4 mb-4" style="border-left: 5px solid var(--accent)">
+    <div class="fw-bold">🏫 Clase de: <strong>{{ profile.profesor.user.get_full_name }}</strong></div>
+    <div class="text-muted small fw-bold">{{ profile.profesor.institucion }}</div>
+  </div>
+  {% endif %}
+
+  <!-- Game Progress -->
+  <div class="nestgrow-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="font-fredoka mb-0" style="color:var(--primary)">🎮 Mis Juegos</h4>
+      <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow">Ver todos</a>
+    </div>
+    {% if progreso %}
+    <div class="row g-3">
+      {% for p in progreso %}
+      <div class="col-md-6">
+        <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:#f8f6ff; border: 2px solid #e8e4ff">
+          <div style="font-size:2rem">{{ p.game.get_game_type_display|slice:":2" }}</div>
+          <div class="flex-grow-1">
+            <div class="fw-bold">{{ p.game.title }}</div>
+            <div class="progress-bar-nestgrow mt-1">
+              <div class="progress-fill" style="width:{{ p.percentage }}%"></div>
+            </div>
+            <div class="text-muted small fw-bold mt-1">{{ p.score }} pts · {{ p.attempts }} intento{{ p.attempts|pluralize:"s" }}</div>
+          </div>
+          {% if p.completed %}
+          <span class="badge bg-success">✅</span>
+          {% endif %}
+          <a href="{{ p.game.get_absolute_url }}" class="btn btn-sm btn-outline-primary rounded-pill">▶</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-4">
+      <div style="font-size:3.5rem">🎮</div>
+      <p class="fw-bold text-muted mt-2">¡Aún no has jugado! <a href="{% url 'games:game_list' %}">¡Empieza ahora!</a></p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

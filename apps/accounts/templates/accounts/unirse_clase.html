@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Unirse a Clase - NestGrow{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card text-center">
+    <div style="font-size:3.5rem; animation:bobble 2s infinite">🏫</div>
+    <h2 class="auth-title">¡Únete a tu Clase!</h2>
+    <p class="text-muted fw-bold mb-4">Ingresa el código que te dio tu profesor/a</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-4">
+        {{ form.codigo_clase }}
+        {% if form.codigo_clase.errors %}
+          <div class="text-danger small fw-bold mt-2">{{ form.codigo_clase.errors.0 }}</div>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100">
+        🚪 ¡Entrar a la clase!
+      </button>
+    </form>
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-link mt-3 text-muted fw-bold">← Volver</a>
+  </div>
+</div>
+<script>
+document.querySelector('input[name="codigo_clase"]').addEventListener('input', function() {
+  this.value = this.value.toUpperCase();
+});
+</script>
+{% endblock %}

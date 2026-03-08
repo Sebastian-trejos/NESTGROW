@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - NestGrow{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card fade-in-up">
+    <div class="text-center mb-4">
+      <div style="font-size:3.5rem; animation:bobble 2s infinite">🐺</div>
+      <h2 class="auth-title">¡Bienvenido de vuelta!</h2>
+      <p class="text-muted fw-bold">Inicia sesión para seguir aprendiendo</p>
+    </div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label fw-bold">👤 Usuario</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="text-danger small fw-bold mt-1">{{ form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+      <div class="mb-4">
+        <label class="form-label fw-bold">🔒 Contraseña</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <div class="text-danger small fw-bold mt-1">{{ form.password.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger rounded-pill text-center fw-bold">
+          {{ form.non_field_errors.0 }}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mb-3">
+        🚀 ¡Entrar!
+      </button>
+    </form>
+
+    <div class="text-center">
+      <p class="text-muted fw-bold mb-0">¿No tienes cuenta?
+        <a href="{% url 'accounts:registro' %}" class="text-decoration-none fw-bold" style="color:var(--primary)">¡Regístrate gratis!</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

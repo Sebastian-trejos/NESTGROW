@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:700px">
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎮 {{ titulo }}</h3>
+  </div>
+
+  <!-- Milo tip -->
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-text">
+      💡 Recuerda: primero debes tener una <strong>Categoría con vocabulario</strong> para poder crear el juego. El juego usará las palabras de esa categoría.
+    </div>
+  </div>
+
+  <div class="nestgrow-card p-4">
+
+    <!-- Game type guide -->
+    <div class="row g-2 mb-4">
+      <div class="col-12"><div class="fw-bold text-muted small text-uppercase mb-2">Tipos de juego disponibles:</div></div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-2 rounded-3" style="background:#f0eeff">
+          <div style="font-size:1.8rem">🖱️</div>
+          <div class="fw-bold small" style="color:var(--primary)">Arrastra y Suelta</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-2 rounded-3" style="background:#fff5f5">
+          <div style="font-size:1.8rem">🔍</div>
+          <div class="fw-bold small" style="color:var(--secondary)">Sopa de Letras</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-2 rounded-3" style="background:#f0fffe">
+          <div style="font-size:1.8rem">🧩</div>
+          <div class="fw-bold small" style="color:var(--accent)">Rompecabezas</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="text-center p-2 rounded-3" style="background:#fff9e6">
+          <div style="font-size:1.8rem">🎵</div>
+          <div class="fw-bold small" style="color:var(--orange)">Juego de Audio</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="mb-4">
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.title.label }}</label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="text-danger small fw-bold mt-1">{{ form.title.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.title_en.label }}</label>
+          {{ form.title_en }}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-bold">{{ form.description.label }}</label>
+          {{ form.description }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.game_type.label }}</label>
+          {{ form.game_type }}
+          {% if form.game_type.errors %}<div class="text-danger small fw-bold mt-1">{{ form.game_type.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.category.label }}</label>
+          {{ form.category }}
+          {% if form.category.errors %}<div class="text-danger small fw-bold mt-1">{{ form.category.errors.0 }}</div>{% endif %}
+          <div class="text-muted small mt-1">¿No ves tu categoría? <a href="{% url 'games:crear_categoria' %}">Créala aquí →</a></div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.difficulty.label }}</label>
+          {{ form.difficulty }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.points_reward.label }}</label>
+          {{ form.points_reward }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">{{ form.time_limit.label }}</label>
+          {{ form.time_limit }}
+          <div class="text-muted small mt-1">0 = sin límite</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">{{ form.order.label }}</label>
+          {{ form.order }}
+        </div>
+        <div class="col-md-6 d-flex align-items-end pb-2">
+          <div class="form-check">
+            {{ form.is_active }}
+            <label class="form-check-label fw-bold ms-2">{{ form.is_active.label }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow">
+          🎮 {{ accion }}
+        </button>
+        <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

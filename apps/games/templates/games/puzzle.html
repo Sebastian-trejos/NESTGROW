@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ game.title }} - NestGrow{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'games/css/games.css' %}" rel="stylesheet">
+<style>
+  .puzzle-board {
+    display: grid;
+    gap: 6px;
+    background: #f0eeff;
+    padding: 20px;
+    border-radius: 20px;
+    border: 3px solid #e0d8ff;
+    width: fit-content;
+    margin: 0 auto;
+  }
+  .puzzle-piece {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    border: 3px solid #e0d8ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+    font-family: 'Fredoka One', cursive;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .puzzle-piece:hover {
+    border-color: var(--primary);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.2);
+  }
+  .puzzle-piece.selected {
+    border-color: var(--primary);
+    background: #f0eeff;
+    box-shadow: 0 0 0 4px rgba(108,99,255,0.3);
+    transform: scale(1.08);
+  }
+  .puzzle-piece.matched {
+    border-color: #4caf50;
+    background: #e8f5e9;
+    cursor: default;
+    transform: none;
+    animation: matchPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .puzzle-piece.wrong {
+    border-color: var(--secondary);
+    background: #ffe8e8;
+    animation: shake 0.4s ease;
+  }
+  .puzzle-img {
+    width: 70px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .puzzle-word {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-align: center;
+    line-height: 1.2;
+    padding: 0 4px;
+  }
+  .puzzle-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 4px;
+  }
+  .columns-container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .column-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 12px;
+    padding: 8px 20px;
+    border-radius: 50px;
+  }
+  .connector-line {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes matchPop {
+    0% { transform: scale(0.8); }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🧩 {{ game.title }}</h3>
+  </div>
+
+  <!-- Vocabulary Tab -->
+  {% include 'games/includes/vocabulary_tab.html' %}
+
+  <!-- Game Section -->
+  <div id="gameSection" style="display:none">
+
+    <!-- Score Bar -->
+    <div class="game-score-bar mb-4">
+      <span>🧩 {{ game.title }}</span>
+      <span>Matched: <strong id="matchedCount">0</strong> / <strong id="totalPairs">0</strong></span>
+      {% if game.time_limit > 0 %}
+      <span>⏱ <span id="timerDisplay">--:--</span></span>
+      {% endif %}
+    </div>
+
+    <!-- Milo hint -->
+    <div class="milo-banner mb-4">
+      <div class="milo-banner-owl">🐺</div>
+      <div class="milo-banner-text">
+        Match each image with its English word! Click one from each column. / ¡Une cada imagen con su palabra en inglés! Haz clic en una de cada columna.
+      </div>
+    </div>
+
+    <!-- Game Board -->
+    <div class="game-area">
+      <div class="columns-container" id="gameBoard">
+
+        <!-- Images column -->
+        <div>
+          <div class="column-label" style="background:#f0eeff;color:var(--primary)">
+            🖼️ Images
+          </div>
+          <div id="imagesColumn" class="d-flex flex-column gap-3"></div>
+        </div>
+
+        <!-- VS divider -->
+        <div class="d-flex align-items-center" style="font-size:2rem;color:#ccc;padding-top:50px">
+          ↔️
+        </div>
+
+        <!-- Words column -->
+        <div>
+          <div class="column-label" style="background:#fff5f5;color:var(--secondary)">
+            🔤 Words
+          </div>
+          <div id="wordsColumn" class="d-flex flex-column gap-3"></div>
+        </div>
+
+      </div>
+
+      <!-- Score display -->
+      <div class="text-center mt-4">
+        <div class="d-inline-flex align-items-center gap-3 px-4 py-2 rounded-pill" style="background:#f8f6ff">
+          <span class="fw-bold text-muted">Points:</span>
+          <span class="font-fredoka fs-3" style="color:var(--primary)" id="scoreDisplay">0</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Win Overlay -->
+<div class="win-overlay" id="winOverlay">
+  <div class="win-card">
+    <div class="win-owl">🐺</div>
+    <div class="win-title">¡Lo lograste! / You did it!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
+      <span id="winScore">0</span> pts (<span id="winPercent">0%</span>)
+    </div>
+    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
+      🔄 Play Again / Jugar de nuevo
+    </button>
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">
+      Ver más juegos →
+    </a>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'games/js/puzzle.js' %}"></script>
+<script>
+  const VOCABULARY = {{ vocabulary_json|safe }};
+  const GAME_ID = {{ game.id }};
+  const TIME_LIMIT = {{ game.time_limit }};
+  const POINTS_REWARD = {{ game.points_reward }};
+  initPuzzle(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD);
+</script>
+{% endblock %}
