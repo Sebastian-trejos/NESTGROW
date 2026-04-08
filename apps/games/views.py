@@ -5,11 +5,55 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required
 
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def verificar_logros(user):
+    """Check and award any new badges. Returns list of newly unlocked badges."""
+    nuevos = []
+    juegos_completados = UserProgress.objects.filter(user=user, completed=True).count()
+    puntaje_total = getattr(getattr(user, 'estudiante_profile', None), 'puntos_totales', 0)
+    score_perfecto = Score.objects.filter(user=user).filter(score__gte=90).count()
+
+    CONDICIONES = [
+        # (condicion_slug, check_value)
+        ('primera_victoria', juegos_completados >= 1),
+        ('cinco_juegos', juegos_completados >= 5),
+        ('diez_juegos', juegos_completados >= 10),
+        ('50_puntos', puntaje_total >= 50),
+        ('100_puntos', puntaje_total >= 100),
+        ('perfeccionista', score_perfecto >= 1),
+        ('tres_perfectos', score_perfecto >= 3),
+    ]
+
+    for slug, condicion_met in CONDICIONES:
+        if condicion_met:
+            try:
+                logro = Logro.objects.get(nombre__icontains=slug.replace('_', ' '), is_active=True)
+            except Logro.DoesNotExist:
+                continue
+            _, created = LogroUsuario.objects.get_or_create(user=user, logro=logro)
+            if created:
+                nuevos.append(logro)
+
+    return nuevos
+
+
+def otorgar_huesos(user, cantidad, descripcion):
+    """Give Milo Bones to a user."""
+    user.huesos += cantidad
+    user.save(update_fields=['huesos'])
+    HuesoTransaccion.objects.create(
+        user=user, tipo='ganado', cantidad=cantidad, descripcion=descripcion
+    )
+
+
+# ── Student views ─────────────────────────────────────────────────────────────
 
 @login_required
 def game_list(request):
@@ -18,10 +62,19 @@ def game_list(request):
     category_filter = request.GET.get('categoria')
     if category_filter:
         games = games.filter(category__id=category_filter)
+
+    # Get unread badge notifications
+    logros_nuevos = []
+    if request.user.role == 'estudiante':
+        logros_nuevos = LogroUsuario.objects.filter(
+            user=request.user, visto=False
+        ).select_related('logro')
+
     return render(request, 'games/game_list.html', {
         'games': games,
         'categories': categories,
         'selected_category': category_filter,
+        'logros_nuevos': logros_nuevos,
     })
 
 
@@ -60,6 +113,53 @@ def game_detail(request, pk):
 
 
 @login_required
+def ranking_salon(request):
+    """Classroom ranking view."""
+    if request.user.role != 'estudiante':
+        return redirect('accounts:dashboard')
+
+    estudiante = request.user.estudiante_profile
+    salon = estudiante.salon
+    if not salon:
+        messages.info(request, 'Únete a un salón para ver el ranking.')
+        return redirect('accounts:dashboard_estudiante')
+
+    compañeros = salon.estudiantes.select_related('user').order_by('-puntos_totales')
+    return render(request, 'games/ranking_salon.html', {
+        'salon': salon,
+        'compañeros': compañeros,
+        'mi_perfil': estudiante,
+    })
+
+
+@login_required
+def mis_logros(request):
+    """View all unlocked badges."""
+    logros_obtenidos = LogroUsuario.objects.filter(
+        user=request.user
+    ).select_related('logro').order_by('-created_at')
+    todos_logros = Logro.objects.filter(is_active=True)
+    ids_obtenidos = set(lu.logro_id for lu in logros_obtenidos)
+
+    # Mark as seen
+    LogroUsuario.objects.filter(user=request.user, visto=False).update(visto=True)
+
+    return render(request, 'games/mis_logros.html', {
+        'logros_obtenidos': logros_obtenidos,
+        'todos_logros': todos_logros,
+        'ids_obtenidos': ids_obtenidos,
+    })
+
+
+@login_required
+@require_POST
+def marcar_logro_visto(request):
+    """AJAX: mark badge notification as seen."""
+    LogroUsuario.objects.filter(user=request.user, visto=False).update(visto=True)
+    return JsonResponse({'status': 'ok'})
+
+
+@login_required
 @require_POST
 def save_score(request):
     """AJAX endpoint to save game score."""
@@ -67,51 +167,83 @@ def save_score(request):
         data = json.loads(request.body)
         game_id = data.get('game_id')
         score_val = int(data.get('score', 0))
+        max_score_val = int(data.get('max_score', score_val))
         time_spent = int(data.get('time_spent', 0))
         completed = data.get('completed', False)
 
         game = get_object_or_404(Game, pk=game_id)
 
-        # Save individual attempt
-        Score.objects.create(user=request.user, game=game, score=score_val, time_spent=time_spent)
+        # Percentage and classification
+        pct = int((score_val / max_score_val) * 100) if max_score_val > 0 else 0
+        clasificacion = clasificar_puntaje(pct)
+
+        # Save score record
+        Score.objects.create(
+            user=request.user, game=game,
+            score=score_val, max_score=max_score_val, time_spent=time_spent
+        )
 
         # Update progress
-        progress, created = UserProgress.objects.get_or_create(user=request.user, game=game)
+        progress, _ = UserProgress.objects.get_or_create(user=request.user, game=game)
         progress.attempts += 1
         progress.time_spent += time_spent
+        progress.max_score = max_score_val
         if score_val > progress.score:
             progress.score = score_val
         if completed:
             progress.completed = True
         progress.save()
 
-        # Update student points
+        # Update student points + huesos
+        nuevos_logros = []
+        huesos_ganados = 0
+        subio_nivel = False
+        nuevo_nivel = 0
         if request.user.role == 'estudiante' and hasattr(request.user, 'estudiante_profile'):
             ep = request.user.estudiante_profile
             ep.puntos_totales += score_val
             ep.save()
-            ep.actualizar_nivel()
+            subio_nivel = ep.actualizar_nivel()
+            nuevo_nivel = ep.nivel
+            request.user.refresh_from_db()
+
+            # Award Huesos based on classification
+            huesos_map = {'perfecto': 5, 'alto': 3, 'basico': 2, 'bajo': 1}
+            huesos_ganados = huesos_map.get(clasificacion[0], 1)
+            otorgar_huesos(request.user, huesos_ganados,
+                           f'Juego: {game.title} ({clasificacion[1]})')
+
+            # Check badges
+            nuevos_logros = verificar_logros(request.user)
 
         return JsonResponse({
             'status': 'ok',
-            'new_score': score_val,
-            'total_points': getattr(getattr(request.user, 'estudiante_profile', None), 'puntos_totales', 0),
+            'score': score_val,
+            'max_score': max_score_val,
+            'percentage': pct,
+            'clasificacion_key': clasificacion[0],
+            'clasificacion_label': clasificacion[1],
+            'clasificacion_color': clasificacion[2],
+            'huesos_ganados': huesos_ganados,
+            'total_huesos': request.user.huesos,
+            'subio_nivel': subio_nivel,
+            'nuevo_nivel': nuevo_nivel,
+            'nuevos_logros': [
+                {'nombre': l.nombre, 'icono': l.icono, 'descripcion': l.descripcion}
+                for l in nuevos_logros
+            ],
         })
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
-# ============================================================
-# PROFESOR — Gestión de Categorías
-# ============================================================
+# ── Professor management views (unchanged) ───────────────────────────────────
 
 @login_required
 @profesor_required
 def gestionar_categorias(request):
     categorias = Category.objects.all().order_by('order', 'name')
-    return render(request, 'games/profesor/gestionar_categorias.html', {
-        'categorias': categorias,
-    })
+    return render(request, 'games/profesor/gestionar_categorias.html', {'categorias': categorias})
 
 
 @login_required
@@ -121,15 +253,12 @@ def crear_categoria(request):
         form = CategoryForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, '✅ ¡Categoría creada exitosamente!')
+            messages.success(request, '✅ ¡Categoría creada!')
             return redirect('games:gestionar_categorias')
     else:
         form = CategoryForm()
     return render(request, 'games/profesor/categoria_form.html', {
-        'form': form,
-        'titulo': 'Nueva Categoría',
-        'accion': 'Crear',
-    })
+        'form': form, 'titulo': 'Nueva Categoría', 'accion': 'Crear'})
 
 
 @login_required
@@ -140,16 +269,12 @@ def editar_categoria(request, pk):
         form = CategoryForm(request.POST, request.FILES, instance=categoria)
         if form.is_valid():
             form.save()
-            messages.success(request, '✅ ¡Categoría actualizada!')
+            messages.success(request, '✅ Categoría actualizada.')
             return redirect('games:gestionar_categorias')
     else:
         form = CategoryForm(instance=categoria)
     return render(request, 'games/profesor/categoria_form.html', {
-        'form': form,
-        'titulo': f'Editar: {categoria.name}',
-        'accion': 'Guardar cambios',
-        'categoria': categoria,
-    })
+        'form': form, 'titulo': f'Editar: {categoria.name}', 'accion': 'Guardar'})
 
 
 @login_required
@@ -157,20 +282,12 @@ def editar_categoria(request, pk):
 def eliminar_categoria(request, pk):
     categoria = get_object_or_404(Category, pk=pk)
     if request.method == 'POST':
-        nombre = categoria.name
         categoria.delete()
-        messages.success(request, f'🗑️ Categoría "{nombre}" eliminada.')
+        messages.success(request, '🗑️ Categoría eliminada.')
         return redirect('games:gestionar_categorias')
     return render(request, 'games/profesor/confirmar_eliminar.html', {
-        'objeto': categoria,
-        'tipo': 'categoría',
-        'volver': 'games:gestionar_categorias',
-    })
+        'objeto': categoria, 'tipo': 'categoría', 'volver': 'games:gestionar_categorias'})
 
-
-# ============================================================
-# PROFESOR — Gestión de Vocabulario
-# ============================================================
 
 @login_required
 @profesor_required
@@ -178,9 +295,7 @@ def gestionar_vocabulario(request, categoria_pk):
     categoria = get_object_or_404(Category, pk=categoria_pk)
     vocabulario = categoria.vocabulary.all()
     return render(request, 'games/profesor/gestionar_vocabulario.html', {
-        'categoria': categoria,
-        'vocabulario': vocabulario,
-    })
+        'categoria': categoria, 'vocabulario': vocabulario})
 
 
 @login_required
@@ -198,11 +313,7 @@ def crear_vocabulario(request, categoria_pk):
     else:
         form = VocabularyItemForm()
     return render(request, 'games/profesor/vocabulario_form.html', {
-        'form': form,
-        'categoria': categoria,
-        'titulo': 'Añadir Palabra',
-        'accion': 'Añadir',
-    })
+        'form': form, 'categoria': categoria, 'titulo': 'Añadir Palabra', 'accion': 'Añadir'})
 
 
 @login_required
@@ -218,11 +329,8 @@ def editar_vocabulario(request, pk):
     else:
         form = VocabularyItemForm(instance=item)
     return render(request, 'games/profesor/vocabulario_form.html', {
-        'form': form,
-        'categoria': item.category,
-        'titulo': f'Editar: {item.word_en}',
-        'accion': 'Guardar cambios',
-    })
+        'form': form, 'categoria': item.category,
+        'titulo': f'Editar: {item.word_en}', 'accion': 'Guardar'})
 
 
 @login_required
@@ -231,20 +339,13 @@ def eliminar_vocabulario(request, pk):
     item = get_object_or_404(VocabularyItem, pk=pk)
     categoria_pk = item.category.pk
     if request.method == 'POST':
-        nombre = item.word_en
         item.delete()
-        messages.success(request, f'🗑️ Palabra "{nombre}" eliminada.')
+        messages.success(request, '🗑️ Palabra eliminada.')
         return redirect('games:gestionar_vocabulario', categoria_pk=categoria_pk)
     return render(request, 'games/profesor/confirmar_eliminar.html', {
-        'objeto': item,
-        'tipo': 'palabra',
-        'volver_url': f'/juegos/vocabulario/{categoria_pk}/',
-    })
+        'objeto': item, 'tipo': 'palabra',
+        'volver_url': f'/juegos/vocabulario/{categoria_pk}/'})
 
-
-# ============================================================
-# PROFESOR — Gestión de Juegos
-# ============================================================
 
 @login_required
 @profesor_required
@@ -252,9 +353,7 @@ def gestionar_juegos(request):
     juegos = Game.objects.select_related('category').order_by('order', 'title')
     categorias = Category.objects.all()
     return render(request, 'games/profesor/gestionar_juegos.html', {
-        'juegos': juegos,
-        'categorias': categorias,
-    })
+        'juegos': juegos, 'categorias': categorias})
 
 
 @login_required
@@ -264,15 +363,12 @@ def crear_juego(request):
         form = GameForm(request.POST, request.FILES)
         if form.is_valid():
             juego = form.save()
-            messages.success(request, f'🎮 ¡Juego "{juego.title}" creado exitosamente!')
+            messages.success(request, f'🎮 Juego "{juego.title}" creado!')
             return redirect('games:gestionar_juegos')
     else:
         form = GameForm()
     return render(request, 'games/profesor/juego_form.html', {
-        'form': form,
-        'titulo': 'Crear Nuevo Juego',
-        'accion': 'Crear juego',
-    })
+        'form': form, 'titulo': 'Crear Nuevo Juego', 'accion': 'Crear juego'})
 
 
 @login_required
@@ -283,16 +379,12 @@ def editar_juego(request, pk):
         form = GameForm(request.POST, request.FILES, instance=juego)
         if form.is_valid():
             form.save()
-            messages.success(request, f'✅ ¡Juego "{juego.title}" actualizado!')
+            messages.success(request, f'✅ Juego "{juego.title}" actualizado!')
             return redirect('games:gestionar_juegos')
     else:
         form = GameForm(instance=juego)
     return render(request, 'games/profesor/juego_form.html', {
-        'form': form,
-        'titulo': f'Editar: {juego.title}',
-        'accion': 'Guardar cambios',
-        'juego': juego,
-    })
+        'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar', 'juego': juego})
 
 
 @login_required
@@ -300,21 +392,16 @@ def editar_juego(request, pk):
 def eliminar_juego(request, pk):
     juego = get_object_or_404(Game, pk=pk)
     if request.method == 'POST':
-        nombre = juego.title
         juego.delete()
-        messages.success(request, f'🗑️ Juego "{nombre}" eliminado.')
+        messages.success(request, f'🗑️ Juego eliminado.')
         return redirect('games:gestionar_juegos')
     return render(request, 'games/profesor/confirmar_eliminar.html', {
-        'objeto': juego,
-        'tipo': 'juego',
-        'volver': 'games:gestionar_juegos',
-    })
+        'objeto': juego, 'tipo': 'juego', 'volver': 'games:gestionar_juegos'})
 
 
 @login_required
 @profesor_required
 def toggle_juego(request, pk):
-    """Activar/desactivar juego con un click."""
     juego = get_object_or_404(Game, pk=pk)
     juego.is_active = not juego.is_active
     juego.save()

@@ -4,7 +4,6 @@
 {% block content %}
 <div class="container py-4">
 
-  <!-- Milo Banner -->
   <div class="milo-banner">
     <div class="milo-banner-owl">🐺</div>
     <div>
@@ -14,12 +13,19 @@
   </div>
 
   <!-- Stats -->
-  <div class="row g-4 mb-4">
+  <div class="row g-4 mb-4 mt-1">
     <div class="col-6 col-md-3">
       <div class="stat-card">
         <div style="font-size:2rem">⭐</div>
         <div class="stat-number">{{ profile.puntos_totales }}</div>
         <div class="stat-label">Puntos</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card" style="border-top-color:#8B4513">
+        <div style="font-size:2rem">🦴</div>
+        <div class="stat-number" style="color:#8B4513">{{ user.huesos }}</div>
+        <div class="stat-label">Huesos de Milo</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
@@ -36,11 +42,48 @@
         <div class="stat-label">Completados</div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:var(--orange)">
-        <div style="font-size:2rem">🎮</div>
-        <div class="stat-number" style="color:var(--orange)">{{ progreso.count }}</div>
-        <div class="stat-label">Jugados</div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="nestgrow-card p-4 mb-4" style="border-left:5px solid var(--primary)">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">⚡ Accesos Rápidos</h5>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <a href="{% url 'games:game_list' %}" class="text-decoration-none">
+          <div class="text-center p-3 rounded-3" style="background:#f0eeff">
+            <div style="font-size:2rem">🎮</div>
+            <div class="fw-bold small" style="color:var(--primary)">Jugar</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'games:mis_logros' %}" class="text-decoration-none">
+          <div class="text-center p-3 rounded-3" style="background:#fff9e6">
+            <div style="font-size:2rem">🏅</div>
+            <div class="fw-bold small" style="color:var(--orange)">
+              Mis Logros
+              {% if logros_pendientes > 0 %}
+              <span class="badge rounded-pill ms-1" style="background:var(--secondary);color:white">{{ logros_pendientes }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'games:ranking_salon' %}" class="text-decoration-none">
+          <div class="text-center p-3 rounded-3" style="background:#fff5f5">
+            <div style="font-size:2rem">🏆</div>
+            <div class="fw-bold small" style="color:var(--secondary)">Ranking</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'content:category_list' %}" class="text-decoration-none">
+          <div class="text-center p-3 rounded-3" style="background:#f0fffe">
+            <div style="font-size:2rem">📚</div>
+            <div class="fw-bold small" style="color:var(--accent)">Vocabulario</div>
+          </div>
+        </a>
       </div>
     </div>
   </div>
@@ -48,35 +91,54 @@
   <!-- Level Progress -->
   <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
-      <h5 class="font-fredoka mb-0" style="color:var(--primary)">🚀 Tu Progreso al Siguiente Nivel</h5>
+      <h5 class="font-fredoka mb-0" style="color:var(--primary)">🚀 Tu Progreso</h5>
       <span class="level-badge">Nivel {{ profile.nivel }}</span>
     </div>
-    {% with next_target=500 %}
     <div class="progress-bar-nestgrow">
-      <div class="progress-fill" style="width:{% widthratio profile.puntos_totales next_target 100 %}%"></div>
+      <div class="progress-fill" style="width:{% widthratio profile.puntos_totales puntos_requeridos 100 %}%;max-width:100%"></div>
     </div>
-    <div class="text-muted small fw-bold mt-1">{{ profile.puntos_totales }} / {{ next_target }} puntos</div>
-    {% endwith %}
+    <div class="d-flex justify-content-between mt-1">
+      <span class="text-muted small fw-bold">{{ profile.puntos_totales }} / {{ puntos_requeridos }} puntos para nivel {{ profile.nivel|add:1 }}</span>
+      {% if profile.nivel >= 10 %}
+      <span class="badge rounded-pill" style="background:var(--yellow);color:#333">🏆 ¡Nivel Máximo!</span>
+      {% endif %}
+    </div>
   </div>
 
-  <!-- Join Class / Teacher -->
-  {% if not profile.profesor %}
-  <div class="nestgrow-card p-4 mb-4" style="border: 3px dashed var(--accent)">
+  <!-- Join class if no salon -->
+  {% if not profile.salon %}
+  <div class="nestgrow-card p-4 mb-4" style="border:3px dashed var(--accent)">
     <div class="d-flex align-items-center gap-3">
       <div style="font-size:2.5rem">🏫</div>
       <div>
         <div class="fw-bold fs-5">¡Únete a la clase de tu profesor!</div>
         <div class="text-muted fw-bold small">Pídele el código de clase a tu profe.</div>
       </div>
-      <a href="{% url 'accounts:unirse_clase' %}" class="btn btn-nestgrow btn-primary-nestgrow ms-auto">
-        Unirme →
-      </a>
+      <a href="{% url 'accounts:unirse_clase' %}" class="btn btn-nestgrow btn-primary-nestgrow ms-auto">Unirme →</a>
     </div>
   </div>
   {% else %}
-  <div class="nestgrow-card p-4 mb-4" style="border-left: 5px solid var(--accent)">
-    <div class="fw-bold">🏫 Clase de: <strong>{{ profile.profesor.user.get_full_name }}</strong></div>
-    <div class="text-muted small fw-bold">{{ profile.profesor.institucion }}</div>
+  <div class="nestgrow-card p-4 mb-4" style="border-left:5px solid var(--accent)">
+    <div class="fw-bold">🏫 Salón: <strong>{{ profile.salon.nombre }}</strong> · {{ profile.salon.get_grado_display }}</div>
+    <div class="text-muted small fw-bold">Profesor/a: {{ profile.salon.profesor.user.get_full_name }}</div>
+  </div>
+  {% endif %}
+
+  <!-- Recent logros -->
+  {% if logros_recientes %}
+  <div class="nestgrow-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="font-fredoka mb-0" style="color:var(--primary)">🏅 Logros Recientes</h5>
+      <a href="{% url 'games:mis_logros' %}" class="btn btn-sm btn-outline-primary rounded-pill">Ver todos</a>
+    </div>
+    <div class="d-flex gap-3 flex-wrap">
+      {% for lu in logros_recientes %}
+      <div class="text-center p-3 rounded-3" style="background:{{ lu.logro.color }}15;border:2px solid {{ lu.logro.color }}40;min-width:80px">
+        <div style="font-size:2rem">{{ lu.logro.icono }}</div>
+        <div class="fw-bold small mt-1" style="color:{{ lu.logro.color }}">{{ lu.logro.nombre }}</div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
 
@@ -84,24 +146,32 @@
   <div class="nestgrow-card p-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h4 class="font-fredoka mb-0" style="color:var(--primary)">🎮 Mis Juegos</h4>
-      <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow">Ver todos</a>
+      <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">Ver todos</a>
     </div>
     {% if progreso %}
     <div class="row g-3">
       {% for p in progreso %}
       <div class="col-md-6">
-        <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:#f8f6ff; border: 2px solid #e8e4ff">
-          <div style="font-size:2rem">{{ p.game.get_game_type_display|slice:":2" }}</div>
+        <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:#f8f6ff;border:2px solid #e8e4ff">
+          <div style="font-size:2rem">
+            {% if p.game.game_type == 'drag_and_drop' %}🖱️
+            {% elif p.game.game_type == 'word_search' %}🔍
+            {% elif p.game.game_type == 'puzzle' %}🧩
+            {% else %}🎵{% endif %}
+          </div>
           <div class="flex-grow-1">
             <div class="fw-bold">{{ p.game.title }}</div>
             <div class="progress-bar-nestgrow mt-1">
               <div class="progress-fill" style="width:{{ p.percentage }}%"></div>
             </div>
-            <div class="text-muted small fw-bold mt-1">{{ p.score }} pts · {{ p.attempts }} intento{{ p.attempts|pluralize:"s" }}</div>
+            <div class="d-flex gap-2 mt-1">
+              <span class="text-muted small fw-bold">{{ p.score }} pts</span>
+              {% with cls=p.clasificacion %}
+              <span class="badge rounded-pill small fw-bold" style="background:{{ cls.2 }}20;color:{{ cls.2 }}">{{ cls.1 }}</span>
+              {% endwith %}
+            </div>
           </div>
-          {% if p.completed %}
-          <span class="badge bg-success">✅</span>
-          {% endif %}
+          {% if p.completed %}<span class="badge bg-success">✅</span>{% endif %}
           <a href="{{ p.game.get_absolute_url }}" class="btn btn-sm btn-outline-primary rounded-pill">▶</a>
         </div>
       </div>

@@ -32,11 +32,11 @@
         <div class="vocab-word-en fs-5">{{ item.word_en }}</div>
         <div class="vocab-word-es">{{ item.word_es }}</div>
         {% if item.hint %}
-          <div class="text-muted mt-1" style="font-size:0.75rem;font-style:italic">💡 {{ item.hint }}</div>
+          <div class="text-muted mt-1" style="font-size:0.75rem;font-style:italic">💡 <em>{{ item.hint }}</em></div>
         {% endif %}
         <div class="mt-2">
           <span class="badge badge-difficulty-{{ item.difficulty }} rounded-pill" style="font-size:0.7rem">
-            {% if item.difficulty == 1 %}⭐ Easy{% elif item.difficulty == 2 %}⭐⭐ Medium{% else %}⭐⭐⭐ Hard{% endif %}
+            {% if item.difficulty == 1 %}⭐ Fácil{% elif item.difficulty == 2 %}⭐⭐ Medio{% else %}⭐⭐⭐ Difícil{% endif %}
           </span>
         </div>
       </div>

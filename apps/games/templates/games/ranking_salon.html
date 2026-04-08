@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Ranking del Salón - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:700px">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏆 Ranking — {{ salon.nombre }}</h3>
+  </div>
+
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-text">¡Sigue jugando para subir en el ranking de tu salón! Cada punto cuenta 💪</div>
+  </div>
+
+  <div class="nestgrow-card p-4">
+    {% for est in compañeros %}
+    <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-2
+      {% if est == mi_perfil %}ranking-me{% endif %}"
+      style="{% if est == mi_perfil %}background:linear-gradient(135deg,#f0eeff,#ffe9e9);border:2px solid var(--primary){% else %}background:#f8f6ff{% endif %}">
+
+      <!-- Position -->
+      <div class="font-fredoka text-center" style="width:48px;font-size:1.8rem">
+        {% if forloop.counter == 1 %}🥇
+        {% elif forloop.counter == 2 %}🥈
+        {% elif forloop.counter == 3 %}🥉
+        {% else %}<span style="color:#aaa;font-size:1.2rem">#{{ forloop.counter }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Name -->
+      <div class="flex-grow-1">
+        <div class="fw-bold fs-5">
+          {{ est.user.get_full_name|default:est.user.username }}
+          {% if est == mi_perfil %}<span class="badge rounded-pill ms-2" style="background:var(--primary);color:white;font-size:0.7rem">¡Tú!</span>{% endif %}
+        </div>
+        <div class="text-muted small fw-bold">Nivel {{ est.nivel }} · {{ est.user.huesos }} 🦴</div>
+      </div>
+
+      <!-- Points -->
+      <div class="text-end">
+        <div class="font-fredoka fs-4" style="color:var(--primary)">{{ est.puntos_totales }}</div>
+        <div class="text-muted small fw-bold">puntos</div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-4">
+      <div style="font-size:3rem">🐺</div>
+      <p class="fw-bold text-muted mt-2">¡Aún no hay estudiantes en el salón!</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -26,6 +26,9 @@
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto align-items-center gap-2">
           {% if user.is_authenticated %}
+  {% if user.role == "estudiante" %}
+  <div id="pendingBadges" data-badges="{% if logros_nuevos %}[{% for l in logros_nuevos %}{"icono":"{{ l.logro.icono }}","nombre":"{{ l.logro.nombre }}","descripcion":"{{ l.logro.descripcion }}"}{% if not forloop.last %},{% endif %}{% endfor %}]{% else %}[]{% endif %}"></div>
+  {% endif %}
             <li class="nav-item">
               <a class="nav-link nav-pill" href="{% url 'games:game_list' %}">
                 <i class="fas fa-gamepad me-1"></i> Juegos
@@ -49,9 +52,15 @@
                   <span class="badge bg-warning text-dark ms-1">Profe</span>
                 {% else %}
                   <span class="badge bg-success ms-1">⭐ {{ user.estudiante_profile.puntos_totales|default:"0" }}</span>
+                  <span class="badge ms-1" style="background:#8B4513;color:white">🦴 {{ user.huesos|default:"0" }}</span>
                 {% endif %}
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
+                {% if user.role == 'estudiante' %}
+                <li><a class="dropdown-item" href="{% url 'games:mis_logros' %}"><i class="fas fa-medal me-2"></i>Mis Logros 🏅</a></li>
+                <li><a class="dropdown-item" href="{% url 'games:ranking_salon' %}"><i class="fas fa-trophy me-2"></i>Ranking 🏆</a></li>
+                <li><hr class="dropdown-divider"></li>
+                {% endif %}
                 <li><a class="dropdown-item" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
@@ -72,6 +81,9 @@
 
   <!-- Milo Floating Mascot -->
   {% if user.is_authenticated %}
+  {% if user.role == "estudiante" %}
+  <div id="pendingBadges" data-badges="{% if logros_nuevos %}[{% for l in logros_nuevos %}{"icono":"{{ l.logro.icono }}","nombre":"{{ l.logro.nombre }}","descripcion":"{{ l.logro.descripcion }}"}{% if not forloop.last %},{% endif %}{% endfor %}]{% else %}[]{% endif %}"></div>
+  {% endif %}
   <div class="milo-float" id="miloFloat" onclick="toggleMiloMessage()">
     <div class="milo-bubble" id="miloBubble">
       <div class="milo-speech">{{ milo_message.text }}</div>

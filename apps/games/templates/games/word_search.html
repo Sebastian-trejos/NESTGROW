@@ -67,6 +67,6 @@ const VOCABULARY = {{ vocabulary_json|safe }};
 const GAME_ID = {{ game.id }};
 const TIME_LIMIT = {{ game.time_limit }};
 const POINTS_REWARD = {{ game.points_reward }};
-initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD);
+initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, {{ game.difficulty }});
 </script>
 {% endblock %}

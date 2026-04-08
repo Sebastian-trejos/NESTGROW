@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Mis Logros - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏅 Mis Logros</h3>
+  </div>
+
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">¡Desbloquea todos los logros jugando y aprendiendo! Cada uno vale 🦴 Huesos de Milo.</div>
+      <div class="fw-bold small text-muted">{{ logros_obtenidos.count }} de {{ todos_logros.count }} logros desbloqueados</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="nestgrow-card p-4 mb-4">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="fw-bold" style="color:var(--primary)">Progreso total</span>
+      <span class="fw-bold">{{ logros_obtenidos.count }}/{{ todos_logros.count }}</span>
+    </div>
+    <div class="progress-bar-nestgrow">
+      <div class="progress-fill" style="width:{% widthratio logros_obtenidos.count todos_logros.count 100 %}%"></div>
+    </div>
+  </div>
+
+  <!-- Badges grid -->
+  <div class="row g-3">
+    {% for logro in todos_logros %}
+    {% if logro.id in ids_obtenidos %}
+    <!-- Unlocked -->
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="nestgrow-card p-4 text-center h-100 logro-card" style="border-top:4px solid {{ logro.color }}">
+        <div style="font-size:3rem">{{ logro.icono }}</div>
+        <div class="font-fredoka mt-2" style="color:{{ logro.color }}">{{ logro.nombre }}</div>
+        <div class="text-muted small fw-bold mt-1">{{ logro.descripcion }}</div>
+        <div class="mt-2">
+          <span class="badge rounded-pill" style="background:#d4edda;color:#155724;font-size:0.8rem">✅ Desbloqueado</span>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <!-- Locked -->
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="nestgrow-card p-4 text-center h-100" style="opacity:0.45;border-top:4px solid #ccc">
+        <div style="font-size:3rem;filter:grayscale(1)">{{ logro.icono }}</div>
+        <div class="font-fredoka mt-2 text-muted">{{ logro.nombre }}</div>
+        <div class="text-muted small fw-bold mt-1">{{ logro.descripcion }}</div>
+        <div class="mt-2">
+          <span class="badge rounded-pill bg-light text-muted" style="font-size:0.8rem">🔒 Bloqueado</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <div style="font-size:4rem">🏅</div>
+      <p class="fw-bold text-muted mt-2">Aún no hay logros configurados. El profesor los añadirá pronto.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

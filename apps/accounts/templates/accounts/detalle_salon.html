@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}{{ salon.nombre }} - NestGrow{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill mb-2">← Panel</a>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏫 {{ salon.nombre }}</h3>
+      <div class="text-muted fw-bold small">{{ salon.get_grado_display }} · Código: <strong style="color:var(--accent);letter-spacing:3px">{{ salon.codigo_clase }}</strong></div>
+    </div>
+    <a href="{% url 'accounts:editar_salon' salon.pk %}" class="btn btn-outline-warning rounded-pill fw-bold">✏️ Editar salón</a>
+  </div>
+
+  <div class="nestgrow-card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="font-fredoka mb-0" style="color:var(--primary)">👨‍🎓 Estudiantes ({{ estudiantes.count }})</h5>
+    </div>
+
+    {% if estudiantes %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead style="background:#f8f6ff">
+          <tr>
+            <th>Nombre completo</th>
+            <th>N° Identidad</th>
+            <th>Correo Padre/Madre</th>
+            <th>Puntos</th>
+            <th>Nota (1-5)</th>
+            <th>Nivel</th>
+            <th>Informe PDF</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for est in estudiantes %}
+          <tr>
+            <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
+            <td>{{ est.numero_identidad|default:"—" }}</td>
+            <td>
+              {% if est.correo_padre %}
+                <span class="text-success fw-bold small">{{ est.correo_padre }}</span>
+              {% else %}
+                <span class="badge rounded-pill" style="background:#fff3cd;color:#856404">⚠️ Sin correo</span>
+              {% endif %}
+            </td>
+            <td><span class="fw-bold" style="color:var(--primary)">⭐ {{ est.puntos_totales }}</span></td>
+            <td>
+              {% with pct=est.puntos_totales %}
+              {% if pct >= 90 %}<span class="badge rounded-pill fw-bold" style="background:#d4edda;color:#155724">5.0</span>
+              {% elif pct >= 80 %}<span class="badge rounded-pill fw-bold" style="background:#d4edda;color:#155724">4.5</span>
+              {% elif pct >= 70 %}<span class="badge rounded-pill fw-bold" style="background:#cce5ff;color:#004085">4.0</span>
+              {% elif pct >= 60 %}<span class="badge rounded-pill fw-bold" style="background:#cce5ff;color:#004085">3.5</span>
+              {% elif pct >= 50 %}<span class="badge rounded-pill fw-bold" style="background:#fff3cd;color:#856404">3.0</span>
+              {% elif pct >= 40 %}<span class="badge rounded-pill fw-bold" style="background:#fff3cd;color:#856404">2.5</span>
+              {% else %}<span class="badge rounded-pill fw-bold" style="background:#f8d7da;color:#721c24">2.0</span>
+              {% endif %}
+              {% endwith %}
+            </td>
+            <td><span class="level-badge">Nivel {{ est.nivel }}</span></td>
+            <td>
+              {% if est.correo_padre %}
+              <a href="{% url 'accounts:enviar_informe' est.pk %}"
+                 class="btn btn-sm btn-nestgrow btn-primary-nestgrow"
+                 onclick="return confirm('¿Enviar informe PDF a {{ est.correo_padre }}?')">
+                📧 Enviar PDF
+              </a>
+              {% else %}
+              <span class="text-muted small">Registra correo primero</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-4">
+      <div style="font-size:3.5rem">🐺</div>
+      <p class="fw-bold text-muted mt-2">Comparte el código <strong style="color:var(--primary)">{{ salon.codigo_clase }}</strong> con tus estudiantes.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

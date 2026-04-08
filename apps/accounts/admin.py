@@ -1,18 +1,16 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, ProfesorProfile, EstudianteProfile
+from .models import CustomUser, ProfesorProfile, EstudianteProfile, Salon
 
 
 class ProfesorProfileInline(admin.StackedInline):
     model = ProfesorProfile
     can_delete = False
-    verbose_name_plural = 'Perfil de Profesor'
 
 
 class EstudianteProfileInline(admin.StackedInline):
     model = EstudianteProfile
     can_delete = False
-    verbose_name_plural = 'Perfil de Estudiante'
 
 
 @admin.register(CustomUser)
@@ -32,14 +30,21 @@ class CustomUserAdmin(UserAdmin):
         return []
 
 
+@admin.register(Salon)
+class SalonAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'grado', 'profesor', 'codigo_clase', 'is_active')
+    list_filter = ('grado', 'is_active')
+    search_fields = ('nombre', 'codigo_clase', 'profesor__user__username')
+
+
 @admin.register(ProfesorProfile)
 class ProfesorProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'institucion', 'codigo_clase', 'grado_a_cargo')
+    list_display = ('user', 'institucion', 'codigo_clase')
     search_fields = ('user__username', 'user__first_name', 'codigo_clase')
 
 
 @admin.register(EstudianteProfile)
 class EstudianteProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'grado', 'puntos_totales', 'nivel', 'profesor')
+    list_display = ('user', 'grado', 'salon', 'puntos_totales', 'nivel', 'correo_padre')
     list_filter = ('grado', 'nivel')
-    search_fields = ('user__username', 'user__first_name')
+    search_fields = ('user__username', 'user__first_name', 'numero_identidad')

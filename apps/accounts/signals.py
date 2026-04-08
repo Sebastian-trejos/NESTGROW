@@ -7,16 +7,6 @@ from .models import CustomUser, ProfesorProfile, EstudianteProfile
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.role == 'profesor':
-            ProfesorProfile.objects.create(user=instance)
+            ProfesorProfile.objects.get_or_create(user=instance)
         elif instance.role == 'estudiante':
-            EstudianteProfile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=CustomUser)
-def save_user_profile(sender, instance, **kwargs):
-    if instance.role == 'profesor':
-        if hasattr(instance, 'profesor_profile'):
-            instance.profesor_profile.save()
-    elif instance.role == 'estudiante':
-        if hasattr(instance, 'estudiante_profile'):
-            instance.estudiante_profile.save()
+            EstudianteProfile.objects.get_or_create(user=instance)

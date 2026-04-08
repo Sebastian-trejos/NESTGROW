@@ -21,6 +21,7 @@
         {% endif %}
         <div class="vocab-word-en">{{ item.word_en }}</div>
         <div class="vocab-word-es">{{ item.word_es }}</div>
+        {% if item.hint %}<div class="text-muted" style="font-size:0.7rem">💡 {{ item.hint }}</div>{% endif %}
         {% if item.audio %}
           <button class="btn btn-sm mt-1 rounded-pill" style="background:#f0eeff;color:var(--primary);font-size:0.75rem"
                   onclick="event.stopPropagation(); playAudio('{{ item.audio.url }}')">

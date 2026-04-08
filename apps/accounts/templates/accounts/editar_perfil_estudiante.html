@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Editar Perfil - NestGrow{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width:600px">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">✏️ Editar Mi Perfil</h3>
+  </div>
+  <div class="nestgrow-card p-5">
+    <div class="milo-banner mb-4">
+      <div class="milo-banner-owl">🐺</div>
+      <div class="milo-banner-text">¡Completa tus datos para que tu profe y tus papás puedan estar al tanto de tu progreso!</div>
+    </div>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <h5 class="font-fredoka mb-3" style="color:var(--primary)">👤 Mis Datos</h5>
+      {% for field in user_form %}
+      <div class="mb-3">
+        <label class="form-label fw-bold">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      <hr class="my-4">
+      <h5 class="font-fredoka mb-3" style="color:var(--primary)">📋 Información Escolar</h5>
+      {% for field in profile_form %}
+      <div class="mb-3">
+        <label class="form-label fw-bold">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
+        {% if field.help_text %}<div class="text-muted small mt-1">{{ field.help_text }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mt-2">
+        ✅ Guardar cambios
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

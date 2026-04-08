@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} - NestGrow{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width:560px">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏫 {{ titulo }}</h3>
+  </div>
+  <div class="nestgrow-card p-5">
+    <div class="milo-banner mb-4">
+      <div class="milo-banner-owl">🐺</div>
+      <div class="milo-banner-text">Cada salón tendrá su propio código único para que tus estudiantes se unan. ¡Puedes tener tantos salones como necesites!</div>
+    </div>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label fw-bold">{{ field.label }}</label>
+        {% if field.field.widget.input_type == 'checkbox' %}
+          <div class="form-check">
+            {{ field }}
+            <label class="form-check-label fw-bold ms-2">Salón activo (visible)</label>
+          </div>
+        {% else %}
+          {{ field }}
+        {% endif %}
+        {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
+        {% if field.help_text %}<div class="text-muted small mt-1">{{ field.help_text }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      {% if salon %}
+      <div class="p-3 rounded-3 mb-3" style="background:#f0eeff">
+        <div class="fw-bold" style="color:var(--primary)">🔑 Código actual del salón:</div>
+        <div class="font-fredoka fs-3" style="color:var(--primary);letter-spacing:6px">{{ salon.codigo_clase }}</div>
+        <div class="text-muted small">Comparte este código con tus estudiantes</div>
+      </div>
+      {% endif %}
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow">🏫 {{ accion }}</button>
+        <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill fw-bold">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

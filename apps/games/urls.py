@@ -8,6 +8,9 @@ urlpatterns = [
     path('', views.game_list, name='game_list'),
     path('<int:pk>/', views.game_detail, name='game_detail'),
     path('guardar-puntaje/', views.save_score, name='save_score'),
+    path('ranking/', views.ranking_salon, name='ranking_salon'),
+    path('mis-logros/', views.mis_logros, name='mis_logros'),
+    path('logro-visto/', views.marcar_logro_visto, name='marcar_logro_visto'),
 
     # Profesor — Juegos
     path('gestionar/', views.gestionar_juegos, name='gestionar_juegos'),
