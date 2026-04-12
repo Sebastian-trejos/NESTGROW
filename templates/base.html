@@ -39,6 +39,13 @@
                 <i class="fas fa-book-open me-1"></i> Vocabulario
               </a>
             </li>
+            {% if user.role == 'estudiante' %}
+            <li class="nav-item">
+              <a class="nav-link nav-pill" href="{% url 'games:museo_virtual' %}">
+                <i class="fas fa-palette me-1"></i> Museo
+              </a>
+            </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link nav-pill" href="{% url 'accounts:dashboard' %}">
                 <i class="fas fa-tachometer-alt me-1"></i> Mi Panel

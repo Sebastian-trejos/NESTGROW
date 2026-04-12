@@ -119,7 +119,11 @@ class EstudianteProfile(TimeStampedModel):
             self.nivel += 1
             subio = True
             requeridos = self.puntos_requeridos()
-        self.save()
+        # Always save current state (points + level)
+        EstudianteProfile.objects.filter(pk=self.pk).update(
+            puntos_totales=self.puntos_totales,
+            nivel=self.nivel
+        )
         if subio:
             # Award 15 Milo Bones on level up
             from django.contrib.auth import get_user_model

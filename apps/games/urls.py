@@ -12,6 +12,11 @@ urlpatterns = [
     path('mis-logros/', views.mis_logros, name='mis_logros'),
     path('logro-visto/', views.marcar_logro_visto, name='marcar_logro_visto'),
 
+    # Museo Virtual
+    path('guardar-obra/', views.guardar_obra, name='guardar_obra'),
+    path('museo/', views.museo_virtual, name='museo_virtual'),
+    path('museo/estudiante/<int:user_pk>/', views.museo_estudiante, name='museo_estudiante'),
+
     # Profesor — Juegos
     path('gestionar/', views.gestionar_juegos, name='gestionar_juegos'),
     path('gestionar/nuevo/', views.crear_juego, name='crear_juego'),

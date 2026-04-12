@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required
@@ -90,14 +90,21 @@ def game_detail(request, pk):
         'word_search': 'games/word_search.html',
         'puzzle': 'games/puzzle.html',
         'audio_matching': 'games/audio_game.html',
+        'painting': 'games/painting.html',
     }
     template = template_map.get(game.game_type, 'games/game_detail.html')
+
+    # Get painting words if painting game
+    painting_words = []
+    if game.game_type == 'painting':
+        painting_words = list(game.painting_words.values_list('word', flat=True))
 
     context = {
         'game': game,
         'vocabulary': vocabulary,
         'progress': progress,
         'top_scores': top_scores,
+        'painting_words_json': json.dumps(painting_words),
         'vocabulary_json': json.dumps([
             {
                 'id': v.id,
@@ -202,7 +209,7 @@ def save_score(request):
         if request.user.role == 'estudiante' and hasattr(request.user, 'estudiante_profile'):
             ep = request.user.estudiante_profile
             ep.puntos_totales += score_val
-            ep.save()
+            # Don't call ep.save() here - actualizar_nivel() handles the save
             subio_nivel = ep.actualizar_nivel()
             nuevo_nivel = ep.nivel
             request.user.refresh_from_db()
@@ -408,3 +415,87 @@ def toggle_juego(request, pk):
     estado = 'activado' if juego.is_active else 'desactivado'
     messages.success(request, f'✅ Juego "{juego.title}" {estado}.')
     return redirect('games:gestionar_juegos')
+
+
+# ── Museo Virtual ─────────────────────────────────────────────────────────────
+
+@login_required
+def guardar_obra(request):
+    """Guarda la obra de arte del estudiante."""
+    try:
+        data = json.loads(request.body)
+        game_id = data.get('game_id')
+        canvas_data = data.get('canvas_data')
+        vocabulary_id = data.get('vocabulary_id')
+        title = data.get('title', 'Sin título')
+
+        game = get_object_or_404(Game, pk=game_id)
+        vocab_item = None
+        if vocabulary_id:
+            from apps.content.models import VocabularyItem
+            try:
+                vocab_item = VocabularyItem.objects.get(pk=vocabulary_id)
+            except VocabularyItem.DoesNotExist:
+                pass
+
+        Artwork.objects.create(
+            user=request.user, game=game,
+            vocabulary_item=vocab_item,
+            canvas_data=canvas_data, title=title,
+        )
+
+        # Award points
+        if request.user.role == 'estudiante' and hasattr(request.user, 'estudiante_profile'):
+            ep = request.user.estudiante_profile
+            ep.puntos_totales += game.points_reward
+            ep.actualizar_nivel()
+            otorgar_huesos(request.user, 2, f'Juego de pintar: {game.title}')
+
+        return JsonResponse({'status': 'ok'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+@login_required
+def museo_virtual(request):
+    """Museo virtual: estudiante ve sus obras, profesor ve las de sus estudiantes."""
+    if request.user.role == 'profesor':
+        profile = request.user.profesor_profile
+        estudiantes = profile.estudiantes.select_related('user').all()
+        artworks = Artwork.objects.filter(
+            user__estudiante_profile__profesor=profile
+        ).select_related('user', 'vocabulary_item').order_by('-created_at')
+        estudiante_filtro = request.GET.get('estudiante')
+        if estudiante_filtro:
+            artworks = artworks.filter(user__pk=estudiante_filtro)
+        return render(request, 'games/museo_virtual.html', {
+            'artworks': artworks,
+            'estudiantes': estudiantes,
+            'estudiante_filtro': estudiante_filtro,
+        })
+    else:
+        artworks = Artwork.objects.filter(
+            user=request.user
+        ).select_related('vocabulary_item').order_by('-created_at')
+        return render(request, 'games/museo_virtual.html', {'artworks': artworks})
+
+
+@login_required
+def museo_estudiante(request, user_pk):
+    """Profesor ve las obras de un estudiante específico."""
+    from apps.accounts.models import EstudianteProfile
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    estudiante_user = get_object_or_404(User, pk=user_pk)
+    if request.user.role == 'profesor':
+        profile = request.user.profesor_profile
+        if not EstudianteProfile.objects.filter(user=estudiante_user, profesor=profile).exists():
+            messages.error(request, 'Este estudiante no pertenece a tu clase.')
+            return redirect('accounts:dashboard_profesor')
+    artworks = Artwork.objects.filter(
+        user=estudiante_user
+    ).select_related('vocabulary_item').order_by('-created_at')
+    return render(request, 'games/museo_virtual.html', {
+        'artworks': artworks,
+        'estudiante_visto': estudiante_user,
+    })

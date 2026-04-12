@@ -41,6 +41,7 @@ class Game(TimeStampedModel, ActiveModel):
         ('word_search', '🔍 Sopa de Letras'),
         ('puzzle', '🧩 Rompecabezas'),
         ('audio_matching', '🎵 Juego de Audio'),
+        ('painting', '🎨 Juego de Pintar'),
     ]
     DIFFICULTY = [
         (1, '⭐ Fácil'), (2, '⭐⭐ Medio'), (3, '⭐⭐⭐ Difícil')
@@ -180,3 +181,38 @@ class HuesoTransaccion(TimeStampedModel):
 
     def __str__(self):
         return f"{self.user.username}: {self.tipo} {self.cantidad} huesos"
+
+
+# ── Museo Virtual / Juego de Pintar ──────────────────────────────────────────
+
+class Artwork(TimeStampedModel):
+    """Obra de arte guardada por un estudiante en el juego de pintar."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='artworks')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='artworks')
+    vocabulary_item = models.ForeignKey(
+        'content.VocabularyItem', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='artworks'
+    )
+    canvas_data = models.TextField(help_text='Base64 del canvas pintado por el estudiante')
+    title = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        verbose_name = 'Obra de Arte'
+        verbose_name_plural = 'Obras de Arte'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Obra de {self.user.username}: {self.title}"
+
+
+class PaintingWord(TimeStampedModel):
+    """Palabras que el profesor define para un juego de pintar."""
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='painting_words')
+    word = models.CharField(max_length=100, help_text='Palabra que el estudiante debe dibujar')
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f"{self.game.title}: {self.word}"

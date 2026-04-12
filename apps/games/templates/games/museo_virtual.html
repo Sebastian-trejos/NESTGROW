@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block title %}🏛️ Museo Virtual - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .museo-header {
+    background: linear-gradient(135deg, #f0eeff, #ffe9f0);
+    border-radius: 24px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .artwork-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(108,99,255,0.12);
+    transition: all 0.3s;
+  }
+  .artwork-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(108,99,255,0.22);
+  }
+  .artwork-frame {
+    background: linear-gradient(135deg, #f8f6ff, #fff5f0);
+    padding: 12px;
+    border-bottom: 2px solid #f0eeff;
+  }
+  .artwork-frame img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 12px;
+    background: white;
+  }
+  .artwork-info {
+    padding: 14px 16px;
+  }
+  .artwork-word {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: var(--primary);
+  }
+  .artwork-author {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-light);
+  }
+  .artwork-date {
+    font-size: 0.78rem;
+    color: #bbb;
+    font-weight: 600;
+  }
+  .empty-museo {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .filter-bar {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="museo-header">
+    <div style="font-size:4rem">🏛️</div>
+    <h1 class="font-fredoka mt-2" style="color:var(--primary)">Museo Virtual NestGrow</h1>
+    <p class="fw-bold text-muted fs-5 mb-0">
+      {% if user.role == 'profesor' %}
+        Las obras de arte de todos tus estudiantes
+      {% else %}
+        Tus obras de arte
+      {% endif %}
+    </p>
+    <div class="mt-3">
+      <span class="badge rounded-pill px-4 py-2 fs-6" style="background:var(--primary);color:white">
+        🎨 {{ artworks.count }} obra{{ artworks.count|pluralize:"s" }}
+      </span>
+    </div>
+  </div>
+
+  {% if artworks %}
+
+    <!-- Filter bar (solo profesor) -->
+    {% if user.role == 'profesor' and estudiantes %}
+    <div class="filter-bar">
+      <span class="fw-bold" style="color:var(--primary)">🔍 Filtrar por estudiante:</span>
+      <a href="{% url 'games:museo_virtual' %}" class="btn btn-sm rounded-pill {% if not estudiante_filtro %}btn-primary{% else %}btn-outline-secondary{% endif %}">Todos</a>
+      {% for est in estudiantes %}
+      <a href="{% url 'games:museo_virtual' %}?estudiante={{ est.user.pk }}" class="btn btn-sm rounded-pill {% if estudiante_filtro == est.user.pk|stringformat:'s' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+        {{ est.user.get_full_name|default:est.user.username }}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Grid de obras -->
+    <div class="row g-4">
+      {% for obra in artworks %}
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="artwork-card">
+          <div class="artwork-frame">
+            <img src="{{ obra.canvas_data }}" alt="{{ obra.title }}">
+          </div>
+          <div class="artwork-info">
+            <div class="artwork-word">
+              {% if obra.vocabulary_item %}
+                🎨 {{ obra.vocabulary_item.word_en }}
+                <small class="text-muted">/ {{ obra.vocabulary_item.word_es }}</small>
+              {% else %}
+                🎨 {{ obra.title|default:"Sin título" }}
+              {% endif %}
+            </div>
+            {% if user.role == 'profesor' %}
+            <div class="artwork-author mt-1">
+              👤 {{ obra.user.get_full_name|default:obra.user.username }}
+            </div>
+            {% endif %}
+            <div class="artwork-date mt-1">📅 {{ obra.created_at|date:"d M Y, H:i" }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+  <div class="empty-museo">
+    <div style="font-size:6rem">🖼️</div>
+    <h3 class="font-fredoka mt-3" style="color:var(--primary)">¡El museo está vacío!</h3>
+    {% if user.role == 'estudiante' %}
+    <p class="fw-bold text-muted fs-5">Aún no has pintado nada. ¡Ve a jugar y crea tu primera obra!</p>
+    <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3">🎮 Ir a jugar</a>
+    {% else %}
+    <p class="fw-bold text-muted fs-5">Tus estudiantes aún no han pintado nada.</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
