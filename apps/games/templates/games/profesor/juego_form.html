@@ -1,6 +1,34 @@
 {% extends 'base.html' %}
 {% block title %}{{ titulo }} - NestGrow{% endblock %}
 
+{% block extra_css %}
+<style>
+  #painting-words-section {
+    display: none;
+    margin-top: 20px;
+  }
+  .word-tag {
+    background: #f0eeff;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    padding: 6px 14px;
+    font-weight: 700;
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+  .word-tag .remove-word {
+    cursor: pointer;
+    color: var(--secondary);
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .word-tag .remove-word:hover { color: #c0392b; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4" style="max-width:700px">
 
@@ -9,7 +37,6 @@
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎮 {{ titulo }}</h3>
   </div>
 
-  <!-- Milo tip -->
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl">🐺</div>
     <div class="milo-banner-text">
@@ -19,7 +46,6 @@
 
   <div class="nestgrow-card p-4">
 
-    <!-- Game type guide -->
     <div class="row g-2 mb-4">
       <div class="col-12"><div class="fw-bold text-muted small text-uppercase mb-2">Tipos de juego disponibles:</div></div>
       <div class="col-6 col-md-3">
@@ -47,9 +73,9 @@
         </div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="text-center p-2 rounded-3" style="background:#fff0fb">
+        <div class="text-center p-2 rounded-3" style="background:#fff0fa">
           <div style="font-size:1.8rem">🎨</div>
-          <div class="fw-bold small" style="color:#c060a0">Juego de Pintar</div>
+          <div class="fw-bold small" style="color:#e91e63">Pintar Imágenes</div>
         </div>
       </div>
     </div>
@@ -58,6 +84,8 @@
 
     <form method="post" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
+      <!-- Campo oculto para palabras de pintar -->
+      <input type="hidden" name="painting_words" id="paintingWordsInput" value="">
 
       <div class="row g-3">
         <div class="col-md-6">
@@ -84,6 +112,30 @@
           {% if form.category.errors %}<div class="text-danger small fw-bold mt-1">{{ form.category.errors.0 }}</div>{% endif %}
           <div class="text-muted small mt-1">¿No ves tu categoría? <a href="{% url 'games:crear_categoria' %}">Créala aquí →</a></div>
         </div>
+
+        <!-- Sección palabras para pintar -->
+        <div class="col-12" id="painting-words-section">
+          <div class="nestgrow-card p-4" style="border: 2px solid #e91e63; background:#fff0fa">
+            <h5 class="font-fredoka mb-3" style="color:#e91e63">🎨 Palabras que los estudiantes deben dibujar</h5>
+            <p class="text-muted small fw-bold mb-3">Escribe las palabras una por una. Los estudiantes verán cada palabra y deberán dibujarla.</p>
+            <div class="d-flex gap-2 mb-3">
+              <input type="text" id="newWordInput" class="form-control" placeholder="Ej: Dog, Cat, Tree..." style="max-width:250px">
+              <button type="button" class="btn btn-nestgrow btn-primary-nestgrow" onclick="addWord()">+ Añadir</button>
+            </div>
+            <div id="wordsList" class="d-flex flex-wrap gap-2">
+              {% if painting_words %}
+                {% for pw in painting_words %}
+                <span class="word-tag" data-word="{{ pw.word }}">
+                  {{ pw.word }}
+                  <span class="remove-word" onclick="removeWord(this)">×</span>
+                </span>
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="text-muted small mt-2" id="wordsCount">0 palabras añadidas</div>
+          </div>
+        </div>
+
         <div class="col-md-4">
           <label class="form-label fw-bold">{{ form.difficulty.label }}</label>
           {{ form.difficulty }}
@@ -120,4 +172,75 @@
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const gameTypeSelect = document.getElementById('id_game_type');
+  const paintingSection = document.getElementById('painting-words-section');
+  const wordsInput = document.getElementById('paintingWordsInput');
+  const wordsList = document.getElementById('wordsList');
+  const wordsCount = document.getElementById('wordsCount');
+
+  // Cargar palabras existentes al editar
+  let words = [];
+  document.querySelectorAll('.word-tag').forEach(tag => {
+    words.push(tag.dataset.word);
+  });
+  updateInput();
+
+  function checkGameType() {
+    if (gameTypeSelect.value === 'painting') {
+      paintingSection.style.display = 'block';
+    } else {
+      paintingSection.style.display = 'none';
+    }
+  }
+
+  gameTypeSelect.addEventListener('change', checkGameType);
+  checkGameType(); // al cargar
+
+  function addWord() {
+    const input = document.getElementById('newWordInput');
+    const word = input.value.trim();
+    if (!word) return;
+    if (words.includes(word)) {
+      input.value = '';
+      return;
+    }
+    words.push(word);
+    renderWords();
+    updateInput();
+    input.value = '';
+    input.focus();
+  }
+
+  document.getElementById('newWordInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addWord(); }
+  });
+
+  function removeWord(el) {
+    const word = el.parentElement.dataset.word;
+    words = words.filter(w => w !== word);
+    renderWords();
+    updateInput();
+  }
+
+  function renderWords() {
+    wordsList.innerHTML = '';
+    words.forEach(word => {
+      const span = document.createElement('span');
+      span.className = 'word-tag';
+      span.dataset.word = word;
+      span.innerHTML = `${word} <span class="remove-word" onclick="removeWord(this)">×</span>`;
+      wordsList.appendChild(span);
+    });
+    wordsCount.textContent = `${words.length} palabra${words.length !== 1 ? 's' : ''} añadida${words.length !== 1 ? 's' : ''}`;
+  }
+
+  function updateInput() {
+    wordsInput.value = JSON.stringify(words);
+    wordsCount.textContent = `${words.length} palabra${words.length !== 1 ? 's' : ''} añadida${words.length !== 1 ? 's' : ''}`;
+  }
+</script>
 {% endblock %}

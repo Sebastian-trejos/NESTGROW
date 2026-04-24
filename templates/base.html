@@ -41,6 +41,16 @@
             </li>
             {% if user.role == 'estudiante' %}
             <li class="nav-item">
+              <a class="nav-link nav-pill" href="{% url 'games:habitacion_milo' %}">
+                🏠 Habitación
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-pill" href="{% url 'games:tienda' %}">
+                🛒 Tienda
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link nav-pill" href="{% url 'games:museo_virtual' %}">
                 <i class="fas fa-palette me-1"></i> Museo
               </a>
@@ -89,7 +99,6 @@
   <!-- Milo Floating Mascot -->
   {% if user.is_authenticated %}
   {% if user.role == "estudiante" %}
-  <div id="pendingBadges" data-badges="{% if logros_nuevos %}[{% for l in logros_nuevos %}{"icono":"{{ l.logro.icono }}","nombre":"{{ l.logro.nombre }}","descripcion":"{{ l.logro.descripcion }}"}{% if not forloop.last %},{% endif %}{% endfor %}]{% else %}[]{% endif %}"></div>
   {% endif %}
   <div class="milo-float" id="miloFloat" onclick="toggleMiloMessage()">
     <div class="milo-bubble" id="miloBubble">

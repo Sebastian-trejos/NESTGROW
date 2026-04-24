@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Tienda de Milo - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .shop-header {
+    background: linear-gradient(135deg, #2d1b69, #6C63FF, #4ECDC4);
+    border-radius: 24px;
+    padding: 36px;
+    text-align: center;
+    color: white;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .shop-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .shop-title { font-family: 'Fredoka One', cursive; font-size: 2.5rem; margin: 0; }
+  .bones-display {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    padding: 10px 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    margin-top: 12px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+  .item-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(108,99,255,0.1);
+    transition: all 0.3s;
+    border: 3px solid transparent;
+    position: relative;
+  }
+  .item-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(108,99,255,0.2);
+    border-color: var(--primary);
+  }
+  .item-card.owned {
+    border-color: #4CAF50;
+    background: linear-gradient(135deg, #fff, #f0fff4);
+  }
+  .item-icon-bg {
+    background: linear-gradient(135deg, #f0eeff, #ffe9f0);
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+  }
+  /* Image placeholder for item */
+  .item-icon-bg img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+  }
+  .item-icon-bg .placeholder-icon {
+    font-size: 4.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+  .owned-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-weight: 800;
+    font-size: 0.75rem;
+  }
+  .unlocks-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50px;
+    padding: 4px 10px;
+    font-weight: 700;
+    font-size: 0.7rem;
+  }
+  .buy-btn {
+    width: 100%;
+    border: none;
+    border-radius: 50px;
+    padding: 10px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .buy-btn:hover { transform: translateY(-2px); }
+  .buy-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .category-filter .btn.active { background: var(--primary); color: white; }
+  .toast-notify {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #2d1b69;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    z-index: 9999;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .toast-notify.show { transform: translateX(-50%) translateY(0); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Shop Header -->
+  <div class="shop-header">
+    <div style="font-size:3.5rem;margin-bottom:8px">
+      <!-- MILO IMAGE PLACEHOLDER: Replace with <img src="{% static 'img/milo/milo_shopkeeper.png' %}" style="height:80px"> -->
+      🐺
+    </div>
+    <div class="shop-title">Tienda de Milo</div>
+    <p style="opacity:0.85;font-weight:700;margin:8px 0 12px">¡Compra objetos para decorar la Habitación de Milo!</p>
+    <div class="bones-display">
+      <span>🦴</span>
+      <span id="bonesCounter">{{ huesos }}</span>
+      <span style="font-size:0.9rem;opacity:0.8">Huesos de Milo</span>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="d-flex gap-2 flex-wrap mb-4 category-filter">
+    <button class="btn rounded-pill fw-bold active" onclick="filterCategory('all', this)">Todos</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('mueble', this)">🛋️ Muebles</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('decoracion', this)">🖼️ Decoración</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('electronico', this)">📺 Electrónicos</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('planta', this)">🌿 Naturaleza</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('especial', this)">✨ Especiales</button>
+  </div>
+
+  <!-- Info banner -->
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-text">
+      ¡Cada objeto que compres aparecerá en mi habitación! Y algunos desbloquean minijuegos especiales 🎮
+    </div>
+  </div>
+
+  <!-- Items Grid -->
+  {% if items %}
+  <div class="row g-4" id="itemsGrid">
+    {% for item in items %}
+    <div class="col-6 col-md-4 col-lg-3 item-wrapper" data-category="{{ item.categoria }}">
+      <div class="item-card {% if item.id in inventario_ids %}owned{% endif %}">
+
+        <div class="item-icon-bg">
+          {% if item.id in inventario_ids %}
+          <span class="owned-badge">✅ Tuyo</span>
+          {% endif %}
+          {% if item.juego_desbloqueado %}
+          <span class="unlocks-badge">🎮 Desbloquea juego</span>
+          {% endif %}
+
+          {% if item.imagen %}
+            <!-- Item image - replace with your own images -->
+            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+          {% else %}
+            <!-- PLACEHOLDER: Add item image at apps/games/static/games/img/items/{{ item.id }}.png -->
+            <span class="placeholder-icon">{{ item.icono }}</span>
+          {% endif %}
+        </div>
+
+        <div class="p-3">
+          <div class="font-fredoka fs-5" style="color:var(--primary)">{{ item.nombre }}</div>
+          <div class="text-muted small fw-bold mb-3">{{ item.descripcion }}</div>
+
+          {% if item.juego_desbloqueado %}
+          <div class="mb-2 small fw-bold" style="color:#e91e63">
+            🎮 Desbloquea: {{ item.juego_desbloqueado.title }}
+          </div>
+          {% endif %}
+
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="font-fredoka fs-5" style="color:#8B4513">
+              🦴 {{ item.costo_huesos }}
+            </span>
+            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);font-size:0.75rem">
+              {{ item.get_categoria_display }}
+            </span>
+          </div>
+
+          {% if item.id in inventario_ids %}
+            <button class="buy-btn" style="background:#e8f5e9;color:#4CAF50" disabled>
+              ✅ Ya lo tienes
+            </button>
+          {% else %}
+            <button class="buy-btn"
+                    style="background:linear-gradient(135deg,#8B4513,#a0522d);color:white"
+                    onclick="comprarItem({{ item.id }}, '{{ item.nombre }}', {{ item.costo_huesos }}, this)"
+                    {% if huesos < item.costo_huesos %}disabled title="No tienes suficientes huesos"{% endif %}>
+              {% if huesos < item.costo_huesos %}
+                🦴 Faltan {{ item.costo_huesos|add:"-huesos" }} huesos
+              {% else %}
+                🦴 Comprar por {{ item.costo_huesos }}
+              {% endif %}
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5">
+    <div style="font-size:5rem">🛒</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡La tienda está vacía!</h4>
+    <p class="text-muted fw-bold">El profesor añadirá objetos pronto.</p>
+  </div>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'games:habitacion_milo' %}" class="btn btn-nestgrow btn-primary-nestgrow me-2">
+      🏠 Ver mi Habitación
+    </a>
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
+      🎮 Ir a jugar
+    </a>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast-notify" id="toastNotify"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterCategory(cat, btn) {
+  document.querySelectorAll('.category-filter .btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.item-wrapper').forEach(el => {
+    el.style.display = (cat === 'all' || el.dataset.category === cat) ? '' : 'none';
+  });
+}
+
+function showToast(msg, success=true) {
+  const t = document.getElementById('toastNotify');
+  t.textContent = msg;
+  t.style.background = success ? '#2d6a4f' : '#c0392b';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+async function comprarItem(itemId, nombre, costo, btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳ Comprando...';
+  try {
+    const resp = await fetch("{% url 'games:comprar_item' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({item_id: itemId})
+    });
+    const data = await resp.json();
+    if (data.status === 'ok') {
+      showToast(`✅ ${data.message}`);
+      // Update bones counter
+      document.getElementById('bonesCounter').textContent = data.huesos_restantes;
+      // Update button
+      btn.textContent = '✅ Ya lo tienes';
+      btn.style.background = '#e8f5e9';
+      btn.style.color = '#4CAF50';
+      // Add owned class to card
+      btn.closest('.item-card').classList.add('owned');
+      // Show level up style popup
+      showPurchasePopup(nombre);
+    } else {
+      showToast(`❌ ${data.message}`, false);
+      btn.disabled = false;
+      btn.textContent = `🦴 Comprar por ${costo}`;
+    }
+  } catch(e) {
+    showToast('❌ Error al conectar', false);
+    btn.disabled = false;
+    btn.textContent = `🦴 Comprar por ${costo}`;
+  }
+}
+
+function showPurchasePopup(nombre) {
+  const popup = document.createElement('div');
+  popup.style.cssText = `
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    background:linear-gradient(135deg,#8B4513,#a0522d);color:white;
+    border-radius:28px;padding:40px 50px;text-align:center;
+    box-shadow:0 20px 60px rgba(139,69,19,0.4);z-index:99999;
+    animation:badgePop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+    max-width:340px;width:90%;
+  `;
+  popup.innerHTML = `
+    <div style="font-size:4rem;animation:bobble 1s infinite">🐺</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;margin:10px 0">¡Compra exitosa!</div>
+    <div style="font-size:1rem;opacity:0.9;margin-bottom:16px"><strong>${nombre}</strong> está en tu habitación</div>
+    <button onclick="this.closest('div[style]').remove();document.getElementById('backdropPurchase').remove()"
+      style="background:white;color:#8B4513;border:none;border-radius:50px;padding:10px 28px;
+             font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer">
+      🏠 Ver habitación
+    </button>
+  `;
+  const backdrop = document.createElement('div');
+  backdrop.id = 'backdropPurchase';
+  backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99998';
+  backdrop.onclick = () => { popup.remove(); backdrop.remove(); };
+  document.body.appendChild(backdrop);
+  document.body.appendChild(popup);
+  launchConfetti();
+  setTimeout(() => { popup.remove(); backdrop.remove(); }, 5000);
+}
+</script>
+{% endblock %}

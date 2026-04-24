@@ -4,13 +4,18 @@ from . import views
 app_name = 'games'
 
 urlpatterns = [
-    # Estudiantes
+    # Estudiantes — Juegos
     path('', views.game_list, name='game_list'),
     path('<int:pk>/', views.game_detail, name='game_detail'),
     path('guardar-puntaje/', views.save_score, name='save_score'),
     path('ranking/', views.ranking_salon, name='ranking_salon'),
     path('mis-logros/', views.mis_logros, name='mis_logros'),
     path('logro-visto/', views.marcar_logro_visto, name='marcar_logro_visto'),
+
+    # Tienda y Habitación
+    path('tienda/', views.tienda, name='tienda'),
+    path('tienda/comprar/', views.comprar_item, name='comprar_item'),
+    path('habitacion/', views.habitacion_milo, name='habitacion_milo'),
 
     # Museo Virtual
     path('guardar-obra/', views.guardar_obra, name='guardar_obra'),

@@ -7,6 +7,9 @@ from .models import CustomUser, ProfesorProfile, EstudianteProfile
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.role == 'profesor':
-            ProfesorProfile.objects.get_or_create(user=instance)
+            ProfesorProfile.objects.get_or_create(
+                user=instance,
+                defaults={'institucion': ''}
+            )
         elif instance.role == 'estudiante':
             EstudianteProfile.objects.get_or_create(user=instance)

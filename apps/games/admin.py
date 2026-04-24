@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, Artwork, PaintingWord
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, Artwork, PaintingWord, TiendaItem, InventarioEstudiante
 
 
 @admin.register(Game)
@@ -58,3 +58,18 @@ class ArtworkAdmin(admin.ModelAdmin):
 class PaintingWordAdmin(admin.ModelAdmin):
     list_display = ('game', 'word', 'order')
     list_filter = ('game',)
+
+
+@admin.register(TiendaItem)
+class TiendaItemAdmin(admin.ModelAdmin):
+    list_display = ('icono', 'nombre', 'categoria', 'costo_huesos', 'juego_desbloqueado', 'is_active', 'order')
+    list_editable = ('costo_huesos', 'is_active', 'order')
+    list_filter = ('categoria', 'is_active')
+    search_fields = ('nombre',)
+
+
+@admin.register(InventarioEstudiante)
+class InventarioEstudianteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'item', 'colocado_en_habitacion', 'created_at')
+    list_filter = ('colocado_en_habitacion',)
+    search_fields = ('user__username', 'item__nombre')

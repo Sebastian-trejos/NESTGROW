@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, TiendaItem, InventarioEstudiante
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required
@@ -99,12 +99,19 @@ def game_detail(request, pk):
     if game.game_type == 'painting':
         painting_words = list(game.painting_words.values_list('word', flat=True))
 
+
+    logros_nuevos = []
+    if request.user.role == 'estudiante':
+        logros_nuevos = LogroUsuario.objects.filter(
+            user=request.user, visto=False).select_related('logro')
     context = {
         'game': game,
+        'logros_nuevos': logros_nuevos,
         'vocabulary': vocabulary,
         'progress': progress,
         'top_scores': top_scores,
         'painting_words_json': json.dumps(painting_words),
+        'words_json': json.dumps(painting_words),
         'vocabulary_json': json.dumps([
             {
                 'id': v.id,
@@ -132,7 +139,13 @@ def ranking_salon(request):
         return redirect('accounts:dashboard_estudiante')
 
     compañeros = salon.estudiantes.select_related('user').order_by('-puntos_totales')
+
+    logros_nuevos = []
+    if request.user.role == 'estudiante':
+        logros_nuevos = LogroUsuario.objects.filter(
+            user=request.user, visto=False).select_related('logro')
     return render(request, 'games/ranking_salon.html', {
+        'logros_nuevos': logros_nuevos,
         'salon': salon,
         'compañeros': compañeros,
         'mi_perfil': estudiante,
@@ -152,6 +165,7 @@ def mis_logros(request):
     LogroUsuario.objects.filter(user=request.user, visto=False).update(visto=True)
 
     return render(request, 'games/mis_logros.html', {
+        'logros_nuevos': [],
         'logros_obtenidos': logros_obtenidos,
         'todos_logros': todos_logros,
         'ids_obtenidos': ids_obtenidos,
@@ -370,6 +384,17 @@ def crear_juego(request):
         form = GameForm(request.POST, request.FILES)
         if form.is_valid():
             juego = form.save()
+            # Save painting words if painting game
+            if juego.game_type == 'painting':
+                raw = request.POST.get('painting_words', '[]')
+                try:
+                    words = json.loads(raw)
+                except Exception:
+                    words = []
+                PaintingWord.objects.filter(game=juego).delete()
+                for i, w in enumerate(words):
+                    if w.strip():
+                        PaintingWord.objects.create(game=juego, word=w.strip(), order=i)
             messages.success(request, f'🎮 Juego "{juego.title}" creado!')
             return redirect('games:gestionar_juegos')
     else:
@@ -382,16 +407,29 @@ def crear_juego(request):
 @profesor_required
 def editar_juego(request, pk):
     juego = get_object_or_404(Game, pk=pk)
+    painting_words = PaintingWord.objects.filter(game=juego)
     if request.method == 'POST':
         form = GameForm(request.POST, request.FILES, instance=juego)
         if form.is_valid():
             form.save()
+            # Save painting words if painting game
+            if juego.game_type == 'painting':
+                raw = request.POST.get('painting_words', '[]')
+                try:
+                    words = json.loads(raw)
+                except Exception:
+                    words = []
+                PaintingWord.objects.filter(game=juego).delete()
+                for i, w in enumerate(words):
+                    if w.strip():
+                        PaintingWord.objects.create(game=juego, word=w.strip(), order=i)
             messages.success(request, f'✅ Juego "{juego.title}" actualizado!')
             return redirect('games:gestionar_juegos')
     else:
         form = GameForm(instance=juego)
     return render(request, 'games/profesor/juego_form.html', {
-        'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar', 'juego': juego})
+        'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar',
+        'juego': juego, 'painting_words': painting_words})
 
 
 @login_required
@@ -498,4 +536,95 @@ def museo_estudiante(request, user_pk):
     return render(request, 'games/museo_virtual.html', {
         'artworks': artworks,
         'estudiante_visto': estudiante_user,
+    })
+
+
+# ── Tienda de Huesos de Milo ──────────────────────────────────────────────────
+
+@login_required
+def tienda(request):
+    """Milo's shop - buy items with bones."""
+    items = TiendaItem.objects.filter(is_active=True).order_by('order', 'costo_huesos')
+    inventario_ids = set()
+    if request.user.role == 'estudiante':
+        inventario_ids = set(
+            InventarioEstudiante.objects.filter(user=request.user)
+            .values_list('item_id', flat=True)
+        )
+    logros_nuevos = []
+    if request.user.role == 'estudiante':
+        logros_nuevos = LogroUsuario.objects.filter(
+            user=request.user, visto=False).select_related('logro')
+    return render(request, 'games/tienda.html', {
+        'items': items,
+        'inventario_ids': inventario_ids,
+        'huesos': request.user.huesos,
+        'logros_nuevos': logros_nuevos,
+    })
+
+
+@login_required
+@require_POST
+def comprar_item(request):
+    """Purchase a shop item with bones."""
+    try:
+        data = json.loads(request.body)
+        item_id = data.get('item_id')
+        item = get_object_or_404(TiendaItem, pk=item_id, is_active=True)
+
+        if request.user.role != 'estudiante':
+            return JsonResponse({'status': 'error', 'message': 'Solo los estudiantes pueden comprar.'}, status=403)
+
+        # Check already owned
+        if InventarioEstudiante.objects.filter(user=request.user, item=item).exists():
+            return JsonResponse({'status': 'error', 'message': '¡Ya tienes este objeto!'}, status=400)
+
+        # Check bones
+        if request.user.huesos < item.costo_huesos:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'No tienes suficientes huesos. Necesitas {item.costo_huesos} 🦴'
+            }, status=400)
+
+        # Deduct bones
+        request.user.huesos -= item.costo_huesos
+        request.user.save(update_fields=['huesos'])
+
+        HuesoTransaccion.objects.create(
+            user=request.user, tipo='gastado',
+            cantidad=item.costo_huesos,
+            descripcion=f'Compra: {item.nombre}'
+        )
+
+        # Add to inventory
+        InventarioEstudiante.objects.create(user=request.user, item=item)
+
+        return JsonResponse({
+            'status': 'ok',
+            'message': f'¡{item.icono} {item.nombre} añadido a tu habitación!',
+            'huesos_restantes': request.user.huesos,
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+# ── Habitación de Milo ────────────────────────────────────────────────────────
+
+@login_required
+def habitacion_milo(request):
+    """Student's Milo room with purchased items."""
+    if request.user.role != 'estudiante':
+        return redirect('accounts:dashboard_profesor')
+
+    inventario = InventarioEstudiante.objects.filter(
+        user=request.user
+    ).select_related('item', 'item__juego_desbloqueado')
+
+    logros_nuevos = LogroUsuario.objects.filter(
+        user=request.user, visto=False).select_related('logro')
+
+    return render(request, 'games/habitacion_milo.html', {
+        'inventario': inventario,
+        'huesos': request.user.huesos,
+        'logros_nuevos': logros_nuevos,
     })

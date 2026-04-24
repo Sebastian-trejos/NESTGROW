@@ -216,3 +216,56 @@ class PaintingWord(TimeStampedModel):
 
     def __str__(self):
         return f"{self.game.title}: {self.word}"
+
+
+# ── Tienda y Habitación de Milo ───────────────────────────────────────────────
+
+class TiendaItem(TimeStampedModel):
+    """An item available in the Milo store."""
+    CATEGORIA_CHOICES = [
+        ('mueble', '🛋️ Mueble'),
+        ('decoracion', '🖼️ Decoración'),
+        ('electronico', '📺 Electrónico'),
+        ('planta', '🌿 Planta/Natural'),
+        ('especial', '✨ Especial'),
+    ]
+    nombre = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=200)
+    categoria = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='decoracion')
+    costo_huesos = models.IntegerField(default=25)
+    icono = models.CharField(max_length=10, default='🛋️')
+    imagen = models.ImageField(upload_to='tienda/', blank=True, null=True,
+                               help_text='Imagen del objeto en la habitación')
+    # Which minigame this item unlocks (optional)
+    juego_desbloqueado = models.ForeignKey(
+        'Game', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='desbloqueado_por',
+        help_text='Minijuego que se desbloquea al comprar este objeto'
+    )
+    posicion_x = models.IntegerField(default=0, help_text='Posición X en la habitación (%)')
+    posicion_y = models.IntegerField(default=0, help_text='Posición Y en la habitación (%)')
+    is_active = models.BooleanField(default=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Item de Tienda'
+        verbose_name_plural = 'Items de Tienda'
+        ordering = ['order', 'costo_huesos']
+
+    def __str__(self):
+        return f"{self.icono} {self.nombre} ({self.costo_huesos} 🦴)"
+
+
+class InventarioEstudiante(TimeStampedModel):
+    """Items owned by a student."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                              related_name='inventario')
+    item = models.ForeignKey(TiendaItem, on_delete=models.CASCADE, related_name='propietarios')
+    colocado_en_habitacion = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('user', 'item')
+        verbose_name = 'Inventario'
+
+    def __str__(self):
+        return f"{self.user.username} → {self.item.nombre}"

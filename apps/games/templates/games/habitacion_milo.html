@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Habitación de Milo - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .room-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #a0856a 40%, #8B6914 100%);
+    min-height: 520px;
+  }
+
+  /* ── ROOM BACKGROUND LAYERS ───────────────── */
+  .room-wall {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60%;
+    /* MILO WALLPAPER PLACEHOLDER:
+       Replace background with:
+       background: url("{% static 'img/milo/room_wall.png' %}") center/cover;
+    */
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+  }
+  .room-wall::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.15) 0%, transparent 70%);
+  }
+  .room-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 42%;
+    /* FLOOR PLACEHOLDER:
+       background: url("{% static 'img/milo/room_floor.png' %}") center/cover;
+    */
+    background: linear-gradient(180deg, #a0856a 0%, #8B6914 100%);
+  }
+
+  /* ── WINDOW ──────────────────────────────── */
+  .room-window {
+    position: absolute;
+    top: 30px; right: 60px;
+    width: 140px; height: 120px;
+    /* WINDOW PLACEHOLDER: replace with image */
+    background: linear-gradient(135deg, #87CEEB, #4FC3F7);
+    border-radius: 8px;
+    border: 8px solid #5D4037;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 4px 15px rgba(0,0,0,0.3);
+  }
+  .room-window::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 4px; background: #5D4037;
+  }
+  .room-window::after {
+    content: '';
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 4px; background: #5D4037;
+  }
+
+  /* ── MILO CHARACTER ──────────────────────── */
+  .milo-character {
+    position: absolute;
+    bottom: 38%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s;
+  }
+  .milo-character:hover { transform: translateX(-50%) scale(1.05); }
+  .milo-character:active { transform: translateX(-50%) scale(0.95); }
+  .milo-img {
+    /* MILO IMAGE: Replace emoji with actual image:
+       <img src="{% static 'img/milo/milo_sitting.png' %}"
+            style="height:160px;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.3))">
+    */
+    font-size: 6rem;
+    display: block;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
+    animation: miloFloat 3s ease-in-out infinite;
+  }
+  .milo-speech {
+    background: white;
+    border-radius: 16px 16px 16px 4px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary);
+    max-width: 200px;
+    margin: 8px auto 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    display: none;
+  }
+  .milo-character:hover .milo-speech { display: block; }
+
+  /* ── ROOM ITEMS ──────────────────────────── */
+  .room-item {
+    position: absolute;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 5;
+    text-align: center;
+  }
+  .room-item:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1) drop-shadow(0 4px 12px rgba(108,99,255,0.4));
+  }
+  .room-item .item-emoji {
+    font-size: 3rem;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  }
+  /* ITEM IMAGE PLACEHOLDER:
+     .room-item img { height: 70px; object-fit: contain; }
+  */
+  .item-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-bottom: 8px;
+  }
+  .room-item:hover .item-tooltip { opacity: 1; }
+  .item-game-indicator {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 900;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.4);
+  }
+
+  /* ── EMPTY ROOM ───────────────────────────── */
+  .empty-room-msg {
+    position: absolute;
+    bottom: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-weight: 700;
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+
+  /* ── BONES COUNTER ────────────────────────── */
+  .room-bones {
+    position: absolute;
+    top: 16px; left: 16px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    color: white;
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    z-index: 20;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+
+  /* ── SHOP BUTTON ──────────────────────────── */
+  .room-shop-btn {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: linear-gradient(135deg, #8B4513, #a0522d);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 20;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(139,69,19,0.4);
+  }
+  .room-shop-btn:hover {
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+  }
+
+  /* ── ITEM POSITIONS (default grid) ─────── */
+  /* Items are positioned using inline styles based on DB posicion_x/y */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏠 Habitación de Milo</h3>
+      <div class="text-muted fw-bold small">Haz clic en los objetos para jugar minijuegos especiales</div>
+    </div>
+    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill fw-bold">← Mi Panel</a>
+  </div>
+
+  <!-- Room -->
+  <div class="room-container" id="miloRoom">
+    <div class="room-wall"></div>
+    <div class="room-floor"></div>
+    <div class="room-window"></div>
+
+    <!-- Bones counter -->
+    <div class="room-bones">🦴 {{ huesos }}</div>
+
+    <!-- Shop button -->
+    <a href="{% url 'games:tienda' %}" class="room-shop-btn">🛒 Tienda</a>
+
+    <!-- Milo character -->
+    <div class="milo-character" onclick="miloSay()" id="miloChar">
+      <!-- MILO IMAGE PLACEHOLDER:
+           Replace the emoji below with:
+           <img src="{% static 'img/milo/milo_sitting.png' %}"
+                class="milo-img" style="height:160px">
+      -->
+      <span class="milo-img">🐺</span>
+      <div class="milo-speech" id="miloSpeech">¡Hola! Soy Milo 👋</div>
+    </div>
+
+    <!-- Placed Items -->
+    {% for inv in inventario %}
+    <div class="room-item"
+         style="left:{{ inv.item.posicion_x }}%;bottom:calc(38% + {{ inv.item.posicion_y }}px)"
+         onclick="{% if inv.item.juego_desbloqueado %}goToGame({{ inv.item.juego_desbloqueado.pk }}){% else %}showItemInfo('{{ inv.item.nombre }}', '{{ inv.item.descripcion }}'){% endif %}">
+
+      {% if inv.item.imagen %}
+        <!-- ITEM IMAGE -->
+        <img src="{{ inv.item.imagen.url }}" style="height:70px;object-fit:contain" alt="{{ inv.item.nombre }}">
+      {% else %}
+        <!-- ITEM EMOJI PLACEHOLDER: Replace with actual image -->
+        <span class="item-emoji">{{ inv.item.icono }}</span>
+      {% endif %}
+
+      {% if inv.item.juego_desbloqueado %}
+      <div class="item-game-indicator">🎮</div>
+      {% endif %}
+
+      <div class="item-tooltip">
+        {{ inv.item.nombre }}
+        {% if inv.item.juego_desbloqueado %} — ¡Toca para jugar!{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if not inventario %}
+    <div class="empty-room-msg">
+      <div style="font-size:2rem">🛒</div>
+      <div>¡Tu habitación está vacía!<br>Ve a la tienda para comprar objetos.</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Items list below room -->
+  {% if inventario %}
+  <div class="nestgrow-card p-4 mt-4">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎮 Minijuegos desbloqueados</h5>
+    <div class="row g-3">
+      {% for inv in inventario %}
+      {% if inv.item.juego_desbloqueado %}
+      <div class="col-md-4">
+        <div class="d-flex align-items-center gap-3 p-3 rounded-3"
+             style="background:#f0eeff;cursor:pointer"
+             onclick="goToGame({{ inv.item.juego_desbloqueado.pk }})">
+          <span style="font-size:2rem">{{ inv.item.icono }}</span>
+          <div>
+            <div class="fw-bold" style="color:var(--primary)">{{ inv.item.juego_desbloqueado.title }}</div>
+            <div class="text-muted small fw-bold">Desbloqueado por: {{ inv.item.nombre }}</div>
+          </div>
+          <span class="ms-auto">▶</span>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Item info modal -->
+<div id="itemModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:white;border-radius:24px;padding:36px;text-align:center;max-width:320px;width:90%">
+    <div style="font-size:3rem" id="modalEmoji"></div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--primary);margin:10px 0" id="modalTitle"></div>
+    <div style="color:#666;font-weight:700;font-size:0.9rem" id="modalDesc"></div>
+    <button onclick="document.getElementById('itemModal').style.display='none'"
+            style="margin-top:20px;background:var(--primary);color:white;border:none;border-radius:50px;
+                   padding:10px 28px;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer">
+      Cerrar
+    </button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const miloSayings = [
+  "¡Hola! ¿Listo para aprender inglés? 🎉",
+  "¡Tú puedes lograrlo! 💪",
+  "¡Sigue jugando y ganarás más huesos! 🦴",
+  "¡Me alegra verte por aquí! 😊",
+  "¡Compra más cosas para mi habitación! 🛒",
+];
+
+function miloSay() {
+  const speech = document.getElementById('miloSpeech');
+  const msg = miloSayings[Math.floor(Math.random() * miloSayings.length)];
+  speech.textContent = msg;
+  speech.style.display = 'block';
+  // Animate milo
+  const milo = document.getElementById('miloChar');
+  milo.style.transform = 'translateX(-50%) scale(1.1)';
+  setTimeout(() => milo.style.transform = 'translateX(-50%) scale(1)', 300);
+  setTimeout(() => { speech.style.display = 'none'; }, 4000);
+}
+
+function goToGame(gameId) {
+  window.location.href = `/juegos/${gameId}/`;
+}
+
+function showItemInfo(name, desc) {
+  document.getElementById('modalTitle').textContent = name;
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('itemModal').style.display = 'flex';
+}
+
+// Auto-greet on load
+setTimeout(() => miloSay(), 2000);
+</script>
+{% endblock %}
