@@ -95,20 +95,27 @@ class EstudianteProfile(TimeStampedModel):
 
     # Points required to level up from each level
     PUNTOS_POR_NIVEL = {
-        1: 20,   # Level 1 → 2: 20 pts
-        2: 30,   # Level 2 → 3: 30 pts
-        3: 50,   # Level 3 → 4: 50 pts
-        4: 80,   # Level 4 → 5: 80 pts
-        5: 120,  # Level 5 → 6: 120 pts
-        6: 160,  # Level 6 → 7: 160 pts
-        7: 200,  # Level 7 → 8: 200 pts
-        8: 250,  # Level 8+: 250 pts
+        # Principiante (Niveles 1–10)
+        1: 20,   2: 30,   3: 50,   4: 80,   5: 120,
+        6: 160,  7: 200,  8: 250,  9: 310,  10: 380,
+        # Intermedio (Niveles 11–20)
+        11: 460,  12: 550,  13: 650,  14: 760,  15: 880,
+        16: 1010, 17: 1150, 18: 1300, 19: 1460, 20: 1640,
+        # Avanzado (Niveles 21–30)
+        21: 1840, 22: 2060, 23: 2300, 24: 2560, 25: 2840,
+        26: 3140, 27: 3460, 28: 3800, 29: 4160, 30: 4540,
+        # Experto (Niveles 31–40)
+        31: 5000,  32: 5500,  33: 6050,  34: 6650,  35: 7300,
+        36: 8000,  37: 8750,  38: 9550,  39: 10400, 40: 11300,
+        # Maestro (Niveles 41–49)
+        41: 12300, 42: 13400, 43: 14600, 44: 15900, 45: 17300,
+        46: 18800, 47: 20400, 48: 22100, 49: 24000,
     }
-    MAX_NIVEL = 10
+    MAX_NIVEL = 50
 
     def puntos_requeridos(self):
         """Points needed to reach next level from current level."""
-        return self.PUNTOS_POR_NIVEL.get(self.nivel, 250)
+        return self.PUNTOS_POR_NIVEL.get(self.nivel, 24000)
 
     def actualizar_nivel(self):
         """Check if student leveled up, reset points if so, award bones."""
@@ -125,16 +132,16 @@ class EstudianteProfile(TimeStampedModel):
             nivel=self.nivel
         )
         if subio:
-            # Award 15 Milo Bones on level up
+            # Award 5 Milo Bones on level up
             from django.contrib.auth import get_user_model
             User = get_user_model()
             user = self.user
-            user.huesos += 15
+            user.huesos += 5
             user.save(update_fields=['huesos'])
             try:
                 from apps.games.models import HuesoTransaccion
                 HuesoTransaccion.objects.create(
-                    user=user, tipo='bonus', cantidad=15,
+                    user=user, tipo='bonus', cantidad=5,
                     descripcion=f'🎉 ¡Subiste al Nivel {self.nivel}!'
                 )
             except Exception:

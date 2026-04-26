@@ -91,6 +91,11 @@ def game_detail(request, pk):
         'puzzle': 'games/puzzle.html',
         'audio_matching': 'games/audio_game.html',
         'painting': 'games/painting.html',
+        'memoria': 'games/memoria.html',
+        'ahorcado': 'games/ahorcado.html',
+        'quiz': 'games/quiz.html',
+        'ordenar_letras': 'games/ordenar_letras.html',
+        'globos': 'games/globos.html',
     }
     template = template_map.get(game.game_type, 'games/game_detail.html')
 

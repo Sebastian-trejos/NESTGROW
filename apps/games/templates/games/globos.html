@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ game.title }} - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎈 {{ game.title }}</h3>
+  </div>
+
+  {% include 'games/includes/vocabulary_tab.html' %}
+
+  <div id="gameSection" style="display:none">
+    <div class="game-score-bar">
+      <span>🎈 Globos</span>
+      <span>Vidas: <span id="livesDisplay">❤️❤️❤️</span></span>
+      <span>⭐ <span id="scoreDisplay">0</span> pts</span>
+    </div>
+
+    <div class="text-center mb-3">
+      <p class="text-muted mb-1">¿Cuál globo tiene la traducción correcta de:</p>
+      <h2 class="font-fredoka" id="targetWord" style="color:var(--primary); font-size:2.8rem;">-</h2>
+    </div>
+
+    <div id="gameArena" style="position:relative; height:380px; background:linear-gradient(180deg,#e8f4ff,#fff); border-radius:20px; overflow:hidden; border:2px solid #e0e7ff;">
+      <div style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); font-size:2.5rem;">🐺</div>
+    </div>
+
+    <div class="text-center mt-3 text-muted" id="feedback" style="min-height:28px;font-size:1.1rem;font-weight:600"></div>
+  </div>
+</div>
+
+<div class="win-overlay" id="winOverlay" style="display:none">
+  <div class="win-card text-center">
+    <div class="win-owl">🐺</div>
+    <div class="win-title">¡Globos reventados!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
+    <button class="btn btn-nestgrow btn-primary-nestgrow mt-3" onclick="location.reload()">🔄 Jugar de nuevo</button>
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const VOCABULARY = {{ vocabulary_json|safe }};
+const GAME_ID = {{ game.id }};
+const POINTS_REWARD = {{ game.points_reward }};
+const SAVE_URL = "{% url 'games:save_score' %}";
+const CSRF = "{{ csrf_token }}";
+const BALLOON_COLORS = ['#FF6B6B','#FFB347','#6C63FF','#4CAF50','#26C6DA','#FF69B4'];
+
+let questions = [], currentQ = 0, score = 0, lives = 3, balloons = [], animFrame;
+const arena = null;
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function buildRound() {
+  if (currentQ >= questions.length) { endGame(); return; }
+  const q = questions[currentQ];
+  document.getElementById('targetWord').textContent = q.question;
+  document.getElementById('feedback').textContent = '';
+
+  const arena = document.getElementById('gameArena');
+  // Remove old balloons
+  arena.querySelectorAll('.balloon-el').forEach(b => b.remove());
+  balloons = [];
+
+  const distractors = shuffle(VOCABULARY.filter(v => v.word_en !== q.answer)).slice(0, 3).map(v => v.word_en);
+  const options = shuffle([q.answer, ...distractors]);
+  const arenaW = arena.offsetWidth;
+
+  options.forEach((opt, i) => {
+    const el = document.createElement('div');
+    el.className = 'balloon-el';
+    const color = BALLOON_COLORS[i % BALLOON_COLORS.length];
+    const x = (arenaW / options.length) * i + (arenaW / options.length / 2) - 45;
+    el.style.cssText = `left:${x}px; bottom:-80px; background:${color};`;
+    el.innerHTML = `<span class="balloon-text">${opt}</span>`;
+    el.addEventListener('click', () => popBalloon(el, opt, q.answer));
+    arena.appendChild(el);
+    balloons.push({ el, correct: opt === q.answer, popped: false, speed: 0.4 + Math.random() * 0.3 });
+  });
+  animFrame = requestAnimationFrame(animateBalloons);
+}
+
+function animateBalloons() {
+  const arena = document.getElementById('gameArena');
+  const arenaH = arena.offsetHeight;
+  let anyAlive = false;
+  balloons.forEach(b => {
+    if (b.popped) return;
+    const bottom = parseFloat(b.el.style.bottom) + b.speed;
+    b.el.style.bottom = bottom + 'px';
+    if (bottom > arenaH + 10) {
+      b.el.remove();
+      b.popped = true;
+      if (b.correct) {
+        // Missed the correct balloon
+        loseLife();
+        return;
+      }
+    } else {
+      anyAlive = true;
+    }
+  });
+  if (anyAlive) animFrame = requestAnimationFrame(animateBalloons);
+}
+
+function popBalloon(el, chosen, correct) {
+  cancelAnimationFrame(animFrame);
+  balloons.forEach(b => b.popped = true);
+  if (chosen === correct) {
+    el.style.transform = 'scale(1.4)';
+    el.style.opacity = '0';
+    score += POINTS_REWARD;
+    document.getElementById('scoreDisplay').textContent = score;
+    document.getElementById('feedback').innerHTML = '<span style="color:#4CAF50">✅ ¡Correcto! 🎉</span>';
+    currentQ++;
+    setTimeout(buildRound, 900);
+  } else {
+    el.style.background = '#FF6B6B';
+    document.getElementById('feedback').innerHTML = `<span style="color:#e53935">❌ Era: <strong>${correct}</strong></span>`;
+    loseLife();
+  }
+}
+
+function loseLife() {
+  lives--;
+  document.getElementById('livesDisplay').textContent = '❤️'.repeat(Math.max(0, lives)) + '🖤'.repeat(3 - lives);
+  if (lives <= 0) { endGame(); return; }
+  currentQ++;
+  setTimeout(buildRound, 900);
+}
+
+function endGame() {
+  cancelAnimationFrame(animFrame);
+  const maxScore = questions.length * POINTS_REWARD;
+  const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
+  document.getElementById('winScore').textContent = score;
+  document.getElementById('winStars').textContent = pct >= 80 ? '⭐⭐⭐' : pct >= 50 ? '⭐⭐' : '⭐';
+  document.getElementById('winOverlay').style.display = 'flex';
+  fetch(SAVE_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+    body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed: true })
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (VOCABULARY.length < 4) {
+    document.getElementById('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ Necesitas al menos 4 palabras para jugar.</div>';
+    document.getElementById('gameSection').style.display = 'block';
+    return;
+  }
+  questions = shuffle(VOCABULARY).slice(0, 10).map(item => {
+    return { question: item.word_es, answer: item.word_en };
+  });
+  document.getElementById('gameSection').style.display = 'block';
+  buildRound();
+});
+</script>
+<style>
+.balloon-el {
+  position:absolute; width:90px; height:100px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  transition:transform .2s, opacity .3s; box-shadow:inset -8px -8px 16px rgba(0,0,0,.2);
+}
+.balloon-el::after { content:''; position:absolute; bottom:-14px; left:50%; transform:translateX(-50%); width:2px; height:14px; background:rgba(0,0,0,.3); }
+.balloon-el:hover { transform:scale(1.08); }
+.balloon-text { color:white; font-weight:700; font-size:.8rem; text-align:center; padding:4px; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+.win-overlay { display:flex; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; align-items:center; justify-content:center; }
+.win-card { background:white; border-radius:24px; padding:2rem; max-width:380px; width:90%; }
+</style>
+{% endblock %}

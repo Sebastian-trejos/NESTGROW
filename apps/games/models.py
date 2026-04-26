@@ -42,6 +42,11 @@ class Game(TimeStampedModel, ActiveModel):
         ('puzzle', '🧩 Rompecabezas'),
         ('audio_matching', '🎵 Juego de Audio'),
         ('painting', '🎨 Juego de Pintar'),
+        ('memoria', '🃏 Memoria'),
+        ('ahorcado', '🦴 Ahorcado de Milo'),
+        ('quiz', '❓ Quiz Rápido'),
+        ('ordenar_letras', '🔤 Ordenar Letras'),
+        ('globos', '🎈 Globos'),
     ]
     DIFFICULTY = [
         (1, '⭐ Fácil'), (2, '⭐⭐ Medio'), (3, '⭐⭐⭐ Difícil')

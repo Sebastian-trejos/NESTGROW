@@ -52,7 +52,9 @@ python manage.py test apps.games  # single app
 
 **Role-based access:** Use `@profesor_required` / `@estudiante_required` decorators from `apps.accounts.decorators`. Both redirect with error messages if the role doesn't match.
 
-**Leveling system:** Students earn points → levels (non-linear scaling). Level-up awards 15 bones and logs a `HuesoTransaccion`. Max level: 10.
+**Leveling system:** Students earn points → levels (non-linear scaling). Level-up awards 5 bones and logs a `HuesoTransaccion`. Max level: 50. Points per level scale in four tiers — Principiante (1–10): 20–380 pts, Intermedio (11–20): 460–1640 pts, Avanzado (21–30): 1840–4540 pts, Experto (31–40): 5000–11300 pts, Maestro (41–49): 12300–24000 pts. All values are defined in `EstudianteProfile.PUNTOS_POR_NIVEL`.
+
+**Game types** (defined in `Game.GAME_TYPES`): `drag_and_drop`, `word_search`, `puzzle`, `audio_matching`, `painting`, `memoria`, `ahorcado`, `quiz`, `ordenar_letras`, `globos`. Each type maps to its own template in `apps/games/templates/games/`. Professors select the type when creating a game; `game_detail` view routes to the correct template via `template_map`.
 
 **Game scoring utilities** (in `apps/games/`): `clasificar_puntaje()` converts score% to letter grade; `pct_to_nota()` converts to Colombian 1–5 scale.
 
