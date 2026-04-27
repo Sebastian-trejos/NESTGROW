@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}¡Taller Completado! — {{ taller.titulo }}{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width:640px">
+
+  <div class="nestgrow-card p-5 text-center mb-4">
+    <div style="font-size:5rem">🎓</div>
+    <h2 class="font-fredoka mt-3" style="color:var(--primary)">¡Taller completado!</h2>
+    <div class="fw-bold text-muted fs-5 mt-1">{{ taller.titulo }}</div>
+
+    {% if subio_nivel %}
+    <div class="alert mt-3" style="background:#f0eeff;border:2px solid #d8d0ff">
+      <div class="font-fredoka" style="color:var(--primary);font-size:1.3rem">🚀 ¡Subiste de nivel!</div>
+      <div class="text-muted fw-bold small">+5 Huesos de Milo extra por subir de nivel</div>
+    </div>
+    {% endif %}
+
+    <!-- Recompensas -->
+    <div class="row g-3 mt-2 mb-4">
+      <div class="col-4">
+        <div class="p-3 rounded-3" style="background:#f0eeff">
+          <div style="font-size:2rem">⭐</div>
+          <div class="font-fredoka" style="font-size:1.8rem;color:var(--primary)">{{ taller.puntos_xp }}</div>
+          <div class="text-muted small fw-bold">XP ganado</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="p-3 rounded-3" style="background:#fff3e0">
+          <div style="font-size:2rem">🦴</div>
+          <div class="font-fredoka" style="font-size:1.8rem;color:#8B4513">{{ sesion.huesos_ganados }}</div>
+          <div class="text-muted small fw-bold">Huesos ganados</div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="p-3 rounded-3" style="background:#f0fff0">
+          <div style="font-size:2rem">🏆</div>
+          <div class="font-fredoka" style="font-size:1.8rem;color:var(--accent)">{{ sesion.puntos_obtenidos }}</div>
+          <div class="text-muted small fw-bold">Pts de preguntas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill px-4">
+        ← Mis Talleres
+      </a>
+      <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">
+        Ir a mi panel
+      </a>
+    </div>
+  </div>
+
+  <!-- Milo banner -->
+  <div class="milo-banner">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">¡Excelente trabajo, {{ user.first_name }}!</div>
+      <div class="text-muted fw-bold small">Milo está muy orgulloso de ti. ¡Sigue aprendiendo inglés!</div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

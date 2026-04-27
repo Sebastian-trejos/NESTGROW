@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.content',
     'apps.games',
+    'apps.talleres',
 ]
 
 MIDDLEWARE = [

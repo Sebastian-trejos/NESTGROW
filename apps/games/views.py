@@ -5,7 +5,7 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, TiendaItem, InventarioEstudiante
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, TiendaItem, InventarioEstudiante, ItemContenidoJuego
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required
@@ -104,6 +104,31 @@ def game_detail(request, pk):
     if game.game_type == 'painting':
         painting_words = list(game.painting_words.values_list('word', flat=True))
 
+    # Custom content overrides vocabulary when defined
+    items_custom = game.contenido_custom.order_by('orden')
+    if items_custom.exists():
+        vocabulary_json = json.dumps([
+            {
+                'id': item.pk,
+                'word_en': item.texto_principal,
+                'word_es': item.texto_secundario,
+                'image': item.imagen.url if item.imagen else None,
+                'audio': item.audio.url if item.audio else None,
+                'es_correcto': item.es_correcto,
+            }
+            for item in items_custom
+        ])
+    else:
+        vocabulary_json = json.dumps([
+            {
+                'id': v.id,
+                'word_en': v.word_en,
+                'word_es': v.word_es,
+                'image': v.image.url if v.image else None,
+                'audio': v.audio.url if v.audio else None,
+            }
+            for v in vocabulary
+        ])
 
     logros_nuevos = []
     if request.user.role == 'estudiante':
@@ -117,16 +142,7 @@ def game_detail(request, pk):
         'top_scores': top_scores,
         'painting_words_json': json.dumps(painting_words),
         'words_json': json.dumps(painting_words),
-        'vocabulary_json': json.dumps([
-            {
-                'id': v.id,
-                'word_en': v.word_en,
-                'word_es': v.word_es,
-                'image': v.image.url if v.image else None,
-                'audio': v.audio.url if v.audio else None,
-            }
-            for v in vocabulary
-        ]),
+        'vocabulary_json': vocabulary_json,
     }
     return render(request, template, context)
 
@@ -400,8 +416,8 @@ def crear_juego(request):
                 for i, w in enumerate(words):
                     if w.strip():
                         PaintingWord.objects.create(game=juego, word=w.strip(), order=i)
-            messages.success(request, f'🎮 Juego "{juego.title}" creado!')
-            return redirect('games:gestionar_juegos')
+            messages.success(request, f'🎮 Juego "{juego.title}" creado! Ahora puedes añadir contenido personalizado.')
+            return redirect('games:editar_juego', pk=juego.pk)
     else:
         form = GameForm()
     return render(request, 'games/profesor/juego_form.html', {
@@ -432,9 +448,11 @@ def editar_juego(request, pk):
             return redirect('games:gestionar_juegos')
     else:
         form = GameForm(instance=juego)
+    items_custom = juego.contenido_custom.order_by('orden')
     return render(request, 'games/profesor/juego_form.html', {
         'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar',
-        'juego': juego, 'painting_words': painting_words})
+        'juego': juego, 'painting_words': painting_words,
+        'items_custom': items_custom})
 
 
 @login_required
@@ -458,6 +476,67 @@ def toggle_juego(request, pk):
     estado = 'activado' if juego.is_active else 'desactivado'
     messages.success(request, f'✅ Juego "{juego.title}" {estado}.')
     return redirect('games:gestionar_juegos')
+
+
+@login_required
+@profesor_required
+@require_POST
+def agregar_item_contenido(request, game_pk):
+    game = get_object_or_404(Game, pk=game_pk)
+    texto_principal = request.POST.get('texto_principal', '').strip()
+    if not texto_principal:
+        return JsonResponse({'ok': False, 'error': 'El texto principal es requerido.'})
+
+    ultimo_orden = (
+        game.contenido_custom.order_by('-orden').values_list('orden', flat=True).first() or 0
+    )
+    item = ItemContenidoJuego(
+        game=game,
+        texto_principal=texto_principal,
+        texto_secundario=request.POST.get('texto_secundario', '').strip(),
+        es_correcto=request.POST.get('es_correcto') == '1',
+        orden=ultimo_orden + 1,
+    )
+    if 'imagen' in request.FILES:
+        item.imagen = request.FILES['imagen']
+    if 'audio' in request.FILES:
+        item.audio = request.FILES['audio']
+    item.save()
+
+    return JsonResponse({
+        'ok': True,
+        'item': {
+            'pk': item.pk,
+            'orden': item.orden,
+            'texto_principal': item.texto_principal,
+            'texto_secundario': item.texto_secundario,
+            'imagen': item.imagen.url if item.imagen else None,
+            'audio': item.audio.url if item.audio else None,
+            'es_correcto': item.es_correcto,
+        }
+    })
+
+
+@login_required
+@profesor_required
+@require_POST
+def eliminar_item_contenido(request, item_pk):
+    item = get_object_or_404(ItemContenidoJuego, pk=item_pk)
+    item.delete()
+    return JsonResponse({'ok': True})
+
+
+@login_required
+@profesor_required
+@require_POST
+def reordenar_contenido(request, game_pk):
+    try:
+        data = json.loads(request.body)
+        for i, pk in enumerate(data.get('orden', [])):
+            ItemContenidoJuego.objects.filter(pk=pk, game_id=game_pk).update(orden=i)
+        return JsonResponse({'ok': True})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)})
 
 
 # ── Museo Virtual ─────────────────────────────────────────────────────────────

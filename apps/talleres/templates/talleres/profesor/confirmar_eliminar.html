@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Taller{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width:500px">
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:4rem">🗑️</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--secondary)">¿Eliminar este taller?</h4>
+    <p class="fw-bold text-muted mt-2">
+      Vas a eliminar <strong>"{{ taller.titulo }}"</strong> y todos sus bloques, preguntas y respuestas.
+      <br>Esta acción <strong>no se puede deshacer</strong>.
+    </p>
+    <div class="d-flex gap-3 justify-content-center mt-4">
+      <a href="{% url 'talleres:lista' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+          Sí, eliminar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

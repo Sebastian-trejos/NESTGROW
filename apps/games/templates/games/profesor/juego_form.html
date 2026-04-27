@@ -3,88 +3,45 @@
 
 {% block extra_css %}
 <style>
-  #painting-words-section {
-    display: none;
-    margin-top: 20px;
-  }
+  #painting-words-section { display:none; margin-top:20px; }
   .word-tag {
-    background: #f0eeff;
-    border: 2px solid var(--primary);
-    border-radius: 50px;
-    padding: 6px 14px;
-    font-weight: 700;
-    color: var(--primary);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
+    background:#f0eeff; border:2px solid var(--primary); border-radius:50px;
+    padding:6px 14px; font-weight:700; color:var(--primary);
+    display:inline-flex; align-items:center; gap:8px; font-size:0.95rem;
   }
-  .word-tag .remove-word {
-    cursor: pointer;
-    color: var(--secondary);
-    font-size: 1.1rem;
-    line-height: 1;
+  .word-tag .remove-word { cursor:pointer; color:var(--secondary); font-size:1.1rem; line-height:1; }
+  .word-tag .remove-word:hover { color:#c0392b; }
+
+  .item-row {
+    background:#f8f6ff; border:2px solid #e8e4ff; border-radius:12px;
+    padding:12px 14px; display:flex; align-items:center; gap:12px;
   }
-  .word-tag .remove-word:hover { color: #c0392b; }
+  .item-row:hover { border-color:#b8b0ff; }
+  .drag-handle { cursor:grab; color:#b0a8e0; font-size:1.3rem; user-select:none; }
+  .drag-handle:active { cursor:grabbing; }
+  .sortable-ghost { opacity:0.4; background:#ddd8ff !important; }
+  #content-editor { display:none; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4" style="max-width:700px">
+<div class="container py-4" style="max-width:760px">
 
   <div class="d-flex align-items-center gap-3 mb-4">
     <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎮 {{ titulo }}</h3>
   </div>
 
-  <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
-    <div class="milo-banner-text">
-      💡 Recuerda: primero debes tener una <strong>Categoría con vocabulario</strong> para poder crear el juego. El juego usará las palabras de esa categoría.
-    </div>
-  </div>
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-success fw-bold rounded-3 mb-3">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
 
-  <div class="nestgrow-card p-4">
-
-    <div class="row g-2 mb-4">
-      <div class="col-12"><div class="fw-bold text-muted small text-uppercase mb-2">Tipos de juego disponibles:</div></div>
-      <div class="col-6 col-md-3">
-        <div class="text-center p-2 rounded-3" style="background:#f0eeff">
-          <div style="font-size:1.8rem">🖱️</div>
-          <div class="fw-bold small" style="color:var(--primary)">Arrastra y Suelta</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="text-center p-2 rounded-3" style="background:#fff5f5">
-          <div style="font-size:1.8rem">🔍</div>
-          <div class="fw-bold small" style="color:var(--secondary)">Sopa de Letras</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="text-center p-2 rounded-3" style="background:#f0fffe">
-          <div style="font-size:1.8rem">🧩</div>
-          <div class="fw-bold small" style="color:var(--accent)">Rompecabezas</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="text-center p-2 rounded-3" style="background:#fff9e6">
-          <div style="font-size:1.8rem">🎵</div>
-          <div class="fw-bold small" style="color:var(--orange)">Juego de Audio</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="text-center p-2 rounded-3" style="background:#fff0fa">
-          <div style="font-size:1.8rem">🎨</div>
-          <div class="fw-bold small" style="color:#e91e63">Pintar Imágenes</div>
-        </div>
-      </div>
-    </div>
-
-    <hr class="mb-4">
-
+  <!-- Config card -->
+  <div class="nestgrow-card p-4 mb-4">
     <form method="post" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
-      <!-- Campo oculto para palabras de pintar -->
       <input type="hidden" name="painting_words" id="paintingWordsInput" value="">
 
       <div class="row g-3">
@@ -113,9 +70,9 @@
           <div class="text-muted small mt-1">¿No ves tu categoría? <a href="{% url 'games:crear_categoria' %}">Créala aquí →</a></div>
         </div>
 
-        <!-- Sección palabras para pintar -->
+        <!-- Palabras para pintar -->
         <div class="col-12" id="painting-words-section">
-          <div class="nestgrow-card p-4" style="border: 2px solid #e91e63; background:#fff0fa">
+          <div class="nestgrow-card p-4" style="border:2px solid #e91e63;background:#fff0fa">
             <h5 class="font-fredoka mb-3" style="color:#e91e63">🎨 Palabras que los estudiantes deben dibujar</h5>
             <p class="text-muted small fw-bold mb-3">Escribe las palabras una por una. Los estudiantes verán cada palabra y deberán dibujarla.</p>
             <div class="d-flex gap-2 mb-3">
@@ -126,8 +83,7 @@
               {% if painting_words %}
                 {% for pw in painting_words %}
                 <span class="word-tag" data-word="{{ pw.word }}">
-                  {{ pw.word }}
-                  <span class="remove-word" onclick="removeWord(this)">×</span>
+                  {{ pw.word }}<span class="remove-word" onclick="removeWord(this)">×</span>
                 </span>
                 {% endfor %}
               {% endif %}
@@ -153,94 +109,364 @@
           <label class="form-label fw-bold">{{ form.order.label }}</label>
           {{ form.order }}
         </div>
-        <div class="col-md-6 d-flex align-items-end pb-2">
-          <div class="form-check">
-            {{ form.is_active }}
-            <label class="form-check-label fw-bold ms-2">{{ form.is_active.label }}</label>
+        <div class="col-12">
+          <label class="form-label fw-bold">¿Cómo quieres guardar este juego?</label>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="d-block p-3 rounded-3 border-2 h-100"
+                     style="cursor:pointer;border-color:#6C63FF;background:#f0eeff"
+                     for="choice-activo">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <input type="radio" id="choice-activo" name="is_active_choice" value="1"
+                         onchange="syncIsActive(this)"
+                         {% if form.is_active.value %}checked{% endif %}>
+                  <span class="fw-bold" style="color:#6C63FF;font-size:1rem">✅ Activar para estudiantes</span>
+                </div>
+                <div class="text-muted small">El juego aparece en la lista pública y los estudiantes pueden jugarlo directamente.</div>
+              </label>
+            </div>
+            <div class="col-md-6">
+              <label class="d-block p-3 rounded-3 border-2 h-100"
+                     style="cursor:pointer;border-color:#ccc;background:#f8f9fa"
+                     for="choice-taller">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <input type="radio" id="choice-taller" name="is_active_choice" value="0"
+                         onchange="syncIsActive(this)"
+                         {% if not form.is_active.value %}checked{% endif %}>
+                  <span class="fw-bold" style="color:#555;font-size:1rem">🔒 Solo para talleres</span>
+                </div>
+                <div class="text-muted small">El juego no aparece en la lista pública. Solo se puede asignar dentro de talleres.</div>
+              </label>
+            </div>
           </div>
+          <div class="d-none">{{ form.is_active }}</div>
         </div>
       </div>
 
       <div class="d-flex gap-3 mt-4">
-        <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow">
-          🎮 {{ accion }}
-        </button>
-        <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
-          Cancelar
-        </a>
+        <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow">🎮 {{ accion }}</button>
+        <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill fw-bold">Cancelar</a>
       </div>
     </form>
   </div>
+
+  <!-- ── Editor de contenido (solo al editar y si no es painting) ────────── -->
+  {% if juego %}
+  <div id="content-editor">
+    <div class="nestgrow-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <h5 class="font-fredoka mb-0" style="color:var(--primary)">📝 Contenido personalizado</h5>
+        <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)" id="items-count-badge">
+          {{ items_custom|length }} ítem{{ items_custom|length|pluralize:"s" }}
+        </span>
+      </div>
+      <p class="text-muted small fw-bold mb-4">
+        Define las palabras/preguntas exactas de este juego. Si no añades nada, el juego usará el vocabulario de la categoría.
+      </p>
+
+      <!-- Lista de ítems existentes -->
+      <div id="items-list" class="d-flex flex-column gap-2 mb-4">
+        {% for item in items_custom %}
+        <div class="item-row" data-pk="{{ item.pk }}" id="item-{{ item.pk }}">
+          <span class="drag-handle">⠿</span>
+          <div class="flex-grow-1">
+            <div class="fw-bold">{{ item.texto_principal }}</div>
+            {% if item.texto_secundario %}
+            <div class="text-muted small">{{ item.texto_secundario }}</div>
+            {% endif %}
+            <div class="d-flex gap-2 mt-1 flex-wrap">
+              {% if item.imagen %}
+              <span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32">🖼 Imagen</span>
+              {% endif %}
+              {% if item.audio %}
+              <span class="badge rounded-pill" style="background:#e3f2fd;color:#1565c0">🎵 Audio</span>
+              {% endif %}
+              {% if item.es_correcto %}
+              <span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32">✅ Correcto</span>
+              {% endif %}
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-danger rounded-pill"
+                  onclick="eliminarItem({{ item.pk }})">🗑</button>
+        </div>
+        {% empty %}
+        <div class="text-center py-3 text-muted fw-bold" id="empty-msg">
+          <div style="font-size:2rem">📭</div>
+          <div>No hay ítems aún. ¡Añade el primero!</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Formulario para añadir ítem -->
+      <div class="p-3 rounded-3" style="background:#f0fffe;border:2px solid #b2dfdb">
+        <div class="fw-bold mb-3" style="color:var(--accent)">➕ Añadir ítem</div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small" id="label-principal">Texto principal (EN)</label>
+            <input type="text" id="inp-principal" class="form-control" placeholder="Ej: Dog">
+          </div>
+          <div class="col-md-6" id="col-secundario">
+            <label class="form-label fw-bold small" id="label-secundario">Texto secundario (ES)</label>
+            <input type="text" id="inp-secundario" class="form-control" placeholder="Ej: Perro">
+          </div>
+          <div class="col-md-6" id="col-imagen" style="display:none">
+            <label class="form-label fw-bold small">Imagen</label>
+            <input type="file" id="inp-imagen" class="form-control" accept="image/*">
+          </div>
+          <div class="col-md-6" id="col-audio" style="display:none">
+            <label class="form-label fw-bold small">Audio</label>
+            <input type="file" id="inp-audio" class="form-control" accept="audio/*">
+          </div>
+          <div class="col-12" id="col-correcto" style="display:none">
+            <div class="form-check">
+              <input type="checkbox" id="inp-correcto" class="form-check-input">
+              <label class="form-check-label fw-bold" for="inp-correcto">¿Es la respuesta correcta?</label>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-nestgrow btn-primary-nestgrow mt-3" onclick="agregarItem()" id="btn-agregar">
+          ➕ Añadir ítem
+        </button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}
 
 {% block extra_js %}
+{% if juego %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+{% endif %}
 <script>
-  const gameTypeSelect = document.getElementById('id_game_type');
-  const paintingSection = document.getElementById('painting-words-section');
-  const wordsInput = document.getElementById('paintingWordsInput');
-  const wordsList = document.getElementById('wordsList');
-  const wordsCount = document.getElementById('wordsCount');
+const GAME_TYPE_SEL = document.getElementById('id_game_type');
+const PAINTING_SEC  = document.getElementById('painting-words-section');
+const CONTENT_ED    = document.getElementById('content-editor');
 
-  // Cargar palabras existentes al editar
-  let words = [];
-  document.querySelectorAll('.word-tag').forEach(tag => {
-    words.push(tag.dataset.word);
+// ── Tipo de juego → mostrar/ocultar secciones ──
+const TIPOS_CON_IMAGEN   = ['drag_and_drop','puzzle','memoria'];
+const TIPOS_CON_AUDIO    = ['audio_matching'];
+const TIPOS_CON_CORRECTO = ['quiz'];
+const TIPO_PINTAR        = 'painting';
+
+function onGameTypeChange() {
+  const tipo = GAME_TYPE_SEL.value;
+
+  // Painting words
+  PAINTING_SEC.style.display = (tipo === TIPO_PINTAR) ? 'block' : 'none';
+
+  // Content editor (only shown if editing)
+  if (CONTENT_ED) {
+    CONTENT_ED.style.display = (tipo === TIPO_PINTAR) ? 'none' : 'block';
+  }
+
+  // Adapt add-item form
+  const colImg    = document.getElementById('col-imagen');
+  const colAud    = document.getElementById('col-audio');
+  const colCorr   = document.getElementById('col-correcto');
+  const colSec    = document.getElementById('col-secundario');
+  const lblPrin   = document.getElementById('label-principal');
+  const lblSec    = document.getElementById('label-secundario');
+
+  if (!colImg) return; // not in edit mode
+
+  if (TIPOS_CON_IMAGEN.includes(tipo)) {
+    colImg.style.display = 'block';
+  } else {
+    colImg.style.display = 'none';
+    document.getElementById('inp-imagen').value = '';
+  }
+
+  if (TIPOS_CON_AUDIO.includes(tipo)) {
+    colAud.style.display = 'block';
+  } else {
+    colAud.style.display = 'none';
+    document.getElementById('inp-audio').value = '';
+  }
+
+  if (TIPOS_CON_CORRECTO.includes(tipo)) {
+    colCorr.style.display = 'block';
+    lblPrin.textContent = 'Opción de respuesta';
+    colSec.style.display = 'none';
+  } else {
+    colCorr.style.display = 'none';
+    colSec.style.display = 'block';
+  }
+
+  // Labels by type
+  const labels = {
+    'drag_and_drop':   ['Palabra EN', 'Traducción ES'],
+    'word_search':     ['Palabra a encontrar', 'Pista (opcional)'],
+    'puzzle':          ['Palabra EN', 'Traducción ES'],
+    'audio_matching':  ['Palabra EN', 'Traducción ES'],
+    'memoria':         ['Palabra EN', 'Traducción ES'],
+    'ahorcado':        ['Palabra EN', 'Pista en ES'],
+    'quiz':            ['Opción de respuesta', ''],
+    'ordenar_letras':  ['Palabra EN', 'Traducción ES'],
+    'globos':          ['Palabra EN', 'Traducción ES'],
+  };
+  const [l1, l2] = labels[tipo] || ['Texto principal', 'Texto secundario'];
+  lblPrin.textContent = l1;
+  if (lblSec) document.getElementById('label-secundario').textContent = l2;
+}
+
+GAME_TYPE_SEL.addEventListener('change', onGameTypeChange);
+onGameTypeChange();
+
+// ── Painting words ─────────────────────────────────────────────────────────
+const wordsInput = document.getElementById('paintingWordsInput');
+const wordsList  = document.getElementById('wordsList');
+const wordsCount = document.getElementById('wordsCount');
+let words = [];
+document.querySelectorAll('.word-tag').forEach(tag => words.push(tag.dataset.word));
+updateInput();
+
+function addWord() {
+  const input = document.getElementById('newWordInput');
+  const word = input.value.trim();
+  if (!word || words.includes(word)) { input.value = ''; return; }
+  words.push(word);
+  renderWords(); updateInput();
+  input.value = ''; input.focus();
+}
+document.getElementById('newWordInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addWord(); }
+});
+function removeWord(el) {
+  words = words.filter(w => w !== el.parentElement.dataset.word);
+  renderWords(); updateInput();
+}
+function renderWords() {
+  wordsList.innerHTML = '';
+  words.forEach(word => {
+    const span = document.createElement('span');
+    span.className = 'word-tag'; span.dataset.word = word;
+    span.innerHTML = `${word} <span class="remove-word" onclick="removeWord(this)">×</span>`;
+    wordsList.appendChild(span);
   });
-  updateInput();
+  wordsCount.textContent = `${words.length} palabra${words.length !== 1 ? 's' : ''} añadida${words.length !== 1 ? 's' : ''}`;
+}
+function updateInput() {
+  if (wordsInput) wordsInput.value = JSON.stringify(words);
+  if (wordsCount) wordsCount.textContent = `${words.length} palabra${words.length !== 1 ? 's' : ''} añadida${words.length !== 1 ? 's' : ''}`;
+}
 
-  function checkGameType() {
-    if (gameTypeSelect.value === 'painting') {
-      paintingSection.style.display = 'block';
-    } else {
-      paintingSection.style.display = 'none';
-    }
-  }
+// ── Content editor (only when juego exists) ────────────────────────────────
+{% if juego %}
+const CSRF      = "{{ csrf_token }}";
+const GAME_PK   = {{ juego.pk }};
+const ADD_URL   = "{% url 'games:agregar_item_contenido' game_pk=juego.pk %}";
+const REORD_URL = "{% url 'games:reordenar_contenido' game_pk=juego.pk %}";
+const DEL_BASE  = "/juegos/gestionar/contenido/";
 
-  gameTypeSelect.addEventListener('change', checkGameType);
-  checkGameType(); // al cargar
+let itemsCount = {{ items_custom|length }};
 
-  function addWord() {
-    const input = document.getElementById('newWordInput');
-    const word = input.value.trim();
-    if (!word) return;
-    if (words.includes(word)) {
-      input.value = '';
-      return;
-    }
-    words.push(word);
-    renderWords();
-    updateInput();
-    input.value = '';
-    input.focus();
-  }
-
-  document.getElementById('newWordInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); addWord(); }
-  });
-
-  function removeWord(el) {
-    const word = el.parentElement.dataset.word;
-    words = words.filter(w => w !== word);
-    renderWords();
-    updateInput();
-  }
-
-  function renderWords() {
-    wordsList.innerHTML = '';
-    words.forEach(word => {
-      const span = document.createElement('span');
-      span.className = 'word-tag';
-      span.dataset.word = word;
-      span.innerHTML = `${word} <span class="remove-word" onclick="removeWord(this)">×</span>`;
-      wordsList.appendChild(span);
+// Sortable
+const sortable = Sortable.create(document.getElementById('items-list'), {
+  handle: '.drag-handle',
+  ghostClass: 'sortable-ghost',
+  animation: 150,
+  onEnd: () => {
+    const orden = [...document.querySelectorAll('#items-list .item-row')].map(el => el.dataset.pk);
+    fetch(REORD_URL, {
+      method: 'POST',
+      headers: {'X-CSRFToken': CSRF, 'Content-Type': 'application/json'},
+      body: JSON.stringify({orden})
     });
-    wordsCount.textContent = `${words.length} palabra${words.length !== 1 ? 's' : ''} añadida${words.length !== 1 ? 's' : ''}`;
   }
+});
 
-  function updateInput() {
-    wordsInput.value = JSON.stringify(words);
-    wordsCount.textContent = `${words.length} palabra${words.length !== 1 ? 's' : ''} añadida${words.length !== 1 ? 's' : ''}`;
+async function agregarItem() {
+  const principal = document.getElementById('inp-principal').value.trim();
+  if (!principal) { alert('⚠️ El texto principal es requerido.'); return; }
+
+  const fd = new FormData();
+  fd.append('csrfmiddlewaretoken', CSRF);
+  fd.append('texto_principal', principal);
+  fd.append('texto_secundario', document.getElementById('inp-secundario')?.value.trim() || '');
+  if (document.getElementById('inp-correcto')?.checked) fd.append('es_correcto', '1');
+  const imgFile = document.getElementById('inp-imagen')?.files[0];
+  if (imgFile) fd.append('imagen', imgFile);
+  const audFile = document.getElementById('inp-audio')?.files[0];
+  if (audFile) fd.append('audio', audFile);
+
+  const btn = document.getElementById('btn-agregar');
+  btn.disabled = true; btn.textContent = 'Añadiendo...';
+
+  const res = await fetch(ADD_URL, {method: 'POST', body: fd});
+  const data = await res.json();
+
+  if (data.ok) {
+    appendItemRow(data.item);
+    // Reset inputs
+    document.getElementById('inp-principal').value = '';
+    if (document.getElementById('inp-secundario')) document.getElementById('inp-secundario').value = '';
+    if (document.getElementById('inp-correcto'))   document.getElementById('inp-correcto').checked = false;
+    if (document.getElementById('inp-imagen'))     document.getElementById('inp-imagen').value = '';
+    if (document.getElementById('inp-audio'))      document.getElementById('inp-audio').value = '';
+    itemsCount++;
+    updateBadge();
+    document.getElementById('empty-msg')?.remove();
+  } else {
+    alert('❌ ' + (data.error || 'Error al añadir.'));
   }
+  btn.disabled = false; btn.textContent = '➕ Añadir ítem';
+}
+
+function appendItemRow(item) {
+  const badges = [];
+  if (item.imagen)     badges.push('<span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32">🖼 Imagen</span>');
+  if (item.audio)      badges.push('<span class="badge rounded-pill" style="background:#e3f2fd;color:#1565c0">🎵 Audio</span>');
+  if (item.es_correcto) badges.push('<span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32">✅ Correcto</span>');
+
+  const div = document.createElement('div');
+  div.className = 'item-row';
+  div.dataset.pk = item.pk;
+  div.id = 'item-' + item.pk;
+  div.innerHTML = `
+    <span class="drag-handle">⠿</span>
+    <div class="flex-grow-1">
+      <div class="fw-bold">${item.texto_principal}</div>
+      ${item.texto_secundario ? `<div class="text-muted small">${item.texto_secundario}</div>` : ''}
+      <div class="d-flex gap-2 mt-1 flex-wrap">${badges.join('')}</div>
+    </div>
+    <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="eliminarItem(${item.pk})">🗑</button>
+  `;
+  document.getElementById('items-list').appendChild(div);
+}
+
+async function eliminarItem(pk) {
+  if (!confirm('¿Eliminar este ítem?')) return;
+  const res = await fetch(`${DEL_BASE}${pk}/eliminar/`, {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF}
+  });
+  const data = await res.json();
+  if (data.ok) {
+    document.getElementById('item-' + pk)?.remove();
+    itemsCount--;
+    updateBadge();
+    if (itemsCount === 0) {
+      const empty = document.createElement('div');
+      empty.id = 'empty-msg';
+      empty.className = 'text-center py-3 text-muted fw-bold';
+      empty.innerHTML = '<div style="font-size:2rem">📭</div><div>No hay ítems aún. ¡Añade el primero!</div>';
+      document.getElementById('items-list').appendChild(empty);
+    }
+  }
+}
+
+function updateBadge() {
+  const b = document.getElementById('items-count-badge');
+  if (b) b.textContent = `${itemsCount} ítem${itemsCount !== 1 ? 's' : ''}`;
+}
+{% endif %}
+
+// ── Sincronizar tarjetas is_active con el checkbox real ────────────────────
+function syncIsActive(radio) {
+  const checkbox = document.getElementById('{{ form.is_active.id_for_label }}');
+  if (checkbox) checkbox.checked = (radio.value === '1');
+}
 </script>
 {% endblock %}

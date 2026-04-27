@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% block title %}{{ taller.titulo }} — Bloque {{ bloque_idx|add:1 }}{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:760px">
+
+  <!-- Header y progreso -->
+  <div class="nestgrow-card p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+      <div>
+        <div class="fw-bold" style="color:var(--primary)">📋 {{ taller.titulo }}</div>
+        <div class="text-muted small fw-bold">Bloque {{ bloque_idx|add:1 }} de {{ total_bloques }}</div>
+      </div>
+      <span class="badge rounded-pill"
+            style="background:{% if bloque_actual.tipo == 'pregunta' %}#f0eeff;color:#6C63FF{% else %}#fff5f5;color:var(--secondary){% endif %}">
+        {{ bloque_actual.get_tipo_display }}
+      </span>
+    </div>
+    <div class="progress-bar-nestgrow">
+      <div class="progress-fill"
+           style="width:{% widthratio bloque_idx total_bloques 100 %}%;max-width:100%;transition:width 0.5s"></div>
+    </div>
+  </div>
+
+  <!-- ── BLOQUE PREGUNTA ─────────────────────────────────────────────────── -->
+  {% if bloque_actual.tipo == 'pregunta' and bloque_actual.bloque_pregunta %}
+  {% with q=bloque_actual.bloque_pregunta %}
+  <div class="nestgrow-card p-4 mb-4" id="bloque-contenido">
+    <div class="mb-3">
+      <span class="badge rounded-pill mb-2" style="background:#f0eeff;color:#6C63FF">❓ Pregunta · {{ q.puntaje_parcial }} pts</span>
+      {% if q.imagen %}
+      <img src="{{ q.imagen.url }}" class="img-fluid rounded-3 d-block mb-3" style="max-height:220px">
+      {% endif %}
+      {% if q.video_archivo %}
+      <video class="w-100 rounded-3 mb-3" controls style="max-height:300px">
+        <source src="{{ q.video_archivo.url }}" type="video/mp4">
+      </video>
+      {% endif %}
+      <p class="fw-bold fs-5 mb-0">{{ q.enunciado }}</p>
+    </div>
+
+    {% if q.tipo_respuesta == 'parrafo' %}
+    <textarea id="respuesta-parrafo" class="form-control mb-3" rows="4"
+              placeholder="Escribe tu respuesta aquí..."></textarea>
+
+    {% elif q.tipo_respuesta == 'opcion_multiple' %}
+    <div class="d-flex flex-column gap-2 mb-3" id="opciones-lista">
+      {% for opcion in q.opciones.all %}
+      <label class="d-flex align-items-center gap-3 p-3 rounded-3 opcion-item"
+             style="background:#f8f6ff;border:2px solid #e8e4ff;cursor:pointer;transition:all 0.15s"
+             onmouseover="this.style.background='#eee9ff'"
+             onmouseout="if(!this.querySelector('input').checked)this.style.background='#f8f6ff'">
+        <input type="radio" name="opcion" value="{{ opcion.pk }}" class="d-none opcion-radio"
+               onchange="marcarOpcionSeleccionada(this)">
+        <span class="opcion-icono" style="font-size:1.3rem">⭕</span>
+        <span class="fw-bold">{{ opcion.texto }}</span>
+      </label>
+      {% endfor %}
+    </div>
+
+    {% elif q.tipo_respuesta == 'casillas' %}
+    <div class="d-flex flex-column gap-2 mb-3" id="opciones-lista">
+      {% for opcion in q.opciones.all %}
+      <label class="d-flex align-items-center gap-3 p-3 rounded-3 opcion-item"
+             style="background:#f8f6ff;border:2px solid #e8e4ff;cursor:pointer;transition:all 0.15s"
+             onmouseover="this.style.background='#eee9ff'"
+             onmouseout="if(!this.querySelector('input').checked)this.style.background='#f8f6ff'">
+        <input type="checkbox" name="opcion" value="{{ opcion.pk }}" class="form-check-input opcion-check"
+               style="width:1.3rem;height:1.3rem">
+        <span class="fw-bold">{{ opcion.texto }}</span>
+      </label>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <button id="btn-responder" class="btn btn-nestgrow btn-primary-nestgrow w-100 fw-bold"
+            onclick="enviarRespuesta({{ bloque_actual.pk }}, '{{ q.tipo_respuesta }}')">
+      Confirmar respuesta →
+    </button>
+  </div>
+  {% endwith %}
+
+  <!-- ── BLOQUE MINIJUEGO ────────────────────────────────────────────────── -->
+  {% elif bloque_actual.tipo == 'minijuego' and bloque_actual.bloque_minijuego %}
+  {% with m=bloque_actual.bloque_minijuego %}
+  <div class="nestgrow-card p-4 mb-4" id="bloque-contenido">
+    <div class="mb-3">
+      <span class="badge rounded-pill mb-2" style="background:#fff5f5;color:var(--secondary)">🎮 Minijuego</span>
+      {% if m.game.description %}
+      <p class="text-muted small mt-2 mb-0">{{ m.game.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="alert" style="background:#fff9e6;border:2px solid #ffe49c">
+      <div class="fw-bold">🐺 Instrucciones de Milo:</div>
+      <div class="small">Juega el minijuego y cuando hayas terminado, haz clic en <strong>"Continuar al siguiente bloque"</strong>.</div>
+    </div>
+
+    <!-- Game info card -->
+    <div class="rounded-3 p-4 mb-3 text-center" style="background:#f0eeff;border:2px solid #d8d0ff">
+      <div style="font-size:3rem">🎮</div>
+      <div class="fw-bold mt-2" style="color:var(--primary);font-size:1.15rem">{{ m.game.title }}</div>
+      <div class="text-muted fw-bold small mt-1">📚 Tema: {{ m.game.category.name }}</div>
+      <div class="badge rounded-pill mt-2" style="background:#fff;color:var(--primary);border:1px solid #d8d0ff">
+        {{ m.game.get_game_type_display }}
+      </div>
+    </div>
+
+    <button class="btn w-100 fw-bold rounded-pill"
+            style="background:var(--accent);color:white;font-size:1.1rem"
+            onclick="completarMinijuego({{ bloque_actual.pk }})">
+      Continuar al siguiente bloque →
+    </button>
+  </div>
+  {% endwith %}
+  {% endif %}
+
+  <!-- Overlay de feedback -->
+  <div id="feedback-overlay" class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+       style="background:rgba(0,0,0,0.5);z-index:9999">
+    <div class="nestgrow-card p-5 text-center" style="max-width:360px;width:90%">
+      <div id="feedback-icono" style="font-size:5rem"></div>
+      <div id="feedback-texto" class="font-fredoka mt-2" style="font-size:1.8rem"></div>
+      <div id="feedback-puntos" class="text-muted fw-bold mt-1"></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const CSRF = "{{ csrf_token }}";
+const TALLER_PK = {{ taller.pk }};
+const RESULTADO_URL = "{% url 'talleres:resultado' pk=taller.pk %}";
+const RESOLVER_URL  = "{% url 'talleres:resolver' pk=taller.pk %}";
+
+function marcarOpcionSeleccionada(radio) {
+  document.querySelectorAll('.opcion-item').forEach(el => {
+    el.style.background = '#f8f6ff';
+    el.style.border = '2px solid #e8e4ff';
+  });
+  const label = radio.closest('.opcion-item');
+  label.style.background = '#e0d8ff';
+  label.style.border = '2px solid #6C63FF';
+  label.querySelector('.opcion-icono').textContent = '✅';
+}
+
+async function enviarRespuesta(bloquePk, tipoRespuesta) {
+  const btn = document.getElementById('btn-responder');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  const fd = new FormData();
+  fd.append('csrfmiddlewaretoken', CSRF);
+
+  if (tipoRespuesta === 'parrafo') {
+    fd.append('texto_respuesta', document.getElementById('respuesta-parrafo').value);
+  } else if (tipoRespuesta === 'opcion_multiple') {
+    const sel = document.querySelector('input[name="opcion"]:checked');
+    if (!sel) { alert('⚠️ Selecciona una opción.'); btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return; }
+    fd.append('opciones', sel.value);
+  } else { // casillas
+    const checks = document.querySelectorAll('input[name="opcion"]:checked');
+    if (checks.length === 0) { alert('⚠️ Selecciona al menos una opción.'); btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return; }
+    checks.forEach(c => fd.append('opciones', c.value));
+  }
+
+  const url = `/talleres/${TALLER_PK}/bloque/${bloquePk}/responder/`;
+  const res = await fetch(url, {method: 'POST', body: fd});
+  const data = await res.json();
+
+  if (data.ok) {
+    mostrarFeedback(data.es_correcta, data.puntos, data.next);
+  } else {
+    alert('❌ Error al enviar. Recarga la página e intenta de nuevo.');
+    btn.disabled = false;
+    btn.textContent = 'Confirmar respuesta →';
+  }
+}
+
+async function completarMinijuego(bloquePk) {
+  const url = `/talleres/${TALLER_PK}/bloque/${bloquePk}/completar-minijuego/`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF}
+  });
+  const data = await res.json();
+  if (data.ok) {
+    if (data.next === 'resultado') {
+      window.location.href = RESULTADO_URL;
+    } else {
+      window.location.href = RESOLVER_URL;
+    }
+  }
+}
+
+function mostrarFeedback(esCorrecta, puntos, next) {
+  const overlay = document.getElementById('feedback-overlay');
+  overlay.classList.remove('d-none');
+  overlay.style.display = 'flex';
+
+  if (esCorrecta === null) {
+    document.getElementById('feedback-icono').textContent = '✍️';
+    document.getElementById('feedback-texto').textContent = '¡Respuesta enviada!';
+    document.getElementById('feedback-puntos').textContent = 'Respuesta libre registrada.';
+  } else if (esCorrecta) {
+    document.getElementById('feedback-icono').textContent = '🎉';
+    document.getElementById('feedback-texto').textContent = '¡Correcto!';
+    document.getElementById('feedback-puntos').textContent = `+${puntos} puntos`;
+  } else {
+    document.getElementById('feedback-icono').textContent = '💪';
+    document.getElementById('feedback-texto').textContent = '¡Sigue intentando!';
+    document.getElementById('feedback-puntos').textContent = 'Respuesta incorrecta.';
+  }
+
+  setTimeout(() => {
+    if (next === 'resultado') {
+      window.location.href = RESULTADO_URL;
+    } else {
+      window.location.href = RESOLVER_URL;
+    }
+  }, 1800);
+}
+</script>
+{% endblock %}

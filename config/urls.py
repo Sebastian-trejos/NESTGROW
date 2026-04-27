@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls')),
     path('contenido/', include('apps.content.urls')),
     path('juegos/', include('apps.games.urls')),
+    path('talleres/', include('apps.talleres.urls')),
 ]
 
 if settings.DEBUG:

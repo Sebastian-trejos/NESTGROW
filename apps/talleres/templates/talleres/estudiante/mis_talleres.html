@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Mis Talleres{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">¡Aquí están tus talleres, {{ user.first_name }}! 🎓</div>
+      <div class="text-muted fw-bold small">Completa cada taller para ganar XP y Huesos de Milo. ¡Puedes retomarlo donde lo dejaste!</div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="font-fredoka mb-0" style="color:var(--primary)">📋 Talleres de mi salón</h4>
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill btn-sm">← Mi panel</a>
+  </div>
+
+  {% if talleres_con_estado %}
+  <div class="row g-4">
+    {% for item in talleres_con_estado %}
+    {% with t=item.taller s=item.sesion %}
+    <div class="col-md-6">
+      <div class="nestgrow-card p-4 h-100 d-flex flex-column"
+           style="border-left:5px solid {% if item.completado %}var(--accent){% elif item.en_progreso %}var(--orange){% else %}var(--primary){% endif %}">
+
+        <!-- Estado -->
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <h5 class="font-fredoka mb-1" style="color:var(--primary)">{{ t.titulo }}</h5>
+            {% if t.descripcion %}
+            <p class="text-muted small fw-bold mb-0">{{ t.descripcion|truncatechars:80 }}</p>
+            {% endif %}
+          </div>
+          {% if item.completado %}
+          <span class="badge rounded-pill" style="background:#d4edda;color:#155724;white-space:nowrap">✅ Completado</span>
+          {% elif item.en_progreso %}
+          <span class="badge rounded-pill" style="background:#fff3cd;color:#856404;white-space:nowrap">⏳ En progreso</span>
+          {% else %}
+          <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);white-space:nowrap">🆕 Nuevo</span>
+          {% endif %}
+        </div>
+
+        <!-- Info -->
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} bloques</span>
+          <span class="badge rounded-pill" style="background:#f0f8ff;color:#4a90d9">⭐ {{ t.puntos_xp }} XP</span>
+          <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ t.huesos_recompensa }} Huesos</span>
+        </div>
+
+        <!-- Progreso si hay sesión -->
+        {% if s and not item.completado %}
+        <div class="mb-3">
+          <div class="d-flex justify-content-between text-muted small fw-bold mb-1">
+            <span>Progreso</span>
+            <span>{{ s.bloque_actual }} / {{ t.total_bloques }}</span>
+          </div>
+          <div class="progress-bar-nestgrow">
+            <div class="progress-fill" style="width:{% widthratio s.bloque_actual t.total_bloques 100 %}%;max-width:100%"></div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if item.completado and s %}
+        <div class="p-3 rounded-3 mb-3" style="background:#d4edda">
+          <div class="fw-bold text-success">🎉 ¡Taller completado!</div>
+          <div class="small text-muted mt-1">Ganaste {{ s.huesos_ganados }} Huesos y {{ t.puntos_xp }} XP</div>
+        </div>
+        {% endif %}
+
+        <div class="mt-auto">
+          {% if item.completado %}
+          <a href="{% url 'talleres:resultado' pk=t.pk %}" class="btn btn-outline-success rounded-pill w-100">
+            📊 Ver mis resultados
+          </a>
+          {% elif item.en_progreso %}
+          <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow rounded-pill w-100 fw-bold"
+             style="background:var(--orange);color:white">
+            ▶ Continuar taller →
+          </a>
+          {% else %}
+          <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill w-100 fw-bold">
+            🚀 Iniciar taller →
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:5rem">📋</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">
+      {% if request.user.estudiante_profile.salon %}
+        ¡Tu profesor aún no ha publicado talleres!
+      {% else %}
+        Primero únete a un salón
+      {% endif %}
+    </h4>
+    <p class="text-muted fw-bold">
+      {% if request.user.estudiante_profile.salon %}
+        Cuando tu profesor publique talleres, aparecerán aquí.
+      {% else %}
+        Pídele el código de clase a tu profe y únete para ver los talleres.
+      {% endif %}
+    </p>
+    {% if not request.user.estudiante_profile.salon %}
+    <a href="{% url 'accounts:unirse_clase' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
+      Unirme a una clase →
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

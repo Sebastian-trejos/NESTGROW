@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Mis Talleres{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">📋 Mis Talleres</h3>
+    <a href="{% url 'talleres:crear' %}" class="btn btn-nestgrow btn-primary-nestgrow">
+      ➕ Nuevo Taller
+    </a>
+  </div>
+
+  <div class="milo-banner mb-4">
+    <div class="milo-banner-owl">🐺</div>
+    <div>
+      <div class="milo-banner-text">¡Crea talleres combinando preguntas y minijuegos!</div>
+      <div class="text-muted fw-bold small">Los talleres se asignan por salón. Los estudiantes los resuelven bloque a bloque y ganan XP y Huesos al completarlos.</div>
+    </div>
+  </div>
+
+  {% if talleres %}
+  <div class="nestgrow-card p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead style="background:#f8f6ff">
+          <tr>
+            <th class="ps-4">Taller</th>
+            <th>Salón</th>
+            <th class="text-center">Bloques</th>
+            <th class="text-center">XP</th>
+            <th class="text-center">🦴</th>
+            <th class="text-center">Completados</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for taller in talleres %}
+          <tr>
+            <td class="ps-4">
+              <div class="fw-bold">{{ taller.titulo }}</div>
+              {% if taller.descripcion %}
+              <div class="text-muted small">{{ taller.descripcion|truncatechars:50 }}</div>
+              {% endif %}
+            </td>
+            <td>
+              {% if taller.salon %}
+                <span class="badge rounded-pill" style="background:var(--primary)20;color:var(--primary)">
+                  🏫 {{ taller.salon.nombre }}
+                </span>
+              {% else %}
+                <span class="text-muted small">Sin asignar</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <span class="fw-bold" style="color:var(--primary)">{{ taller.total_bloques }}</span>
+            </td>
+            <td class="text-center">
+              <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">⭐ {{ taller.puntos_xp }}</span>
+            </td>
+            <td class="text-center">
+              <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ taller.huesos_recompensa }}</span>
+            </td>
+            <td class="text-center">
+              <span class="fw-bold" style="color:var(--accent)">
+                {{ taller.sesiones.filter.completada|default:"0" }}
+                {% with completadas=taller.sesiones.all %}
+                  {% for s in completadas %}{% if s.completada %}{% if forloop.last %}{{ forloop.counter }}{% endif %}{% endif %}{% endfor %}
+                {% endwith %}
+              </span>
+            </td>
+            <td class="text-center">
+              <form method="post" action="{% url 'talleres:toggle' pk=taller.pk %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="badge rounded-pill border-0"
+                        style="background:{% if taller.is_active %}#d4edda;color:#155724{% else %}#f8d7da;color:#721c24{% endif %};cursor:pointer">
+                  {% if taller.is_active %}✅ Publicado{% else %}🔒 Borrador{% endif %}
+                </button>
+              </form>
+            </td>
+            <td class="text-center">
+              <div class="d-flex gap-1 justify-content-center">
+                <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-sm btn-outline-primary rounded-pill" title="Editar">✏️</a>
+                <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill" title="Vista previa" target="_blank">👁️</a>
+                <a href="{% url 'talleres:eliminar' pk=taller.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">🗑️</a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:5rem">📋</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Aún no tienes talleres!</h4>
+    <p class="text-muted fw-bold">Crea tu primer taller combinando preguntas y minijuegos.</p>
+    <a href="{% url 'talleres:crear' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
+      ➕ Crear mi primer taller
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

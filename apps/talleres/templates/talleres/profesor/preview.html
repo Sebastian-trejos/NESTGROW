@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Vista Previa: {{ taller.titulo }}{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:760px">
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-outline-secondary rounded-pill">← Volver a editar</a>
+    <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">👁️ Vista previa (solo tú ves esto)</span>
+  </div>
+
+  <!-- Header del taller -->
+  <div class="nestgrow-card p-4 mb-4" style="border-left:5px solid var(--primary)">
+    <h2 class="font-fredoka mb-1" style="color:var(--primary)">📋 {{ taller.titulo }}</h2>
+    {% if taller.descripcion %}
+    <p class="text-muted fw-bold mb-2">{{ taller.descripcion }}</p>
+    {% endif %}
+    <div class="d-flex gap-3 flex-wrap">
+      <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">⭐ {{ taller.puntos_xp }} XP al completar</span>
+      <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ taller.huesos_recompensa }} Huesos al completar</span>
+      <span class="badge rounded-pill" style="background:#f0f0f0;color:#333">🧩 {{ bloques.count }} bloques</span>
+      {% if taller.salon %}
+      <span class="badge rounded-pill" style="background:var(--primary)20;color:var(--primary)">🏫 {{ taller.salon.nombre }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Bloques -->
+  {% for bloque in bloques %}
+  <div class="nestgrow-card p-4 mb-3"
+       style="border-left:4px solid {% if bloque.tipo == 'pregunta' %}#6C63FF{% else %}var(--secondary){% endif %}">
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <span class="badge rounded-pill fw-bold"
+            style="background:{% if bloque.tipo == 'pregunta' %}#f0eeff;color:#6C63FF{% else %}#fff5f5;color:var(--secondary){% endif %}">
+        Bloque {{ bloque.orden }}
+      </span>
+      <span class="fw-bold text-muted small">{{ bloque.get_tipo_display }}</span>
+    </div>
+
+    {% if bloque.tipo == 'pregunta' and bloque.bloque_pregunta %}
+      {% with q=bloque.bloque_pregunta %}
+      {% if q.imagen %}
+      <img src="{{ q.imagen.url }}" class="img-fluid rounded-3 mb-3" style="max-height:200px">
+      {% endif %}
+      {% if q.video_archivo %}
+      <video class="w-100 rounded-3 mb-3" controls style="max-height:220px">
+        <source src="{{ q.video_archivo.url }}" type="video/mp4">
+      </video>
+      {% endif %}
+      <p class="fw-bold fs-5 mb-3">{{ q.enunciado }}</p>
+      <div class="text-muted small fw-bold mb-2">{{ q.get_tipo_respuesta_display }} · {{ q.puntaje_parcial }} pts</div>
+
+      {% if q.tipo_respuesta == 'parrafo' %}
+      <textarea class="form-control" rows="3" disabled placeholder="El estudiante escribirá su respuesta aquí..."></textarea>
+      {% else %}
+        {% for opcion in q.opciones.all %}
+        <div class="d-flex align-items-center gap-2 p-2 mb-1 rounded-3"
+             style="background:{% if opcion.es_correcta %}#d4edda{% else %}#f8f9fa{% endif %}">
+          {% if q.tipo_respuesta == 'opcion_multiple' %}
+          <span style="font-size:1.1rem">{% if opcion.es_correcta %}✅{% else %}⭕{% endif %}</span>
+          {% else %}
+          <span style="font-size:1.1rem">{% if opcion.es_correcta %}✅{% else %}☐{% endif %}</span>
+          {% endif %}
+          <span class="fw-bold">{{ opcion.texto }}</span>
+          {% if opcion.es_correcta %}<span class="badge bg-success ms-auto">Correcta</span>{% endif %}
+        </div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+    {% elif bloque.tipo == 'minijuego' and bloque.bloque_minijuego %}
+      {% with m=bloque.bloque_minijuego %}
+      <div class="p-3 rounded-3 text-center" style="background:#fff5f5">
+        <div style="font-size:3rem">🎮</div>
+        <div class="fw-bold fs-5 mt-1">{{ m.game.get_game_type_display }}</div>
+        <div class="text-muted fw-bold">{{ m.game.title }}</div>
+        <div class="mt-2">
+          <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">⭐ {{ m.game.points_reward }} pts propios</span>
+        </div>
+        <div class="btn btn-sm btn-outline-secondary rounded-pill mt-3 disabled">▶ El estudiante jugará aquí</div>
+      </div>
+      {% endwith %}
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="nestgrow-card p-5 text-center text-muted">
+    <div style="font-size:3rem">📋</div>
+    <div class="fw-bold mt-2">Este taller no tiene bloques aún.</div>
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

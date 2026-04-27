@@ -261,6 +261,35 @@ class TiendaItem(TimeStampedModel):
         return f"{self.icono} {self.nombre} ({self.costo_huesos} 🦴)"
 
 
+# ── Contenido personalizado por el profesor ───────────────────────────────────
+
+class ItemContenidoJuego(TimeStampedModel):
+    """
+    Contenido personalizado que el profesor define para un juego.
+    Reemplaza el vocabulario de categoría cuando existen items.
+    Cada tipo de juego usa los campos que necesita:
+      - texto_principal → word_en  (siempre requerido)
+      - texto_secundario → word_es (traducción, pista, pregunta)
+      - imagen           → image   (para drag_and_drop, puzzle, memoria)
+      - audio            → audio   (para audio_matching)
+    """
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='contenido_custom')
+    orden = models.PositiveIntegerField(default=0)
+    texto_principal = models.CharField(max_length=200, verbose_name='Texto principal')
+    texto_secundario = models.CharField(max_length=200, blank=True, verbose_name='Texto secundario')
+    imagen = models.ImageField(upload_to='games/contenido/', blank=True, null=True)
+    audio = models.FileField(upload_to='games/contenido/audio/', blank=True, null=True)
+    es_correcto = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'Item de Contenido'
+        verbose_name_plural = 'Items de Contenido'
+        ordering = ['orden', 'pk']
+
+    def __str__(self):
+        return f"{self.game.title} → {self.texto_principal}"
+
+
 class InventarioEstudiante(TimeStampedModel):
     """Items owned by a student."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,

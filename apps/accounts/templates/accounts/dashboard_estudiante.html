@@ -101,6 +101,14 @@
           </div>
         </a>
       </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'talleres:mis_talleres' %}" class="text-decoration-none">
+          <div class="text-center p-3 rounded-3" style="background:#f0fff4">
+            <div style="font-size:2rem">📋</div>
+            <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 
@@ -115,7 +123,7 @@
     </div>
     <div class="d-flex justify-content-between mt-1">
       <span class="text-muted small fw-bold">{{ profile.puntos_totales }} / {{ puntos_requeridos }} puntos para nivel {{ profile.nivel|add:1 }}</span>
-      {% if profile.nivel >= 10 %}
+      {% if profile.nivel >= 50 %}
       <span class="badge rounded-pill" style="background:var(--yellow);color:#333">🏆 ¡Nivel Máximo!</span>
       {% endif %}
     </div>
