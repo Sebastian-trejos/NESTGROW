@@ -4,16 +4,10 @@ from apps.core.models import TimeStampedModel, ActiveModel
 
 class Category(TimeStampedModel, ActiveModel):
     """Vocabulary category / topic (Animals, Colors, Numbers, etc.)"""
-    ICON_CHOICES = [
-        ('🐾', 'Animales'), ('🎨', 'Colores'), ('🔢', 'Números'),
-        ('🍎', 'Frutas'), ('🏠', 'Casa'), ('🏫', 'Escuela'),
-        ('👗', 'Ropa'), ('🌦️', 'Clima'), ('👨‍👩‍👧', 'Familia'),
-        ('🚗', 'Transporte'), ('🌿', 'Naturaleza'), ('🍔', 'Comida'),
-    ]
     name = models.CharField(max_length=100, verbose_name='Nombre (Español)')
     name_en = models.CharField(max_length=100, verbose_name='Nombre (Inglés)')
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=10, choices=ICON_CHOICES, default='🐾')
+    icon = models.CharField(max_length=10, default='🐾')
     color = models.CharField(max_length=7, default='#6C63FF',
                              help_text='Color HEX para la tarjeta (ej: #FF6B6B)')
     order = models.PositiveIntegerField(default=0)

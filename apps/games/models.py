@@ -241,12 +241,6 @@ class TiendaItem(TimeStampedModel):
     icono = models.CharField(max_length=10, default='🛋️')
     imagen = models.ImageField(upload_to='tienda/', blank=True, null=True,
                                help_text='Imagen del objeto en la habitación')
-    # Which minigame this item unlocks (optional)
-    juego_desbloqueado = models.ForeignKey(
-        'Game', on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='desbloqueado_por',
-        help_text='Minijuego que se desbloquea al comprar este objeto'
-    )
     posicion_x = models.IntegerField(default=0, help_text='Posición X en la habitación (%)')
     posicion_y = models.IntegerField(default=0, help_text='Posición Y en la habitación (%)')
     is_active = models.BooleanField(default=True)

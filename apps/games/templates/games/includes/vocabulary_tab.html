@@ -1,5 +1,11 @@
 <!-- Vocabulary Preview Tab (included before each game) -->
-<div class="vocab-tab-container">
+{% if embedded %}<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var gs = document.getElementById('gameSection');
+  if (gs) gs.style.display = 'block';
+});
+</script>{% endif %}
+<div class="vocab-tab-container" {% if embedded %}style="display:none"{% endif %}>
   <div class="vocab-tab-title">
     <span>📚</span>
     <span>Vocabulary Preview — {{ game.category.name_en }}</span>

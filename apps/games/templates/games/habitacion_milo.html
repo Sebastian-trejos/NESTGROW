@@ -253,7 +253,7 @@
     {% for inv in inventario %}
     <div class="room-item"
          style="left:{{ inv.item.posicion_x }}%;bottom:calc(38% + {{ inv.item.posicion_y }}px)"
-         onclick="{% if inv.item.juego_desbloqueado %}goToGame({{ inv.item.juego_desbloqueado.pk }}){% else %}showItemInfo('{{ inv.item.nombre }}', '{{ inv.item.descripcion }}'){% endif %}">
+         onclick="showItemInfo('{{ inv.item.nombre }}', '{{ inv.item.descripcion }}')">
 
       {% if inv.item.imagen %}
         <!-- ITEM IMAGE -->
@@ -263,14 +263,7 @@
         <span class="item-emoji">{{ inv.item.icono }}</span>
       {% endif %}
 
-      {% if inv.item.juego_desbloqueado %}
-      <div class="item-game-indicator">🎮</div>
-      {% endif %}
-
-      <div class="item-tooltip">
-        {{ inv.item.nombre }}
-        {% if inv.item.juego_desbloqueado %} — ¡Toca para jugar!{% endif %}
-      </div>
+      <div class="item-tooltip">{{ inv.item.nombre }}</div>
     </div>
     {% endfor %}
 
@@ -282,30 +275,6 @@
     {% endif %}
   </div>
 
-  <!-- Items list below room -->
-  {% if inventario %}
-  <div class="nestgrow-card p-4 mt-4">
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎮 Minijuegos desbloqueados</h5>
-    <div class="row g-3">
-      {% for inv in inventario %}
-      {% if inv.item.juego_desbloqueado %}
-      <div class="col-md-4">
-        <div class="d-flex align-items-center gap-3 p-3 rounded-3"
-             style="background:#f0eeff;cursor:pointer"
-             onclick="goToGame({{ inv.item.juego_desbloqueado.pk }})">
-          <span style="font-size:2rem">{{ inv.item.icono }}</span>
-          <div>
-            <div class="fw-bold" style="color:var(--primary)">{{ inv.item.juego_desbloqueado.title }}</div>
-            <div class="text-muted small fw-bold">Desbloqueado por: {{ inv.item.nombre }}</div>
-          </div>
-          <span class="ms-auto">▶</span>
-        </div>
-      </div>
-      {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
 
 </div>
 

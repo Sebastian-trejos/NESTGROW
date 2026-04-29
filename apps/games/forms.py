@@ -4,13 +4,19 @@ from apps.content.models import Category, VocabularyItem
 
 
 class CategoryForm(forms.ModelForm):
+    icon = forms.CharField(
+        max_length=10,
+        widget=forms.TextInput(attrs={'class': 'd-none', 'id': 'id_icon'}),
+        label='Ícono',
+        initial='📚',
+    )
+
     class Meta:
         model = Category
         fields = ('name', 'name_en', 'icon', 'description', 'color', 'order')
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Animales'}),
             'name_en': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Animals'}),
-            'icon': forms.Select(attrs={'class': 'form-select'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color'}),
             'order': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -18,7 +24,6 @@ class CategoryForm(forms.ModelForm):
         labels = {
             'name': 'Nombre en Español',
             'name_en': 'Name in English',
-            'icon': 'Ícono',
             'description': 'Descripción',
             'color': 'Color de la tarjeta',
             'order': 'Orden de aparición',

@@ -117,6 +117,14 @@ class EstudianteProfile(TimeStampedModel):
         """Points needed to reach next level from current level."""
         return self.PUNTOS_POR_NIVEL.get(self.nivel, 24000)
 
+    @property
+    def puntos_acumulados(self):
+        """Lifetime total points, never reset by level-ups."""
+        total = self.puntos_totales
+        for lvl in range(1, self.nivel):
+            total += self.PUNTOS_POR_NIVEL.get(lvl, 0)
+        return total
+
     def actualizar_nivel(self):
         """Check if student leveled up, reset points if so, award bones."""
         requeridos = self.puntos_requeridos()

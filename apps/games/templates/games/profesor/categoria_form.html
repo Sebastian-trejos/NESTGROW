@@ -23,10 +23,26 @@
           {{ form.name_en }}
           {% if form.name_en.errors %}<div class="text-danger small fw-bold mt-1">{{ form.name_en.errors.0 }}</div>{% endif %}
         </div>
+
+        <!-- Emoji picker -->
         <div class="col-md-6">
-          <label class="form-label fw-bold">{{ form.icon.label }}</label>
+          <label class="form-label fw-bold">Ícono de la Categoría</label>
           {{ form.icon }}
+          <div class="d-flex align-items-center gap-3">
+            <button type="button" id="emoji-btn"
+                    class="btn border-2 rounded-3 fw-bold p-2"
+                    style="font-size:2.8rem;line-height:1;min-width:72px;background:#f8f6ff;border-color:#d8d0ff">
+              {{ form.icon.value|default:"📚" }}
+            </button>
+            <div class="text-muted small">Haz clic para<br>elegir un emoji</div>
+          </div>
+          <div id="emoji-picker-container"
+               class="d-none position-absolute mt-1"
+               style="z-index:1050">
+            <emoji-picker></emoji-picker>
+          </div>
         </div>
+
         <div class="col-md-6">
           <label class="form-label fw-bold">{{ form.color.label }}</label>
           {{ form.color }}
@@ -53,4 +69,33 @@
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module">
+  import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js';
+
+  const btn = document.getElementById('emoji-btn');
+  const input = document.getElementById('id_icon');
+  const container = document.getElementById('emoji-picker-container');
+  const picker = container.querySelector('emoji-picker');
+
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    container.classList.toggle('d-none');
+  });
+
+  picker.addEventListener('emoji-click', event => {
+    const emoji = event.detail.unicode;
+    input.value = emoji;
+    btn.textContent = emoji;
+    container.classList.add('d-none');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!container.contains(e.target) && e.target !== btn) {
+      container.classList.add('d-none');
+    }
+  });
+</script>
 {% endblock %}

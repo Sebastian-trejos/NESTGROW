@@ -1,217 +1,448 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Panel del Profesor - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes miloFloat {
+    0%,100% { transform: translateY(0) rotate(-1deg); }
+    50%      { transform: translateY(-10px) rotate(1deg); }
+  }
+  @keyframes borderGlow {
+    0%,100% { box-shadow: 0 20px 60px rgba(108,99,255,0.15); }
+    50%      { box-shadow: 0 20px 60px rgba(255,107,107,0.2); }
+  }
+
+  .prof-hero {
+    background: linear-gradient(135deg, #FF6B6B 0%, #ff9494 50%, #FFB347 100%);
+    border-radius: 28px;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .prof-hero::before {
+    content:'';
+    position:absolute;
+    width:220px;height:220px;
+    background:rgba(255,255,255,0.06);
+    border-radius:50%;
+    top:-70px;right:-50px;
+  }
+  .prof-hero::after {
+    content:'';
+    position:absolute;
+    width:140px;height:140px;
+    background:rgba(255,255,255,0.06);
+    border-radius:50%;
+    bottom:-40px;left:15%;
+  }
+
+  .stat-card-prof {
+    background: white;
+    border-radius: 20px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.1);
+    transition: all 0.3s;
+    border-top: 4px solid var(--primary);
+    height: 100%;
+  }
+  .stat-card-prof:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(108,99,255,0.2);
+  }
+  .stat-icon-wrap {
+    width: 55px;height: 55px;
+    border-radius: 50%;
+    display: flex;align-items: center;justify-content: center;
+    margin: 0 auto 0.8rem;
+    font-size: 1.5rem;
+  }
+
+  .quick-card-prof {
+    background: white;
+    border-radius: 20px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.08);
+    transition: all 0.3s;
+    text-decoration: none;
+    display: block;
+    border: 2px solid transparent;
+    height: 100%;
+  }
+  .quick-card-prof:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 35px rgba(108,99,255,0.2);
+  }
+  .quick-icon-prof {
+    width: 60px;height: 60px;
+    border-radius: 18px;
+    display: flex;align-items: center;justify-content: center;
+    margin: 0 auto 0.8rem;
+    font-size: 1.6rem;
+    transition: all 0.3s;
+  }
+  .quick-card-prof:hover .quick-icon-prof {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .salon-card-prof {
+    background: white;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.1);
+    margin-bottom: 1.5rem;
+    border-left: 5px solid var(--primary);
+    transition: all 0.3s;
+  }
+  .salon-card-prof:hover {
+    box-shadow: 0 12px 35px rgba(108,99,255,0.18);
+  }
+
+  .codigo-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: var(--accent);
+    letter-spacing: 4px;
+    background: #f0fffe;
+    border-radius: 12px;
+    padding: 4px 14px;
+    display: inline-block;
+  }
+
+  .table-nestgrow thead th {
+    background: #f8f6ff;
+    color: var(--primary);
+    font-weight: 700;
+    border: none;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+  .table-nestgrow tbody td {
+    padding: 12px 16px;
+    border-color: #f0eeff;
+    vertical-align: middle;
+  }
+  .table-nestgrow tbody tr:hover {
+    background: #faf8ff;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
 
-  <!-- Milo Banner -->
-  <div class="milo-banner">
-    <div class="milo-banner-owl">🐺</div>
-    <div>
-      <div class="milo-banner-text">¡Hola, Profesor/a {{ user.first_name }}! 👩‍🏫</div>
-      <div class="text-muted fw-bold small">Gestiona tus salones y sigue el progreso de tus estudiantes.</div>
+  <!-- HERO -->
+  <div class="prof-hero">
+    <div class="row align-items-center position-relative" style="z-index:1">
+      <div class="col-md-8">
+        <div class="d-inline-flex align-items-center gap-2 mb-2 px-3 py-1 rounded-pill fw-bold"
+             style="background:rgba(255,255,255,0.2);font-size:0.85rem">
+          <i class="bi bi-mortarboard-fill"></i> Panel del Profesor
+        </div>
+        <h2 class="font-fredoka mb-1" style="font-size:2rem;line-height:1.1">
+          ¡Hola, {{ user.first_name }}! 
+        </h2>
+        <p style="opacity:0.85;font-weight:700;font-size:1rem;margin-bottom:1rem">
+          Gestiona tus salones y sigue el progreso de tus estudiantes.
+        </p>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="{% url 'accounts:crear_salon' %}"
+             style="background:white;color:#FF6B6B;border:none;border-radius:50px;
+                    padding:10px 24px;font-family:'Fredoka One',cursive;font-size:1rem;
+                    text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.15);
+                    transition:all 0.3s;display:inline-block"
+             onmouseover="this.style.transform='translateY(-2px)'"
+             onmouseout="this.style.transform='translateY(0)'">
+            <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Salón
+          </a>
+          <a href="{% url 'games:gestionar_juegos' %}"
+             style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.5);
+                    border-radius:50px;padding:10px 24px;font-family:'Fredoka One',cursive;
+                    font-size:1rem;text-decoration:none;transition:all 0.3s;display:inline-block"
+             onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+            <i class="bi bi-controller-fill me-1"></i>Gestionar Juegos
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center d-none d-md-block">
+        <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo"
+             style="width:150px;filter:drop-shadow(0 10px 25px rgba(0,0,0,0.2));
+                    animation:miloFloat 4s ease-in-out infinite">
+      </div>
     </div>
   </div>
 
-  <!-- Stats -->
-  <div class="row g-4 mb-4">
+  <!-- STATS -->
+  <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div style="font-size:2rem">🏫</div>
-        <div class="stat-number">{{ total_salones }}</div>
-        <div class="stat-label">Salones</div>
+      <div class="stat-card-prof" style="border-top-color:#6C63FF">
+        <div class="stat-icon-wrap" style="background:#f0eeff">
+          <i class="bi bi-building-fill" style="color:#6C63FF"></i>
+        </div>
+        <div class="font-fredoka" style="font-size:2rem;color:#6C63FF">{{ total_salones }}</div>
+        <div style="font-size:0.8rem;font-weight:700;color:#888">Salones</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:var(--accent)">
-        <div style="font-size:2rem">👨‍🎓</div>
-        <div class="stat-number" style="color:var(--accent)">{{ total_estudiantes }}</div>
-        <div class="stat-label">Estudiantes</div>
+      <div class="stat-card-prof" style="border-top-color:#4ECDC4">
+        <div class="stat-icon-wrap" style="background:#f0fffe">
+          <i class="bi bi-people-fill" style="color:#4ECDC4"></i>
+        </div>
+        <div class="font-fredoka" style="font-size:2rem;color:#4ECDC4">{{ total_estudiantes }}</div>
+        <div style="font-size:0.8rem;font-weight:700;color:#888">Estudiantes</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:var(--secondary)">
-        <div style="font-size:2rem">🏫</div>
-        <div class="stat-number" style="color:var(--secondary);font-size:1rem;margin-top:8px">
+      <div class="stat-card-prof" style="border-top-color:#FF6B6B">
+        <div class="stat-icon-wrap" style="background:#fff0f0">
+          <i class="bi bi-bank2" style="color:#FF6B6B"></i>
+        </div>
+        <div style="font-size:0.85rem;font-weight:700;color:#FF6B6B;margin-top:4px">
           {{ profile.institucion|default:"Sin especificar" }}
         </div>
-        <div class="stat-label">Institución</div>
+        <div style="font-size:0.8rem;font-weight:700;color:#888">Institución</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:var(--orange)">
-        <div style="font-size:2rem">🔑</div>
-        <div class="font-fredoka" style="font-size:1.6rem;color:var(--orange);letter-spacing:4px">
-          {{ profile.codigo_clase }}
+      <div class="stat-card-prof" style="border-top-color:#FFB347">
+        <div class="stat-icon-wrap" style="background:#fff9ee">
+          <i class="bi bi-key-fill" style="color:#FFB347"></i>
         </div>
-        <div class="stat-label">Código Profe</div>
+        <div class="codigo-badge">{{ profile.codigo_clase }}</div>
+        <div style="font-size:0.8rem;font-weight:700;color:#888;margin-top:4px">Código Profe</div>
       </div>
     </div>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="nestgrow-card p-4 mb-4" style="border-left:5px solid var(--primary)">
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">⚡ Acciones Rápidas</h5>
+  <!-- ACCIONES RÁPIDAS -->
+  <div class="nestgrow-card p-4 mb-4">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">
+      <i class="bi bi-lightning-charge-fill me-2" style="color:#FFB347"></i>Acciones Rápidas
+    </h5>
     <div class="row g-3">
       <div class="col-6 col-md-3">
-        <a href="{% url 'accounts:crear_salon' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0eeff;transition:all 0.2s" onmouseover="this.style.background='#e0d8ff'" onmouseout="this.style.background='#f0eeff'">
-            <div style="font-size:2rem">🏫</div>
-            <div class="fw-bold small" style="color:var(--primary)">Nuevo Salón</div>
+        <a href="{% url 'accounts:crear_salon' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#6C63FF'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#f0eeff">
+            <i class="bi bi-building-fill" style="color:#6C63FF"></i>
           </div>
+          <div class="fw-bold small" style="color:#6C63FF">Nuevo Salón</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'games:gestionar_juegos' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#fff5f5;transition:all 0.2s" onmouseover="this.style.background='#ffe0e0'" onmouseout="this.style.background='#fff5f5'">
-            <div style="font-size:2rem">🎮</div>
-            <div class="fw-bold small" style="color:var(--secondary)">Gestionar Juegos</div>
+        <a href="{% url 'games:gestionar_juegos' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#FF6B6B'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#fff0f0">
+            <i class="bi bi-controller" style="color:#FF6B6B"></i>
           </div>
+          <div class="fw-bold small" style="color:#FF6B6B">Gestionar Juegos</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'games:gestionar_categorias' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0fffe;transition:all 0.2s" onmouseover="this.style.background='#d8f8f5'" onmouseout="this.style.background='#f0fffe'">
-            <div style="font-size:2rem">📚</div>
-            <div class="fw-bold small" style="color:var(--accent)">Categorías</div>
+        <a href="{% url 'games:gestionar_categorias' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#4ECDC4'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#f0fffe">
+            <i class="bi bi-book-fill" style="color:#4ECDC4"></i>
           </div>
+          <div class="fw-bold small" style="color:#4ECDC4">Categorías</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'accounts:editar_perfil_profesor' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#fff9e6;transition:all 0.2s" onmouseover="this.style.background='#fff0b3'" onmouseout="this.style.background='#fff9e6'">
-            <div style="font-size:2rem">✏️</div>
-            <div class="fw-bold small" style="color:var(--orange)">Mi Perfil</div>
+        <a href="{% url 'accounts:editar_perfil_profesor' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#FFB347'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#fff9ee">
+            <i class="bi bi-pencil-fill" style="color:#FFB347"></i>
           </div>
+          <div class="fw-bold small" style="color:#FFB347">Mi Perfil</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'games:museo_virtual' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#fff0fb;transition:all 0.2s" onmouseover="this.style.background='#ffd6f5'" onmouseout="this.style.background='#fff0fb'">
-            <div style="font-size:2rem">🏛️</div>
-            <div class="fw-bold small" style="color:#c060a0">Museo Virtual</div>
+        <a href="{% url 'games:museo_virtual' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#9c94ff'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#f0eeff">
+            <i class="bi bi-image-fill" style="color:#9c94ff"></i>
           </div>
+          <div class="fw-bold small" style="color:#9c94ff">Museo Virtual</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'talleres:lista' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0fff4;transition:all 0.2s" onmouseover="this.style.background='#d0f0dc'" onmouseout="this.style.background='#f0fff4'">
-            <div style="font-size:2rem">📋</div>
-            <div class="fw-bold small" style="color:#2e7d52">Mis Talleres</div>
+        <a href="{% url 'talleres:lista' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#2e7d52'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#f0fff4">
+            <i class="bi bi-clipboard2-check-fill" style="color:#2e7d52"></i>
           </div>
+          <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Salones -->
+  <!-- MIS SALONES -->
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="font-fredoka mb-0" style="color:var(--primary)">🏫 Mis Salones</h4>
-    <a href="{% url 'accounts:crear_salon' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
-      ➕ Nuevo Salón
+    <h4 class="font-fredoka mb-0" style="color:var(--primary)">
+      <i class="bi bi-building-fill me-2"></i>Mis Salones
+    </h4>
+    <a href="{% url 'accounts:crear_salon' %}"
+       class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
+      <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Salón
     </a>
   </div>
 
   {% if salones %}
-    {% for salon in salones %}
-    <div class="nestgrow-card p-4 mb-4">
-      <!-- Salon Header -->
-      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <div>
-          <h5 class="font-fredoka mb-0" style="color:var(--primary)">
-            🏫 {{ salon.nombre }}
-            <span class="badge rounded-pill ms-2" style="background:var(--primary);color:white;font-size:0.75rem">
-              {{ salon.get_grado_display }}
-            </span>
-          </h5>
-          <div class="text-muted small fw-bold mt-1">
-            Código: <strong style="color:var(--accent);letter-spacing:3px">{{ salon.codigo_clase }}</strong>
-            · {{ salon.estudiantes.count }} estudiante{{ salon.estudiantes.count|pluralize:"s" }}
-            {% if salon.descripcion %} · {{ salon.descripcion }}{% endif %}
-          </div>
-        </div>
-        <div class="d-flex gap-2">
-          <a href="{% url 'accounts:detalle_salon' salon.pk %}" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">
-            Ver detalle →
-          </a>
-          <a href="{% url 'accounts:editar_salon' salon.pk %}" class="btn btn-sm btn-outline-warning rounded-pill">✏️</a>
-          <a href="{% url 'accounts:eliminar_salon' salon.pk %}" class="btn btn-sm btn-outline-danger rounded-pill">🗑️</a>
-        </div>
-      </div>
+  {% for salon in salones %}
+  <div class="salon-card-prof">
 
-      <!-- Students mini table -->
-      {% if salon.estudiantes.all %}
-      <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle mb-0">
-          <thead style="background:#f8f6ff">
-            <tr>
-              <th>Estudiante</th>
-              <th>N° Identidad</th>
-              <th>Puntos</th>
-              <th>Nota (1-5)</th>
-              <th>Nivel</th>
-              <th>Correo Padre</th>
-              <th>Informe</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for est in salon.estudiantes.all %}
-            <tr>
-              <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
-              <td><span class="text-muted small">{{ est.numero_identidad|default:"—" }}</span></td>
-              <td><span class="fw-bold" style="color:var(--primary)">⭐ {{ est.puntos_totales }}</span></td>
-              <td>
-                {% with pct=est.puntos_totales %}
-                {% if pct >= 90 %}<span class="badge rounded-pill" style="background:#d4edda;color:#155724;font-size:0.9rem">5.0</span>
-                {% elif pct >= 80 %}<span class="badge rounded-pill" style="background:#d4edda;color:#155724;font-size:0.9rem">4.5</span>
-                {% elif pct >= 70 %}<span class="badge rounded-pill" style="background:#cce5ff;color:#004085;font-size:0.9rem">4.0</span>
-                {% elif pct >= 60 %}<span class="badge rounded-pill" style="background:#cce5ff;color:#004085;font-size:0.9rem">3.5</span>
-                {% elif pct >= 50 %}<span class="badge rounded-pill" style="background:#fff3cd;color:#856404;font-size:0.9rem">3.0</span>
-                {% elif pct >= 40 %}<span class="badge rounded-pill" style="background:#fff3cd;color:#856404;font-size:0.9rem">2.5</span>
-                {% else %}<span class="badge rounded-pill" style="background:#f8d7da;color:#721c24;font-size:0.9rem">2.0</span>
-                {% endif %}
-                {% endwith %}
-              </td>
-              <td><span class="level-badge">Nv. {{ est.nivel }}</span></td>
-              <td>
-                {% if est.correo_padre %}
-                  <span class="text-success small fw-bold">✅ {{ est.correo_padre }}</span>
-                {% else %}
-                  <span class="text-muted small">Sin correo</span>
-                {% endif %}
-              </td>
-              <td>
-                {% if est.correo_padre %}
-                <a href="{% url 'accounts:enviar_informe' est.pk %}"
-                   class="btn btn-sm btn-outline-primary rounded-pill fw-bold"
-                   onclick="return confirm('¿Enviar informe PDF a {{ est.correo_padre }}?')">
-                  📧 Enviar PDF
-                </a>
-                {% else %}
-                <span class="text-muted small">Sin correo</span>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="text-center py-3">
-        <div class="text-muted fw-bold">
-          🐺 Comparte el código <strong style="color:var(--primary);letter-spacing:3px">{{ salon.codigo_clase }}</strong> con tus estudiantes para que se unan.
+    <!-- Header del salón -->
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <div>
+        <h5 class="font-fredoka mb-1" style="color:var(--primary)">
+          <i class="bi bi-building-fill me-2"></i>{{ salon.nombre }}
+          <span class="badge rounded-pill ms-2"
+                style="background:var(--primary);color:white;font-size:0.75rem">
+            {{ salon.get_grado_display }}
+          </span>
+        </h5>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <span class="text-muted small fw-bold">
+            <i class="bi bi-people-fill me-1" style="color:var(--accent)"></i>
+            {{ salon.estudiantes.count }} estudiante{{ salon.estudiantes.count|pluralize:"s" }}
+          </span>
+          <span>
+            <i class="bi bi-key-fill me-1" style="color:#FFB347"></i>
+            <span class="codigo-badge" style="font-size:1rem;padding:2px 10px">{{ salon.codigo_clase }}</span>
+          </span>
+          {% if salon.descripcion %}
+          <span class="text-muted small fw-bold">{{ salon.descripcion }}</span>
+          {% endif %}
         </div>
       </div>
-      {% endif %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'accounts:detalle_salon' salon.pk %}"
+           class="btn btn-sm rounded-pill fw-bold"
+           style="background:#f0eeff;color:var(--primary);border:none">
+          <i class="bi bi-eye-fill me-1"></i>Ver detalle
+        </a>
+        <a href="{% url 'accounts:editar_salon' salon.pk %}"
+           class="btn btn-sm rounded-pill fw-bold"
+           style="background:#fff9ee;color:#FFB347;border:none">
+          <i class="bi bi-pencil-fill"></i>
+        </a>
+        <a href="{% url 'accounts:eliminar_salon' salon.pk %}"
+           class="btn btn-sm rounded-pill fw-bold"
+           style="background:#fff0f0;color:#FF6B6B;border:none">
+          <i class="bi bi-trash-fill"></i>
+        </a>
+      </div>
     </div>
-    {% endfor %}
+
+    <!-- Tabla estudiantes -->
+    {% if salon.estudiantes.all %}
+    <div class="table-responsive">
+      <table class="table table-nestgrow mb-0">
+        <thead>
+          <tr>
+            <th><i class="bi bi-person-fill me-1"></i>Estudiante</th>
+            <th><i class="bi bi-card-text me-1"></i>N° Identidad</th>
+            <th><i class="bi bi-star-fill me-1"></i>Puntos</th>
+            <th><i class="bi bi-clipboard-check-fill me-1"></i>Nota</th>
+            <th><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
+            <th><i class="bi bi-envelope-fill me-1"></i>Correo Padre</th>
+            <th><i class="bi bi-send-fill me-1"></i>Informe</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for est in salon.estudiantes.all %}
+          <tr>
+            <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
+            <td><span class="text-muted small">{{ est.numero_identidad|default:"—" }}</span></td>
+            <td>
+              <span class="fw-bold" style="color:var(--primary)">
+                <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ est.puntos_totales }}
+              </span>
+            </td>
+            <td>
+              {% with pct=est.puntos_totales %}
+              {% if pct >= 90 %}<span class="badge rounded-pill" style="background:#d4edda;color:#155724">5.0</span>
+              {% elif pct >= 80 %}<span class="badge rounded-pill" style="background:#d4edda;color:#155724">4.5</span>
+              {% elif pct >= 70 %}<span class="badge rounded-pill" style="background:#cce5ff;color:#004085">4.0</span>
+              {% elif pct >= 60 %}<span class="badge rounded-pill" style="background:#cce5ff;color:#004085">3.5</span>
+              {% elif pct >= 50 %}<span class="badge rounded-pill" style="background:#fff3cd;color:#856404">3.0</span>
+              {% elif pct >= 40 %}<span class="badge rounded-pill" style="background:#fff3cd;color:#856404">2.5</span>
+              {% else %}<span class="badge rounded-pill" style="background:#f8d7da;color:#721c24">2.0</span>
+              {% endif %}
+              {% endwith %}
+            </td>
+            <td><span class="level-badge">Nv. {{ est.nivel }}</span></td>
+            <td>
+              {% if est.correo_padre %}
+                <span class="small fw-bold" style="color:#4ECDC4">
+                  <i class="bi bi-check-circle-fill me-1"></i>{{ est.correo_padre }}
+                </span>
+              {% else %}
+                <span class="text-muted small">
+                  <i class="bi bi-x-circle me-1"></i>Sin correo
+                </span>
+              {% endif %}
+            </td>
+            <td>
+              {% if est.correo_padre %}
+              <a href="{% url 'accounts:enviar_informe' est.pk %}"
+                 class="btn btn-sm rounded-pill fw-bold"
+                 style="background:#f0eeff;color:var(--primary);border:none"
+                 onclick="return confirm('¿Enviar informe PDF a {{ est.correo_padre }}?')">
+                <i class="bi bi-send-fill me-1"></i>Enviar PDF
+              </a>
+              {% else %}
+              <span class="text-muted small">Sin correo</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-3" style="background:#f8f6ff;border-radius:14px">
+      <i class="bi bi-person-plus-fill" style="font-size:2rem;color:#ccc"></i>
+      <p class="text-muted fw-bold small mt-2 mb-0">
+        Comparte el código
+        <span class="codigo-badge" style="font-size:1rem">{{ salon.codigo_clase }}</span>
+        con tus estudiantes para que se unan.
+      </p>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
   {% else %}
   <div class="nestgrow-card p-5 text-center">
-    <div style="font-size:5rem">🏫</div>
-    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Aún no tienes salones!</h4>
+    <div style="width:90px;height:90px;border-radius:50%;background:#f0eeff;
+                display:flex;align-items:center;justify-content:center;
+                margin:0 auto 1rem">
+      <i class="bi bi-building-fill" style="font-size:2.5rem;color:var(--primary)"></i>
+    </div>
+    <h4 class="font-fredoka mt-2" style="color:var(--primary)">¡Aún no tienes salones!</h4>
     <p class="text-muted fw-bold">Crea tu primer salón para empezar a gestionar tus estudiantes.</p>
-    <a href="{% url 'accounts:crear_salon' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
-      ➕ Crear mi primer salón
+    <a href="{% url 'accounts:crear_salon' %}"
+       class="btn btn-nestgrow btn-primary-nestgrow mt-2">
+      <i class="bi bi-plus-circle-fill me-2"></i>Crear mi primer salón
     </a>
   </div>
   {% endif %}

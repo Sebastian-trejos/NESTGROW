@@ -62,7 +62,7 @@ class PaintingWordAdmin(admin.ModelAdmin):
 
 @admin.register(TiendaItem)
 class TiendaItemAdmin(admin.ModelAdmin):
-    list_display = ('icono', 'nombre', 'categoria', 'costo_huesos', 'juego_desbloqueado', 'is_active', 'order')
+    list_display = ('icono', 'nombre', 'categoria', 'costo_huesos', 'is_active', 'order')
     list_editable = ('costo_huesos', 'is_active', 'order')
     list_filter = ('categoria', 'is_active')
     search_fields = ('nombre',)

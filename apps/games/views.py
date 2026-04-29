@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.contrib import messages
 import json
 
@@ -147,6 +148,62 @@ def game_detail(request, pk):
     return render(request, template, context)
 
 
+@xframe_options_exempt
+@login_required
+def game_embed(request, pk):
+    """Render a game without navbar/footer, for embedding inside talleres."""
+    game = get_object_or_404(Game, pk=pk)
+    vocabulary = VocabularyItem.objects.filter(category=game.category, is_active=True)
+    progress, _ = UserProgress.objects.get_or_create(user=request.user, game=game)
+    top_scores = Score.objects.filter(game=game).select_related('user').order_by('-score')[:5]
+
+    template_map = {
+        'drag_and_drop': 'games/drag_and_drop.html',
+        'word_search': 'games/word_search.html',
+        'puzzle': 'games/puzzle.html',
+        'audio_matching': 'games/audio_game.html',
+        'painting': 'games/painting.html',
+        'memoria': 'games/memoria.html',
+        'ahorcado': 'games/ahorcado.html',
+        'quiz': 'games/quiz.html',
+        'ordenar_letras': 'games/ordenar_letras.html',
+        'globos': 'games/globos.html',
+    }
+    template = template_map.get(game.game_type, 'games/game_detail.html')
+
+    painting_words = []
+    if game.game_type == 'painting':
+        painting_words = list(game.painting_words.values_list('word', flat=True))
+
+    items_custom = game.contenido_custom.order_by('orden')
+    if items_custom.exists():
+        vocabulary_json = json.dumps([
+            {'id': item.pk, 'word_en': item.texto_principal, 'word_es': item.texto_secundario,
+             'image': item.imagen.url if item.imagen else None,
+             'audio': item.audio.url if item.audio else None,
+             'es_correcto': item.es_correcto}
+            for item in items_custom
+        ])
+    else:
+        vocabulary_json = json.dumps([
+            {'id': v.id, 'word_en': v.word_en, 'word_es': v.word_es,
+             'image': v.image.url if v.image else None,
+             'audio': v.audio.url if v.audio else None}
+            for v in vocabulary
+        ])
+
+    return render(request, template, {
+        'game': game,
+        'vocabulary': vocabulary,
+        'progress': progress,
+        'top_scores': top_scores,
+        'painting_words_json': json.dumps(painting_words),
+        'words_json': json.dumps(painting_words),
+        'vocabulary_json': vocabulary_json,
+        'embedded': True,
+    })
+
+
 @login_required
 def ranking_salon(request):
     """Classroom ranking view."""
@@ -159,7 +216,11 @@ def ranking_salon(request):
         messages.info(request, 'Únete a un salón para ver el ranking.')
         return redirect('accounts:dashboard_estudiante')
 
-    compañeros = salon.estudiantes.select_related('user').order_by('-puntos_totales')
+    compañeros = sorted(
+        salon.estudiantes.select_related('user').all(),
+        key=lambda p: p.puntos_acumulados,
+        reverse=True,
+    )
 
     logros_nuevos = []
     if request.user.role == 'estudiante':
@@ -702,7 +763,7 @@ def habitacion_milo(request):
 
     inventario = InventarioEstudiante.objects.filter(
         user=request.user
-    ).select_related('item', 'item__juego_desbloqueado')
+    ).select_related('item')
 
     logros_nuevos = LogroUsuario.objects.filter(
         user=request.user, visto=False).select_related('logro')

@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Editar Perfil - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .profile-card {
+    background: linear-gradient(135deg, #f8f6ff 0%, #f0eeff 50%, #ffe9f0 100%);
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(108,99,255,0.15);
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container py-5" style="max-width:600px">
+<div class="container py-5" style="max-width:600px;background:linear-gradient(135deg,#f0eeff,#e8e3ff);min-height:100vh">
   <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">✏️ Editar Mi Perfil</h3>
+    <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-arrow-left me-1"></i> Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)"><i class="bi bi-pencil-fill me-2"></i>Editar Mi Perfil</h3>
   </div>
-  <div class="nestgrow-card p-5">
+  
+  <div class="profile-card">
     <form method="post" novalidate>
       {% csrf_token %}
-      <h5 class="font-fredoka mb-3" style="color:var(--primary)">👤 Datos Personales</h5>
+      <h5 class="font-fredoka mb-3" style="color:var(--primary)"><i class="bi bi-person-fill me-2"></i>Datos Personales</h5>
       {% for field in user_form %}
       <div class="mb-3">
         <label class="form-label fw-bold">{{ field.label }}</label>
@@ -17,8 +31,8 @@
         {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
       </div>
       {% endfor %}
-      <hr class="my-4">
-      <h5 class="font-fredoka mb-3" style="color:var(--primary)">🏫 Datos Profesionales</h5>
+      <hr class="my-4" style="border-color:#e8e4ff">
+      <h5 class="font-fredoka mb-3" style="color:var(--primary)"><i class="bi bi-briefcase-fill me-2" style="color:#9c94ff"></i>Datos Profesionales</h5>
       {% for field in profile_form %}
       <div class="mb-3">
         <label class="form-label fw-bold">{{ field.label }}</label>
@@ -26,8 +40,8 @@
         {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
       </div>
       {% endfor %}
-      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mt-2">
-        ✅ Guardar cambios
+      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mt-3 py-3 fw-bold" style="border-radius:50px;font-size:1.1rem">
+        <i class="bi bi-check-circle-fill me-2"></i>Guardar cambios
       </button>
     </form>
   </div>

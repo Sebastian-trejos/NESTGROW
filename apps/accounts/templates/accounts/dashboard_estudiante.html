@@ -1,213 +1,507 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Mi Panel - NestGrow{% endblock %}
 
+{% block extra_css %}
+<style>
+  @keyframes miloFloat {
+    0%,100% { transform: translateY(0) rotate(-1deg); }
+    50%      { transform: translateY(-12px) rotate(1deg); }
+  }
+  @keyframes starFloat {
+    0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
+    50%      { transform: translateY(-8px) rotate(15deg); opacity:1; }
+  }
+  @keyframes progressPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(108,99,255,0.3); }
+    50%      { box-shadow: 0 0 0 6px rgba(108,99,255,0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* Hero banner */
+  .dash-hero {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    border-radius: 28px;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .dash-hero::before {
+    content:'';
+    position:absolute;
+    width:200px;height:200px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.08);
+    top:-60px;right:-60px;
+  }
+  .dash-hero::after {
+    content:'';
+    position:absolute;
+    width:150px;height:150px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    bottom:-40px;left:20%;
+  }
+
+  /* Stat cards */
+  .stat-card-new {
+    background: white;
+    border-radius: 20px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.1);
+    transition: all 0.3s;
+    border-top: 4px solid var(--primary);
+    animation: fadeInUp 0.5s ease both;
+  }
+  .stat-card-new:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(108,99,255,0.2); }
+  .stat-number-new {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--primary);
+  }
+  .stat-label-new { font-size: 0.8rem; font-weight: 700; color: #888; margin-top: 4px; }
+  .stat-icon-new { font-size: 1.8rem; margin-bottom: 6px; }
+
+  /* Quick action cards */
+  .quick-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.08);
+    transition: all 0.3s;
+    text-decoration: none;
+    display: block;
+    border: 2px solid transparent;
+  }
+  .quick-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+    box-shadow: 0 15px 35px rgba(108,99,255,0.15);
+  }
+  .quick-icon {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.8rem;
+    font-size: 1.6rem;
+  }
+
+  /* Progress bar */
+  .progress-nestgrow {
+    height: 14px;
+    border-radius: 20px;
+    background: #f0eeff;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill-new {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    transition: width 1s ease;
+    animation: progressPulse 2s infinite;
+  }
+
+  /* Game cards */
+  .game-progress-card {
+    background: white;
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.08);
+    border: 2px solid #f0eeff;
+    transition: all 0.3s;
+  }
+  .game-progress-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-3px);
+  }
+
+  /* Section titles */
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    color: var(--primary);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Level badge */
+  .level-pill {
+    background: linear-gradient(135deg, #FFE66D, #FFB347);
+    color: #333;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 6px 18px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(255,179,71,0.3);
+  }
+
+  /* Logro badge */
+  .logro-badge {
+    background: white;
+    border-radius: 18px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.1);
+    transition: all 0.3s;
+    border: 2px solid transparent;
+  }
+  .logro-badge:hover { transform: translateY(-4px); }
+
+  /* Star decorations */
+  .star-deco {
+    position: absolute;
+    animation: starFloat 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
+
+
 <div class="container py-4">
 
-  <div class="milo-banner">
-    <div class="milo-banner-owl">🐺</div>
-    <div>
-      <div class="milo-banner-text">¡Hola, {{ user.first_name }}! 🌟 ¡Sigue así, campeón!</div>
-      <div class="text-muted fw-bold small">Milo está muy orgulloso de tu progreso. ¡Tú puedes!</div>
-    </div>
-  </div>
+  <!-- ══════════════════════════════════
+       HERO BANNER
+  ══════════════════════════════════ -->
+  <div class="dash-hero">
+    <!-- Estrellas decorativas -->
+    <span class="star-deco" style="top:10%;left:2%;font-size:1.2rem;animation-delay:0s">
+      <i class="bi bi-star-fill" style="color:rgba(255,255,255,0.4)"></i>
+    </span>
+    <span class="star-deco" style="top:20%;left:5%;font-size:0.8rem;animation-delay:0.5s">
+      <i class="bi bi-sparkle-fill" style="color:rgba(255,255,255,0.3)"></i>
+    </span>
+    <span class="star-deco" style="bottom:15%;right:25%;font-size:1rem;animation-delay:1s">
+      <i class="bi bi-star-fill" style="color:rgba(255,255,255,0.3)"></i>
+    </span>
 
-  <!-- Stats -->
-  <div class="row g-4 mb-4 mt-1">
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div style="font-size:2rem">⭐</div>
-        <div class="stat-number">{{ profile.puntos_totales }}</div>
-        <div class="stat-label">Puntos</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:#8B4513">
-        <div style="font-size:2rem">🦴</div>
-        <div class="stat-number" style="color:#8B4513">{{ user.huesos }}</div>
-        <div class="stat-label">Huesos de Milo</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:var(--secondary)">
-        <div style="font-size:2rem">🏆</div>
-        <div class="stat-number" style="color:var(--secondary)">{{ profile.nivel }}</div>
-        <div class="stat-label">Nivel</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card" style="border-top-color:var(--accent)">
-        <div style="font-size:2rem">✅</div>
-        <div class="stat-number" style="color:var(--accent)">{{ juegos_completados }}</div>
-        <div class="stat-label">Completados</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Quick Actions -->
-  <div class="nestgrow-card p-4 mb-4" style="border-left:5px solid var(--primary)">
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">⚡ Accesos Rápidos</h5>
-    <div class="row g-3">
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:game_list' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0eeff">
-            <div style="font-size:2rem">🎮</div>
-            <div class="fw-bold small" style="color:var(--primary)">Jugar</div>
+    <div class="row align-items-center">
+      <div class="col-md-7 position-relative" style="z-index:1">
+        <!-- Avatar -->
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="flex-shrink:0">
+            {% if user.avatar %}
+              <img src="{{ user.avatar.url }}"
+                   style="width:70px;height:70px;border-radius:50%;display:block;
+                          border:3px solid rgba(255,255,255,0.5);
+                          box-shadow:0 4px 15px rgba(0,0,0,0.2);object-fit:cover;">
+            {% else %}
+              <div style="width:70px;height:70px;border-radius:50%;
+                          background:rgba(255,255,255,0.2);display:flex;
+                          align-items:center;justify-content:center;font-size:2rem;
+                          border:3px solid rgba(255,255,255,0.4);">
+                <i class="bi bi-person-fill" style="color:white"></i>
+              </div>
+            {% endif %}
           </div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:mis_logros' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#fff9e6">
-            <div style="font-size:2rem">🏅</div>
-            <div class="fw-bold small" style="color:var(--orange)">
-              Mis Logros
-              {% if logros_pendientes > 0 %}
-              <span class="badge rounded-pill ms-1" style="background:var(--secondary);color:white">{{ logros_pendientes }}</span>
-              {% endif %}
+          <div>
+            <div style="font-family:'Fredoka One',cursive;font-size:1.8rem;line-height:1">
+              ¡Hola, {{ user.first_name }}! <i class="bi bi-emoji-laughing-fill"></i>
+            </div>
+            <div style="opacity:0.85;font-weight:700;font-size:0.95rem">
+              Milo está muy orgulloso de tu progreso
             </div>
           </div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:ranking_salon' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#fff5f5">
-            <div style="font-size:2rem">🏆</div>
-            <div class="fw-bold small" style="color:var(--secondary)">Ranking</div>
+        </div>
+
+        <!-- Chips de estado -->
+        <div class="d-flex gap-2 flex-wrap">
+          <div class="px-3 py-1 rounded-pill fw-bold"
+               style="background:rgba(255,255,255,0.2);font-size:0.85rem">
+            <i class="bi bi-trophy-fill me-1" style="color:#FFE66D"></i>
+            Nivel {{ profile.nivel }}
           </div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'content:category_list' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0fffe">
-            <div style="font-size:2rem">📚</div>
-            <div class="fw-bold small" style="color:var(--accent)">Vocabulario</div>
+          <div class="px-3 py-1 rounded-pill fw-bold"
+               style="background:rgba(255,255,255,0.2);font-size:0.85rem">
+            <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>
+            {{ profile.puntos_totales }} pts
           </div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:habitacion_milo' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0f8ff">
-            <div style="font-size:2rem">🏠</div>
-            <div class="fw-bold small" style="color:#4a90d9">Habitación</div>
+          <div class="px-3 py-1 rounded-pill fw-bold"
+               style="background:rgba(255,255,255,0.2);font-size:0.85rem">
+            <i class="bi bi-heart-fill me-1" style="color:#FF6B6B"></i>
+            {{ user.huesos }} huesos
           </div>
-        </a>
+        </div>
       </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:tienda' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#fff5eb">
-            <div style="font-size:2rem">🛒</div>
-            <div class="fw-bold small" style="color:#8B4513">Tienda</div>
-          </div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'talleres:mis_talleres' %}" class="text-decoration-none">
-          <div class="text-center p-3 rounded-3" style="background:#f0fff4">
-            <div style="font-size:2rem">📋</div>
-            <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
-          </div>
-        </a>
+
+      <!-- Milo en el hero -->
+      <div class="col-md-5 text-center d-none d-md-block" style="position:relative;z-index:1">
+        <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo"
+             style="width:160px;filter:drop-shadow(0 10px 25px rgba(0,0,0,0.2));
+                    animation:miloFloat 4s ease-in-out infinite;">
       </div>
     </div>
   </div>
 
-  <!-- Level Progress -->
+  <!-- ══════════════════════════════════
+       PROGRESO DE NIVEL
+  ══════════════════════════════════ -->
   <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
-      <h5 class="font-fredoka mb-0" style="color:var(--primary)">🚀 Tu Progreso</h5>
-      <span class="level-badge">Nivel {{ profile.nivel }}</span>
+      <div class="section-title mb-0">
+        <i class="bi bi-rocket-takeoff-fill" style="color:var(--primary)"></i>
+        Tu Progreso
+      </div>
+      <span class="level-pill">Nivel {{ profile.nivel }}</span>
     </div>
-    <div class="progress-bar-nestgrow">
-      <div class="progress-fill" style="width:{% widthratio profile.puntos_totales puntos_requeridos 100 %}%;max-width:100%"></div>
+    <div class="progress-nestgrow">
+      <div class="progress-fill-new"
+           style="width:{% widthratio profile.puntos_totales puntos_requeridos 100 %}%;max-width:100%">
+      </div>
     </div>
     <div class="d-flex justify-content-between mt-1">
-      <span class="text-muted small fw-bold">{{ profile.puntos_totales }} / {{ puntos_requeridos }} puntos para nivel {{ profile.nivel|add:1 }}</span>
-      {% if profile.nivel >= 50 %}
-      <span class="badge rounded-pill" style="background:var(--yellow);color:#333">🏆 ¡Nivel Máximo!</span>
+      <span class="text-muted small fw-bold">
+        <i class="bi bi-star-fill me-1" style="color:#FFB347"></i>
+        {{ profile.puntos_totales }} / {{ puntos_requeridos }} pts para nivel {{ profile.nivel|add:1 }}
+      </span>
+      {% if profile.nivel >= 10 %}
+      <span class="badge rounded-pill" style="background:var(--yellow);color:#333">
+        <i class="bi bi-trophy-fill me-1"></i>¡Nivel Máximo!
+      </span>
       {% endif %}
     </div>
   </div>
 
-  <!-- Join class if no salon -->
+  <!-- ══════════════════════════════════
+       ACCESOS RÁPIDOS
+  ══════════════════════════════════ -->
+  <div class="section-title">
+    <i class="bi bi-lightning-charge-fill" style="color:#FFB347"></i>
+    Accesos Rápidos
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <a href="{% url 'games:game_list' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#f0eeff,#e0d9ff)">
+          <i class="bi bi-controller" style="color:#6C63FF"></i>
+        </div>
+        <div class="fw-bold small" style="color:var(--primary)">Jugar</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">¡A aprender!</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'games:mis_logros' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#fff9e6,#fff0cc)">
+          <i class="bi bi-award-fill" style="color:#FFB347"></i>
+        </div>
+        <div class="fw-bold small" style="color:var(--orange)">
+          Mis Logros
+          {% if logros_pendientes > 0 %}
+          <span class="badge rounded-pill ms-1"
+                style="background:var(--secondary);color:white;font-size:0.65rem">
+            {{ logros_pendientes }}
+          </span>
+          {% endif %}
+        </div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tus medallas</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'games:ranking_salon' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#fff5f5,#ffe0e0)">
+          <i class="bi bi-bar-chart-fill" style="color:#FF6B6B"></i>
+        </div>
+        <div class="fw-bold small" style="color:var(--secondary)">Ranking</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">¿En qué lugar estás?</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'content:category_list' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#f0fffe,#d9f9f7)">
+          <i class="bi bi-book-fill" style="color:#4ECDC4"></i>
+        </div>
+        <div class="fw-bold small" style="color:var(--accent)">Vocabulario</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Aprende palabras</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'games:habitacion_milo' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#f0f8ff,#d9ecff)">
+          <i class="bi bi-house-heart-fill" style="color:#4a90d9"></i>
+        </div>
+        <div class="fw-bold small" style="color:#4a90d9">Habitación</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tu espacio Milo</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'games:tienda' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#fff5eb,#ffe6cc)">
+          <i class="bi bi-shop" style="color:#8B4513"></i>
+        </div>
+        <div class="fw-bold small" style="color:#8B4513">Tienda</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Gasta tus huesos</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'talleres:mis_talleres' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#f0fff4,#d9f7e2)">
+          <i class="bi bi-clipboard2-check-fill" style="color:#2e7d52"></i>
+        </div>
+        <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tus actividades</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       SALÓN
+  ══════════════════════════════════ -->
   {% if not profile.salon %}
-  <div class="nestgrow-card p-4 mb-4" style="border:3px dashed var(--accent)">
+  <div class="nestgrow-card p-4 mb-4"
+       style="border:3px dashed var(--accent);background:linear-gradient(135deg,#f0fffe,#fff)">
     <div class="d-flex align-items-center gap-3">
-      <div style="font-size:2.5rem">🏫</div>
+      <div style="width:56px;height:56px;border-radius:18px;background:#f0fffe;
+                  display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="bi bi-building-fill" style="color:var(--accent);font-size:1.5rem"></i>
+      </div>
       <div>
         <div class="fw-bold fs-5">¡Únete a la clase de tu profesor!</div>
         <div class="text-muted fw-bold small">Pídele el código de clase a tu profe.</div>
       </div>
-      <a href="{% url 'accounts:unirse_clase' %}" class="btn btn-nestgrow btn-primary-nestgrow ms-auto">Unirme →</a>
+      <a href="{% url 'accounts:unirse_clase' %}"
+         class="btn btn-nestgrow btn-primary-nestgrow ms-auto">
+        Unirme →
+      </a>
     </div>
   </div>
   {% else %}
-  <div class="nestgrow-card p-4 mb-4" style="border-left:5px solid var(--accent)">
-    <div class="fw-bold">🏫 Salón: <strong>{{ profile.salon.nombre }}</strong> · {{ profile.salon.get_grado_display }}</div>
-    <div class="text-muted small fw-bold">Profesor/a: {{ profile.salon.profesor.user.get_full_name }}</div>
+  <div class="nestgrow-card p-4 mb-4"
+       style="border-left:5px solid var(--accent);
+              background:linear-gradient(135deg,#f0fffe,#fff)">
+    <div class="d-flex align-items-center gap-3">
+      <div style="width:50px;height:50px;border-radius:16px;background:#f0fffe;
+                  display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="bi bi-building-fill" style="color:var(--accent);font-size:1.3rem"></i>
+      </div>
+      <div>
+        <div class="fw-bold">
+          {{ profile.salon.nombre }}
+          <span class="badge rounded-pill ms-2"
+                style="background:#f0fffe;color:var(--accent);font-size:0.75rem">
+            {{ profile.salon.get_grado_display }}
+          </span>
+        </div>
+        <div class="text-muted small fw-bold">
+          <i class="bi bi-person-fill me-1"></i>
+          Profe: {{ profile.salon.profesor.user.get_full_name }}
+        </div>
+      </div>
+    </div>
   </div>
   {% endif %}
 
-  <!-- Recent logros -->
+  <!-- ══════════════════════════════════
+       LOGROS RECIENTES
+  ══════════════════════════════════ -->
   {% if logros_recientes %}
   <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="font-fredoka mb-0" style="color:var(--primary)">🏅 Logros Recientes</h5>
-      <a href="{% url 'games:mis_logros' %}" class="btn btn-sm btn-outline-primary rounded-pill">Ver todos</a>
+      <div class="section-title mb-0">
+        <i class="bi bi-award-fill" style="color:#FFB347"></i>
+        Logros Recientes
+      </div>
+      <a href="{% url 'games:mis_logros' %}"
+         class="btn btn-sm btn-outline-primary rounded-pill">Ver todos</a>
     </div>
     <div class="d-flex gap-3 flex-wrap">
       {% for lu in logros_recientes %}
-      <div class="text-center p-3 rounded-3" style="background:{{ lu.logro.color }}15;border:2px solid {{ lu.logro.color }}40;min-width:80px">
+      <div class="logro-badge" style="border-color:{{ lu.logro.color }}30;min-width:90px">
         <div style="font-size:2rem">{{ lu.logro.icono }}</div>
-        <div class="fw-bold small mt-1" style="color:{{ lu.logro.color }}">{{ lu.logro.nombre }}</div>
+        <div class="fw-bold small mt-1" style="color:{{ lu.logro.color }}">
+          {{ lu.logro.nombre }}
+        </div>
       </div>
       {% endfor %}
     </div>
   </div>
   {% endif %}
 
-  <!-- Game Progress -->
-  <div class="nestgrow-card p-4">
+  <!-- ══════════════════════════════════
+       MIS JUEGOS
+  ══════════════════════════════════ -->
+  <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="font-fredoka mb-0" style="color:var(--primary)">🎮 Mis Juegos</h4>
-      <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">Ver todos</a>
+      <div class="section-title mb-0">
+        <i class="bi bi-controller-fill" style="color:var(--primary)"></i>
+        Mis Juegos
+      </div>
+      <a href="{% url 'games:game_list' %}"
+         class="btn btn-nestgrow btn-primary-nestgrow btn-sm">Ver todos</a>
     </div>
     {% if progreso %}
     <div class="row g-3">
       {% for p in progreso %}
       <div class="col-md-6">
-        <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:#f8f6ff;border:2px solid #e8e4ff">
-          <div style="font-size:2rem">
-            {% if p.game.game_type == 'drag_and_drop' %}🖱️
-            {% elif p.game.game_type == 'word_search' %}🔍
-            {% elif p.game.game_type == 'puzzle' %}🧩
-            {% else %}🎵{% endif %}
-          </div>
-          <div class="flex-grow-1">
-            <div class="fw-bold">{{ p.game.title }}</div>
-            <div class="progress-bar-nestgrow mt-1">
-              <div class="progress-fill" style="width:{{ p.percentage }}%"></div>
+        <div class="game-progress-card">
+          <div class="d-flex align-items-center gap-3">
+            <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
+                        display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+                        {% if p.game.game_type == 'drag_and_drop' %}background:#f0eeff{% elif p.game.game_type == 'word_search' %}background:#fff0f0{% elif p.game.game_type == 'puzzle' %}background:#f0fffe{% else %}background:#fff9ee{% endif %}">
+              {% if p.game.game_type == 'drag_and_drop' %}
+                <i class="bi bi-bug-fill" style="color:#6C63FF"></i>
+              {% elif p.game.game_type == 'word_search' %}
+                <i class="bi bi-search-heart-fill" style="color:#FF6B6B"></i>
+              {% elif p.game.game_type == 'puzzle' %}
+                <i class="bi bi-paint-bucket" style="color:#4ECDC4"></i>
+              {% else %}
+                <i class="bi bi-brush-fill" style="color:#FFB347"></i>
+              {% endif %}
             </div>
-            <div class="d-flex gap-2 mt-1">
-              <span class="text-muted small fw-bold">{{ p.score }} pts</span>
-              {% with cls=p.clasificacion %}
-              <span class="badge rounded-pill small fw-bold" style="background:{{ cls.2 }}20;color:{{ cls.2 }}">{{ cls.1 }}</span>
-              {% endwith %}
+            <div class="flex-grow-1">
+              <div class="fw-bold" style="font-size:0.95rem">{{ p.game.title }}</div>
+              <div class="progress-nestgrow mt-1" style="height:10px">
+                <div class="progress-fill-new" style="width:{{ p.percentage }}%"></div>
+              </div>
+              <div class="d-flex gap-2 mt-1 align-items-center">
+                <span class="text-muted small fw-bold">{{ p.score }} pts</span>
+                {% with cls=p.clasificacion %}
+                <span class="badge rounded-pill small fw-bold"
+                      style="background:{{ cls.2 }}20;color:{{ cls.2 }}">{{ cls.1 }}</span>
+                {% endwith %}
+              </div>
+            </div>
+            <div class="d-flex flex-column gap-2 align-items-center">
+              {% if p.completed %}
+              <i class="bi bi-check-circle-fill" style="color:#4CAF50;font-size:1.2rem"></i>
+              {% endif %}
+              <a href="{{ p.game.get_absolute_url }}"
+                 class="btn btn-sm rounded-pill"
+                 style="background:var(--primary);color:white;padding:4px 12px">
+                <i class="bi bi-play-fill"></i>
+              </a>
             </div>
           </div>
-          {% if p.completed %}<span class="badge bg-success">✅</span>{% endif %}
-          <a href="{{ p.game.get_absolute_url }}" class="btn btn-sm btn-outline-primary rounded-pill">▶</a>
         </div>
       </div>
       {% endfor %}
     </div>
     {% else %}
-    <div class="text-center py-4">
-      <div style="font-size:3.5rem">🎮</div>
-      <p class="fw-bold text-muted mt-2">¡Aún no has jugado! <a href="{% url 'games:game_list' %}">¡Empieza ahora!</a></p>
+    <div class="text-center py-5">
+      <img src="{% static 'img/milo_duda1.png' %}" alt="Milo"
+           style="width:120px;filter:drop-shadow(0 8px 15px rgba(108,99,255,0.2));
+                  animation:miloFloat 4s ease-in-out infinite;margin-bottom:1rem">
+      <p class="fw-bold text-muted">
+        ¡Aún no has jugado!
+        <a href="{% url 'games:game_list' %}" style="color:var(--primary)">
+          ¡Empieza ahora!
+        </a>
+      </p>
     </div>
     {% endif %}
   </div>
 
 </div>
+
 {% endblock %}

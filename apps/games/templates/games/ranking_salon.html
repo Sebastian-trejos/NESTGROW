@@ -1,54 +1,374 @@
 {% extends 'base.html' %}
-{% block title %}Ranking del Salón - NestGrow{% endblock %}
+{% load static %}
+{% block extra_css %}
+<style>
+  @keyframes podiumRise {
+    from { opacity: 0; transform: translateY(60px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes floatStar {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-8px) rotate(10deg); }
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.08); }
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .ranking-hero {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff, #4ECDC4);
+    border-radius: 28px;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .ranking-hero::before {
+    content:'';
+    position:absolute;
+    width:200px;height:200px;
+    background:rgba(255,255,255,0.08);
+    border-radius:50%;
+    top:-80px;right:-60px;
+  }
+  .ranking-hero::after {
+    content:'';
+    position:absolute;
+    width:150px;height:150px;
+    background:rgba(255,255,255,0.06);
+    border-radius:50%;
+    bottom:-50px;left:20%;
+  }
+  .hero-star {
+    position: absolute;
+    animation: floatStar 2.5s ease-in-out infinite;
+  }
+
+  /* Pódium */
+  .podium-wrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 16px;
+    margin: 2rem 0 2.5rem;
+  }
+  .podium-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .podium-col.p1 { animation: podiumRise 0.7s cubic-bezier(.22,1,.36,1) 0.4s both; }
+  .podium-col.p2 { animation: podiumRise 0.7s cubic-bezier(.22,1,.36,1) 0.1s both; }
+  .podium-col.p3 { animation: podiumRise 0.7s cubic-bezier(.22,1,.36,1) 0.25s both; }
+
+  /* Avatar del pódium */
+  .podium-avatar-wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 8px;
+    border: 3px solid white;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    background: #f0eeff;
+  }
+  .podium-avatar-wrap.p1-wrap {
+    width: 80px;
+    height: 80px;
+    font-size: 2.6rem;
+    animation: pulse 2s ease-in-out infinite;
+    border-color: #FFE66D;
+    box-shadow: 0 8px 25px rgba(255,179,71,0.4);
+  }
+  .podium-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .podium-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    text-align: center;
+    max-width: 100px;
+    word-break: break-word;
+    color: #444;
+    margin-bottom: 3px;
+  }
+  .podium-pts {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .podium-block {
+    border-radius: 16px 16px 0 0;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    color: white;
+  }
+  /* Colores del programa para el pódium */
+  .podium-block.gold   { height: 120px; background: linear-gradient(180deg,#6C63FF,#9c94ff); }
+  .podium-block.silver { height: 85px;  background: linear-gradient(180deg,#FF6B6B,#ff9494); }
+  .podium-block.bronze { height: 65px;  background: linear-gradient(180deg,#4ECDC4,#7ee8e2); }
+
+  .podium-me .podium-name { color: var(--primary); font-size:1rem; }
+
+  /* Filas ranking */
+  .rank-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    background: white;
+    box-shadow: 0 4px 15px rgba(108,99,255,0.08);
+    animation: fadeInUp 0.4s ease both;
+    transition: all 0.3s;
+  }
+  .rank-row:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.15);
+  }
+  .rank-row.es-yo {
+    background: linear-gradient(135deg,#f0eeff,#e8e3ff);
+    border: 3px solid var(--primary);
+  }
+  .rank-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .rank-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background: #f0eeff;
+    border: 2px solid #e8e4ff;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .rank-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .confetti {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 10px; height: 10px;
+    top: -20px;
+    animation: confettiFall 3s ease-out forwards;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4" style="max-width:700px">
-  <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏆 Ranking — {{ salon.nombre }}</h3>
+<div class="container py-4" style="max-width:750px">
+
+  <!-- HERO -->
+  <div class="ranking-hero">
+    <i class="bi bi-star-fill hero-star" style="top:10%;left:5%;font-size:1.5rem;color:rgba(255,255,255,0.5);animation-delay:0s"></i>
+    <i class="bi bi-star-fill hero-star" style="top:20%;right:8%;font-size:1.2rem;color:rgba(255,255,255,0.4);animation-delay:0.5s"></i>
+    <i class="bi bi-sparkle-fill hero-star" style="bottom:15%;right:15%;font-size:1.8rem;color:rgba(255,255,255,0.3);animation-delay:1s"></i>
+    <i class="bi bi-star-fill hero-star" style="bottom:25%;left:8%;font-size:1rem;color:rgba(255,255,255,0.4);animation-delay:1.5s"></i>
+
+    <div class="text-center position-relative" style="z-index:1">
+      <i class="bi bi-trophy-fill" style="font-size:3.5rem;color:#FFE66D;
+               filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))"></i>
+      <h2 class="font-fredoka mt-2 mb-0" style="font-size:2rem">Ranking del Salón</h2>
+      <p class="fw-bold mb-0" style="opacity:0.9">{{ salon.nombre }}</p>
+    </div>
   </div>
 
+  <!-- MILO BANNER -->
   <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
-    <div class="milo-banner-text">¡Sigue jugando para subir en el ranking de tu salón! Cada punto cuenta 💪</div>
+    <img src="{% static 'img/milo_fest.png' %}" alt="Milo"
+         style="width:50px;height:50px;object-fit:contain">
+    <div class="milo-banner-text">
+      ¡Sigue jugando para subir en el ranking! Cada punto cuenta
+      <i class="bi bi-lightning-charge-fill text-warning"></i>
+    </div>
   </div>
 
-  <div class="nestgrow-card p-4">
-    {% for est in compañeros %}
-    <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-2
-      {% if est == mi_perfil %}ranking-me{% endif %}"
-      style="{% if est == mi_perfil %}background:linear-gradient(135deg,#f0eeff,#ffe9e9);border:2px solid var(--primary){% else %}background:#f8f6ff{% endif %}">
+  {% if ranking %}
 
-      <!-- Position -->
-      <div class="font-fredoka text-center" style="width:48px;font-size:1.8rem">
-        {% if forloop.counter == 1 %}🥇
-        {% elif forloop.counter == 2 %}🥈
-        {% elif forloop.counter == 3 %}🥉
-        {% else %}<span style="color:#aaa;font-size:1.2rem">#{{ forloop.counter }}</span>
+  <!-- PÓDIUM -->
+  <div class="podium-wrap">
+
+    <!-- 2do lugar -->
+    {% if ranking|length >= 2 %}
+    {% with ranking.1 as s %}
+    <div class="podium-col p2 {% if s == mi_perfil %}podium-me{% endif %}">
+      <div class="podium-avatar-wrap">
+        {% if s.avatar_kitchen_url %}
+          <img src="{{ s.avatar_kitchen_url }}" alt="avatar">
+        {% else %}
+          {{ s.avatar_emoji1|default:'🐶' }}
+        {% endif %}
+      </div>
+      <div class="podium-name">{{ s.user.get_full_name|default:s.user.username }}</div>
+      <div class="podium-pts">
+        <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ s.puntos_totales }} pts
+      </div>
+      <div class="podium-block silver">2</div>
+    </div>
+    {% endwith %}
+    {% endif %}
+
+    <!-- 1er lugar -->
+    {% with ranking.0 as s %}
+    <div class="podium-col p1 {% if s == mi_perfil %}podium-me{% endif %}">
+      <div class="podium-avatar-wrap p1-wrap">
+        {% if s.avatar_kitchen_url %}
+          <img src="{{ s.avatar_kitchen_url }}" alt="avatar">
+        {% else %}
+          {{ s.avatar_emoji1|default:'🐶' }}
+        {% endif %}
+      </div>
+      <div class="podium-name">{{ s.user.get_full_name|default:s.user.username }}</div>
+      <div class="podium-pts">
+        <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ s.puntos_totales }} pts
+      </div>
+      <div class="podium-block gold">1</div>
+    </div>
+    {% endwith %}
+
+    <!-- 3er lugar -->
+    {% if ranking|length >= 3 %}
+    {% with ranking.2 as s %}
+    <div class="podium-col p3 {% if s == mi_perfil %}podium-me{% endif %}">
+      <div class="podium-avatar-wrap">
+        {% if s.avatar_kitchen_url %}
+          <img src="{{ s.avatar_kitchen_url }}" alt="avatar">
+        {% else %}
+          {{ s.avatar_emoji1|default:'🐶' }}
+        {% endif %}
+      </div>
+      <div class="podium-name">{{ s.user.get_full_name|default:s.user.username }}</div>
+      <div class="podium-pts">
+        <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ s.puntos_totales }} pts
+      </div>
+      <div class="podium-block bronze">3</div>
+    </div>
+    {% endwith %}
+    {% endif %}
+
+  </div>
+
+  <!-- RESTO DEL RANKING -->
+  {% if ranking|length > 3 %}
+  <div class="nestgrow-card p-3">
+    {% for est in ranking %}
+    {% if forloop.counter > 3 %}
+    <div class="rank-row {% if est == mi_perfil %}es-yo{% endif %}"
+         style="animation-delay:{{ forloop.counter|add:'-3' }}00ms">
+
+      <!-- Número -->
+      <div class="rank-num" style="background:#f0eeff;color:#888">
+        {{ forloop.counter }}
+      </div>
+
+      <!-- Avatar -->
+      <div class="rank-avatar">
+        {% if est.avatar_kitchen_url %}
+          <img src="{{ est.avatar_kitchen_url }}" alt="avatar">
+        {% else %}
+          {{ est.avatar_emoji1|default:'🐶' }}
         {% endif %}
       </div>
 
-      <!-- Name -->
+      <!-- Nombre y nivel -->
       <div class="flex-grow-1">
-        <div class="fw-bold fs-5">
+        <div class="fw-bold">
           {{ est.user.get_full_name|default:est.user.username }}
-          {% if est == mi_perfil %}<span class="badge rounded-pill ms-2" style="background:var(--primary);color:white;font-size:0.7rem">¡Tú!</span>{% endif %}
+          {% if est == mi_perfil %}
+          <span class="badge rounded-pill ms-2"
+                style="background:var(--primary);color:white;font-size:0.7rem">¡Tú!</span>
+          {% endif %}
         </div>
-        <div class="text-muted small fw-bold">Nivel {{ est.nivel }} · {{ est.user.huesos }} 🦴</div>
+        <div class="text-muted small fw-bold">
+          <i class="bi bi-speedometer2 me-1"></i>Nivel {{ est.nivel }}
+        </div>
       </div>
 
-      <!-- Points -->
+      <!-- Puntos -->
       <div class="text-end">
-        <div class="font-fredoka fs-4" style="color:var(--primary)">{{ est.puntos_totales }}</div>
-        <div class="text-muted small fw-bold">puntos</div>
+        <div class="font-fredoka fs-5" style="color:var(--primary)">{{ est.puntos_totales }}</div>
+        <div class="text-muted small fw-bold">pts</div>
       </div>
     </div>
-    {% empty %}
-    <div class="text-center py-4">
-      <div style="font-size:3rem">🐺</div>
-      <p class="fw-bold text-muted mt-2">¡Aún no hay estudiantes en el salón!</p>
-    </div>
+    {% endif %}
     {% endfor %}
   </div>
+  {% endif %}
+
+  {% else %}
+  <div class="nestgrow-card p-5 text-center">
+    <img src="{% static 'img/milo_preocupado.png' %}" alt="Milo"
+         style="width:120px;filter:drop-shadow(0 8px 20px rgba(108,99,255,0.2));margin-bottom:1rem">
+    <p class="fw-bold text-muted mt-2">¡Aún no hay estudiantes en el salón!</p>
+  </div>
+  {% endif %}
+
 </div>
+
+<script>
+(function() {
+  const colors = ['#6C63FF','#FF6B6B','#4ECDC4','#FFB347','#FFE66D','#9c94ff'];
+  const confetti = document.createElement('div');
+  confetti.className = 'confetti';
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 0.8 + 's';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+    piece.style.width = (Math.random() * 8 + 6) + 'px';
+    piece.style.height = (Math.random() * 8 + 6) + 'px';
+    confetti.appendChild(piece);
+  }
+  document.body.appendChild(confetti);
+  setTimeout(() => confetti.remove(), 4000);
+})();
+</script>
+
 {% endblock %}

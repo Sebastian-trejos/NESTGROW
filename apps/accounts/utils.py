@@ -28,9 +28,11 @@ def calcular_ranking(estudiante):
     if not estudiante.salon:
         return None, None
     from apps.accounts.models import EstudianteProfile
-    compañeros = EstudianteProfile.objects.filter(
-        salon=estudiante.salon
-    ).order_by('-puntos_totales')
+    compañeros = sorted(
+        EstudianteProfile.objects.filter(salon=estudiante.salon).all(),
+        key=lambda p: p.puntos_acumulados,
+        reverse=True,
+    )
     total = compañeros.count()
     for i, c in enumerate(compañeros, 1):
         if c.pk == estudiante.pk:

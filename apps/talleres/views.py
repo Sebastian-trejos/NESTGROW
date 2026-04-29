@@ -341,7 +341,7 @@ def guardar_respuesta(request, pk, bpk):
 @require_POST
 def score_bloque_minijuego(request, pk, bpk):
     taller = get_object_or_404(Taller, pk=pk, is_active=True)
-    bloque = get_object_or_404(BloqueTaller, pk=bpk, taller=taller, tipo='minijuego')  # noqa: F841
+    bloque = get_object_or_404(BloqueTaller, pk=bpk, taller=taller, tipo='minijuego')
     sesion = get_object_or_404(SesionTaller, taller=taller, estudiante=request.user)
 
     if sesion.completada:
@@ -351,6 +351,7 @@ def score_bloque_minijuego(request, pk, bpk):
     if sesion.bloque_actual >= len(bloques_ids) or bloques_ids[sesion.bloque_actual] != bpk:
         return JsonResponse({'error': 'No es el bloque actual'}, status=400)
 
+    sesion.puntos_obtenidos += bloque.bloque_minijuego.game.points_reward
     sesion.bloque_actual += 1
     sesion.save()
 

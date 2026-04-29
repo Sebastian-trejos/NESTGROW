@@ -172,9 +172,6 @@
           {% if item.id in inventario_ids %}
           <span class="owned-badge">✅ Tuyo</span>
           {% endif %}
-          {% if item.juego_desbloqueado %}
-          <span class="unlocks-badge">🎮 Desbloquea juego</span>
-          {% endif %}
 
           {% if item.imagen %}
             <!-- Item image - replace with your own images -->
@@ -189,11 +186,6 @@
           <div class="font-fredoka fs-5" style="color:var(--primary)">{{ item.nombre }}</div>
           <div class="text-muted small fw-bold mb-3">{{ item.descripcion }}</div>
 
-          {% if item.juego_desbloqueado %}
-          <div class="mb-2 small fw-bold" style="color:#e91e63">
-            🎮 Desbloquea: {{ item.juego_desbloqueado.title }}
-          </div>
-          {% endif %}
 
           <div class="d-flex align-items-center justify-content-between mb-3">
             <span class="font-fredoka fs-5" style="color:#8B4513">

@@ -3,48 +3,283 @@
 
 {% block title %}Iniciar Sesión - NestGrow{% endblock %}
 
+{% block extra_css %}
+<style>
+  .login-page {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f0eeff 0%, #ffe9e9 50%, #e9f9ff 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 0;
+  }
+  @keyframes floatBubble {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-20px) scale(1.05); }
+  }
+  @keyframes miloFloat {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-18px) rotate(2deg); }
+  }
+  @keyframes starFloat {
+    0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
+    50%      { transform: translateY(-12px) rotate(15deg); opacity:1; }
+  }
+  @keyframes borderGlow {
+    0%,100% { box-shadow: 0 20px 60px rgba(108,99,255,0.2); }
+    33%      { box-shadow: 0 20px 60px rgba(255,107,107,0.25); }
+    66%      { box-shadow: 0 20px 60px rgba(78,205,196,0.25); }
+  }
+  @keyframes bubblePop {
+    from { opacity:0; transform: scale(0.8) translateY(5px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+  }
+  .login-card {
+    background: white;
+    border-radius: 28px;
+    padding: 2.5rem;
+    width: 100%;
+    animation: borderGlow 4s ease-in-out infinite;
+  }
+  .login-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.3rem;
+  }
+  .input-group-nestgrow {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  .input-group-nestgrow .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    font-size: 1.1rem;
+    z-index: 5;
+  }
+  .input-group-nestgrow input {
+    padding-left: 42px !important;
+    border-radius: 14px !important;
+    border: 2px solid #e8e4ff !important;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s;
+    height: 50px;
+    width: 100%;
+  }
+  .input-group-nestgrow input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(108,99,255,0.1) !important;
+    outline: none;
+  }
+  .btn-login {
+    background: linear-gradient(135deg, var(--primary), #9c94ff);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.35);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 35px rgba(108,99,255,0.45);
+    color: white;
+  }
+  .star-deco {
+    position: absolute;
+    animation: starFloat 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .milo-bubble {
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: -180px;
+    background: white;
+    border-radius: 20px 20px 5px 20px;
+    padding: 12px 18px;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.15);
+    max-width: 165px;
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.8) translateY(5px);
+    animation: bubblePop 0.4s ease forwards;
+    animation-delay: 0.3s;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="auth-page">
-  <div class="auth-card fade-in-up">
-    <div class="text-center mb-4">
-      <div style="font-size:3.5rem; animation:bobble 2s infinite">🐺</div>
-      <h2 class="auth-title">¡Bienvenido de vuelta!</h2>
-      <p class="text-muted fw-bold">Inicia sesión para seguir aprendiendo</p>
-    </div>
+<div class="login-page">
 
-    <form method="post" novalidate>
-      {% csrf_token %}
-      <div class="mb-3">
-        <label class="form-label fw-bold">👤 Usuario</label>
-        {{ form.username }}
-        {% if form.username.errors %}
-          <div class="text-danger small fw-bold mt-1">{{ form.username.errors.0 }}</div>
-        {% endif %}
-      </div>
-      <div class="mb-4">
-        <label class="form-label fw-bold">🔒 Contraseña</label>
-        {{ form.password }}
-        {% if form.password.errors %}
-          <div class="text-danger small fw-bold mt-1">{{ form.password.errors.0 }}</div>
-        {% endif %}
-      </div>
+  <!-- Burbujas de fondo -->
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;
+              background:rgba(108,99,255,0.15);top:5%;left:10%;
+              animation:floatBubble 7s ease-in-out infinite"></div>
+  <div style="position:absolute;width:140px;height:140px;border-radius:50%;
+              background:rgba(255,107,107,0.15);top:20%;right:8%;
+              animation:floatBubble 5s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;
+              background:rgba(78,205,196,0.15);bottom:10%;left:5%;
+              animation:floatBubble 9s ease-in-out infinite"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;
+              background:rgba(255,179,71,0.15);bottom:15%;right:10%;
+              animation:floatBubble 6s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:90px;height:90px;border-radius:50%;
+              background:rgba(108,99,255,0.12);top:50%;left:3%;
+              animation:floatBubble 8s ease-in-out infinite"></div>
+  <div style="position:absolute;width:160px;height:160px;border-radius:50%;
+              background:rgba(255,107,107,0.1);top:55%;right:3%;
+              animation:floatBubble 7s ease-in-out infinite reverse"></div>
 
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger rounded-pill text-center fw-bold">
-          {{ form.non_field_errors.0 }}
+  <!-- Estrellas decorativas -->
+  <span class="star-deco" style="top:5%;left:3%;animation-delay:0s;font-size:1.8rem"><i class="bi bi-star-fill" style="color:#FFE66D"></i></span>
+  <span class="star-deco" style="top:15%;left:1%;animation-delay:0.8s;font-size:1rem"><i class="bi bi-sparkle-fill" style="color:#6C63FF"></i></span>
+  <span class="star-deco" style="top:30%;left:2%;animation-delay:1.5s;font-size:1.4rem"><i class="bi bi-star-fill" style="color:#FF6B6B"></i></span>
+  <span class="star-deco" style="top:65%;left:3%;animation-delay:1.2s;font-size:2rem"><i class="bi bi-star-fill" style="color:#FFB347"></i></span>
+  <span class="star-deco" style="top:85%;left:1%;animation-delay:0.6s;font-size:0.9rem"><i class="bi bi-sparkle-fill" style="color:#6C63FF"></i></span>
+  <span class="star-deco" style="top:5%;right:3%;animation-delay:0.5s;font-size:1.3rem"><i class="bi bi-sparkle-fill" style="color:#FF6B6B"></i></span>
+  <span class="star-deco" style="top:18%;right:1%;animation-delay:1s;font-size:2rem"><i class="bi bi-star-fill" style="color:#6C63FF"></i></span>
+  <span class="star-deco" style="top:55%;right:0%;animation-delay:1.7s;font-size:1.6rem"><i class="bi bi-star-fill" style="color:#4ECDC4"></i></span>
+  <span class="star-deco" style="top:85%;right:5%;animation-delay:1.3s;font-size:1.5rem"><i class="bi bi-star-fill" style="color:#FF6B6B"></i></span>
+
+  <div class="container position-relative" style="z-index:2">
+    <div class="row align-items-center justify-content-center g-5">
+
+      <!-- Milo izquierda -->
+      <div class="col-lg-5 text-center d-none d-lg-block">
+        <div style="position:relative;display:inline-block">
+
+          <!-- Burbuja oculta por defecto -->
+          <div id="miloBubble" class="milo-bubble">
+            <div class="fw-bold" style="font-size:0.85rem;color:var(--primary)">
+              <i class="bi bi-patch-question-fill me-1" style="color:#FFB347"></i>
+              ¿Ya tienes cuenta?
+            </div>
+            <div style="font-size:0.75rem;color:#aaa;font-weight:700">
+              ¡Entra y juguemos!
+            </div>
+          </div>
+
+          <!-- Imagen de Milo con hover -->
+          <img id="miloImg"
+               src="{% static 'img/milo_star.png' %}"
+               alt="Milo"
+               style="width:340px;
+                      filter:drop-shadow(0 20px 40px rgba(108,99,255,0.25));
+                      animation:miloFloat 4s ease-in-out infinite;
+                      cursor:pointer;
+                      transition: all 0.3s ease;">
         </div>
-      {% endif %}
 
-      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mb-3">
-        🚀 ¡Entrar!
-      </button>
-    </form>
+        <!-- Chips decorativos -->
+        <div class="d-flex gap-2 justify-content-center mt-4 flex-wrap">
+          <div class="px-3 py-2 rounded-pill fw-bold"
+               style="background:white;color:var(--primary);font-size:0.85rem;
+                      box-shadow:0 4px 15px rgba(108,99,255,0.15)">
+            <i class="bi bi-trophy-fill me-1" style="color:#FFB347"></i>Logros
+          </div>
+          <div class="px-3 py-2 rounded-pill fw-bold"
+               style="background:white;color:var(--secondary);font-size:0.85rem;
+                      box-shadow:0 4px 15px rgba(255,107,107,0.15)">
+            <i class="bi bi-star-fill me-1" style="color:#FF6B6B"></i>Puntos
+          </div>
+          <div class="px-3 py-2 rounded-pill fw-bold"
+               style="background:white;color:var(--accent);font-size:0.85rem;
+                      box-shadow:0 4px 15px rgba(78,205,196,0.15)">
+            <i class="bi bi-controller-fill me-1" style="color:#4ECDC4"></i>Juegos
+          </div>
+        </div>
+      </div>
 
-    <div class="text-center">
-      <p class="text-muted fw-bold mb-0">¿No tienes cuenta?
-        <a href="{% url 'accounts:registro' %}" class="text-decoration-none fw-bold" style="color:var(--primary)">¡Regístrate gratis!</a>
-      </p>
+      <!-- Tarjeta login derecha -->
+      <div class="col-lg-5 col-md-8 col-sm-10">
+        <div class="login-card">
+
+          <div class="text-center mb-4">
+            <div style="width:70px;height:70px;border-radius:50%;
+                        background:linear-gradient(135deg,#f0eeff,#ffe9e9);
+                        display:flex;align-items:center;justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 20px rgba(108,99,255,0.15)">
+              <i class="bi bi-person-fill" style="color:var(--primary);font-size:2rem"></i>
+            </div>
+            <h2 class="login-title">¡Bienvenido!</h2>
+            <p class="text-muted fw-bold small">Inicia sesión para seguir aprendiendo</p>
+          </div>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label fw-bold" style="color:var(--primary);font-size:0.9rem">
+                <i class="bi bi-person-fill me-1"></i>Usuario
+              </label>
+              <div class="input-group-nestgrow">
+                <i class="bi bi-person-fill input-icon"></i>
+                {{ form.username }}
+              </div>
+              {% if form.username.errors %}
+                <div class="text-danger small fw-bold mt-1">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ form.username.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold" style="color:var(--primary);font-size:0.9rem">
+                <i class="bi bi-lock-fill me-1"></i>Contraseña
+              </label>
+              <div class="input-group-nestgrow">
+                <i class="bi bi-lock-fill input-icon"></i>
+                {{ form.password }}
+              </div>
+              {% if form.password.errors %}
+                <div class="text-danger small fw-bold mt-1">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ form.password.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% if form.non_field_errors %}
+              <div class="mb-3 p-3 rounded-3 fw-bold text-center"
+                   style="background:#fff0f0;color:var(--secondary);font-size:0.9rem">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                {{ form.non_field_errors.0 }}
+              </div>
+            {% endif %}
+
+            <button type="submit" class="btn-login">
+              <i class="bi bi-box-arrow-in-right me-2"></i>¡Entrar!
+            </button>
+          </form>
+
+          <div class="text-center mt-4 pt-3" style="border-top:2px solid #f0eeff">
+            <p class="text-muted fw-bold small mb-0">
+              ¿No tienes cuenta?
+              <a href="{% url 'accounts:registro' %}"
+                 class="text-decoration-none fw-bold ms-1"
+                 style="color:var(--primary)">
+                <i class="bi bi-person-plus-fill me-1"></i>¡Regístrate gratis!
+              </a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
+
 {% endblock %}

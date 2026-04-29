@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ salon.nombre }} - NestGrow{% endblock %}
 {% block content %}
 <div class="container py-4">
@@ -74,7 +75,7 @@
     </div>
     {% else %}
     <div class="text-center py-4">
-      <div style="font-size:3.5rem">🐺</div>
+      <div style="font-size:3.5rem"><img src="{% static 'img/milo_fest.png' %}" style="width:70px;height:70px;object-fit:contain"></div>
       <p class="fw-bold text-muted mt-2">Comparte el código <strong style="color:var(--primary)">{{ salon.codigo_clase }}</strong> con tus estudiantes.</p>
     </div>
     {% endif %}

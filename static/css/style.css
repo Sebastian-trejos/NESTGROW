@@ -263,7 +263,11 @@ body.nestgrow-body {
   border-left: 6px solid var(--primary);
 }
 
-.milo-banner-owl { font-size: 3rem; }
+.milo-banner-owl {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
 
 .milo-banner-text {
   font-size: 1rem;
@@ -570,4 +574,29 @@ body.nestgrow-body {
   .milo-float { bottom: 20px; right: 20px; }
   .milo-avatar { width: 55px; height: 55px; }
   .ws-cell { width: 28px; height: 28px; font-size: 0.85rem; }
+}
+
+.dropdown-menu .dropdown-item.fw-bold {
+  border-radius: 10px !important;
+  margin: 2px 6px !important;
+  width: auto !important;
+  transition: all 0.2s;
+}
+
+.dropdown-item-azul {
+  background: #e8f4ff !important;
+  color: #1a6fc4 !important;
+}
+.dropdown-item-azul:hover {
+  background: #d0e8ff !important;
+  color: #1a6fc4 !important;
+}
+
+.dropdown-item-rojo {
+  background: #FF6B6B !important;
+  color: white !important;
+}
+.dropdown-item-rojo:hover {
+  background: #ff5252 !important;
+  color: white !important;
 }

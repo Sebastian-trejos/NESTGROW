@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Mis Logros - NestGrow{% endblock %}
 
 {% block content %}
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
     <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏅 Mis Logros</h3>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)"> Mis Logros <i class="bi bi-trophy-fill"></i></h3>
   </div>
 
   <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
+    <div class="milo-banner-owl"><img src="{% static 'img/milo_fest.png' %}" alt="Milo" style="width:50px;height:50px;object-fit:contain"></div>
     <div>
-      <div class="milo-banner-text">¡Desbloquea todos los logros jugando y aprendiendo! Cada uno vale 🦴 Huesos de Milo.</div>
+      <div class="milo-banner-text">¡Desbloquea todos los logros jugando y aprendiendo! Cada uno vale Huesos de Milo.</div>
       <div class="fw-bold small text-muted">{{ logros_obtenidos.count }} de {{ todos_logros.count }} logros desbloqueados</div>
     </div>
   </div>

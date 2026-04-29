@@ -7,6 +7,7 @@ urlpatterns = [
     # Estudiantes — Juegos
     path('', views.game_list, name='game_list'),
     path('<int:pk>/', views.game_detail, name='game_detail'),
+    path('<int:pk>/embed/', views.game_embed, name='game_embed'),
     path('guardar-puntaje/', views.save_score, name='save_score'),
     path('ranking/', views.ranking_salon, name='ranking_salon'),
     path('mis-logros/', views.mis_logros, name='mis_logros'),

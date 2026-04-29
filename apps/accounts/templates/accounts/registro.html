@@ -3,103 +3,478 @@
 
 {% block title %}Registrarse - NestGrow{% endblock %}
 
+{% block extra_css %}
+
+<style>
+/* ── Animaciones ── */
+@keyframes floatBubble {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-22px) scale(1.05); }
+}
+@keyframes floatBubbleSlow {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-30px) scale(1.08); }
+}
+@keyframes starFloat {
+  0%,100% { transform: translateY(0) rotate(0deg); opacity:0.75; }
+  50%      { transform: translateY(-14px) rotate(18deg); opacity:1; }
+}
+@keyframes starSpin {
+  0%,100% { transform: translateY(0) rotate(0deg) scale(1); opacity:0.8; }
+  50%      { transform: translateY(-10px) rotate(180deg) scale(1.15); opacity:1; }
+}
+@keyframes borderGlow {
+  0%,100% { box-shadow: 0 20px 60px rgba(100,80,255,0.2); }
+  33%      { box-shadow: 0 20px 60px rgba(55,138,221,0.25); }
+  66%      { box-shadow: 0 20px 60px rgba(130,100,255,0.22); }
+}
+@keyframes miloFloat {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-20px) rotate(2deg); }
+}
+
+/* ── Página ── */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ddeeff 0%, #e8e4ff 35%, #d6eaff 65%, #ece8ff 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 2.5rem 0;
+}
+
+/* ── Tarjeta ── */
+.login-card {
+  background: white;
+  border-radius: 28px;
+  padding: 2.5rem;
+  width: 100%;
+  animation: borderGlow 4s ease-in-out infinite;
+}
+
+/* ── Títulos ── */
+.login-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 0.3rem;
+}
+
+/* ── Inputs ── */
+.input-group-nestgrow {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  z-index: 10;
+}
+.input-group-nestgrow input {
+  padding-left: 42px !important;
+  border-radius: 14px !important;
+  border: 2px solid #e8e4ff !important;
+  height: 50px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+.input-group-nestgrow input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px rgba(108,99,255,0.1) !important;
+  outline: none;
+}
+
+/* ── Botón ── */
+.btn-login {
+  background: linear-gradient(135deg, var(--primary), #9c94ff);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 14px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(108,99,255,0.35);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.btn-login:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 35px rgba(108,99,255,0.45);
+  color: white;
+}
+
+/* ── Roles ── */
+.role-option {
+  border: 2px solid #e8e4ff;
+  border-radius: 18px;
+  background: white;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.role-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(108,99,255,0.15);
+}
+.role-option:has(input:checked) {
+  border-color: var(--primary) !important;
+  background: #f0eeff;
+}
+
+/* ── Milo ── */
+.milo-side {
+  width: 360px;
+  filter: drop-shadow(0 20px 40px rgba(108,99,255,0.28));
+  animation: miloFloat 4s ease-in-out infinite;
+}
+
+/* ── Chips ── */
+.chip {
+  background: white;
+  border-radius: 50px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 15px rgba(108,99,255,0.15);
+}
+
+/* ── Estrellas ── */
+.star-deco {
+  position: absolute;
+  animation: starFloat 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+.star-spin {
+  position: absolute;
+  animation: starSpin 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+:focus {
+  scroll-margin-top: 9999px;
+}
+</style>
+
+{% endblock %}
+
 {% block content %}
-<div class="auth-page">
-  <div class="auth-card fade-in-up" style="max-width:560px">
-    <div class="text-center mb-4">
-      <div style="font-size:3rem; animation:bobble 2s infinite">🐺</div>
-      <h2 class="auth-title">¡Únete a NestGrow!</h2>
-      <p class="text-muted fw-bold">Crea tu cuenta y empieza a aprender inglés</p>
-    </div>
+<div class="register-page">
 
-    <form method="post" novalidate>
-      {% csrf_token %}
+  <!-- ══════════════════════════ -->
+  <!--   CÍRCULOS DE FONDO       -->
+  <!-- ══════════════════════════ -->
 
-      <!-- Role Selector -->
-      <div class="mb-4">
-        <label class="form-label fw-bold fs-5">¿Quién eres?</label>
-        <div class="row g-3">
-          <div class="col-6">
-            <label class="role-option w-100 text-center p-3 border rounded-4 cursor-pointer" for="id_role_0"
-                   style="cursor:pointer; transition: all 0.2s; border-width:3px!important">
-              <input type="radio" name="role" value="profesor" id="id_role_0" class="d-none"
-                     {% if form.role.value == 'profesor' %}checked{% endif %}>
-              <div style="font-size:2.5rem">👩‍🏫</div>
-              <div class="fw-bold mt-1">Soy Profesor</div>
-            </label>
+  <div style="position:absolute;width:260px;height:260px;border-radius:50%;
+              background:rgba(100,130,255,0.13);top:2%;left:6%;
+              animation:floatBubbleSlow 9s ease-in-out infinite"></div>
+  <div style="position:absolute;width:220px;height:220px;border-radius:50%;
+              background:rgba(130,100,255,0.12);bottom:5%;right:5%;
+              animation:floatBubbleSlow 11s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;
+              background:rgba(55,138,221,0.13);top:30%;right:3%;
+              animation:floatBubbleSlow 8s ease-in-out infinite"></div>
+  <div style="position:absolute;width:180px;height:180px;border-radius:50%;
+              background:rgba(108,99,255,0.11);bottom:20%;left:3%;
+              animation:floatBubbleSlow 10s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:150px;height:150px;border-radius:50%;
+              background:rgba(55,138,221,0.14);top:12%;right:15%;
+              animation:floatBubble 7s ease-in-out infinite"></div>
+  <div style="position:absolute;width:140px;height:140px;border-radius:50%;
+              background:rgba(150,120,255,0.13);top:55%;left:1%;
+              animation:floatBubble 6s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:130px;height:130px;border-radius:50%;
+              background:rgba(80,110,255,0.12);bottom:28%;right:12%;
+              animation:floatBubble 8s ease-in-out infinite"></div>
+  <div style="position:absolute;width:120px;height:120px;border-radius:50%;
+              background:rgba(108,99,255,0.15);top:42%;left:8%;
+              animation:floatBubble 5s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:110px;height:110px;border-radius:50%;
+              background:rgba(55,138,221,0.10);top:70%;right:20%;
+              animation:floatBubble 9s ease-in-out infinite"></div>
+  <div style="position:absolute;width:100px;height:100px;border-radius:50%;
+              background:rgba(130,100,255,0.14);top:8%;left:30%;
+              animation:floatBubble 7s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:80px;height:80px;border-radius:50%;
+              background:rgba(100,160,255,0.16);top:22%;left:2%;
+              animation:floatBubble 6s ease-in-out infinite"></div>
+  <div style="position:absolute;width:70px;height:70px;border-radius:50%;
+              background:rgba(80,120,255,0.12);top:85%;left:15%;
+              animation:floatBubble 8s ease-in-out infinite"></div>
+  <div style="position:absolute;width:65px;height:65px;border-radius:50%;
+              background:rgba(55,138,221,0.15);top:48%;right:8%;
+              animation:floatBubble 6s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:55px;height:55px;border-radius:50%;
+              background:rgba(100,130,255,0.12);top:35%;right:25%;
+              animation:floatBubble 9s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:45px;height:45px;border-radius:50%;
+              background:rgba(55,138,221,0.13);top:5%;right:35%;
+              animation:floatBubble 6s ease-in-out infinite reverse"></div>
+  <div style="position:absolute;width:40px;height:40px;border-radius:50%;
+              background:rgba(130,100,255,0.15);top:60%;left:14%;
+              animation:floatBubble 7s ease-in-out infinite"></div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--   ESTRELLAS                            -->
+  <!-- ══════════════════════════════════════ -->
+
+  <span class="star-deco" style="top:3%;left:1%;animation-delay:0s;font-size:2.2rem">
+    <i class="bi bi-star-fill" style="color:#FFE066"></i>
+  </span>
+  <span class="star-spin" style="top:10%;left:3%;animation-delay:0.5s;font-size:1.1rem">
+    <i class="bi bi-sparkle-fill" style="color:#b8adff"></i>
+  </span>
+  <span class="star-deco" style="top:18%;left:0.5%;animation-delay:1s;font-size:1.6rem">
+    <i class="bi bi-star-fill" style="color:#FFD23F"></i>
+  </span>
+  <span class="star-spin" style="top:34%;left:1%;animation-delay:1.6s;font-size:1.4rem">
+    <i class="bi bi-star-fill" style="color:#FFE066"></i>
+  </span>
+  <span class="star-spin" style="top:43%;left:5%;animation-delay:0.8s;font-size:1.8rem">
+    <i class="bi bi-star-fill" style="color:#c4b8ff"></i>
+  </span>
+  <span class="star-deco" style="top:60%;left:3%;animation-delay:0.4s;font-size:2rem">
+    <i class="bi bi-star-fill" style="color:#7eb8f7"></i>
+  </span>
+  <span class="star-deco" style="top:76%;left:4%;animation-delay:0.7s;font-size:1.7rem">
+    <i class="bi bi-star-fill" style="color:#FFE066"></i>
+  </span>
+  <span class="star-spin" style="top:91%;left:2%;animation-delay:0.2s;font-size:1.5rem">
+    <i class="bi bi-star-fill" style="color:#c4b8ff"></i>
+  </span>
+  <span class="star-deco" style="top:1%;left:22%;animation-delay:0.6s;font-size:1.4rem">
+    <i class="bi bi-sparkle-fill" style="color:#FFD23F"></i>
+  </span>
+  <span class="star-spin" style="top:2%;left:50%;animation-delay:1.3s;font-size:1.1rem">
+    <i class="bi bi-star-fill" style="color:#b8adff"></i>
+  </span>
+  <span class="star-deco" style="top:1%;right:22%;animation-delay:0.9s;font-size:1.7rem">
+    <i class="bi bi-sparkle-fill" style="color:#7eb8f7"></i>
+  </span>
+  <span class="star-spin" style="top:95%;left:20%;animation-delay:0.4s;font-size:1.3rem">
+    <i class="bi bi-star-fill" style="color:#FFE066"></i>
+  </span>
+  <span class="star-deco" style="top:95%;right:20%;animation-delay:0.7s;font-size:1.4rem">
+    <i class="bi bi-star-fill" style="color:#FFD23F"></i>
+  </span>
+  <span class="star-deco" style="top:3%;right:1%;animation-delay:0.3s;font-size:1.9rem">
+    <i class="bi bi-star-fill" style="color:#FFD23F"></i>
+  </span>
+  <span class="star-spin" style="top:10%;right:3%;animation-delay:1.4s;font-size:1.1rem">
+    <i class="bi bi-sparkle-fill" style="color:#c4b8ff"></i>
+  </span>
+  <span class="star-deco" style="top:18%;right:0.5%;animation-delay:0.8s;font-size:1.5rem">
+    <i class="bi bi-star-fill" style="color:#7eb8f7"></i>
+  </span>
+  <span class="star-deco" style="top:34%;right:1%;animation-delay:0.5s;font-size:2.1rem">
+    <i class="bi bi-star-fill" style="color:#b8adff"></i>
+  </span>
+  <span class="star-spin" style="top:52%;right:0.5%;animation-delay:0.2s;font-size:1.6rem">
+    <i class="bi bi-star-fill" style="color:#7eb8f7"></i>
+  </span>
+  <span class="star-deco" style="top:68%;right:1%;animation-delay:0.9s;font-size:1.8rem">
+    <i class="bi bi-star-fill" style="color:#FFE066"></i>
+  </span>
+  <span class="star-deco" style="top:84%;right:0.5%;animation-delay:1.3s;font-size:1.5rem">
+    <i class="bi bi-star-fill" style="color:#FFD23F"></i>
+  </span>
+  <span class="star-spin" style="top:91%;right:2%;animation-delay:0.6s;font-size:1.9rem">
+    <i class="bi bi-star-fill" style="color:#7eb8f7"></i>
+  </span>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--   CONTENIDO PRINCIPAL                  -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="container position-relative" style="z-index:2">
+    <div class="row align-items-center justify-content-center g-5">
+
+      <!-- ── Columna izquierda: formulario ── -->
+      <div class="col-lg-5 col-md-8 col-sm-10 order-1">
+        <div class="login-card">
+
+          <div class="text-center mb-4">
+            <h2 class="login-title">¡Comienza tu aventura!</h2>
+            <p class="text-muted fw-bold small">Crea tu cuenta y empieza a aprender o enseñar.</p>
           </div>
-          <div class="col-6">
-            <label class="role-option w-100 text-center p-3 border rounded-4" for="id_role_1"
-                   style="cursor:pointer; transition: all 0.2s; border-width:3px!important">
-              <input type="radio" name="role" value="estudiante" id="id_role_1" class="d-none"
-                     {% if form.role.value == 'estudiante' %}checked{% endif %}>
-              <div style="font-size:2.5rem">🎒</div>
-              <div class="fw-bold mt-1">Soy Estudiante</div>
-            </label>
+
+          <form method="post" onsubmit="window.scrollTo(0,0)">
+            {% csrf_token %}
+
+            <!-- ROLES -->
+            <div class="mb-4">
+              <label class="fw-bold mb-2">
+                <p>Selecciona tu rol</p>
+              </label>
+              <div class="row g-3">
+                <div class="col-6">
+                  <label class="role-option p-3 text-center w-100">
+                    <input type="radio" name="role" value="profesor" class="d-none">
+                    <div style="font-size:2rem">
+                      <i class="bi bi-person-workspace" style="color:var(--primary)"></i>
+                    </div>
+                    <div class="fw-bold">Profesor</div>
+                  </label>
+                </div>
+                <div class="col-6">
+                  <label class="role-option p-3 text-center w-100">
+                    <input type="radio" name="role" value="estudiante" class="d-none">
+                    <div style="font-size:2rem">
+                      <i class="bi bi-backpack3-fill" style="color:var(--primary)"></i>
+                    </div>
+                    <div class="fw-bold">Estudiante</div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-md-7">
+                <label class="fw-bold small">Nombre</label>
+                <div class="input-group-nestgrow">
+                  <i class="bi bi-person-fill input-icon"></i>
+                  {{ form.first_name }}
+                </div>
+              </div>
+
+              <div class="col-md-9">
+                <label class="fw-bold small">Apellido</label>
+                <div class="input-group-nestgrow">
+                  <i class="bi bi-person-fill input-icon"></i>
+                  {{ form.last_name }}
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="fw-bold small" style="color:var(--primary)">Correo electrónico</label>
+                <div class="input-group-nestgrow">
+                  <i class="bi bi-envelope-fill input-icon"></i>
+                  {{ form.email }}
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label class="fw-bold small" style="color:var(--primary)">Nombre de usuario</label>
+                <div class="input-group-nestgrow">
+                  <i class="bi bi-person-circle input-icon"></i>
+                  {{ form.username }}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="fw-bold small" style="color:var(--primary)">Contraseña</label>
+                <div class="input-group-nestgrow">
+                  <i class="bi bi-lock-fill input-icon"></i>
+                  {{ form.password1 }}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="fw-bold small" style="color:var(--primary)">Confirmar contraseña</label>
+                <div class="input-group-nestgrow">
+                  <i class="bi bi-shield-lock-fill input-icon"></i>
+                  {{ form.password2 }}
+                </div>
+              </div>
+
+            </div>
+
+            <button type="submit" class="btn-login mt-4">
+              <i class="bi bi-star-fill me-2"></i> Crear mi cuenta
+            </button>
+          </form>
+
+          <div class="text-center mt-4 pt-3" style="border-top:2px solid #f0eeff">
+            <p class="text-muted fw-bold small mb-0">
+              ¿Ya tienes cuenta?
+              <a href="{% url 'accounts:login' %}"
+                 class="text-decoration-none fw-bold ms-1"
+                 style="color:var(--primary)">
+                <i class="bi bi-box-arrow-in-right me-1"></i>¡Inicia sesión!
+              </a>
+            </p>
           </div>
+
         </div>
       </div>
 
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Nombre</label>
-          {{ form.first_name }}
-          {% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Apellido</label>
-          {{ form.last_name }}
-          {% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="col-12">
-          <label class="form-label fw-bold">Correo electrónico</label>
-          {{ form.email }}
-          {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="col-12">
-          <label class="form-label fw-bold">Nombre de usuario</label>
-          {{ form.username }}
-          {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Contraseña</label>
-          {{ form.password1 }}
-          {% if form.password1.errors %}<div class="text-danger small">{{ form.password1.errors.0 }}</div>{% endif %}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Confirmar contraseña</label>
-          {{ form.password2 }}
-          {% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors.0 }}</div>{% endif %}
-        </div>
+      <!-- ── Columna derecha: frase motivadora ── -->
+<div class="col-lg-5 text-center d-none d-lg-block order-2" style="align-self:center;position:relative">
+
+  <!-- Milo completamente independiente -->
+  <img src="{% static 'img/milo_lupa2.png' %}" alt="Milo"
+       style="position:absolute;
+              bottom:130px;
+              left:10%;
+              transform:translateX(-50%);
+              width:400px;
+              filter:drop-shadow(0 10px 20px rgba(108,99,255,0.2));
+              animation:miloFloat 4s ease-in-out infinite;
+              z-index:0;
+              pointer-events:none">
+
+  <!-- Cuadro blanco encima -->
+  <div style="position:relative;z-index:1;padding:1rem">
+
+    <!-- Frase principal -->
+    <div style="background:white;border-radius:28px;padding:2.5rem 2rem;
+                box-shadow:0 15px 40px rgba(108,99,255,0.12);
+                margin-top:80px;">
+
+      <div style="width:70px;height:70px;border-radius:50%;
+                  background:linear-gradient(135deg,#f0eeff,#ffe9e9);
+                  display:flex;align-items:center;justify-content:center;
+                  margin:0 auto 1.2rem;
+                  box-shadow:0 8px 20px rgba(108,99,255,0.15)">
+        <i class="bi bi-rocket-takeoff-fill" style="color:var(--primary);font-size:1.8rem"></i>
       </div>
 
-      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mt-4 mb-3">
-        🎉 ¡Crear mi cuenta!
-      </button>
-    </form>
+      <h2 class="font-fredoka mb-3" style="font-size:2rem;color:var(--primary);line-height:1.2">
+        ¡Únete a la<br>manada!
+      </h2>
 
-    <div class="text-center">
-      <p class="text-muted fw-bold mb-0">¿Ya tienes cuenta?
-        <a href="{% url 'accounts:login' %}" class="fw-bold text-decoration-none" style="color:var(--primary)">¡Inicia sesión!</a>
+      <p class="fw-bold text-muted mb-4" style="font-size:1rem">
+        Ingresa a NestGrow y aprende inglés jugando con Milo y tus compañeros.
       </p>
+
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <div style="text-align:center">
+          <div class="fw-bold" style="font-size:1.5rem;color:var(--primary);font-family:'Fredoka One',cursive">4+</div>
+          <div class="text-muted fw-bold" style="font-size:0.78rem">Juegos</div>
+        </div>
+        <div style="width:1px;background:#e8e4ff"></div>
+        <div style="text-align:center">
+          <div class="fw-bold" style="font-size:1.5rem;color:var(--secondary);font-family:'Fredoka One',cursive"><i class="bi bi-award-fill"></i></div>
+          <div class="text-muted fw-bold" style="font-size:0.78rem">Niveles</div>
+        </div>
+        <div style="width:1px;background:#e8e4ff"></div>
+        <div style="text-align:center">
+          <div class="fw-bold" style="font-size:1.5rem;color:var(--accent);font-family:'Fredoka One',cursive"><i class="bi bi-magic"></i></div>
+          <div class="text-muted fw-bold" style="font-size:0.78rem">Diversión</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<style>
-input[type="radio"]:checked + .role-option,
-.role-option:has(input:checked) { border-color: var(--primary) !important; background: #f0eeff; }
-</style>
 <script>
-document.querySelectorAll('.role-option').forEach(label => {
-  label.addEventListener('click', () => {
-    document.querySelectorAll('.role-option').forEach(l => {
-      l.style.borderColor = '#dee2e6';
-      l.style.background = 'white';
+  document.addEventListener('DOMContentLoaded', function() {
+    // Quitar autofocus de todos los inputs
+    document.querySelectorAll('input').forEach(input => {
+      input.blur();
+      input.setAttribute('tabindex', '-1');
+      setTimeout(() => input.setAttribute('tabindex', '0'), 500);
     });
-    label.style.borderColor = 'var(--primary)';
-    label.style.background = '#f0eeff';
+    // Forzar scroll arriba
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 50);
   });
-});
 </script>
+
 {% endblock %}

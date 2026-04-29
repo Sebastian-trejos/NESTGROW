@@ -1,39 +1,255 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Editar Perfil - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes miloFloat {
+    0%,100% { transform: translateY(0) rotate(-1deg); }
+    50%      { transform: translateY(-10px) rotate(1deg); }
+  }
+  @keyframes borderGlow {
+    0%,100% { box-shadow: 0 20px 60px rgba(108,99,255,0.15); }
+    50%      { box-shadow: 0 20px 60px rgba(255,107,107,0.2); }
+  }
+
+  .edit-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0eeff 0%, #ffe9e9 50%, #e9f9ff 100%);
+    padding: 2rem 0;
+  }
+
+  .edit-hero {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    border-radius: 28px;
+    padding: 1.8rem 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .edit-hero::before {
+    content:'';
+    position:absolute;
+    width:180px;height:180px;
+    background:rgba(255,255,255,0.06);
+    border-radius:50%;
+    top:-60px;right:-40px;
+  }
+
+  .edit-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    animation: borderGlow 4s ease-in-out infinite;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #f0eeff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .field-wrap {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  .field-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    font-size: 1rem;
+    z-index: 5;
+  }
+  .field-wrap input,
+  .field-wrap select {
+    padding-left: 42px !important;
+    border-radius: 14px !important;
+    border: 2px solid #e8e4ff !important;
+    height: 50px;
+    width: 100%;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+  }
+  .field-wrap input:focus,
+  .field-wrap select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(108,99,255,0.1) !important;
+    outline: none;
+  }
+
+  .btn-save {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.35);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .btn-save:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 35px rgba(108,99,255,0.45);
+    color: white;
+  }
+
+  .field-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container py-5" style="max-width:600px">
-  <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">✏️ Editar Mi Perfil</h3>
-  </div>
-  <div class="nestgrow-card p-5">
-    <div class="milo-banner mb-4">
-      <div class="milo-banner-owl">🐺</div>
-      <div class="milo-banner-text">¡Completa tus datos para que tu profe y tus papás puedan estar al tanto de tu progreso!</div>
+<div class="edit-page">
+  <div class="container" style="max-width:620px">
+
+    <!-- Botón volver -->
+    <div class="mb-3">
+      <a href="{% url 'accounts:dashboard_estudiante' %}"
+         style="background:white;color:var(--primary);border:2px solid #e8e4ff;
+                border-radius:50px;padding:8px 20px;font-weight:700;
+                text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+                transition:all 0.3s;font-size:0.9rem"
+         onmouseover="this.style.borderColor='var(--primary)'"
+         onmouseout="this.style.borderColor='#e8e4ff'">
+        <i class="bi bi-arrow-left"></i> Volver al panel
+      </a>
     </div>
+
+    <!-- Hero -->
+    <div class="edit-hero">
+      <div class="row align-items-center position-relative" style="z-index:1">
+        <div class="col-8">
+          <div class="d-inline-flex align-items-center gap-2 mb-2 px-3 py-1 rounded-pill fw-bold"
+               style="background:rgba(255,255,255,0.2);font-size:0.8rem">
+            <i class="bi bi-pencil-fill"></i> Tu perfil
+          </div>
+          <h3 class="font-fredoka mb-1" style="font-size:1.8rem;line-height:1.1">
+            ¡Actualiza tu información!
+          </h3>
+          <p style="opacity:0.85;font-weight:700;font-size:0.9rem;margin:0">
+            Mantén tus datos al día para que tu profe te conozca mejor.
+          </p>
+        </div>
+        <div class="col-4 text-center">
+          <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo"
+               style="width:100px;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+                      animation:miloFloat 4s ease-in-out infinite">
+        </div>
+      </div>
+    </div>
+
     <form method="post" novalidate>
       {% csrf_token %}
-      <h5 class="font-fredoka mb-3" style="color:var(--primary)">👤 Mis Datos</h5>
-      {% for field in user_form %}
-      <div class="mb-3">
-        <label class="form-label fw-bold">{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
+
+      <!-- Datos personales -->
+      <div class="edit-card">
+        <div class="section-title">
+          <div style="width:32px;height:32px;border-radius:50%;background:#f0eeff;
+                      display:flex;align-items:center;justify-content:center">
+            <i class="bi bi-person-fill" style="color:var(--primary)"></i>
+          </div>
+          Mis Datos Personales
+        </div>
+
+        {% for field in user_form %}
+        <div class="mb-3">
+          <label class="field-label">{{ field.label }}</label>
+          <div class="field-wrap">
+            <!-- Icono según el campo -->
+            {% if 'nombre' in field.label|lower or 'first' in field.html_name %}
+              <i class="bi bi-person-fill field-icon"></i>
+            {% elif 'apellido' in field.label|lower or 'last' in field.html_name %}
+              <i class="bi bi-person-fill field-icon"></i>
+            {% elif 'correo' in field.label|lower or 'email' in field.html_name %}
+              <i class="bi bi-envelope-fill field-icon"></i>
+            {% elif 'usuario' in field.label|lower or 'username' in field.html_name %}
+              <i class="bi bi-at field-icon"></i>
+            {% else %}
+              <i class="bi bi-pencil-fill field-icon"></i>
+            {% endif %}
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="mt-1" style="color:var(--secondary);font-size:0.82rem;font-weight:700">
+              <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors.0 }}
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-      <hr class="my-4">
-      <h5 class="font-fredoka mb-3" style="color:var(--primary)">📋 Información Escolar</h5>
-      {% for field in profile_form %}
-      <div class="mb-3">
-        <label class="form-label fw-bold">{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}<div class="text-danger small fw-bold mt-1">{{ field.errors.0 }}</div>{% endif %}
-        {% if field.help_text %}<div class="text-muted small mt-1">{{ field.help_text }}</div>{% endif %}
+
+      <!-- Información escolar -->
+      <div class="edit-card">
+        <div class="section-title">
+          <div style="width:32px;height:32px;border-radius:50%;background:#fff0f0;
+                      display:flex;align-items:center;justify-content:center">
+            <i class="bi bi-mortarboard-fill" style="color:var(--secondary)"></i>
+          </div>
+          Información Escolar
+        </div>
+
+        {% for field in profile_form %}
+        <div class="mb-3">
+          <label class="field-label">{{ field.label }}</label>
+          <div class="field-wrap">
+            {% if 'grado' in field.label|lower %}
+              <i class="bi bi-mortarboard-fill field-icon"></i>
+            {% elif 'identidad' in field.label|lower or 'tarjeta' in field.label|lower %}
+              <i class="bi bi-card-text field-icon"></i>
+            {% elif 'correo' in field.label|lower or 'padre' in field.label|lower %}
+              <i class="bi bi-envelope-heart-fill field-icon"></i>
+            {% else %}
+              <i class="bi bi-pencil-fill field-icon"></i>
+            {% endif %}
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="mt-1" style="color:var(--secondary);font-size:0.82rem;font-weight:700">
+              <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors.0 }}
+            </div>
+          {% endif %}
+          {% if field.help_text %}
+            <div class="text-muted small mt-1 fw-bold">
+              <i class="bi bi-info-circle me-1"></i>{{ field.help_text }}
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 mt-2">
-        ✅ Guardar cambios
+
+      <!-- Botón guardar -->
+      <button type="submit" class="btn-save">
+        <i class="bi bi-check-circle-fill me-2"></i>¡Guardar cambios!
       </button>
+
+      <!-- Link volver abajo -->
+      <div class="text-center mt-3 mb-4">
+        <a href="{% url 'accounts:dashboard_estudiante' %}"
+           class="text-decoration-none fw-bold"
+           style="color:#aaa;font-size:0.9rem">
+          <i class="bi bi-x-circle me-1"></i>Cancelar y volver
+        </a>
+      </div>
+
     </form>
   </div>
 </div>

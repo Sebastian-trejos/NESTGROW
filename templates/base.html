@@ -8,6 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   {% block extra_css %}{% endblock %}
 </head>
@@ -17,7 +18,7 @@
   <nav class="navbar nestgrow-navbar navbar-expand-lg">
     <div class="container-fluid px-4">
       <a class="navbar-brand nestgrow-brand" href="{% url 'core:home' %}">
-        <span class="brand-icon">🐺</span>
+        <i class="bi bi-easel2-fill"></i>
         <span class="brand-text">NestGrow</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -29,42 +30,60 @@
   {% if user.role == "estudiante" %}
   <div id="pendingBadges" data-badges="{% if logros_nuevos %}[{% for l in logros_nuevos %}{"icono":"{{ l.logro.icono }}","nombre":"{{ l.logro.nombre }}","descripcion":"{{ l.logro.descripcion }}"}{% if not forloop.last %},{% endif %}{% endfor %}]{% else %}[]{% endif %}"></div>
   {% endif %}
-            <li class="nav-item">
-              <a class="nav-link nav-pill" href="{% url 'games:game_list' %}">
-                <i class="fas fa-gamepad me-1"></i> Juegos
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-pill" href="{% url 'content:category_list' %}">
-                <i class="fas fa-book-open me-1"></i> Vocabulario
-              </a>
-            </li>
-            {% if user.role == 'estudiante' %}
-            <li class="nav-item">
-              <a class="nav-link nav-pill" href="{% url 'games:habitacion_milo' %}">
-                🏠 Habitación
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-pill" href="{% url 'games:tienda' %}">
-                🛒 Tienda
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-pill" href="{% url 'games:museo_virtual' %}">
-                <i class="fas fa-palette me-1"></i> Museo
-              </a>
-            </li>
-            {% endif %}
-            <li class="nav-item">
-              <a class="nav-link nav-pill" href="{% url 'accounts:dashboard' %}">
-                <i class="fas fa-tachometer-alt me-1"></i> Mi Panel
-              </a>
-            </li>
+          <li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:game_list' %}"
+     style="background:#f0eeff;color:#6C63FF;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(108,99,255,0.25)';this.style.background='#e0d9ff'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0eeff'">
+    <i class="bi bi-controller"></i> Juegos
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:category_list' %}"
+     style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,107,107,0.25)';this.style.background='#ffd9d9'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff0f0'">
+    <i class="bi bi-book"></i> Vocabulario
+  </a>
+</li>
+{% if user.role == 'estudiante' %}
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:habitacion_milo' %}"
+     style="background:#fff9ee;color:#FFB347;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,179,71,0.25)';this.style.background='#ffecd9'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff9ee'">
+    <i class="bi bi-house-heart-fill"></i> Habitación
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:tienda' %}"
+     style="background:#f0fff4;color:#4caf50;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(76,175,80,0.25)';this.style.background='#d9f7dd'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0fff4'">
+    <i class="bi bi-shop"></i> Tienda
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:museo_virtual' %}"
+     style="background:#f0fffe;color:#4ECDC4;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(78,205,196,0.25)';this.style.background='#d9f7f5'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0fffe'">
+    <i class="bi bi-palette-fill me-1"></i> Museo
+  </a>
+</li>
+{% endif %}
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'accounts:dashboard' %}"
+     style="background:#fff9ee;color:#FFB347;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,179,71,0.25)';this.style.background='#ffecd9'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff9ee'">
+    <i class="bi bi-grid-fill me-1"></i> Mi Panel
+  </a>
+</li>
             <li class="nav-item dropdown">
               <a class="nav-link nav-pill user-pill dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 <i class="fas fa-user-circle me-1"></i>
-                {{ user.first_name|default:user.username }}
+                {{ user.first_name|default:user.username }} {{ user.last_name }}
                 {% if user.role == 'profesor' %}
                   <span class="badge bg-warning text-dark ms-1">Profe</span>
                 {% else %}
@@ -74,21 +93,21 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 {% if user.role == 'estudiante' %}
-                <li><a class="dropdown-item" href="{% url 'games:mis_logros' %}"><i class="fas fa-medal me-2"></i>Mis Logros 🏅</a></li>
-                <li><a class="dropdown-item" href="{% url 'games:ranking_salon' %}"><i class="fas fa-trophy me-2"></i>Ranking 🏆</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:mis_logros' %}"><i class="fas fa-medal me-2"></i>Mis Logros</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:ranking_salon' %}"><i class="fas fa-trophy me-2"></i>Ranking</a></li>
                 <li><hr class="dropdown-divider"></li>
                 {% endif %}
-                <li><a class="dropdown-item" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
               </ul>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="{% url 'accounts:login' %}">Iniciar Sesión</a>
+              <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="{% url 'accounts:login' %}" style="font-family:'Fredoka One',cursive;font-size:1rem">Iniciar Sesión</a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-primary btn-sm rounded-pill px-3" href="{% url 'accounts:registro' %}">Registrarse</a>
+              <a class="btn btn-primary btn-sm rounded-pill px-3" href="{% url 'accounts:registro' %}" style="font-family:'Fredoka One',cursive;font-size:1rem">Registrarse</a>
             </li>
           {% endif %}
         </ul>
@@ -98,14 +117,15 @@
 
   <!-- Milo Floating Mascot -->
   {% if user.is_authenticated %}
-  {% if user.role == "estudiante" %}
-  {% endif %}
   <div class="milo-float" id="miloFloat" onclick="toggleMiloMessage()">
     <div class="milo-bubble" id="miloBubble">
       <div class="milo-speech">{{ milo_message.text }}</div>
     </div>
     <div class="milo-avatar">
-      <div class="milo-owl">🐺</div>
+      <img src="{% static 'img/milo_rostro.png' %}"
+           id="miloImgFloat"
+           style="width:55px;filter:drop-shadow(0 4px 10px rgba(108,99,255,0.3))"
+           alt="Milo">
     </div>
   </div>
   {% endif %}
@@ -115,7 +135,7 @@
   <div class="messages-container">
     {% for msg in messages %}
     <div class="alert alert-{{ msg.tags|default:'info' }} alert-dismissible fade show nestgrow-alert" role="alert">
-      {{ msg }}
+      {{ msg|safe }}
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     {% endfor %}
@@ -131,15 +151,36 @@
   <footer class="nestgrow-footer">
     <div class="container text-center">
       <p class="mb-1">
-        <span class="brand-icon">🐺</span>
+        <i class="bi bi-easel2-fill"></i>
         <strong>NestGrow</strong> — Aprende Inglés Jugando
       </p>
-      <p class="footer-sub">Hecho con ❤️ para niños de primaria en Colombia</p>
+      <p class="footer-sub">Hecho con <i class="bi bi-heart-fill" style="color:var(--secondary)"></i> para niños de primaria en Colombia</p>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <script src="{% static 'js/main.js' %}"></script>
   {% block extra_js %}{% endblock %}
+
+  <script>
+  let miloClicks = 0;
+  const miloFloat = document.getElementById('miloFloat');
+  if (miloFloat) {
+    miloFloat.addEventListener('click', function() {
+      miloClicks++;
+      if (miloClicks >= 3) {
+        miloClicks = 0;
+        if (typeof lanzarConfetiFuerte === 'function') lanzarConfetiFuerte();
+        const img = document.getElementById('miloImgFloat');
+        if (img) {
+          img.src = "{% static 'img/milo_bai.png' %}";
+          setTimeout(() => img.src = "{% static 'img/milo_fest.png' %}", 3000);
+        }
+      }
+    });
+  }
+  </script>
+
 </body>
 </html>

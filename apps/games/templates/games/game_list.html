@@ -1,74 +1,269 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Juegos - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes floatBounce {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-15px) scale(1.05); }
+  }
+
+  /* HERO más festivo */
+  .games-hero {
+    background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 50%, #4ECDC4 100%);
+    border-radius: 32px;
+    padding: 2.5rem 3rem;
+    color: white;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 2rem;
+    min-height: 240px;
+  }
+  .games-hero::before {
+    content:'';
+    position:absolute;
+    width:350px;height:350px;
+    background:rgba(255,255,255,0.08);
+    border-radius:50%;
+    top:-120px;right:-100px;
+  }
+  .games-hero::after {
+    content:'';
+    position:absolute;
+    width:200px;height:200px;
+    background:rgba(255,255,255,0.06);
+    border-radius:50%;
+    bottom:-80px;left:30px;
+  }
+  .hero-deco {
+    position: absolute;
+    pointer-events: none;
+    animation: floatBounce 3s ease-in-out infinite;
+  }
+  .hero-deco:nth-child(1) { top:3%;right:8%;font-size:1.2rem;animation-delay:0s;opacity:0.25 }
+  .hero-deco:nth-child(2) { top:25%;right:3%;font-size:0.9rem;animation-delay:0.5s;opacity:0.2 }
+  .hero-deco:nth-child(3) { bottom:8%;right:15%;font-size:1rem;animation-delay:1s;opacity:0.3 }
+  .hero-deco:nth-child(4) { bottom:20%;right:5%;font-size:0.8rem;animation-delay:1.5s;opacity:0.2 }
+  .hero-deco:nth-child(5) { top:12%;right:20%;font-size:0.7rem;animation-delay:0.8s;opacity:0.15 }
+
+  /* FILTROS más coloridos - estilo chip */
+  .filter-chip {
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    border: 3px solid transparent;
+    transition: all 0.3s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-chip:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(108,99,255,0.25);
+  }
+  .filter-chip.active {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    color: white !important;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.4);
+    border-color: white;
+  }
+  .filter-chip.inactive {
+    background: white;
+    border-color: #e8e4ff;
+    color: #666 !important;
+  }
+  .filter-chip.all { border-color: #6C63FF; color: #6C63FF; }
+  .filter-chip.drag { border-color: #6C63FF; color: #6C63FF; }
+  .filter-chip.search { border-color: #FF6B6B; color: #FF6B6B; }
+  .filter-chip.puzzle { border-color: #4ECDC4; color: #4ECDC4; }
+  .filter-chip.paint { border-color: #FFB347; color: #FFB347; }
+  .filter-chip.audio { border-color: #9c94ff; color: #9c94ff; }
+
+  /* TARJETAS */
+  .game-card {
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(108,99,255,0.12);
+    transition: all 0.3s;
+    border: 4px solid var(--primary);
+    text-decoration: none;
+    display: block;
+  }
+  .game-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(108,99,255,0.25);
+  }
+  .game-card.drag { border-color: #6C63FF; }
+  .game-card.search { border-color: #FF6B6B; }
+  .game-card.puzzle { border-color: #4ECDC4; }
+  .game-card.paint { border-color: #FFB347; }
+  .game-card.audio { border-color: #9c94ff; }
+
+  .game-icon-wrap {
+    height: 150px;
+    overflow: hidden;
+  }
+
+  /* Badge dificultad */
+  .diff-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 50px;
+  }
+  .diff-easy { background: #e6faf8; color: #4ECDC4; }
+  .diff-medium { background: #fff8eb; color: #FFB347; }
+  .diff-hard { background: #ffeaea; color: #FF6B6B; }
+
+  /* Empty state */
+  .empty-state {
+    background: white;
+    border-radius: 32px;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(108,99,255,0.1);
+    border: 4px dashed #e8e4ff;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
 
-  <!-- Milo Banner -->
-  <div class="milo-banner">
-    <div class="milo-banner-owl">🐺</div>
-    <div>
-      <div class="milo-banner-text">🎮 ¡Elige un juego y empieza a aprender inglés!</div>
-      <div class="text-muted fw-bold small">Cada juego te da puntos ⭐ y te ayuda a mejorar.</div>
-    </div>
-  </div>
-
-  <!-- Category Filter -->
-  <div class="d-flex gap-2 flex-wrap mb-4">
-    <a href="{% url 'games:game_list' %}"
-       class="btn rounded-pill fw-bold {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
-      Todos
-    </a>
-    {% for cat in categories %}
-    <a href="?categoria={{ cat.id }}"
-       class="btn rounded-pill fw-bold {% if selected_category == cat.id|stringformat:'s' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
-      {{ cat.icon }} {{ cat.name }}
-    </a>
-    {% endfor %}
-  </div>
-
-  <!-- Games Grid -->
-  {% if games %}
-  <div class="row g-4">
-    {% for game in games %}
-    <div class="col-sm-6 col-lg-4 fade-in-up">
-      <div class="game-card h-100">
-        <div class="game-icon-big">
-          {% if game.game_type == 'drag_and_drop' %}🖱️
-          {% elif game.game_type == 'word_search' %}🔍
-          {% elif game.game_type == 'puzzle' %}🧩
-          {% elif game.game_type == 'painting' %}🎨
-          {% else %}🎵{% endif %}
+  <!-- HERO -->
+  <div class="games-hero">
+    <span class="hero-deco"><i class="bi bi-star-fill" style="color:white"></i></span>
+    <span class="hero-deco"><i class="bi bi-star-fill" style="color:white"></i></span>
+    <span class="hero-deco"><i class="bi bi-star-fill" style="color:white"></i></span>
+    <span class="hero-deco"><i class="bi bi-star-fill" style="color:white"></i></span>
+    <span class="hero-deco"><i class="bi bi-star-fill" style="color:white"></i></span>
+    <div class="row align-items-center position-relative" style="z-index:1">
+      <div class="col-md-8">
+        <div class="d-inline-flex align-items-center gap-2 mb-3 px-4 py-2 rounded-pill fw-bold"
+             style="background:rgba(255,255,255,0.25);color:white;font-size:0.9rem">
+          <i class="bi bi-controller-fill"></i> Zona de juegos
         </div>
-        <div class="p-4">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <span class="badge rounded-pill" style="background:{{ game.category.color }}20; color:{{ game.category.color }}; font-weight:700">
-              {{ game.category.icon }} {{ game.category.name }}
-            </span>
-            <span class="badge badge-difficulty-{{ game.difficulty }} rounded-pill">
-              {% if game.difficulty == 1 %}⭐ Fácil
-              {% elif game.difficulty == 2 %}⭐⭐ Medio
-              {% else %}⭐⭐⭐ Difícil{% endif %}
-            </span>
+        <h2 class="font-fredoka mb-2" style="font-size:2.5rem;line-height:1.1">
+          ¡Elige tu juego y<br>aprende inglés!
+        </h2>
+        <p style="opacity:0.9;font-weight:700;font-size:1.1;margin-bottom:1.2rem">
+          Cada juego te da puntos y te acerca más al siguiente nivel.
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-star-fill" style="color:#FFE66D;font-size:1.2rem"></i> Gana puntos
           </div>
-          <h5 class="font-fredoka" style="color:var(--primary)">{{ game.title }}</h5>
-          <p class="text-muted small fw-bold mb-3">{{ game.description|truncatewords:15 }}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="fw-bold" style="color:var(--orange)">+{{ game.points_reward }} pts ⭐</span>
-            <a href="{{ game.get_absolute_url }}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
-              ▶ Jugar
-            </a>
+          <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-award-fill" style="color:#FFE66D;font-size:1.2rem"></i> Desbloquea logros
+          </div>
+          <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-trophy-fill" style="color:#FFE66D;font-size:1.2rem"></i> Sube en el ranking
           </div>
         </div>
       </div>
+      <div class="col-md-4 text-center d-none d-md-block">
+        <img src="{% static 'img/milo_fest.png' %}" alt="Milo"
+             style="width:170px;filter:drop-shadow(0 10px 25px rgba(0,0,0,0.2));
+                    animation:floatBounce 3s ease-in-out infinite">
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="d-flex gap-2 flex-wrap mb-4 align-items-center">
+    <span class="fw-bold me-2" style="color:var(--primary);font-family:'Fredoka One',cursive;font-size:1.1rem">
+      <i class="bi bi-funnel-fill me-1"></i>Filtrar:
+    </span>
+    <a href="{% url 'games:game_list' %}"
+       class="filter-chip {% if not selected_category %}active{% else %}inactive all{% endif %}"
+       style="text-decoration:none">
+      <i class="bi bi-grid-fill"></i>Todos
+    </a>
+    {% for cat in categories %}
+    <a href="?categoria={{ cat.id }}"
+       class="filter-chip {% if selected_category == cat.id|stringformat:'s' %}active{% else %}inactive{% endif %}"
+       style="text-decoration:none">
+      {{ cat.icon|safe }} {{ cat.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- GRID DE JUEGOS -->
+  {% if games %}
+  <div class="row g-4">
+    {% for game in games %}
+    <div class="col-sm-6 col-lg-4">
+      <a href="{{ game.get_absolute_url }}" class="game-card {% if game.game_type == 'drag_and_drop' %}drag{% elif game.game_type == 'word_search' %}search{% elif game.game_type == 'puzzle' %}puzzle{% elif game.game_type == 'painting' %}paint{% else %}audio{% endif %}">
+
+        <!-- Imagen según tipo de juego -->
+        {% if game.game_type == 'painting' %}
+        <div class="game-icon-wrap">
+          <img src="{% static 'img/games (2).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+        </div>
+
+        {% elif game.game_type == 'drag_and_drop' %}
+        <div class="game-icon-wrap">
+          <img src="{% static 'img/games (1).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+        </div>
+
+        {% elif game.game_type == 'word_search' %}
+        <div class="game-icon-wrap">
+          <img src="{% static 'img/games (3).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+        </div>
+
+{% else %}
+        <div class="game-icon-wrap">
+          <img src="{% static 'img/games(4).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        {% endif %}
+
+        <!-- Info del juego -->
+        <div class="p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge rounded-pill fw-bold px-3 py-2"
+                  style="background:{{ game.category.color }}25;color:{{ game.category.color }};font-size:0.85rem">
+              {{ game.category.icon|safe }} {{ game.category.name }}
+            </span>
+            <span class="diff-badge {% if game.difficulty == 1 %}diff-easy{% elif game.difficulty == 2 %}diff-medium{% else %}diff-hard{% endif %}">
+              {% if game.difficulty == 1 %}<i class="bi bi-star-fill"></i> Fácil
+              {% elif game.difficulty == 2 %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Medio
+              {% else %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Difícil{% endif %}
+            </span>
+          </div>
+          <h4 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.25rem">{{ game.title }}</h4>
+          <p class="text-muted small fw-bold mb-2" style="font-size:0.9rem;line-height:1.4">
+            {{ game.description|truncatewords:8 }}
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-bold" style="color:#FFB347;font-size:1.1rem">
+              <i class="bi bi-star-fill me-1"></i>+{{ game.points_reward }} pts
+            </span>
+            <span class="btn fw-bold px-4 py-2"
+                  style="background:linear-gradient(135deg, #6C63FF, #9c94ff);color:white;border-radius:50px;font-family:'Fredoka One',cursive;font-size:1rem">
+              <i class="bi bi-play-fill me-1"></i>¡Jugar!
+            </span>
+          </div>
+        </div>
+      </a>
     </div>
     {% endfor %}
   </div>
+
   {% else %}
-  <div class="text-center py-5">
-    <div style="font-size:5rem">🐺</div>
-    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Próximamente más juegos!</h4>
-    <p class="text-muted fw-bold">El profesor aún no ha habilitado juegos para esta categoría.</p>
+  <div class="empty-state">
+    <i class="bi bi-controller" style="font-size:4rem;color:#ccc;margin-bottom:1rem;display:block"></i>
+    <h3 class="font-fredoka mt-2 mb-2" style="color:var(--primary);font-size:1.6rem">¡Aún no hay juegos!</h3>
+    <p class="text-muted fw-bold mb-3">El profesor Miló está preparando nuevos juegos para esta categoría.</p>
+    <a href="{% url 'games:game_list' %}"
+       class="btn fw-bold mt-2"
+       style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;
+              padding:12px 32px;font-family:'Fredoka One',cursive;border-radius:50px">
+      <i class="bi bi-arrow-left me-2"></i>Ver todos los juegos
+    </a>
   </div>
   {% endif %}
 

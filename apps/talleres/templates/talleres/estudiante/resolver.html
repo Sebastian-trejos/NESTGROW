@@ -96,17 +96,11 @@
       <div class="small">Juega el minijuego y cuando hayas terminado, haz clic en <strong>"Continuar al siguiente bloque"</strong>.</div>
     </div>
 
-    <!-- Game info card -->
-    <div class="rounded-3 p-4 mb-3 text-center" style="background:#f0eeff;border:2px solid #d8d0ff">
-      <div style="font-size:3rem">🎮</div>
-      <div class="fw-bold mt-2" style="color:var(--primary);font-size:1.15rem">{{ m.game.title }}</div>
-      <div class="text-muted fw-bold small mt-1">📚 Tema: {{ m.game.category.name }}</div>
-      <div class="badge rounded-pill mt-2" style="background:#fff;color:var(--primary);border:1px solid #d8d0ff">
-        {{ m.game.get_game_type_display }}
-      </div>
-    </div>
+    <iframe src="{% url 'games:game_embed' pk=m.game.pk %}"
+            style="width:100%;height:600px;border:none;border-radius:12px"
+            title="{{ m.game.title }}"></iframe>
 
-    <button class="btn w-100 fw-bold rounded-pill"
+    <button class="btn w-100 fw-bold rounded-pill mt-3"
             style="background:var(--accent);color:white;font-size:1.1rem"
             onclick="completarMinijuego({{ bloque_actual.pk }})">
       Continuar al siguiente bloque →
