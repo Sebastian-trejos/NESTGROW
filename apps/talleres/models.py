@@ -19,6 +19,13 @@ class Taller(TimeStampedModel):
     puntos_xp = models.IntegerField(default=10, verbose_name='XP al completar')
     huesos_recompensa = models.IntegerField(default=5, verbose_name='Huesos al completar')
     is_active = models.BooleanField(default=False, verbose_name='Publicado')
+    categorias_vocabulario = models.ManyToManyField(
+        'content.Category',
+        blank=True,
+        related_name='talleres_asociados',
+        verbose_name='Categorías de vocabulario',
+        help_text='Palabras de estas categorías se desbloquearán al completar el taller',
+    )
 
     class Meta:
         verbose_name = 'Taller'

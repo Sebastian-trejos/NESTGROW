@@ -1,11 +1,21 @@
 from django import forms
 from .models import Taller
+from apps.content.models import Category
 
 
 class TallerForm(forms.ModelForm):
+    categorias_vocabulario = forms.ModelMultipleChoiceField(
+        queryset=Category.active.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'vocab-cat-checkbox'}),
+        label='Categorías de vocabulario que desbloquea',
+        help_text='Las palabras de estas categorías se desbloquearán al completar el taller.',
+    )
+
     class Meta:
         model = Taller
-        fields = ('titulo', 'descripcion', 'salon', 'puntos_xp', 'huesos_recompensa', 'is_active')
+        fields = ('titulo', 'descripcion', 'salon', 'puntos_xp', 'huesos_recompensa',
+                  'categorias_vocabulario', 'is_active')
         widgets = {
             'titulo': forms.TextInput(attrs={
                 'class': 'form-control',

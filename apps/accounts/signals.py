@@ -13,3 +13,14 @@ def create_user_profile(sender, instance, created, **kwargs):
             )
         elif instance.role == 'estudiante':
             EstudianteProfile.objects.get_or_create(user=instance)
+            # Desbloquear palabras iniciales (is_unlocked_by_default=True)
+            # Se hace post-create para evitar circular imports al nivel de módulo
+            _desbloquear_inicial(instance)
+
+
+def _desbloquear_inicial(estudiante):
+    try:
+        from apps.content.utils import desbloquear_palabras_iniciales
+        desbloquear_palabras_iniciales(estudiante)
+    except Exception:
+        pass

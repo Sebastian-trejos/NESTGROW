@@ -475,6 +475,16 @@
     // Forzar scroll arriba
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 50);
   });
+
+  /* ── Transición de círculos al registrarse ── */
+  const regForm = document.querySelector('form[method="post"]');
+  if (regForm) {
+    regForm.addEventListener('submit', function () {
+      const user = regForm.querySelector('[name="username"]')?.value?.trim();
+      const pwd  = regForm.querySelector('[name="password1"]')?.value;
+      if (user && pwd) sessionStorage.setItem('ngTransition', '1');
+    });
+  }
 </script>
 
 {% endblock %}

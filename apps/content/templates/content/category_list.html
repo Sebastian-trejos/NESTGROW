@@ -4,54 +4,283 @@
 
 {% block extra_css %}
 <style>
+@keyframes floatCard {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+  70%  { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* ── Hero banner mejorado ── */
+.vocab-hero {
+  background: linear-gradient(135deg, #6C63FF 0%, #a78bfa 100%);
+  border-radius: 28px;
+  padding: 2rem 2.5rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 15px 40px rgba(108,99,255,0.3);
+}
+.vocab-hero::before {
+  content:'';
+  position:absolute;
+  width:220px;height:220px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  top:-70px;right:-50px;
+}
+.vocab-hero::after {
+  content:'';
+  position:absolute;
+  width:140px;height:140px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  bottom:-40px;left:15%;
+}
+
+/* ── Cards de categoría ── */
+.cat-card {
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.10);
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1),
+              box-shadow 0.3s ease;
+  animation: fadeInUp 0.5s ease both;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+.cat-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+}
+.cat-card:hover .cat-card-inner { filter: brightness(1.08); }
+
+/* Fondo degradado generado por JS a partir del color de la categoría */
+.cat-card-inner {
+  padding: 2rem 1.5rem 1.5rem;
+  text-align: center;
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.3s;
+}
+
+/* Burbuja decorativa detrás del icono */
+.cat-icon-wrap {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 3rem;
+  line-height: 1;
+  border: 3px solid rgba(255,255,255,0.35);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  animation: pulse-ring 3s infinite;
+}
+
+/* Imagen de la categoría (cuando existe) */
 .cat-card-img {
-  width: 100%;
-  height: 120px;
+  width: 80px; height: 80px;
   object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 12px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  margin-bottom: 1rem;
+}
+
+/* Nombre en inglés */
+.cat-name-en {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.35rem;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  margin-bottom: 2px;
+}
+
+/* Nombre en español */
+.cat-name-es {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 0.8rem;
+}
+
+/* Badge de palabras */
+.cat-badge {
+  background: rgba(255,255,255,0.25);
+  color: white;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 4px 14px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Flecha "entrar" que aparece al hover */
+.cat-arrow {
+  position: absolute;
+  bottom: 12px; right: 14px;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.cat-card:hover .cat-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Ondas decorativas en el fondo de la card */
+.cat-wave {
+  position: absolute;
+  bottom: -10px; left: -10px;
+  width: 110%;
+  height: 60px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cat-wave2 {
+  position: absolute;
+  top: -15px; right: -15px;
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Número de animación para delay escalonado */
+.cat-delay-0 { animation-delay: 0.05s; }
+.cat-delay-1 { animation-delay: 0.10s; }
+.cat-delay-2 { animation-delay: 0.15s; }
+.cat-delay-3 { animation-delay: 0.20s; }
+.cat-delay-4 { animation-delay: 0.25s; }
+.cat-delay-5 { animation-delay: 0.30s; }
+.cat-delay-6 { animation-delay: 0.35s; }
+.cat-delay-7 { animation-delay: 0.40s; }
+
+/* Título sección */
+.section-heading {
+  font-family: 'Fredoka One', cursive;
+  color: var(--primary);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
 }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container py-4">
-  <div class="milo-banner">
-    <div class="milo-banner-owl"><img src="{% static 'img/milo_fest.png' %}" alt="Milo" style="width:50px;height:50px;object-fit:contain"></div>
-    <div>
-      <div class="milo-banner-text"><i class="bi bi-book-half"></i> ¡Explora el vocabulario en inglés!</div>
-      <div class="text-muted fw-bold small">Aprende palabras nuevas en cada categoría. ¡Milo te ayuda!</div>
+
+  <!-- ── Hero Banner ── -->
+  <div class="vocab-hero">
+    <div style="position:relative;z-index:1;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+      <img src="{% static 'img/milo_lupa1.png' %}" alt="Milo"
+           style="width:90px;height:90px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+                  animation:floatCard 3s ease-in-out infinite">
+      <div>
+        <div style="font-family:'Fredoka One',cursive;font-size:2rem;line-height:1.1">
+          <i class="bi bi-book-half me-2"></i>¡Aprende vocabulario!
+        </div>
+        <div style="font-size:1rem;opacity:0.9;font-weight:700;margin-top:6px">
+          Explora cada categoría y descubre palabras nuevas en inglés 🌍
+        </div>
+        <div class="mt-3 d-flex gap-2 flex-wrap">
+          <span style="background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:50px;font-size:0.85rem;font-weight:700;border:1.5px solid rgba(255,255,255,0.3)">
+            <i class="bi bi-grid-3x3-gap-fill me-1"></i>{{ categories|length }} categorías
+          </span>
+          <span style="background:rgba(255,255,255,0.2);padding:5px 14px;border-radius:50px;font-size:0.85rem;font-weight:700;border:1.5px solid rgba(255,255,255,0.3)">
+            <i class="bi bi-translate me-1"></i>ES / EN
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <h3 class="font-fredoka mb-4" style="color:var(--primary)">Categorías / Categories</h3>
+  <!-- ── Título sección ── -->
+  <div class="section-heading">
+    <i class="bi bi-grid-3x3-gap-fill"></i> Categorías / Categories
+  </div>
 
+  <!-- ── Grid de cards ── -->
   <div class="row g-4">
     {% for cat in categories %}
-    <div class="col-sm-6 col-md-4 col-lg-3 fade-in-up">
-      <a href="{% url 'content:category_detail' cat.pk %}" class="text-decoration-none">
-        <div class="nestgrow-card p-4 text-center h-100">
+    {% with forloop.counter0|divisibleby:8 as _d %}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <a href="{% url 'content:category_detail' cat.pk %}"
+         class="cat-card cat-delay-{{ forloop.counter0|add:0 }}"
+         style="animation-delay:{{ forloop.counter0 }}00ms">
+        <div class="cat-card-inner"
+             style="background: linear-gradient(145deg, {{ cat.color }}, {{ cat.color }}cc);">
+
+          <!-- Ondas decorativas -->
+          <div class="cat-wave"></div>
+          <div class="cat-wave2"></div>
+
+          <!-- Icono o imagen -->
           {% if cat.image %}
-          <img src="{{ cat.image.url }}" alt="{{ cat.name_en }}" class="cat-card-img">
+            <img src="{{ cat.image.url }}" alt="{{ cat.name_en }}" class="cat-card-img">
           {% else %}
-          <div style="font-size:3.5rem; margin-bottom:12px;color:{{ cat.color }}">{{ cat.icon|safe }}</div>
+            <div class="cat-icon-wrap">{{ cat.icon|safe }}</div>
           {% endif %}
-          <h5 class="font-fredoka" style="color:{{ cat.color }}">{{ cat.name_en }}</h5>
-          <div class="text-muted fw-bold small">{{ cat.name }}</div>
-          <div class="mt-2">
-            <span class="badge rounded-pill" style="background:{{ cat.color }}20;color:{{ cat.color }}">
-              {{ cat.vocabulary.count }} palabras
-            </span>
+
+          <!-- Nombres -->
+          <div class="cat-name-en">{{ cat.name_en }}</div>
+          <div class="cat-name-es">{{ cat.name }}</div>
+
+          <!-- Badge de palabras -->
+          <div class="cat-badge">
+            <i class="bi bi-collection-fill"></i>
+            {{ cat.vocabulary.count }} palabras
+          </div>
+
+          <!-- Flecha hover -->
+          <div class="cat-arrow">
+            <i class="bi bi-arrow-right-short"></i>
           </div>
         </div>
       </a>
     </div>
+    {% endwith %}
     {% empty %}
     <div class="col-12 text-center py-5">
-      <div style="font-size:4rem"><img src="{% static 'img/milo_fest.png' %}" style="width:80px;height:80px;object-fit:contain"></div>
-      <p class="fw-bold text-muted">Aún no hay categorías de vocabulario cargadas.</p>
+      <img src="{% static 'img/milo_duda1.png' %}"
+           style="width:100px;height:100px;object-fit:contain;opacity:0.8;margin-bottom:1rem">
+      <p class="fw-bold text-muted fs-5">Aún no hay categorías cargadas.</p>
+      <p class="text-muted small">Pide a tu profesor que agregue contenido.</p>
     </div>
     {% endfor %}
   </div>
+
 </div>
 {% endblock %}

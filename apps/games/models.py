@@ -234,6 +234,12 @@ class TiendaItem(TimeStampedModel):
         ('planta', '🌿 Planta/Natural'),
         ('especial', '✨ Especial'),
     ]
+    JUEGO_ENTRETENIMIENTO_CHOICES = [
+        ('ninguno', '— Sin juego —'),
+        ('flappy_milo', '🐦 Flappy Milo'),
+        ('snake_milo', '🐍 Snake de Milo'),
+    ]
+
     nombre = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=200)
     categoria = models.CharField(max_length=20, choices=CATEGORIA_CHOICES, default='decoracion')
@@ -241,8 +247,14 @@ class TiendaItem(TimeStampedModel):
     icono = models.CharField(max_length=10, default='🛋️')
     imagen = models.ImageField(upload_to='tienda/', blank=True, null=True,
                                help_text='Imagen del objeto en la habitación')
+    juego_entretenimiento = models.CharField(
+        max_length=20,
+        choices=JUEGO_ENTRETENIMIENTO_CHOICES,
+        default='ninguno',
+        verbose_name='Juego de entretenimiento',
+    )
     posicion_x = models.IntegerField(default=0, help_text='Posición X en la habitación (%)')
-    posicion_y = models.IntegerField(default=0, help_text='Posición Y en la habitación (%)')
+    posicion_y = models.IntegerField(default=0, help_text='Posición Y en la habitación (px sobre el piso)')
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0)
 

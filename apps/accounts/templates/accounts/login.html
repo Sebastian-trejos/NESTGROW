@@ -283,3 +283,19 @@
 </div>
 
 {% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('form[method="post"]');
+  if (!form) return;
+  /* Solo marcamos el flag; el form se envía normalmente.
+     La animación completa se reproduce en la página destino. */
+  form.addEventListener('submit', function () {
+    const user = form.querySelector('[name="username"]')?.value?.trim();
+    const pwd  = form.querySelector('[name="password"]')?.value;
+    if (user && pwd) sessionStorage.setItem('ngTransition', '1');
+  });
+});
+</script>
+{% endblock %}

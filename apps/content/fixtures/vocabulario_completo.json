@@ -1,0 +1,7297 @@
+[
+  {
+    "model": "content.category",
+    "pk": 1,
+    "fields": {
+      "name": "Animales",
+      "name_en": "Animals",
+      "icon": "🐾",
+      "color": "#FF6B6B",
+      "order": 1,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 2,
+    "fields": {
+      "name": "Colores",
+      "name_en": "Colors",
+      "icon": "🎨",
+      "color": "#6C63FF",
+      "order": 2,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 3,
+    "fields": {
+      "name": "Números",
+      "name_en": "Numbers",
+      "icon": "🔢",
+      "color": "#4ECDC4",
+      "order": 3,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 4,
+    "fields": {
+      "name": "Comida y Bebidas",
+      "name_en": "Food & Drinks",
+      "icon": "🍎",
+      "color": "#FFE66D",
+      "order": 4,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 5,
+    "fields": {
+      "name": "Familia",
+      "name_en": "Family",
+      "icon": "👨‍👩‍👧",
+      "color": "#FF8B94",
+      "order": 5,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 6,
+    "fields": {
+      "name": "Partes del Cuerpo",
+      "name_en": "Body Parts",
+      "icon": "🫀",
+      "color": "#FF6B9D",
+      "order": 6,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 7,
+    "fields": {
+      "name": "Ropa",
+      "name_en": "Clothes",
+      "icon": "👕",
+      "color": "#C3A6FF",
+      "order": 7,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 8,
+    "fields": {
+      "name": "Escuela",
+      "name_en": "School",
+      "icon": "🏫",
+      "color": "#5BC0EB",
+      "order": 8,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 9,
+    "fields": {
+      "name": "Casa y Habitaciones",
+      "name_en": "House & Rooms",
+      "icon": "🏠",
+      "color": "#F9A825",
+      "order": 9,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 10,
+    "fields": {
+      "name": "Naturaleza y Clima",
+      "name_en": "Nature & Weather",
+      "icon": "🌿",
+      "color": "#2ECC71",
+      "order": 10,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 11,
+    "fields": {
+      "name": "Transporte",
+      "name_en": "Transport",
+      "icon": "🚗",
+      "color": "#3498DB",
+      "order": 11,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 12,
+    "fields": {
+      "name": "Acciones",
+      "name_en": "Actions & Verbs",
+      "icon": "🏃",
+      "color": "#E74C3C",
+      "order": 12,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.category",
+    "pk": 13,
+    "fields": {
+      "name": "Adjetivos",
+      "name_en": "Adjectives",
+      "icon": "✨",
+      "color": "#9B59B6",
+      "order": 13,
+      "is_active": true,
+      "description": "",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "word_en": "Dog",
+      "word_es": "Perro",
+      "descripcion_es": "Animal doméstico fiel y cariñoso, el mejor amigo del humano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 2,
+    "fields": {
+      "category": 1,
+      "word_en": "Cat",
+      "word_es": "Gato",
+      "descripcion_es": "Animal doméstico independiente que ronronea y le encanta dormir",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 3,
+    "fields": {
+      "category": 1,
+      "word_en": "Lion",
+      "word_es": "León",
+      "descripcion_es": "Gran felino africano, conocido como el rey de la selva",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 4,
+    "fields": {
+      "category": 1,
+      "word_en": "Elephant",
+      "word_es": "Elefante",
+      "descripcion_es": "El animal terrestre más grande, tiene una trompa muy larga",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 5,
+    "fields": {
+      "category": 1,
+      "word_en": "Butterfly",
+      "word_es": "Mariposa",
+      "descripcion_es": "Insecto de alas coloridas que vuela de flor en flor",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 6,
+    "fields": {
+      "category": 1,
+      "word_en": "Bird",
+      "word_es": "Pájaro",
+      "descripcion_es": "Animal con plumas y alas que puede volar por el cielo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 7,
+    "fields": {
+      "category": 1,
+      "word_en": "Fish",
+      "word_es": "Pez",
+      "descripcion_es": "Animal acuático que respira con branquias y nada en el agua",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 8,
+    "fields": {
+      "category": 1,
+      "word_en": "Horse",
+      "word_es": "Caballo",
+      "descripcion_es": "Animal grande y veloz que la gente monta para transportarse",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 9,
+    "fields": {
+      "category": 1,
+      "word_en": "Cow",
+      "word_es": "Vaca",
+      "descripcion_es": "Animal de granja que nos da leche para beber",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 10,
+    "fields": {
+      "category": 1,
+      "word_en": "Pig",
+      "word_es": "Cerdo",
+      "descripcion_es": "Animal de granja rosado y regordete que dice oink",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 11,
+    "fields": {
+      "category": 1,
+      "word_en": "Sheep",
+      "word_es": "Oveja",
+      "descripcion_es": "Animal con lana blanca y esponjosa del que hacemos ropa",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 12,
+    "fields": {
+      "category": 1,
+      "word_en": "Duck",
+      "word_es": "Pato",
+      "descripcion_es": "Ave con patas palmeadas que nada y dice cuac",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 13,
+    "fields": {
+      "category": 1,
+      "word_en": "Rabbit",
+      "word_es": "Conejo",
+      "descripcion_es": "Animal de orejas largas y cola pequeña que salta mucho",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 14,
+    "fields": {
+      "category": 1,
+      "word_en": "Snake",
+      "word_es": "Serpiente",
+      "descripcion_es": "Reptil sin patas que se arrastra por el suelo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 15,
+    "fields": {
+      "category": 1,
+      "word_en": "Tiger",
+      "word_es": "Tigre",
+      "descripcion_es": "Gran felino con rayas negras y naranjas muy poderoso",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 16,
+    "fields": {
+      "category": 1,
+      "word_en": "Bear",
+      "word_es": "Oso",
+      "descripcion_es": "Animal grande y peludo que hiberna en invierno",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 17,
+    "fields": {
+      "category": 1,
+      "word_en": "Wolf",
+      "word_es": "Lobo",
+      "descripcion_es": "Animal salvaje parecido al perro que vive en manada",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 18,
+    "fields": {
+      "category": 1,
+      "word_en": "Fox",
+      "word_es": "Zorro",
+      "descripcion_es": "Animal astuto de cola esponjosa y orejas puntiagudas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 19,
+    "fields": {
+      "category": 1,
+      "word_en": "Deer",
+      "word_es": "Ciervo",
+      "descripcion_es": "Animal del bosque con cuernos ramificados, muy ágil",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 20,
+    "fields": {
+      "category": 1,
+      "word_en": "Monkey",
+      "word_es": "Mono",
+      "descripcion_es": "Animal tropical muy ágil que trepa árboles con facilidad",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 21,
+    "fields": {
+      "category": 1,
+      "word_en": "Frog",
+      "word_es": "Rana",
+      "descripcion_es": "Anfibio verde que salta y vive entre el agua y la tierra",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 22,
+    "fields": {
+      "category": 1,
+      "word_en": "Turtle",
+      "word_es": "Tortuga",
+      "descripcion_es": "Reptil de movimiento lento con caparazón duro que lo protege",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 23,
+    "fields": {
+      "category": 1,
+      "word_en": "Crocodile",
+      "word_es": "Cocodrilo",
+      "descripcion_es": "Reptil grande con dientes afilados que vive en ríos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 24,
+    "fields": {
+      "category": 1,
+      "word_en": "Shark",
+      "word_es": "Tiburón",
+      "descripcion_es": "Pez grande y veloz considerado el depredador del océano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 25,
+    "fields": {
+      "category": 1,
+      "word_en": "Whale",
+      "word_es": "Ballena",
+      "descripcion_es": "El animal más grande del planeta, vive en el océano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 26,
+    "fields": {
+      "category": 1,
+      "word_en": "Dolphin",
+      "word_es": "Delfín",
+      "descripcion_es": "Mamífero marino muy inteligente y juguetón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 26,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 27,
+    "fields": {
+      "category": 1,
+      "word_en": "Penguin",
+      "word_es": "Pingüino",
+      "descripcion_es": "Ave que no vuela pero nada muy bien, vive en el polo sur",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 27,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 28,
+    "fields": {
+      "category": 1,
+      "word_en": "Eagle",
+      "word_es": "Águila",
+      "descripcion_es": "Ave de gran tamaño y vista muy aguda que vuela muy alto",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 28,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 29,
+    "fields": {
+      "category": 1,
+      "word_en": "Owl",
+      "word_es": "Búho",
+      "descripcion_es": "Ave nocturna con ojos grandes que ve perfectamente de noche",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 29,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 30,
+    "fields": {
+      "category": 1,
+      "word_en": "Bee",
+      "word_es": "Abeja",
+      "descripcion_es": "Insecto que produce miel y poliniza las flores",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 30,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 31,
+    "fields": {
+      "category": 1,
+      "word_en": "Spider",
+      "word_es": "Araña",
+      "descripcion_es": "Arácnido de ocho patas que teje telarañas para cazar insectos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 31,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 32,
+    "fields": {
+      "category": 1,
+      "word_en": "Ant",
+      "word_es": "Hormiga",
+      "descripcion_es": "Insecto pequeño pero muy fuerte que trabaja en equipo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 32,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 33,
+    "fields": {
+      "category": 1,
+      "word_en": "Flamingo",
+      "word_es": "Flamenco",
+      "descripcion_es": "Ave rosada de cuello largo que se para en un solo pie",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 33,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 34,
+    "fields": {
+      "category": 1,
+      "word_en": "Giraffe",
+      "word_es": "Jirafa",
+      "descripcion_es": "Animal con el cuello más largo del mundo para alcanzar hojas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 34,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 35,
+    "fields": {
+      "category": 1,
+      "word_en": "Zebra",
+      "word_es": "Cebra",
+      "descripcion_es": "Animal africano con rayas blancas y negras en todo el cuerpo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 35,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 36,
+    "fields": {
+      "category": 1,
+      "word_en": "Kangaroo",
+      "word_es": "Canguro",
+      "descripcion_es": "Animal australiano que lleva a su cría en una bolsa del vientre",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 36,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 37,
+    "fields": {
+      "category": 1,
+      "word_en": "Panda",
+      "word_es": "Panda",
+      "descripcion_es": "Oso de China con manchas blancas y negras que come bambú",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 37,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 38,
+    "fields": {
+      "category": 1,
+      "word_en": "Parrot",
+      "word_es": "Loro",
+      "descripcion_es": "Ave colorida que puede imitar palabras y sonidos humanos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 38,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 39,
+    "fields": {
+      "category": 1,
+      "word_en": "Crab",
+      "word_es": "Cangrejo",
+      "descripcion_es": "Animal marino con pinzas y caparazón duro que camina de lado",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 39,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 40,
+    "fields": {
+      "category": 1,
+      "word_en": "Octopus",
+      "word_es": "Pulpo",
+      "descripcion_es": "Animal marino con ocho tentáculos que puede cambiar de color",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 40,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 41,
+    "fields": {
+      "category": 2,
+      "word_en": "Red",
+      "word_es": "Rojo",
+      "descripcion_es": "Color del fuego, la sangre y muchas frutas maduras",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 42,
+    "fields": {
+      "category": 2,
+      "word_en": "Blue",
+      "word_es": "Azul",
+      "descripcion_es": "Color del cielo despejado y del mar profundo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 43,
+    "fields": {
+      "category": 2,
+      "word_en": "Green",
+      "word_es": "Verde",
+      "descripcion_es": "Color del pasto, los árboles y la naturaleza",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 44,
+    "fields": {
+      "category": 2,
+      "word_en": "Yellow",
+      "word_es": "Amarillo",
+      "descripcion_es": "Color brillante del sol, los pollitos y el limón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 45,
+    "fields": {
+      "category": 2,
+      "word_en": "White",
+      "word_es": "Blanco",
+      "descripcion_es": "Color de la nieve, las nubes y el papel en blanco",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 46,
+    "fields": {
+      "category": 2,
+      "word_en": "Black",
+      "word_es": "Negro",
+      "descripcion_es": "Color de la noche oscura y del carbón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 47,
+    "fields": {
+      "category": 2,
+      "word_en": "Orange",
+      "word_es": "Naranja",
+      "descripcion_es": "Color vivo del atardecer y de la fruta naranja",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 48,
+    "fields": {
+      "category": 2,
+      "word_en": "Purple",
+      "word_es": "Morado",
+      "descripcion_es": "Color que se forma mezclando rojo y azul",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 49,
+    "fields": {
+      "category": 2,
+      "word_en": "Pink",
+      "word_es": "Rosado",
+      "descripcion_es": "Color suave y claro, mezcla de rojo y blanco",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 50,
+    "fields": {
+      "category": 2,
+      "word_en": "Brown",
+      "word_es": "Marrón",
+      "descripcion_es": "Color de la tierra, el chocolate y la madera",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 51,
+    "fields": {
+      "category": 2,
+      "word_en": "Gray",
+      "word_es": "Gris",
+      "descripcion_es": "Color intermedio entre blanco y negro, como las nubes de lluvia",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 52,
+    "fields": {
+      "category": 2,
+      "word_en": "Gold",
+      "word_es": "Dorado",
+      "descripcion_es": "Color brillante y cálido como el metal precioso oro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 53,
+    "fields": {
+      "category": 2,
+      "word_en": "Silver",
+      "word_es": "Plateado",
+      "descripcion_es": "Color brillante y frío como el metal plata",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 54,
+    "fields": {
+      "category": 2,
+      "word_en": "Cyan",
+      "word_es": "Cian",
+      "descripcion_es": "Color azul verdoso muy brillante y vivo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 55,
+    "fields": {
+      "category": 2,
+      "word_en": "Magenta",
+      "word_es": "Magenta",
+      "descripcion_es": "Color rosado intenso y brillante",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 56,
+    "fields": {
+      "category": 2,
+      "word_en": "Beige",
+      "word_es": "Beige",
+      "descripcion_es": "Color crema claro parecido al color de la arena",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 57,
+    "fields": {
+      "category": 2,
+      "word_en": "Turquoise",
+      "word_es": "Turquesa",
+      "descripcion_es": "Color azul verdoso como el agua del mar tropical",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 58,
+    "fields": {
+      "category": 2,
+      "word_en": "Violet",
+      "word_es": "Violeta",
+      "descripcion_es": "Color morado claro parecido a la flor violeta",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 59,
+    "fields": {
+      "category": 2,
+      "word_en": "Scarlet",
+      "word_es": "Escarlata",
+      "descripcion_es": "Tono de rojo muy intenso, vivo y brillante",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 60,
+    "fields": {
+      "category": 2,
+      "word_en": "Indigo",
+      "word_es": "Índigo",
+      "descripcion_es": "Color azul profundo y oscuro, uno de los colores del arcoíris",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 61,
+    "fields": {
+      "category": 3,
+      "word_en": "One",
+      "word_es": "Uno",
+      "descripcion_es": "El primer número natural, se representa con el número 1",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 62,
+    "fields": {
+      "category": 3,
+      "word_en": "Two",
+      "word_es": "Dos",
+      "descripcion_es": "Número que representa un par de cosas iguales",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 63,
+    "fields": {
+      "category": 3,
+      "word_en": "Three",
+      "word_es": "Tres",
+      "descripcion_es": "El número de los tres cerditos del cuento",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 64,
+    "fields": {
+      "category": 3,
+      "word_en": "Four",
+      "word_es": "Cuatro",
+      "descripcion_es": "El número de las patas de un perro o un gato",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 65,
+    "fields": {
+      "category": 3,
+      "word_en": "Five",
+      "word_es": "Cinco",
+      "descripcion_es": "El número de los dedos de una mano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 66,
+    "fields": {
+      "category": 3,
+      "word_en": "Six",
+      "word_es": "Seis",
+      "descripcion_es": "El número de las caras de un cubo o dado",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 67,
+    "fields": {
+      "category": 3,
+      "word_en": "Seven",
+      "word_es": "Siete",
+      "descripcion_es": "El número de los días de la semana",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 68,
+    "fields": {
+      "category": 3,
+      "word_en": "Eight",
+      "word_es": "Ocho",
+      "descripcion_es": "El número de las patas de una araña",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 69,
+    "fields": {
+      "category": 3,
+      "word_en": "Nine",
+      "word_es": "Nueve",
+      "descripcion_es": "El número justo antes del diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 70,
+    "fields": {
+      "category": 3,
+      "word_en": "Ten",
+      "word_es": "Diez",
+      "descripcion_es": "El número de los dedos de las dos manos juntas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 71,
+    "fields": {
+      "category": 3,
+      "word_en": "Eleven",
+      "word_es": "Once",
+      "descripcion_es": "El número que viene después del diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 72,
+    "fields": {
+      "category": 3,
+      "word_en": "Twelve",
+      "word_es": "Doce",
+      "descripcion_es": "El número de los meses del año",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 73,
+    "fields": {
+      "category": 3,
+      "word_en": "Thirteen",
+      "word_es": "Trece",
+      "descripcion_es": "El número que sigue al doce",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 74,
+    "fields": {
+      "category": 3,
+      "word_en": "Fourteen",
+      "word_es": "Catorce",
+      "descripcion_es": "El número que sigue al trece",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 75,
+    "fields": {
+      "category": 3,
+      "word_en": "Fifteen",
+      "word_es": "Quince",
+      "descripcion_es": "La suma de diez más cinco",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 76,
+    "fields": {
+      "category": 3,
+      "word_en": "Twenty",
+      "word_es": "Veinte",
+      "descripcion_es": "El doble de diez, dos grupos de diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 77,
+    "fields": {
+      "category": 3,
+      "word_en": "Thirty",
+      "word_es": "Treinta",
+      "descripcion_es": "Tres grupos de diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 78,
+    "fields": {
+      "category": 3,
+      "word_en": "Forty",
+      "word_es": "Cuarenta",
+      "descripcion_es": "Cuatro grupos de diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 79,
+    "fields": {
+      "category": 3,
+      "word_en": "Fifty",
+      "word_es": "Cincuenta",
+      "descripcion_es": "Cinco grupos de diez, la mitad de cien",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 80,
+    "fields": {
+      "category": 3,
+      "word_en": "Sixty",
+      "word_es": "Sesenta",
+      "descripcion_es": "Seis grupos de diez, los minutos que tiene una hora",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 81,
+    "fields": {
+      "category": 3,
+      "word_en": "Seventy",
+      "word_es": "Setenta",
+      "descripcion_es": "Siete grupos de diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 82,
+    "fields": {
+      "category": 3,
+      "word_en": "Eighty",
+      "word_es": "Ochenta",
+      "descripcion_es": "Ocho grupos de diez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 83,
+    "fields": {
+      "category": 3,
+      "word_en": "Ninety",
+      "word_es": "Noventa",
+      "descripcion_es": "Nueve grupos de diez, el número antes del cien",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 84,
+    "fields": {
+      "category": 3,
+      "word_en": "One hundred",
+      "word_es": "Cien",
+      "descripcion_es": "Diez grupos de diez, el número perfecto de puntos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 85,
+    "fields": {
+      "category": 3,
+      "word_en": "Zero",
+      "word_es": "Cero",
+      "descripcion_es": "El número que representa nada, el punto de partida",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 86,
+    "fields": {
+      "category": 3,
+      "word_en": "First",
+      "word_es": "Primero",
+      "descripcion_es": "El que ocupa el lugar número uno en una lista",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 26,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 87,
+    "fields": {
+      "category": 3,
+      "word_en": "Second",
+      "word_es": "Segundo",
+      "descripcion_es": "El que ocupa el segundo lugar, después del primero",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 27,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 88,
+    "fields": {
+      "category": 3,
+      "word_en": "Third",
+      "word_es": "Tercero",
+      "descripcion_es": "El que ocupa el tercer lugar en un orden",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 28,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 89,
+    "fields": {
+      "category": 3,
+      "word_en": "Half",
+      "word_es": "Mitad",
+      "descripcion_es": "Una de las dos partes iguales en que se divide algo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 29,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 90,
+    "fields": {
+      "category": 3,
+      "word_en": "Double",
+      "word_es": "Doble",
+      "descripcion_es": "El resultado de multiplicar una cantidad por dos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 30,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 91,
+    "fields": {
+      "category": 4,
+      "word_en": "Apple",
+      "word_es": "Manzana",
+      "descripcion_es": "Fruta redonda crujiente que puede ser roja, verde o amarilla",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 92,
+    "fields": {
+      "category": 4,
+      "word_en": "Banana",
+      "word_es": "Banana",
+      "descripcion_es": "Fruta alargada, amarilla y dulce que le encanta a los monos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 93,
+    "fields": {
+      "category": 4,
+      "word_en": "Water",
+      "word_es": "Agua",
+      "descripcion_es": "Líquido transparente e insaboro esencial para vivir",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 94,
+    "fields": {
+      "category": 4,
+      "word_en": "Milk",
+      "word_es": "Leche",
+      "descripcion_es": "Bebida blanca y nutritiva que producen las vacas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 95,
+    "fields": {
+      "category": 4,
+      "word_en": "Bread",
+      "word_es": "Pan",
+      "descripcion_es": "Alimento esponjoso hecho con harina que se hornea",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 96,
+    "fields": {
+      "category": 4,
+      "word_en": "Rice",
+      "word_es": "Arroz",
+      "descripcion_es": "Grano pequeño blanco o integral que es base de muchas comidas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 97,
+    "fields": {
+      "category": 4,
+      "word_en": "Egg",
+      "word_es": "Huevo",
+      "descripcion_es": "Alimento oval que pone la gallina, muy nutritivo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 98,
+    "fields": {
+      "category": 4,
+      "word_en": "Chicken",
+      "word_es": "Pollo",
+      "descripcion_es": "Carne de ave muy popular que se puede freír, asar o guisar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 99,
+    "fields": {
+      "category": 4,
+      "word_en": "Fish",
+      "word_es": "Pescado",
+      "descripcion_es": "Carne de pez, alimento muy saludable rico en proteínas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 100,
+    "fields": {
+      "category": 4,
+      "word_en": "Soup",
+      "word_es": "Sopa",
+      "descripcion_es": "Alimento líquido caliente con verduras, pasta o carne",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 101,
+    "fields": {
+      "category": 4,
+      "word_en": "Salad",
+      "word_es": "Ensalada",
+      "descripcion_es": "Mezcla de verduras frescas, colorida y muy nutritiva",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 102,
+    "fields": {
+      "category": 4,
+      "word_en": "Cake",
+      "word_es": "Pastel",
+      "descripcion_es": "Postre dulce y esponjoso que se usa en cumpleaños",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 103,
+    "fields": {
+      "category": 4,
+      "word_en": "Cookie",
+      "word_es": "Galleta",
+      "descripcion_es": "Pequeño dulce horneado, crujiente y delicioso",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 104,
+    "fields": {
+      "category": 4,
+      "word_en": "Juice",
+      "word_es": "Jugo",
+      "descripcion_es": "Bebida natural hecha exprimiendo frutas frescas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 105,
+    "fields": {
+      "category": 4,
+      "word_en": "Orange",
+      "word_es": "Naranja",
+      "descripcion_es": "Fruta cítrica redonda con jugo delicioso y vitamina C",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 106,
+    "fields": {
+      "category": 4,
+      "word_en": "Strawberry",
+      "word_es": "Fresa",
+      "descripcion_es": "Fruta roja pequeña con semillitas y sabor dulce y ácido",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 107,
+    "fields": {
+      "category": 4,
+      "word_en": "Grape",
+      "word_es": "Uva",
+      "descripcion_es": "Fruta pequeña que crece en racimos, puede ser verde o morada",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 108,
+    "fields": {
+      "category": 4,
+      "word_en": "Watermelon",
+      "word_es": "Sandía",
+      "descripcion_es": "Fruta enorme verde por fuera y roja y dulce por dentro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 109,
+    "fields": {
+      "category": 4,
+      "word_en": "Tomato",
+      "word_es": "Tomate",
+      "descripcion_es": "Fruta o verdura roja jugosa usada en salsas y ensaladas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 110,
+    "fields": {
+      "category": 4,
+      "word_en": "Carrot",
+      "word_es": "Zanahoria",
+      "descripcion_es": "Verdura alargada de color naranja, muy buena para la vista",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 111,
+    "fields": {
+      "category": 4,
+      "word_en": "Potato",
+      "word_es": "Papa",
+      "descripcion_es": "Tubérculo marrón que se usa para papas fritas, puré o sopas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 112,
+    "fields": {
+      "category": 4,
+      "word_en": "Pizza",
+      "word_es": "Pizza",
+      "descripcion_es": "Comida italiana de masa con queso, tomate y muchos ingredientes",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 113,
+    "fields": {
+      "category": 4,
+      "word_en": "Hamburger",
+      "word_es": "Hamburguesa",
+      "descripcion_es": "Pan redondo relleno con carne, lechuga, queso y tomate",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 114,
+    "fields": {
+      "category": 4,
+      "word_en": "Ice cream",
+      "word_es": "Helado",
+      "descripcion_es": "Postre frío y dulce hecho con leche, en muchos sabores",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 115,
+    "fields": {
+      "category": 4,
+      "word_en": "Chocolate",
+      "word_es": "Chocolate",
+      "descripcion_es": "Dulce delicioso hecho del cacao, puede ser negro o con leche",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 116,
+    "fields": {
+      "category": 4,
+      "word_en": "Coffee",
+      "word_es": "Café",
+      "descripcion_es": "Bebida oscura y caliente hecha de granos de café tostados",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 26,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 117,
+    "fields": {
+      "category": 4,
+      "word_en": "Tea",
+      "word_es": "Té",
+      "descripcion_es": "Bebida caliente aromática hecha infusionando hojas de plantas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 27,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 118,
+    "fields": {
+      "category": 4,
+      "word_en": "Corn",
+      "word_es": "Maíz",
+      "descripcion_es": "Cereal amarillo con granos en mazorca, base de la cocina latina",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 28,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 119,
+    "fields": {
+      "category": 4,
+      "word_en": "Bean",
+      "word_es": "Frijol",
+      "descripcion_es": "Semilla pequeña muy nutritiva usada en muchos platos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 29,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 120,
+    "fields": {
+      "category": 4,
+      "word_en": "Cheese",
+      "word_es": "Queso",
+      "descripcion_es": "Alimento hecho de leche fermentada, puede ser suave o duro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 30,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 121,
+    "fields": {
+      "category": 4,
+      "word_en": "Butter",
+      "word_es": "Mantequilla",
+      "descripcion_es": "Grasa cremosa de leche que se unta en el pan",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 31,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 122,
+    "fields": {
+      "category": 4,
+      "word_en": "Sugar",
+      "word_es": "Azúcar",
+      "descripcion_es": "Ingrediente blanco y dulce que endulza postres y bebidas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 32,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 123,
+    "fields": {
+      "category": 4,
+      "word_en": "Salt",
+      "word_es": "Sal",
+      "descripcion_es": "Condimento blanco que realza el sabor de las comidas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 33,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 124,
+    "fields": {
+      "category": 4,
+      "word_en": "Lemon",
+      "word_es": "Limón",
+      "descripcion_es": "Fruta amarilla muy ácida usada en bebidas y como condimento",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 34,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 125,
+    "fields": {
+      "category": 4,
+      "word_en": "Mango",
+      "word_es": "Mango",
+      "descripcion_es": "Fruta tropical dulce y jugosa de pulpa amarilla o naranja",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 35,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 126,
+    "fields": {
+      "category": 4,
+      "word_en": "Pineapple",
+      "word_es": "Piña",
+      "descripcion_es": "Fruta tropical con corona verde y pulpa amarilla muy dulce",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 36,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 127,
+    "fields": {
+      "category": 4,
+      "word_en": "Avocado",
+      "word_es": "Aguacate",
+      "descripcion_es": "Fruta verde cremosa muy nutritiva, base del guacamole",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 37,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 128,
+    "fields": {
+      "category": 4,
+      "word_en": "Honey",
+      "word_es": "Miel",
+      "descripcion_es": "Líquido dorado y muy dulce producido por las abejas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 38,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 129,
+    "fields": {
+      "category": 4,
+      "word_en": "Pasta",
+      "word_es": "Pasta",
+      "descripcion_es": "Alimento italiano hecho con harina, como los espaguetis",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 39,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 130,
+    "fields": {
+      "category": 4,
+      "word_en": "Sandwich",
+      "word_es": "Sándwich",
+      "descripcion_es": "Pan con relleno de jamón, queso, verduras u otros ingredientes",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 40,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 131,
+    "fields": {
+      "category": 5,
+      "word_en": "Mother",
+      "word_es": "Mamá",
+      "descripcion_es": "La mujer que cuida, protege y ama a sus hijos con todo el corazón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 132,
+    "fields": {
+      "category": 5,
+      "word_en": "Father",
+      "word_es": "Papá",
+      "descripcion_es": "El hombre que cuida, protege y provee para su familia",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 133,
+    "fields": {
+      "category": 5,
+      "word_en": "Brother",
+      "word_es": "Hermano",
+      "descripcion_es": "Niño o chico que comparte los mismos padres que tú",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 134,
+    "fields": {
+      "category": 5,
+      "word_en": "Sister",
+      "word_es": "Hermana",
+      "descripcion_es": "Niña o chica que comparte los mismos padres que tú",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 135,
+    "fields": {
+      "category": 5,
+      "word_en": "Baby",
+      "word_es": "Bebé",
+      "descripcion_es": "Niño o niña muy pequeño que aún no puede hablar ni caminar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 136,
+    "fields": {
+      "category": 5,
+      "word_en": "Grandmother",
+      "word_es": "Abuela",
+      "descripcion_es": "La mamá de tu papá o de tu mamá, llena de experiencia y amor",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 137,
+    "fields": {
+      "category": 5,
+      "word_en": "Grandfather",
+      "word_es": "Abuelo",
+      "descripcion_es": "El papá de tu papá o de tu mamá",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 138,
+    "fields": {
+      "category": 5,
+      "word_en": "Aunt",
+      "word_es": "Tía",
+      "descripcion_es": "La hermana de tu mamá o de tu papá",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 139,
+    "fields": {
+      "category": 5,
+      "word_en": "Uncle",
+      "word_es": "Tío",
+      "descripcion_es": "El hermano de tu mamá o de tu papá",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 140,
+    "fields": {
+      "category": 5,
+      "word_en": "Cousin",
+      "word_es": "Primo",
+      "descripcion_es": "El hijo de tu tío o de tu tía, un familiar cercano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 141,
+    "fields": {
+      "category": 5,
+      "word_en": "Son",
+      "word_es": "Hijo",
+      "descripcion_es": "El niño o chico que tiene un padre y una madre",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 142,
+    "fields": {
+      "category": 5,
+      "word_en": "Daughter",
+      "word_es": "Hija",
+      "descripcion_es": "La niña o chica que tiene un padre y una madre",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 143,
+    "fields": {
+      "category": 5,
+      "word_en": "Husband",
+      "word_es": "Esposo",
+      "descripcion_es": "El hombre que está casado con una mujer",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 144,
+    "fields": {
+      "category": 5,
+      "word_en": "Wife",
+      "word_es": "Esposa",
+      "descripcion_es": "La mujer que está casada con un hombre",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 145,
+    "fields": {
+      "category": 5,
+      "word_en": "Parents",
+      "word_es": "Padres",
+      "descripcion_es": "El papá y la mamá juntos, los cuidadores principales",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 146,
+    "fields": {
+      "category": 5,
+      "word_en": "Family",
+      "word_es": "Familia",
+      "descripcion_es": "Todas las personas unidas por lazos de amor y parentesco",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 147,
+    "fields": {
+      "category": 5,
+      "word_en": "Twin",
+      "word_es": "Gemelo",
+      "descripcion_es": "Hermano o hermana nacido el mismo día y del mismo parto",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 148,
+    "fields": {
+      "category": 5,
+      "word_en": "Nephew",
+      "word_es": "Sobrino",
+      "descripcion_es": "El hijo de tu hermano o de tu hermana",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 149,
+    "fields": {
+      "category": 5,
+      "word_en": "Niece",
+      "word_es": "Sobrina",
+      "descripcion_es": "La hija de tu hermano o de tu hermana",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 150,
+    "fields": {
+      "category": 5,
+      "word_en": "Grandparents",
+      "word_es": "Abuelos",
+      "descripcion_es": "Los padres de tu papá o de tu mamá juntos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 151,
+    "fields": {
+      "category": 6,
+      "word_en": "Head",
+      "word_es": "Cabeza",
+      "descripcion_es": "La parte más alta del cuerpo, donde están el cerebro y los sentidos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 152,
+    "fields": {
+      "category": 6,
+      "word_en": "Eye",
+      "word_es": "Ojo",
+      "descripcion_es": "Órgano que usamos para ver todo lo que nos rodea",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 153,
+    "fields": {
+      "category": 6,
+      "word_en": "Nose",
+      "word_es": "Nariz",
+      "descripcion_es": "Órgano que usamos para oler y para respirar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 154,
+    "fields": {
+      "category": 6,
+      "word_en": "Mouth",
+      "word_es": "Boca",
+      "descripcion_es": "Parte de la cara que usamos para hablar, comer y sonreír",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 155,
+    "fields": {
+      "category": 6,
+      "word_en": "Ear",
+      "word_es": "Oreja",
+      "descripcion_es": "Órgano que usamos para escuchar todos los sonidos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 156,
+    "fields": {
+      "category": 6,
+      "word_en": "Hand",
+      "word_es": "Mano",
+      "descripcion_es": "Extremidad con cinco dedos que usamos para agarrar y tocar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 157,
+    "fields": {
+      "category": 6,
+      "word_en": "Foot",
+      "word_es": "Pie",
+      "descripcion_es": "Parte del cuerpo que usamos para caminar y pararnos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 158,
+    "fields": {
+      "category": 6,
+      "word_en": "Leg",
+      "word_es": "Pierna",
+      "descripcion_es": "Parte del cuerpo entre la cadera y el pie",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 159,
+    "fields": {
+      "category": 6,
+      "word_en": "Arm",
+      "word_es": "Brazo",
+      "descripcion_es": "Parte del cuerpo entre el hombro y la mano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 160,
+    "fields": {
+      "category": 6,
+      "word_en": "Finger",
+      "word_es": "Dedo",
+      "descripcion_es": "Cada una de las cinco prolongaciones de la mano",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 161,
+    "fields": {
+      "category": 6,
+      "word_en": "Hair",
+      "word_es": "Cabello",
+      "descripcion_es": "Filamentos que crecen en la cabeza y la protegen",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 162,
+    "fields": {
+      "category": 6,
+      "word_en": "Teeth",
+      "word_es": "Dientes",
+      "descripcion_es": "Estructuras duras en la boca que usamos para masticar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 163,
+    "fields": {
+      "category": 6,
+      "word_en": "Tongue",
+      "word_es": "Lengua",
+      "descripcion_es": "Músculo en la boca que ayuda a hablar, saborear y tragar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 164,
+    "fields": {
+      "category": 6,
+      "word_en": "Neck",
+      "word_es": "Cuello",
+      "descripcion_es": "Parte que une la cabeza con el resto del cuerpo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 165,
+    "fields": {
+      "category": 6,
+      "word_en": "Shoulder",
+      "word_es": "Hombro",
+      "descripcion_es": "Parte superior del brazo donde este se une al tronco",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 166,
+    "fields": {
+      "category": 6,
+      "word_en": "Back",
+      "word_es": "Espalda",
+      "descripcion_es": "Parte posterior del tronco, detrás del pecho",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 167,
+    "fields": {
+      "category": 6,
+      "word_en": "Chest",
+      "word_es": "Pecho",
+      "descripcion_es": "Parte delantera del tronco donde se encuentra el corazón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 168,
+    "fields": {
+      "category": 6,
+      "word_en": "Stomach",
+      "word_es": "Estómago",
+      "descripcion_es": "Órgano interno que digiere los alimentos que comemos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 169,
+    "fields": {
+      "category": 6,
+      "word_en": "Knee",
+      "word_es": "Rodilla",
+      "descripcion_es": "Articulación que está en el centro de la pierna",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 170,
+    "fields": {
+      "category": 6,
+      "word_en": "Elbow",
+      "word_es": "Codo",
+      "descripcion_es": "Articulación que está en el centro del brazo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 171,
+    "fields": {
+      "category": 6,
+      "word_en": "Thumb",
+      "word_es": "Pulgar",
+      "descripcion_es": "El dedo más grueso y corto de la mano, muy útil",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 172,
+    "fields": {
+      "category": 6,
+      "word_en": "Lip",
+      "word_es": "Labio",
+      "descripcion_es": "Borde suave y carnoso de la boca",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 173,
+    "fields": {
+      "category": 6,
+      "word_en": "Cheek",
+      "word_es": "Mejilla",
+      "descripcion_es": "La parte redondita y suave de la cara, a los lados de la nariz",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 174,
+    "fields": {
+      "category": 6,
+      "word_en": "Chin",
+      "word_es": "Mentón",
+      "descripcion_es": "La parte más inferior de la cara, debajo de la boca",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 175,
+    "fields": {
+      "category": 6,
+      "word_en": "Heart",
+      "word_es": "Corazón",
+      "descripcion_es": "Órgano vital que bombea la sangre por todo el cuerpo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 176,
+    "fields": {
+      "category": 7,
+      "word_en": "Shirt",
+      "word_es": "Camisa",
+      "descripcion_es": "Prenda con botones y cuello que cubre la parte superior del cuerpo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 177,
+    "fields": {
+      "category": 7,
+      "word_en": "Pants",
+      "word_es": "Pantalón",
+      "descripcion_es": "Prenda que cubre desde la cintura hasta los pies",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 178,
+    "fields": {
+      "category": 7,
+      "word_en": "Shoes",
+      "word_es": "Zapatos",
+      "descripcion_es": "Calzado de material duro que protege y cubre los pies",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 179,
+    "fields": {
+      "category": 7,
+      "word_en": "Hat",
+      "word_es": "Sombrero",
+      "descripcion_es": "Accesorio que se pone en la cabeza para protegerse del sol",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 180,
+    "fields": {
+      "category": 7,
+      "word_en": "Dress",
+      "word_es": "Vestido",
+      "descripcion_es": "Prenda de una sola pieza que cubre el cuerpo y las piernas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 181,
+    "fields": {
+      "category": 7,
+      "word_en": "Jacket",
+      "word_es": "Chaqueta",
+      "descripcion_es": "Prenda abrigadora que se usa encima de la camisa o camiseta",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 182,
+    "fields": {
+      "category": 7,
+      "word_en": "Socks",
+      "word_es": "Medias",
+      "descripcion_es": "Cubiertas suaves de tela que se ponen en los pies",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 183,
+    "fields": {
+      "category": 7,
+      "word_en": "Gloves",
+      "word_es": "Guantes",
+      "descripcion_es": "Cubiertas para las manos que las abrigan en el frío",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 184,
+    "fields": {
+      "category": 7,
+      "word_en": "Scarf",
+      "word_es": "Bufanda",
+      "descripcion_es": "Tira larga de tela que se enrolla al cuello para abrigar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 185,
+    "fields": {
+      "category": 7,
+      "word_en": "Coat",
+      "word_es": "Abrigo",
+      "descripcion_es": "Prenda larga y gruesa para protegerse del frío intenso",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 186,
+    "fields": {
+      "category": 7,
+      "word_en": "Boots",
+      "word_es": "Botas",
+      "descripcion_es": "Calzado alto que cubre el tobillo o llega hasta la pierna",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 187,
+    "fields": {
+      "category": 7,
+      "word_en": "Sweater",
+      "word_es": "Suéter",
+      "descripcion_es": "Prenda tejida de lana o algodón que abriga el torso",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 188,
+    "fields": {
+      "category": 7,
+      "word_en": "Skirt",
+      "word_es": "Falda",
+      "descripcion_es": "Prenda que cubre desde la cintura hacia abajo con vuelo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 189,
+    "fields": {
+      "category": 7,
+      "word_en": "T-shirt",
+      "word_es": "Camiseta",
+      "descripcion_es": "Prenda sin cuello ni botones, cómoda y casual",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 190,
+    "fields": {
+      "category": 7,
+      "word_en": "Underwear",
+      "word_es": "Ropa interior",
+      "descripcion_es": "Prendas íntimas que se usan debajo de la ropa exterior",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 191,
+    "fields": {
+      "category": 7,
+      "word_en": "Uniform",
+      "word_es": "Uniforme",
+      "descripcion_es": "Ropa igual y estandarizada que se usa en el colegio o trabajo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 192,
+    "fields": {
+      "category": 7,
+      "word_en": "Belt",
+      "word_es": "Cinturón",
+      "descripcion_es": "Tira que se ciñe a la cintura para sostener el pantalón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 193,
+    "fields": {
+      "category": 7,
+      "word_en": "Tie",
+      "word_es": "Corbata",
+      "descripcion_es": "Tira de tela elegante que se anuda al cuello de la camisa",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 194,
+    "fields": {
+      "category": 7,
+      "word_en": "Sandals",
+      "word_es": "Sandalias",
+      "descripcion_es": "Calzado abierto y ligero para usar en el calor o la playa",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 195,
+    "fields": {
+      "category": 7,
+      "word_en": "Pajamas",
+      "word_es": "Pijama",
+      "descripcion_es": "Ropa cómoda y suave que se usa para dormir en la noche",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 196,
+    "fields": {
+      "category": 8,
+      "word_en": "Book",
+      "word_es": "Libro",
+      "descripcion_es": "Conjunto de hojas impresas con texto para leer y aprender",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 197,
+    "fields": {
+      "category": 8,
+      "word_en": "Pencil",
+      "word_es": "Lápiz",
+      "descripcion_es": "Instrumento delgado de madera con grafito para escribir y dibujar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 198,
+    "fields": {
+      "category": 8,
+      "word_en": "Classroom",
+      "word_es": "Salón",
+      "descripcion_es": "Habitación del colegio donde los estudiantes aprenden con el profesor",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 199,
+    "fields": {
+      "category": 8,
+      "word_en": "Teacher",
+      "word_es": "Profesor",
+      "descripcion_es": "Persona que enseña y guía a los estudiantes en el colegio",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 200,
+    "fields": {
+      "category": 8,
+      "word_en": "Student",
+      "word_es": "Estudiante",
+      "descripcion_es": "Persona que va al colegio o escuela a aprender",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 201,
+    "fields": {
+      "category": 8,
+      "word_en": "Notebook",
+      "word_es": "Cuaderno",
+      "descripcion_es": "Libreta de hojas en blanco para escribir y tomar apuntes",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 202,
+    "fields": {
+      "category": 8,
+      "word_en": "Pen",
+      "word_es": "Esfero",
+      "descripcion_es": "Instrumento con tinta para escribir, más permanente que el lápiz",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 203,
+    "fields": {
+      "category": 8,
+      "word_en": "Eraser",
+      "word_es": "Borrador",
+      "descripcion_es": "Pequeño objeto que elimina lo escrito con lápiz",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 204,
+    "fields": {
+      "category": 8,
+      "word_en": "Ruler",
+      "word_es": "Regla",
+      "descripcion_es": "Instrumento recto marcado para medir y trazar líneas derechas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 205,
+    "fields": {
+      "category": 8,
+      "word_en": "Scissors",
+      "word_es": "Tijeras",
+      "descripcion_es": "Instrumento de dos hojas afiladas para cortar papel o tela",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 206,
+    "fields": {
+      "category": 8,
+      "word_en": "Backpack",
+      "word_es": "Mochila",
+      "descripcion_es": "Bolsa con correas que los estudiantes cargan en la espalda",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 207,
+    "fields": {
+      "category": 8,
+      "word_en": "Desk",
+      "word_es": "Escritorio",
+      "descripcion_es": "Mesa de trabajo donde el estudiante escribe y estudia",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 208,
+    "fields": {
+      "category": 8,
+      "word_en": "Chair",
+      "word_es": "Silla",
+      "descripcion_es": "Mueble con respaldo y cuatro patas para sentarse",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 209,
+    "fields": {
+      "category": 8,
+      "word_en": "Board",
+      "word_es": "Tablero",
+      "descripcion_es": "Superficie plana en la pared donde el profesor escribe para enseñar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 210,
+    "fields": {
+      "category": 8,
+      "word_en": "Marker",
+      "word_es": "Marcador",
+      "descripcion_es": "Instrumento con tinta gruesa para escribir en el tablero o carteles",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 211,
+    "fields": {
+      "category": 8,
+      "word_en": "Glue",
+      "word_es": "Pegante",
+      "descripcion_es": "Sustancia pegajosa que une materiales como papel o cartón",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 212,
+    "fields": {
+      "category": 8,
+      "word_en": "Paint",
+      "word_es": "Pintura",
+      "descripcion_es": "Líquido de colores que se aplica con un pincel para crear imágenes",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 213,
+    "fields": {
+      "category": 8,
+      "word_en": "Calculator",
+      "word_es": "Calculadora",
+      "descripcion_es": "Máquina electrónica que realiza operaciones matemáticas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 214,
+    "fields": {
+      "category": 8,
+      "word_en": "Computer",
+      "word_es": "Computador",
+      "descripcion_es": "Máquina electrónica para trabajar, estudiar y comunicarse",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 215,
+    "fields": {
+      "category": 8,
+      "word_en": "Test",
+      "word_es": "Examen",
+      "descripcion_es": "Prueba escrita o verbal para evaluar los conocimientos aprendidos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 216,
+    "fields": {
+      "category": 8,
+      "word_en": "Homework",
+      "word_es": "Tarea",
+      "descripcion_es": "Trabajo escolar asignado por el profesor para hacerlo en casa",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 217,
+    "fields": {
+      "category": 8,
+      "word_en": "Library",
+      "word_es": "Biblioteca",
+      "descripcion_es": "Lugar lleno de libros donde se puede leer y estudiar en silencio",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 218,
+    "fields": {
+      "category": 8,
+      "word_en": "Map",
+      "word_es": "Mapa",
+      "descripcion_es": "Representación gráfica de un lugar, ciudad, país o el mundo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 219,
+    "fields": {
+      "category": 8,
+      "word_en": "Globe",
+      "word_es": "Globo terráqueo",
+      "descripcion_es": "Esfera giratoria que representa la Tierra con sus países y océanos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 220,
+    "fields": {
+      "category": 8,
+      "word_en": "Lunch box",
+      "word_es": "Lonchera",
+      "descripcion_es": "Caja o bolsa donde se lleva la comida y merienda al colegio",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 221,
+    "fields": {
+      "category": 9,
+      "word_en": "House",
+      "word_es": "Casa",
+      "descripcion_es": "Edificación donde vive una familia, su hogar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 222,
+    "fields": {
+      "category": 9,
+      "word_en": "Kitchen",
+      "word_es": "Cocina",
+      "descripcion_es": "Habitación donde se preparan y cocinan los alimentos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 223,
+    "fields": {
+      "category": 9,
+      "word_en": "Bedroom",
+      "word_es": "Cuarto",
+      "descripcion_es": "Habitación destinada principalmente para dormir y descansar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 224,
+    "fields": {
+      "category": 9,
+      "word_en": "Bathroom",
+      "word_es": "Baño",
+      "descripcion_es": "Habitación con ducha, lavamanos e inodoro para el aseo personal",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 225,
+    "fields": {
+      "category": 9,
+      "word_en": "Door",
+      "word_es": "Puerta",
+      "descripcion_es": "Panel móvil que abre o cierra el acceso a un lugar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 226,
+    "fields": {
+      "category": 9,
+      "word_en": "Window",
+      "word_es": "Ventana",
+      "descripcion_es": "Abertura en la pared que permite la entrada de luz y aire",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 227,
+    "fields": {
+      "category": 9,
+      "word_en": "Living room",
+      "word_es": "Sala",
+      "descripcion_es": "Habitación principal donde la familia se reúne a descansar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 228,
+    "fields": {
+      "category": 9,
+      "word_en": "Bed",
+      "word_es": "Cama",
+      "descripcion_es": "Mueble acolchado donde dormimos y descansamos por la noche",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 229,
+    "fields": {
+      "category": 9,
+      "word_en": "Table",
+      "word_es": "Mesa",
+      "descripcion_es": "Mueble con superficie plana y patas para poner objetos encima",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 230,
+    "fields": {
+      "category": 9,
+      "word_en": "Chair",
+      "word_es": "Silla",
+      "descripcion_es": "Mueble individual para sentarse con respaldo y patas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 231,
+    "fields": {
+      "category": 9,
+      "word_en": "Sofa",
+      "word_es": "Sofá",
+      "descripcion_es": "Mueble amplio y cómodo para sentarse varias personas a la vez",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 232,
+    "fields": {
+      "category": 9,
+      "word_en": "Lamp",
+      "word_es": "Lámpara",
+      "descripcion_es": "Objeto eléctrico que produce luz para iluminar una habitación",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 233,
+    "fields": {
+      "category": 9,
+      "word_en": "Refrigerator",
+      "word_es": "Nevera",
+      "descripcion_es": "Electrodoméstico que mantiene los alimentos frescos y fríos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 234,
+    "fields": {
+      "category": 9,
+      "word_en": "Stove",
+      "word_es": "Estufa",
+      "descripcion_es": "Electrodoméstico con quemadores para cocinar calentando alimentos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 235,
+    "fields": {
+      "category": 9,
+      "word_en": "Microwave",
+      "word_es": "Microondas",
+      "descripcion_es": "Electrodoméstico que calienta y cocina comida rápidamente",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 236,
+    "fields": {
+      "category": 9,
+      "word_en": "Toilet",
+      "word_es": "Inodoro",
+      "descripcion_es": "Artefacto del baño donde se hacen las necesidades fisiológicas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 237,
+    "fields": {
+      "category": 9,
+      "word_en": "Shower",
+      "word_es": "Ducha",
+      "descripcion_es": "Dispositivo que lanza agua para bañarse de pie",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 238,
+    "fields": {
+      "category": 9,
+      "word_en": "Mirror",
+      "word_es": "Espejo",
+      "descripcion_es": "Superficie reflectante que muestra la imagen de quien se mira",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 239,
+    "fields": {
+      "category": 9,
+      "word_en": "Stairs",
+      "word_es": "Escaleras",
+      "descripcion_es": "Estructura de peldaños para subir o bajar entre pisos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 240,
+    "fields": {
+      "category": 9,
+      "word_en": "Roof",
+      "word_es": "Techo",
+      "descripcion_es": "Cubierta superior de la casa que protege de la lluvia y el sol",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 241,
+    "fields": {
+      "category": 9,
+      "word_en": "Garden",
+      "word_es": "Jardín",
+      "descripcion_es": "Espacio al aire libre con plantas, flores y césped",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 242,
+    "fields": {
+      "category": 9,
+      "word_en": "Garage",
+      "word_es": "Garaje",
+      "descripcion_es": "Espacio cubierto destinado para guardar el carro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 243,
+    "fields": {
+      "category": 9,
+      "word_en": "Floor",
+      "word_es": "Piso",
+      "descripcion_es": "Superficie horizontal por la que caminamos dentro de la casa",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 244,
+    "fields": {
+      "category": 9,
+      "word_en": "Wall",
+      "word_es": "Pared",
+      "descripcion_es": "Estructura vertical que forma los lados de una habitación",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 245,
+    "fields": {
+      "category": 9,
+      "word_en": "Ceiling",
+      "word_es": "Cielo raso",
+      "descripcion_es": "La parte superior interior de una habitación, el techo de adentro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 246,
+    "fields": {
+      "category": 10,
+      "word_en": "Sun",
+      "word_es": "Sol",
+      "descripcion_es": "La estrella central de nuestro sistema solar que da luz y calor",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 247,
+    "fields": {
+      "category": 10,
+      "word_en": "Rain",
+      "word_es": "Lluvia",
+      "descripcion_es": "Agua que cae del cielo en gotas desde las nubes cargadas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 248,
+    "fields": {
+      "category": 10,
+      "word_en": "Cloud",
+      "word_es": "Nube",
+      "descripcion_es": "Masa de vapor de agua condensada que flota en el cielo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 249,
+    "fields": {
+      "category": 10,
+      "word_en": "Tree",
+      "word_es": "Árbol",
+      "descripcion_es": "Planta de gran tamaño con tronco duro, ramas y hojas verdes",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 250,
+    "fields": {
+      "category": 10,
+      "word_en": "Flower",
+      "word_es": "Flor",
+      "descripcion_es": "Parte colorida y fragante de la planta que atrae a insectos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 251,
+    "fields": {
+      "category": 10,
+      "word_en": "Mountain",
+      "word_es": "Montaña",
+      "descripcion_es": "Gran elevación natural de tierra que forma picos elevados",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 252,
+    "fields": {
+      "category": 10,
+      "word_en": "River",
+      "word_es": "Río",
+      "descripcion_es": "Corriente continua de agua dulce que fluye hacia el mar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 253,
+    "fields": {
+      "category": 10,
+      "word_en": "Sea",
+      "word_es": "Mar",
+      "descripcion_es": "Gran extensión de agua salada que rodea los continentes",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 254,
+    "fields": {
+      "category": 10,
+      "word_en": "Wind",
+      "word_es": "Viento",
+      "descripcion_es": "Movimiento del aire que sentimos en la piel y mueve las hojas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 255,
+    "fields": {
+      "category": 10,
+      "word_en": "Snow",
+      "word_es": "Nieve",
+      "descripcion_es": "Agua congelada que cae del cielo en copos blancos y suaves",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 256,
+    "fields": {
+      "category": 10,
+      "word_en": "Lightning",
+      "word_es": "Rayo",
+      "descripcion_es": "Descarga eléctrica natural muy brillante que ocurre en tormentas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 257,
+    "fields": {
+      "category": 10,
+      "word_en": "Rainbow",
+      "word_es": "Arcoíris",
+      "descripcion_es": "Arco de siete colores que aparece cuando el sol brilla tras la lluvia",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 258,
+    "fields": {
+      "category": 10,
+      "word_en": "Storm",
+      "word_es": "Tormenta",
+      "descripcion_es": "Lluvia fuerte acompañada de viento, truenos y rayos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 259,
+    "fields": {
+      "category": 10,
+      "word_en": "Forest",
+      "word_es": "Bosque",
+      "descripcion_es": "Área extensa cubierta de árboles y habitada por animales",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 260,
+    "fields": {
+      "category": 10,
+      "word_en": "Desert",
+      "word_es": "Desierto",
+      "descripcion_es": "Zona árida con muy poca lluvia, mucho calor y arena",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 261,
+    "fields": {
+      "category": 10,
+      "word_en": "Beach",
+      "word_es": "Playa",
+      "descripcion_es": "Franja de arena junto al mar donde las olas llegan a la orilla",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 262,
+    "fields": {
+      "category": 10,
+      "word_en": "Island",
+      "word_es": "Isla",
+      "descripcion_es": "Porción de tierra rodeada completamente por agua",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 263,
+    "fields": {
+      "category": 10,
+      "word_en": "Volcano",
+      "word_es": "Volcán",
+      "descripcion_es": "Montaña con magma en su interior que puede hacer erupción",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 264,
+    "fields": {
+      "category": 10,
+      "word_en": "Grass",
+      "word_es": "Pasto",
+      "descripcion_es": "Plantas pequeñas de hojas verdes y delgadas que cubren el suelo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 265,
+    "fields": {
+      "category": 10,
+      "word_en": "Leaf",
+      "word_es": "Hoja",
+      "descripcion_es": "Parte plana y verde de la planta que capta la luz solar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 266,
+    "fields": {
+      "category": 10,
+      "word_en": "Rock",
+      "word_es": "Roca",
+      "descripcion_es": "Formación sólida y dura de minerales de la corteza terrestre",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 267,
+    "fields": {
+      "category": 10,
+      "word_en": "Sand",
+      "word_es": "Arena",
+      "descripcion_es": "Granitos muy pequeños de roca molida que forman playas y desiertos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 268,
+    "fields": {
+      "category": 10,
+      "word_en": "Fog",
+      "word_es": "Niebla",
+      "descripcion_es": "Nube muy baja y densa que reduce la visibilidad al nivel del suelo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 269,
+    "fields": {
+      "category": 10,
+      "word_en": "Ice",
+      "word_es": "Hielo",
+      "descripcion_es": "Agua en estado sólido debido a temperaturas muy bajas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 270,
+    "fields": {
+      "category": 10,
+      "word_en": "Moon",
+      "word_es": "Luna",
+      "descripcion_es": "El satélite natural de la Tierra que brilla de noche",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 271,
+    "fields": {
+      "category": 10,
+      "word_en": "Star",
+      "word_es": "Estrella",
+      "descripcion_es": "Punto brillante de luz que vemos en el cielo durante la noche",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 26,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 272,
+    "fields": {
+      "category": 10,
+      "word_en": "Lake",
+      "word_es": "Lago",
+      "descripcion_es": "Masa de agua dulce completamente rodeada de tierra",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 27,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 273,
+    "fields": {
+      "category": 10,
+      "word_en": "Earthquake",
+      "word_es": "Terremoto",
+      "descripcion_es": "Movimiento brusco y violento de la superficie de la Tierra",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 28,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 274,
+    "fields": {
+      "category": 10,
+      "word_en": "Sunrise",
+      "word_es": "Amanecer",
+      "descripcion_es": "El momento cuando el sol aparece en el horizonte al comenzar el día",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 29,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 275,
+    "fields": {
+      "category": 10,
+      "word_en": "Sunset",
+      "word_es": "Atardecer",
+      "descripcion_es": "El momento cuando el sol se oculta en el horizonte al terminar el día",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 30,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 276,
+    "fields": {
+      "category": 11,
+      "word_en": "Car",
+      "word_es": "Carro",
+      "descripcion_es": "Vehículo de cuatro ruedas con motor para transportar personas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 277,
+    "fields": {
+      "category": 11,
+      "word_en": "Bus",
+      "word_es": "Bus",
+      "descripcion_es": "Vehículo grande de transporte público que lleva muchos pasajeros",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 278,
+    "fields": {
+      "category": 11,
+      "word_en": "Bicycle",
+      "word_es": "Bicicleta",
+      "descripcion_es": "Vehículo de dos ruedas que se mueve pedaleando, sin motor",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 279,
+    "fields": {
+      "category": 11,
+      "word_en": "Airplane",
+      "word_es": "Avión",
+      "descripcion_es": "Vehículo que vuela transportando personas y carga a gran velocidad",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 280,
+    "fields": {
+      "category": 11,
+      "word_en": "Boat",
+      "word_es": "Bote",
+      "descripcion_es": "Embarcación pequeña que se mueve sobre el agua",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 281,
+    "fields": {
+      "category": 11,
+      "word_en": "Train",
+      "word_es": "Tren",
+      "descripcion_es": "Vehículo sobre rieles formado por vagones para muchos pasajeros",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 282,
+    "fields": {
+      "category": 11,
+      "word_en": "Motorcycle",
+      "word_es": "Moto",
+      "descripcion_es": "Vehículo de dos ruedas con motor, más pequeño que el carro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 283,
+    "fields": {
+      "category": 11,
+      "word_en": "Truck",
+      "word_es": "Camión",
+      "descripcion_es": "Vehículo grande para transportar mercancías y cargas pesadas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 284,
+    "fields": {
+      "category": 11,
+      "word_en": "Helicopter",
+      "word_es": "Helicóptero",
+      "descripcion_es": "Aeronave que vuela gracias a hélices que giran sobre ella",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 285,
+    "fields": {
+      "category": 11,
+      "word_en": "Ship",
+      "word_es": "Barco",
+      "descripcion_es": "Embarcación grande que navega por mares y océanos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 286,
+    "fields": {
+      "category": 11,
+      "word_en": "Submarine",
+      "word_es": "Submarino",
+      "descripcion_es": "Nave especial que puede navegar sumergida bajo el agua",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 287,
+    "fields": {
+      "category": 11,
+      "word_en": "Rocket",
+      "word_es": "Cohete",
+      "descripcion_es": "Vehículo propulsado a altísima velocidad para ir al espacio exterior",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 288,
+    "fields": {
+      "category": 11,
+      "word_en": "Tram",
+      "word_es": "Tranvía",
+      "descripcion_es": "Vehículo eléctrico sobre rieles que circula por las calles de la ciudad",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 289,
+    "fields": {
+      "category": 11,
+      "word_en": "Taxi",
+      "word_es": "Taxi",
+      "descripcion_es": "Carro de alquiler que lleva pasajeros a donde necesiten ir",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 290,
+    "fields": {
+      "category": 11,
+      "word_en": "Metro",
+      "word_es": "Metro",
+      "descripcion_es": "Tren eléctrico subterráneo que transporta personas en la ciudad",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 291,
+    "fields": {
+      "category": 11,
+      "word_en": "Canoe",
+      "word_es": "Canoa",
+      "descripcion_es": "Embarcación pequeña y estrecha que se impulsa con remos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 292,
+    "fields": {
+      "category": 11,
+      "word_en": "Skateboard",
+      "word_es": "Patineta",
+      "descripcion_es": "Tabla de madera sobre ruedas para deslizarse y hacer trucos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 293,
+    "fields": {
+      "category": 11,
+      "word_en": "Hot air balloon",
+      "word_es": "Globo aerostático",
+      "descripcion_es": "Globo gigante que vuela gracias al aire caliente en su interior",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 3,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 294,
+    "fields": {
+      "category": 11,
+      "word_en": "Ambulance",
+      "word_es": "Ambulancia",
+      "descripcion_es": "Vehículo de emergencias equipado para transportar personas enfermas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 295,
+    "fields": {
+      "category": 11,
+      "word_en": "Pickup",
+      "word_es": "Camioneta",
+      "descripcion_es": "Vehículo con cajón trasero abierto para cargar objetos y materiales",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 296,
+    "fields": {
+      "category": 12,
+      "word_en": "Run",
+      "word_es": "Correr",
+      "descripcion_es": "Moverse muy rápido impulsando las piernas con fuerza",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 297,
+    "fields": {
+      "category": 12,
+      "word_en": "Jump",
+      "word_es": "Saltar",
+      "descripcion_es": "Impulsarse hacia arriba despegando los pies del suelo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 298,
+    "fields": {
+      "category": 12,
+      "word_en": "Eat",
+      "word_es": "Comer",
+      "descripcion_es": "Ingerir alimentos llevándolos a la boca para nutrirse",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 299,
+    "fields": {
+      "category": 12,
+      "word_en": "Sleep",
+      "word_es": "Dormir",
+      "descripcion_es": "Descansar el cuerpo y la mente cerrando los ojos por horas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 300,
+    "fields": {
+      "category": 12,
+      "word_en": "Play",
+      "word_es": "Jugar",
+      "descripcion_es": "Realizar actividades recreativas y divertidas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 301,
+    "fields": {
+      "category": 12,
+      "word_en": "Walk",
+      "word_es": "Caminar",
+      "descripcion_es": "Moverse a pie a una velocidad tranquila y normal",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 302,
+    "fields": {
+      "category": 12,
+      "word_en": "Talk",
+      "word_es": "Hablar",
+      "descripcion_es": "Comunicarse con otras personas usando palabras y la voz",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 303,
+    "fields": {
+      "category": 12,
+      "word_en": "Read",
+      "word_es": "Leer",
+      "descripcion_es": "Interpretar y entender las palabras escritas en un texto",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 304,
+    "fields": {
+      "category": 12,
+      "word_en": "Write",
+      "word_es": "Escribir",
+      "descripcion_es": "Plasmar palabras o ideas en papel u otro medio",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 305,
+    "fields": {
+      "category": 12,
+      "word_en": "Draw",
+      "word_es": "Dibujar",
+      "descripcion_es": "Crear imágenes usando lápiz, colores u otras herramientas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 306,
+    "fields": {
+      "category": 12,
+      "word_en": "Sing",
+      "word_es": "Cantar",
+      "descripcion_es": "Emitir sonidos musicales con la voz siguiendo una melodía",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 307,
+    "fields": {
+      "category": 12,
+      "word_en": "Dance",
+      "word_es": "Bailar",
+      "descripcion_es": "Mover el cuerpo al ritmo de la música de forma expresiva",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 308,
+    "fields": {
+      "category": 12,
+      "word_en": "Swim",
+      "word_es": "Nadar",
+      "descripcion_es": "Moverse dentro del agua usando los brazos y las piernas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 309,
+    "fields": {
+      "category": 12,
+      "word_en": "Fly",
+      "word_es": "Volar",
+      "descripcion_es": "Moverse por el aire como los pájaros o los aviones",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 310,
+    "fields": {
+      "category": 12,
+      "word_en": "Laugh",
+      "word_es": "Reír",
+      "descripcion_es": "Expresar alegría o diversión con sonidos y gestos faciales",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 311,
+    "fields": {
+      "category": 12,
+      "word_en": "Cry",
+      "word_es": "Llorar",
+      "descripcion_es": "Soltar lágrimas de los ojos por tristeza, dolor o emoción",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 312,
+    "fields": {
+      "category": 12,
+      "word_en": "Think",
+      "word_es": "Pensar",
+      "descripcion_es": "Usar la mente para razonar, reflexionar y resolver problemas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 313,
+    "fields": {
+      "category": 12,
+      "word_en": "Listen",
+      "word_es": "Escuchar",
+      "descripcion_es": "Prestar atención intencionada a los sonidos o lo que otros dicen",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 314,
+    "fields": {
+      "category": 12,
+      "word_en": "Watch",
+      "word_es": "Ver",
+      "descripcion_es": "Mirar con atención algo que sucede o se mueve",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 315,
+    "fields": {
+      "category": 12,
+      "word_en": "Touch",
+      "word_es": "Tocar",
+      "descripcion_es": "Entrar en contacto físico con algo usando las manos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 316,
+    "fields": {
+      "category": 12,
+      "word_en": "Open",
+      "word_es": "Abrir",
+      "descripcion_es": "Hacer que algo pase de cerrado a abierto para acceder",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 317,
+    "fields": {
+      "category": 12,
+      "word_en": "Close",
+      "word_es": "Cerrar",
+      "descripcion_es": "Hacer que algo pase de abierto a cerrado",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 318,
+    "fields": {
+      "category": 12,
+      "word_en": "Give",
+      "word_es": "Dar",
+      "descripcion_es": "Entregar voluntariamente algo a otra persona",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 319,
+    "fields": {
+      "category": 12,
+      "word_en": "Take",
+      "word_es": "Tomar",
+      "descripcion_es": "Coger algo con la mano o recibirlo de otro",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 320,
+    "fields": {
+      "category": 12,
+      "word_en": "Help",
+      "word_es": "Ayudar",
+      "descripcion_es": "Colaborar con otra persona para resolver algo o aliviar una carga",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 321,
+    "fields": {
+      "category": 12,
+      "word_en": "Learn",
+      "word_es": "Aprender",
+      "descripcion_es": "Adquirir nuevos conocimientos o habilidades",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 26,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 322,
+    "fields": {
+      "category": 12,
+      "word_en": "Teach",
+      "word_es": "Enseñar",
+      "descripcion_es": "Transmitir conocimientos o habilidades a otra persona",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 27,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 323,
+    "fields": {
+      "category": 12,
+      "word_en": "Cook",
+      "word_es": "Cocinar",
+      "descripcion_es": "Preparar alimentos aplicándoles calor para hacerlos comestibles",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 28,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 324,
+    "fields": {
+      "category": 12,
+      "word_en": "Clean",
+      "word_es": "Limpiar",
+      "descripcion_es": "Quitar la suciedad, el polvo o los desechos de un lugar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 29,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 325,
+    "fields": {
+      "category": 12,
+      "word_en": "Build",
+      "word_es": "Construir",
+      "descripcion_es": "Crear algo ensamblando partes o materiales",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 30,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 326,
+    "fields": {
+      "category": 12,
+      "word_en": "Break",
+      "word_es": "Romper",
+      "descripcion_es": "Separar algo en pedazos por la fuerza o un golpe",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 31,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 327,
+    "fields": {
+      "category": 12,
+      "word_en": "Fix",
+      "word_es": "Arreglar",
+      "descripcion_es": "Reparar algo que estaba dañado para que vuelva a funcionar",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 32,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 328,
+    "fields": {
+      "category": 12,
+      "word_en": "Buy",
+      "word_es": "Comprar",
+      "descripcion_es": "Obtener algo a cambio de dinero",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 33,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 329,
+    "fields": {
+      "category": 12,
+      "word_en": "Sell",
+      "word_es": "Vender",
+      "descripcion_es": "Entregar algo a otra persona a cambio de dinero",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 34,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 330,
+    "fields": {
+      "category": 12,
+      "word_en": "Love",
+      "word_es": "Amar",
+      "descripcion_es": "Sentir un afecto profundo y sincero por alguien o algo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 35,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 331,
+    "fields": {
+      "category": 13,
+      "word_en": "Big",
+      "word_es": "Grande",
+      "descripcion_es": "Que tiene tamaño mayor al promedio o a lo normal",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 1,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 332,
+    "fields": {
+      "category": 13,
+      "word_en": "Small",
+      "word_es": "Pequeño",
+      "descripcion_es": "Que tiene tamaño menor al promedio o a lo normal",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 2,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 333,
+    "fields": {
+      "category": 13,
+      "word_en": "Happy",
+      "word_es": "Feliz",
+      "descripcion_es": "Que siente alegría, bienestar y satisfacción",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 3,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 334,
+    "fields": {
+      "category": 13,
+      "word_en": "Sad",
+      "word_es": "Triste",
+      "descripcion_es": "Que siente melancolía, pena o desánimo",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 4,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 335,
+    "fields": {
+      "category": 13,
+      "word_en": "Fast",
+      "word_es": "Rápido",
+      "descripcion_es": "Que se mueve, actúa o reacciona con mucha velocidad",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": true,
+      "orden": 5,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 336,
+    "fields": {
+      "category": 13,
+      "word_en": "Slow",
+      "word_es": "Lento",
+      "descripcion_es": "Que se mueve o actúa con poca velocidad",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 6,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 337,
+    "fields": {
+      "category": 13,
+      "word_en": "Hot",
+      "word_es": "Caliente",
+      "descripcion_es": "Que tiene una temperatura muy alta, lo contrario de frío",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 7,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 338,
+    "fields": {
+      "category": 13,
+      "word_en": "Cold",
+      "word_es": "Frío",
+      "descripcion_es": "Que tiene una temperatura muy baja, lo contrario de caliente",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 8,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 339,
+    "fields": {
+      "category": 13,
+      "word_en": "New",
+      "word_es": "Nuevo",
+      "descripcion_es": "Que existe desde hace poco tiempo o es reciente",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 9,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 340,
+    "fields": {
+      "category": 13,
+      "word_en": "Old",
+      "word_es": "Viejo",
+      "descripcion_es": "Que existe desde hace mucho tiempo o está desgastado",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 10,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 341,
+    "fields": {
+      "category": 13,
+      "word_en": "Good",
+      "word_es": "Bueno",
+      "descripcion_es": "Que tiene cualidades positivas o valor favorable",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 11,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 342,
+    "fields": {
+      "category": 13,
+      "word_en": "Bad",
+      "word_es": "Malo",
+      "descripcion_es": "Que tiene cualidades negativas o valor desfavorable",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 12,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 343,
+    "fields": {
+      "category": 13,
+      "word_en": "Strong",
+      "word_es": "Fuerte",
+      "descripcion_es": "Que tiene mucha energía, fuerza o resistencia",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 13,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 344,
+    "fields": {
+      "category": 13,
+      "word_en": "Weak",
+      "word_es": "Débil",
+      "descripcion_es": "Que tiene poca energía, fuerza o resistencia",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 14,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 345,
+    "fields": {
+      "category": 13,
+      "word_en": "Beautiful",
+      "word_es": "Hermoso",
+      "descripcion_es": "Que es muy agradable a la vista o a los sentidos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 15,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 346,
+    "fields": {
+      "category": 13,
+      "word_en": "Ugly",
+      "word_es": "Feo",
+      "descripcion_es": "Que no resulta agradable a la vista",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 16,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 347,
+    "fields": {
+      "category": 13,
+      "word_en": "Clean",
+      "word_es": "Limpio",
+      "descripcion_es": "Que no tiene suciedad, manchas ni impurezas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 17,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 348,
+    "fields": {
+      "category": 13,
+      "word_en": "Dirty",
+      "word_es": "Sucio",
+      "descripcion_es": "Que tiene suciedad, manchas o impurezas",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 18,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 349,
+    "fields": {
+      "category": 13,
+      "word_en": "Tall",
+      "word_es": "Alto",
+      "descripcion_es": "Que mide mucho desde la base hasta la parte superior",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 19,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 350,
+    "fields": {
+      "category": 13,
+      "word_en": "Short",
+      "word_es": "Bajo",
+      "descripcion_es": "Que mide poco desde la base hasta la parte superior",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 20,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 351,
+    "fields": {
+      "category": 13,
+      "word_en": "Round",
+      "word_es": "Redondo",
+      "descripcion_es": "Que tiene forma circular o esférica sin ángulos",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 21,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 352,
+    "fields": {
+      "category": 13,
+      "word_en": "Sharp",
+      "word_es": "Afilado",
+      "descripcion_es": "Que tiene un filo o punta que puede cortar fácilmente",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 22,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 353,
+    "fields": {
+      "category": 13,
+      "word_en": "Soft",
+      "word_es": "Suave",
+      "descripcion_es": "Que tiene una textura agradable y no áspera al tacto",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 23,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 354,
+    "fields": {
+      "category": 13,
+      "word_en": "Hard",
+      "word_es": "Duro",
+      "descripcion_es": "Que es resistente, firme y no se deforma fácilmente",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 1,
+      "is_unlocked_by_default": false,
+      "orden": 24,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "content.vocabularyitem",
+    "pk": 355,
+    "fields": {
+      "category": 13,
+      "word_en": "Empty",
+      "word_es": "Vacío",
+      "descripcion_es": "Que no tiene nada en su interior, sin contenido",
+      "pronunciacion_es": "",
+      "image": null,
+      "audio": null,
+      "hint": "",
+      "difficulty": 2,
+      "is_unlocked_by_default": false,
+      "orden": 25,
+      "is_active": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]

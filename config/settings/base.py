@@ -2,14 +2,17 @@
 NESTGROW - Configuración Base
 """
 import os
+import environ
 from pathlib import Path
-from dotenv import load_dotenv
 
-load_dotenv()
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-nestgrow-dev-key-cambiar-en-produccion')
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-nestgrow-dev-key-cambiar-en-produccion')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -94,14 +97,18 @@ LOGIN_REDIRECT_URL = '/accounts/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
 # ── Email Configuration ───────────────────────────────────────────────────────
-# For development, emails print to console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'NestGrow <nestgrow@noreply.com>'
 
-# For production with Gmail, replace the above with:
+# Para producción con Gmail, reemplazar con:
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# ── APIs Externas ─────────────────────────────────────────────────────────────
+GEMINI_API_KEY = env('GEMINI_API_KEY', default='')
+GROQ_API_KEY = env('GROQ_API_KEY', default='')
+MYMEMORY_API_KEY = env('MYMEMORY_API_KEY', default='')

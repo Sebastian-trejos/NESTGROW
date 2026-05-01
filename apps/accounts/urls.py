@@ -22,6 +22,7 @@ urlpatterns = [
     # Estudiante
     path('dashboard/estudiante/', views.dashboard_estudiante, name='dashboard_estudiante'),
     path('perfil/estudiante/editar/', views.editar_perfil_estudiante, name='editar_perfil_estudiante'),
+    path('avatar/guardar/', views.guardar_avatar, name='guardar_avatar'),
     path('unirse/', views.unirse_clase, name='unirse_clase'),
 
     # Legacy

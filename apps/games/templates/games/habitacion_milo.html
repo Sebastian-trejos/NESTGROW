@@ -4,329 +4,740 @@
 
 {% block extra_css %}
 <style>
-  .room-container {
+  /* ── Quitar padding del main para llenar la pantalla ── */
+  .nestgrow-main { padding-bottom: 0 !important; overflow: hidden; }
+
+  /* ── Contenedor principal de la habitación ── */
+  .room-page {
     position: relative;
     width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #a0856a 40%, #8B6914 100%);
-    min-height: 520px;
+    background: url("{% static 'img/Habitacion_milo.png' %}") center center / 100% 100% no-repeat;
+    min-height: 500px;
   }
 
-  /* ── ROOM BACKGROUND LAYERS ───────────────── */
-  .room-wall {
+  /* ── HUD flotante (huesos, tienda, panel) ── */
+  .room-hud {
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 60%;
-    /* MILO WALLPAPER PLACEHOLDER:
-       Replace background with:
-       background: url("{% static 'img/milo/room_wall.png' %}") center/cover;
-    */
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    z-index: 30;
+    font-family: 'Fredoka One', cursive;
+    border-radius: 50px;
+    padding: 8px 18px;
+    border: 2px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(10px);
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
   }
-  .room-wall::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,0.15) 0%, transparent 70%);
+  .hud-bones {
+    top: 16px; left: 16px;
+    background: rgba(100, 60, 10, 0.82);
+    color: #FFE66D;
+    font-size: 1rem;
   }
-  .room-floor {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 42%;
-    /* FLOOR PLACEHOLDER:
-       background: url("{% static 'img/milo/room_floor.png' %}") center/cover;
-    */
-    background: linear-gradient(180deg, #a0856a 0%, #8B6914 100%);
+  .hud-panel {
+    top: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 0.85rem;
+    padding: 7px 16px;
   }
+  .hud-panel:hover { color: white; background: rgba(0,0,0,0.7); }
+  .hud-shop {
+    top: 16px; right: 16px;
+    background: rgba(108,99,255,0.88);
+    color: white;
+    font-size: 1rem;
+  }
+  .hud-shop:hover { color: white; background: rgba(108,99,255,1); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(108,99,255,0.4); }
 
-  /* ── WINDOW ──────────────────────────────── */
-  .room-window {
+  /* ── Milo lector sobre el sillón ── */
+  .milo-lector {
     position: absolute;
-    top: 30px; right: 60px;
-    width: 140px; height: 120px;
-    /* WINDOW PLACEHOLDER: replace with image */
-    background: linear-gradient(135deg, #87CEEB, #4FC3F7);
-    border-radius: 8px;
-    border: 8px solid #5D4037;
-    box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 4px 15px rgba(0,0,0,0.3);
-  }
-  .room-window::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 0; right: 0;
-    height: 4px; background: #5D4037;
-  }
-  .room-window::after {
-    content: '';
-    position: absolute;
-    left: 50%; top: 0; bottom: 0;
-    width: 4px; background: #5D4037;
-  }
-
-  /* ── MILO CHARACTER ──────────────────────── */
-  .milo-character {
-    position: absolute;
-    bottom: 38%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
+    left: 10%;
+    bottom: 28%;
+    width: 24%;
+    max-width: 270px;
     cursor: pointer;
     z-index: 10;
-    transition: transform 0.2s;
   }
-  .milo-character:hover { transform: translateX(-50%) scale(1.05); }
-  .milo-character:active { transform: translateX(-50%) scale(0.95); }
-  .milo-img {
-    /* MILO IMAGE: Replace emoji with actual image:
-       <img src="{% static 'img/milo/milo_sitting.png' %}"
-            style="height:160px;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.3))">
-    */
-    font-size: 6rem;
+  .milo-lector-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .milo-lector-img {
+    width: 100%;
     display: block;
-    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
-    animation: miloFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
-  .milo-speech {
+  #miloMov {
+    position: absolute;
+    top: 0; left: 0;
+    opacity: 0;
+  }
+  /* Al hacer hover: estática se va, movimiento aparece */
+  .milo-lector:hover #miloStatic { opacity: 0; }
+  .milo-lector:hover #miloMov    { opacity: 1; }
+  .milo-lector:hover .milo-lector-img { transform: scale(1.03); }
+
+  /* Bocadillo de diálogo de Milo */
+  .milo-bubble {
+    position: absolute;
+    bottom: 102%;
+    left: 50%;
+    transform: translateX(-50%);
     background: white;
     border-radius: 16px 16px 16px 4px;
     padding: 10px 16px;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: var(--primary);
-    max-width: 200px;
-    margin: 8px auto 0;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    display: none;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    margin-bottom: 10px;
+    z-index: 20;
+    border: 2px solid #e8e3ff;
   }
-  .milo-character:hover .milo-speech { display: block; }
+  .milo-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; left: 20px;
+    border: 5px solid transparent;
+    border-top-color: white;
+  }
+  .milo-lector:hover .milo-bubble { opacity: 1; }
 
-  /* ── ROOM ITEMS ──────────────────────────── */
+  /* ── Objetos regulares (sin juego) ── */
   .room-item {
     position: absolute;
+    z-index: 15;
+    text-align: center;
     cursor: pointer;
     transition: all 0.2s;
-    z-index: 5;
-    text-align: center;
   }
-  .room-item:hover {
-    transform: scale(1.1);
-    filter: brightness(1.1) drop-shadow(0 4px 12px rgba(108,99,255,0.4));
-  }
-  .room-item .item-emoji {
+  .room-item:hover { transform: scale(1.12) translateY(-5px); }
+  .room-item:hover .item-label { opacity: 1; }
+  .item-emoji-big {
     font-size: 3rem;
     display: block;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
   }
-  /* ITEM IMAGE PLACEHOLDER:
-     .room-item img { height: 70px; object-fit: contain; }
-  */
-  .item-tooltip {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.85);
-    color: white;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 0.75rem;
+  .item-img-room {
+    height: 72px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+    display: block;
+    margin: 0 auto;
+  }
+  .item-label {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.72rem;
     font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.9);
     white-space: nowrap;
-    pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s;
-    margin-bottom: 8px;
-  }
-  .room-item:hover .item-tooltip { opacity: 1; }
-  .item-game-indicator {
-    position: absolute;
-    top: -6px; right: -6px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    width: 22px; height: 22px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 900;
-    box-shadow: 0 2px 8px rgba(108,99,255,0.4);
   }
 
-  /* ── EMPTY ROOM ───────────────────────────── */
-  .empty-room-msg {
+  /* ── Botones de juego en la habitación ── */
+  .room-game-card {
     position: absolute;
-    bottom: 45%;
-    left: 50%;
-    transform: translateX(-50%);
+    z-index: 15;
     text-align: center;
-    color: rgba(255,255,255,0.6);
-    font-weight: 700;
-    font-size: 0.9rem;
-    pointer-events: none;
+    cursor: pointer;
+    border-radius: 18px;
+    padding: 14px 18px;
+    min-width: 120px;
+    background: rgba(18, 18, 40, 0.88);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(108, 99, 255, 0.7);
+    box-shadow: 0 0 22px rgba(108, 99, 255, 0.45), inset 0 0 18px rgba(108, 99, 255, 0.08);
+    transition: all 0.25s cubic-bezier(.22,1,.36,1);
+    animation: rgbPulse 4s ease-in-out infinite;
   }
-
-  /* ── BONES COUNTER ────────────────────────── */
-  .room-bones {
-    position: absolute;
-    top: 16px; left: 16px;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(8px);
-    color: white;
-    border-radius: 50px;
-    padding: 8px 18px;
+  .room-game-card:hover {
+    transform: translateY(-6px) scale(1.06);
+    box-shadow: 0 0 40px rgba(108, 99, 255, 0.7), inset 0 0 20px rgba(108, 99, 255, 0.15);
+    border-color: rgba(155, 148, 255, 0.95);
+  }
+  @keyframes rgbPulse {
+    0%, 100% {
+      box-shadow: 0 0 22px rgba(108, 99, 255, 0.45), inset 0 0 10px rgba(108,99,255,0.08);
+      border-color: rgba(108,99,255,0.7);
+    }
+    33% {
+      box-shadow: 0 0 28px rgba(255, 107, 107, 0.4), inset 0 0 10px rgba(255,107,107,0.06);
+      border-color: rgba(255,107,107,0.65);
+    }
+    66% {
+      box-shadow: 0 0 28px rgba(78, 205, 196, 0.4), inset 0 0 10px rgba(78,205,196,0.06);
+      border-color: rgba(78,205,196,0.65);
+    }
+  }
+  .game-card-icon { font-size: 2.4rem; display: block; margin-bottom: 6px; }
+  .game-card-name {
     font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    z-index: 20;
-    border: 2px solid rgba(255,255,255,0.2);
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 10px;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    line-height: 1.2;
   }
-
-  /* ── SHOP BUTTON ──────────────────────────── */
-  .room-shop-btn {
-    position: absolute;
-    top: 16px; right: 16px;
-    background: linear-gradient(135deg, #8B4513, #a0522d);
+  .game-card-play-btn {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
     color: white;
     border: none;
     border-radius: 50px;
-    padding: 10px 20px;
+    padding: 6px 16px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(108,99,255,0.4);
+  }
+  .room-game-card:hover .game-card-play-btn {
+    background: linear-gradient(135deg, #5a52e0, #8880ee);
+    box-shadow: 0 5px 16px rgba(108,99,255,0.6);
+  }
+
+  /* ── Mensaje habitación vacía ── */
+  .room-empty {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    border-radius: 22px;
+    padding: 28px 40px;
+    color: white;
+    font-weight: 700;
+    z-index: 20;
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+  .room-empty a { color: #FFE66D; text-decoration: underline; }
+
+  /* ── Overlay modal genérico ── */
+  .room-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+  }
+  .room-modal-overlay.active { display: flex; }
+  .room-modal-box {
+    background: white;
+    border-radius: 24px;
+    padding: 28px 28px 24px;
+    width: 95%;
+    max-height: 92vh;
+    overflow-y: auto;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+  .modal-close-btn {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: #f0eeff;
+    border: none;
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .modal-close-btn:hover { background: #e0d8ff; }
+
+  /* ── Juegos canvas ── */
+  canvas { display: block; margin: 0 auto; border-radius: 12px; max-width: 100%; }
+  .game-hint {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #aaa;
+    margin-top: 6px;
+  }
+  .btn-game-action {
+    background: linear-gradient(135deg, var(--primary), #9c94ff);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 11px 30px;
     font-family: 'Fredoka One', cursive;
     font-size: 1rem;
     cursor: pointer;
-    z-index: 20;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    margin-top: 14px;
     transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(139,69,19,0.4);
+    box-shadow: 0 4px 14px rgba(108,99,255,0.35);
   }
-  .room-shop-btn:hover {
-    transform: translateY(-2px);
-    color: white;
-    text-decoration: none;
-  }
-
-  /* ── ITEM POSITIONS (default grid) ─────── */
-  /* Items are positioned using inline styles based on DB posicion_x/y */
+  .btn-game-action:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(108,99,255,0.5); }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<!-- ═══════════════════════════════════════════════════════
+     HABITACIÓN FULL-PAGE
+══════════════════════════════════════════════════════════ -->
+<div class="room-page" id="roomPage">
 
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-    <div>
-      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏠 Habitación de Milo</h3>
-      <div class="text-muted fw-bold small">Haz clic en los objetos para jugar minijuegos especiales</div>
+  <!-- ── HUD ─────────────────────────────────────────── -->
+  <div class="room-hud hud-bones">🦴 {{ huesos }}</div>
+  <a href="{% url 'accounts:dashboard_estudiante' %}" class="room-hud hud-panel">← Mi Panel</a>
+  <a href="{% url 'games:tienda' %}" class="room-hud hud-shop">🛒 Tienda</a>
+
+  <!-- ── Milo lector (sobre el sillón) ──────────────── -->
+  <div class="milo-lector" id="miloLector">
+    <div class="milo-bubble">
+      ¡Bienvenid@ a mi habitación! 🎉<br>
+      <span style="font-size:0.75rem;opacity:0.8">Hay cosas muy divertidas aquí</span>
     </div>
-    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill fw-bold">← Mi Panel</a>
+    <div class="milo-lector-wrap">
+      <img src="{% static 'img/Milo_Lector_estatico.png' %}"
+           class="milo-lector-img" id="miloStatic" alt="Milo leyendo">
+      <img src="{% static 'img/Milo_Lector_movimiento.png' %}"
+           class="milo-lector-img" id="miloMov" alt="Milo saltando">
+    </div>
   </div>
 
-  <!-- Room -->
-  <div class="room-container" id="miloRoom">
-    <div class="room-wall"></div>
-    <div class="room-floor"></div>
-    <div class="room-window"></div>
+  <!-- ── Items del inventario ───────────────────────── -->
+  {% for inv in inventario %}
 
-    <!-- Bones counter -->
-    <div class="room-bones">🦴 {{ huesos }}</div>
-
-    <!-- Shop button -->
-    <a href="{% url 'games:tienda' %}" class="room-shop-btn">🛒 Tienda</a>
-
-    <!-- Milo character -->
-    <div class="milo-character" onclick="miloSay()" id="miloChar">
-      <!-- MILO IMAGE PLACEHOLDER:
-           Replace the emoji below with:
-           <img src="{% static 'img/milo/milo_sitting.png' %}"
-                class="milo-img" style="height:160px">
-      -->
-      <span class="milo-img">🐺</span>
-      <div class="milo-speech" id="miloSpeech">¡Hola! Soy Milo 👋</div>
+    {% if inv.item.juego_entretenimiento != 'ninguno' %}
+    <!-- Botón de juego (item con minijuego casual) -->
+    <div class="room-game-card"
+         style="left:{{ inv.item.posicion_x }}%;bottom:calc(32% + {{ inv.item.posicion_y }}px)">
+      <span class="game-card-icon">
+        {% if inv.item.juego_entretenimiento == 'flappy_milo' %}🐦{% else %}🐍{% endif %}
+      </span>
+      <div class="game-card-name">{{ inv.item.nombre }}</div>
+      <button class="game-card-play-btn"
+              onclick="abrirJuego('{{ inv.item.juego_entretenimiento }}', '{{ inv.item.nombre }}', '{{ inv.item.icono }}')">
+        ▶ ¡Jugar!
+      </button>
     </div>
 
-    <!-- Placed Items -->
-    {% for inv in inventario %}
+    {% else %}
+    <!-- Item decorativo (sin juego) -->
     <div class="room-item"
-         style="left:{{ inv.item.posicion_x }}%;bottom:calc(38% + {{ inv.item.posicion_y }}px)"
-         onclick="showItemInfo('{{ inv.item.nombre }}', '{{ inv.item.descripcion }}')">
-
+         style="left:{{ inv.item.posicion_x }}%;bottom:calc(32% + {{ inv.item.posicion_y }}px)"
+         onclick="verItem('{{ inv.item.nombre }}', '{{ inv.item.descripcion }}', '{{ inv.item.icono }}')">
       {% if inv.item.imagen %}
-        <!-- ITEM IMAGE -->
-        <img src="{{ inv.item.imagen.url }}" style="height:70px;object-fit:contain" alt="{{ inv.item.nombre }}">
+        <img src="{{ inv.item.imagen.url }}" class="item-img-room" alt="{{ inv.item.nombre }}">
       {% else %}
-        <!-- ITEM EMOJI PLACEHOLDER: Replace with actual image -->
-        <span class="item-emoji">{{ inv.item.icono }}</span>
+        <span class="item-emoji-big">{{ inv.item.icono }}</span>
       {% endif %}
-
-      <div class="item-tooltip">{{ inv.item.nombre }}</div>
-    </div>
-    {% endfor %}
-
-    {% if not inventario %}
-    <div class="empty-room-msg">
-      <div style="font-size:2rem">🛒</div>
-      <div>¡Tu habitación está vacía!<br>Ve a la tienda para comprar objetos.</div>
+      <span class="item-label">{{ inv.item.nombre }}</span>
     </div>
     {% endif %}
+
+  {% endfor %}
+
+  <!-- ── Habitación vacía ───────────────────────────── -->
+  {% if not inventario %}
+  <div class="room-empty">
+    <div style="font-size:2.8rem;margin-bottom:8px">🛒</div>
+    <div style="font-size:1.05rem;margin-bottom:6px">¡Tu habitación está vacía!</div>
+    <div style="font-size:0.88rem;opacity:0.85">
+      Ve a la <a href="{% url 'games:tienda' %}">Tienda</a> para comprar objetos.
+    </div>
   </div>
+  {% endif %}
+
+</div><!-- /room-page -->
 
 
+<!-- ═══════════════════════════════════════════════════════
+     MODAL — Info de objeto decorativo
+══════════════════════════════════════════════════════════ -->
+<div id="infoModal" class="room-modal-overlay">
+  <div class="room-modal-box" style="max-width:340px">
+    <button class="modal-close-btn" onclick="cerrarInfo()">✕</button>
+    <div id="infoEmoji" style="font-size:3.5rem;margin-bottom:8px"></div>
+    <div id="infoNombre"
+         style="font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--primary);margin-bottom:6px"></div>
+    <div id="infoDesc" style="color:#666;font-size:0.9rem;font-weight:700"></div>
+    <button class="btn-game-action" onclick="cerrarInfo()" style="margin-top:18px">Cerrar</button>
+  </div>
 </div>
 
-<!-- Item info modal -->
-<div id="itemModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
-  <div style="background:white;border-radius:24px;padding:36px;text-align:center;max-width:320px;width:90%">
-    <div style="font-size:3rem" id="modalEmoji"></div>
-    <div style="font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--primary);margin:10px 0" id="modalTitle"></div>
-    <div style="color:#666;font-weight:700;font-size:0.9rem" id="modalDesc"></div>
-    <button onclick="document.getElementById('itemModal').style.display='none'"
-            style="margin-top:20px;background:var(--primary);color:white;border:none;border-radius:50px;
-                   padding:10px 28px;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer">
-      Cerrar
-    </button>
+
+<!-- ═══════════════════════════════════════════════════════
+     MODAL — Juego casual
+══════════════════════════════════════════════════════════ -->
+<div id="gameModal" class="room-modal-overlay">
+  <div class="room-modal-box" id="gameModalBox" style="max-width:520px">
+    <button class="modal-close-btn" onclick="cerrarJuego()">✕</button>
+    <div id="gameContent"></div>
   </div>
 </div>
-
 {% endblock %}
+
 
 {% block extra_js %}
 <script>
-const miloSayings = [
-  "¡Hola! ¿Listo para aprender inglés? 🎉",
-  "¡Tú puedes lograrlo! 💪",
-  "¡Sigue jugando y ganarás más huesos! 🦴",
-  "¡Me alegra verte por aquí! 😊",
-  "¡Compra más cosas para mi habitación! 🛒",
-];
+/* ═══════════════════════════════════════════════════════════
+   SETUP: altura de la habitación = viewport - navbar
+══════════════════════════════════════════════════════════════ */
+(function () {
+  const room = document.getElementById('roomPage');
+  const nav  = document.querySelector('.nestgrow-navbar');
+  function fit() {
+    if (room && nav) room.style.height = (window.innerHeight - nav.offsetHeight) + 'px';
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
 
-function miloSay() {
-  const speech = document.getElementById('miloSpeech');
-  const msg = miloSayings[Math.floor(Math.random() * miloSayings.length)];
-  speech.textContent = msg;
-  speech.style.display = 'block';
-  // Animate milo
-  const milo = document.getElementById('miloChar');
-  milo.style.transform = 'translateX(-50%) scale(1.1)';
-  setTimeout(() => milo.style.transform = 'translateX(-50%) scale(1)', 300);
-  setTimeout(() => { speech.style.display = 'none'; }, 4000);
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL — Info objeto decorativo
+══════════════════════════════════════════════════════════════ */
+function verItem(nombre, desc, emoji) {
+  document.getElementById('infoEmoji').textContent   = emoji;
+  document.getElementById('infoNombre').textContent  = nombre;
+  document.getElementById('infoDesc').textContent    = desc;
+  document.getElementById('infoModal').classList.add('active');
+}
+function cerrarInfo() {
+  document.getElementById('infoModal').classList.remove('active');
+}
+document.getElementById('infoModal').addEventListener('click', function(e) {
+  if (e.target === this) cerrarInfo();
+});
+
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL — Juego casual (Flappy / Snake)
+══════════════════════════════════════════════════════════════ */
+let flappyRAF     = null;
+let snakeInterval = null;
+let activeGame    = null;
+let activeKey     = null;
+
+function setKey(fn) {
+  if (activeKey) document.removeEventListener('keydown', activeKey);
+  activeKey = fn;
+  if (fn) document.addEventListener('keydown', fn);
 }
 
-function goToGame(gameId) {
-  window.location.href = `/juegos/${gameId}/`;
+function abrirJuego(tipo, nombre, emoji) {
+  const labels = { flappy_milo: '🐦 Flappy Milo', snake_milo: '🐍 Snake de Milo' };
+  document.getElementById('gameContent').innerHTML = `
+    <div style="font-size:2.4rem;margin-bottom:4px">${emoji}</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.25rem;color:var(--primary);margin-bottom:2px">${nombre}</div>
+    <div style="font-size:0.82rem;color:#aaa;font-weight:700;margin-bottom:18px">${labels[tipo] || tipo}</div>
+    <div id="gameArea"></div>
+  `;
+  document.getElementById('gameModal').classList.add('active');
+  activeGame = tipo;
+  if (tipo === 'flappy_milo') initFlappy();
+  else if (tipo === 'snake_milo') initSnake();
 }
 
-function showItemInfo(name, desc) {
-  document.getElementById('modalTitle').textContent = name;
-  document.getElementById('modalDesc').textContent = desc;
-  document.getElementById('itemModal').style.display = 'flex';
+function cerrarJuego() {
+  if (flappyRAF)     { cancelAnimationFrame(flappyRAF); flappyRAF = null; }
+  if (snakeInterval) { clearInterval(snakeInterval); snakeInterval = null; }
+  setKey(null);
+  activeGame = null;
+  document.getElementById('gameContent').innerHTML = '';
+  document.getElementById('gameModal').classList.remove('active');
 }
 
-// Auto-greet on load
-setTimeout(() => miloSay(), 2000);
+document.getElementById('gameModal').addEventListener('click', function(e) {
+  if (e.target === this) cerrarJuego();
+});
+
+
+/* ═══════════════════════════════════════════════════════════
+   JUEGO 1 — FLAPPY MILO
+══════════════════════════════════════════════════════════════ */
+function initFlappy() {
+  document.getElementById('gameArea').innerHTML = `
+    <canvas id="fc" width="460" height="300" style="cursor:pointer"></canvas>
+    <p class="game-hint">Clic en el canvas · Espacio para volar</p>
+  `;
+  const cv  = document.getElementById('fc');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+
+  const GRAV = 0.44, FLAP = -9, SPD = 2.7, GAP = 148, PW = 54, R = 16;
+  let milo, pipes, score, frame, running, started;
+
+  function reset() {
+    milo    = { x: 85, y: H / 2, vy: 0 };
+    pipes   = [];
+    score   = 0;
+    frame   = 0;
+    running = true;
+  }
+
+  function spawnPipe() {
+    const top = 46 + Math.random() * (H - GAP - 28 - 56);
+    pipes.push({ x: W + 20, top, passed: false });
+  }
+
+  function drawBg() {
+    const sk = ctx.createLinearGradient(0, 0, 0, H);
+    sk.addColorStop(0, '#87CEEB');
+    sk.addColorStop(1, '#C6EEFF');
+    ctx.fillStyle = sk;
+    ctx.fillRect(0, 0, W, H);
+    // suelo
+    ctx.fillStyle = '#5D9A2B'; ctx.fillRect(0, H - 28, W, 28);
+    ctx.fillStyle = '#7A5230'; ctx.fillRect(0, H - 18, W, 18);
+  }
+
+  function drawPipes() {
+    for (const p of pipes) {
+      const g = ctx.createLinearGradient(p.x, 0, p.x + PW, 0);
+      g.addColorStop(0, '#3ABFB7'); g.addColorStop(1, '#4ECDC4');
+      ctx.fillStyle = g;
+      ctx.fillRect(p.x, 0, PW, p.top);
+      ctx.fillRect(p.x, p.top + GAP, PW, H - p.top - GAP - 28);
+      // tapas
+      ctx.fillStyle = '#2DA8A0';
+      ctx.fillRect(p.x - 5, p.top - 18, PW + 10, 18);
+      ctx.fillRect(p.x - 5, p.top + GAP, PW + 10, 18);
+    }
+  }
+
+  function drawMilo() {
+    ctx.fillStyle = '#6C63FF';
+    ctx.beginPath(); ctx.arc(milo.x, milo.y, R, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#9c94ff'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(milo.x, milo.y, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.font = `${R * 1.7}px Apple Color Emoji, Segoe UI Emoji, serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('🐺', milo.x, milo.y + 1);
+  }
+
+  function drawScore() {
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.font = 'bold 30px Fredoka One, cursive';
+    ctx.fillText(score, W / 2 + 1, 44);
+    ctx.fillStyle = 'white';
+    ctx.fillText(score, W / 2, 43);
+  }
+
+  function drawStartScreen() {
+    drawBg(); drawMilo();
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'white'; ctx.font = 'bold 30px Fredoka One, cursive';
+    ctx.fillText('¡Flappy Milo!', W / 2, H / 2 - 24);
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '15px Nunito, sans-serif';
+    ctx.fillText('Clic aquí o Espacio para empezar', W / 2, H / 2 + 8);
+    ctx.fillStyle = '#FFE66D'; ctx.font = '13px Nunito, sans-serif';
+    ctx.fillText('Esquiva los obstáculos', W / 2, H / 2 + 32);
+  }
+
+  function gameOver() {
+    running = false;
+    ctx.fillStyle = 'rgba(0,0,0,0.58)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FF6B6B'; ctx.font = 'bold 36px Fredoka One, cursive';
+    ctx.fillText('¡Fin!', W / 2, H / 2 - 30);
+    ctx.fillStyle = 'white'; ctx.font = 'bold 20px Nunito, sans-serif';
+    ctx.fillText('Puntaje: ' + score + ' 🏆', W / 2, H / 2 + 6);
+    ctx.fillStyle = '#FFE66D'; ctx.font = '13px Nunito, sans-serif';
+    ctx.fillText('Clic o Espacio para reiniciar', W / 2, H / 2 + 38);
+  }
+
+  function flap() {
+    if (!started) { started = true; reset(); loop(); return; }
+    if (!running) { reset(); if (flappyRAF) cancelAnimationFrame(flappyRAF); loop(); return; }
+    milo.vy = FLAP;
+  }
+
+  function loop() {
+    frame++;
+    milo.vy += GRAV; milo.y += milo.vy;
+    if (frame % 80 === 0) spawnPipe();
+    pipes.forEach(p => {
+      p.x -= SPD;
+      if (!p.passed && p.x + PW < milo.x) { p.passed = true; score++; }
+    });
+    pipes = pipes.filter(p => p.x + PW > 0);
+
+    const gnd = H - 28;
+    if (milo.y + R > gnd || milo.y - R < 0) {
+      drawBg(); drawPipes(); drawMilo(); drawScore(); gameOver(); return;
+    }
+    for (const p of pipes) {
+      if (milo.x + R > p.x && milo.x - R < p.x + PW) {
+        if (milo.y - R < p.top || milo.y + R > p.top + GAP) {
+          drawBg(); drawPipes(); drawMilo(); drawScore(); gameOver(); return;
+        }
+      }
+    }
+    drawBg(); drawPipes(); drawMilo(); drawScore();
+    flappyRAF = requestAnimationFrame(loop);
+  }
+
+  started = false;
+  drawStartScreen();
+  cv.addEventListener('click', flap);
+  setKey(function(e) {
+    if (activeGame !== 'flappy_milo') return;
+    if (e.code === 'Space') { e.preventDefault(); flap(); }
+  });
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   JUEGO 2 — SNAKE DE MILO
+══════════════════════════════════════════════════════════════ */
+function initSnake() {
+  document.getElementById('gameArea').innerHTML = `
+    <div id="snkScore"
+         style="font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--primary);margin-bottom:10px">
+      🦴 0
+    </div>
+    <canvas id="sc" width="400" height="400" style="background:#1a1a2e"></canvas>
+    <p class="game-hint">Flechas del teclado para mover · Espacio para reiniciar</p>
+  `;
+  const cv  = document.getElementById('sc');
+  const ctx = cv.getContext('2d');
+  const COLS = 20, ROWS = 20, SZ = 20;
+  let snake, dir, nextDir, food, score, gameState;
+
+  function randFood() {
+    let f;
+    do { f = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS) }; }
+    while (snake && snake.some(s => s.x === f.x && s.y === f.y));
+    return f;
+  }
+
+  function drawRoundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+  }
+
+  function draw() {
+    // fondo
+    ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0, 0, COLS * SZ, ROWS * SZ);
+    // cuadrícula
+    ctx.strokeStyle = 'rgba(108,99,255,0.07)'; ctx.lineWidth = 1;
+    for (let i = 0; i <= COLS; i++) {
+      ctx.beginPath(); ctx.moveTo(i * SZ, 0); ctx.lineTo(i * SZ, ROWS * SZ); ctx.stroke();
+    }
+    for (let j = 0; j <= ROWS; j++) {
+      ctx.beginPath(); ctx.moveTo(0, j * SZ); ctx.lineTo(COLS * SZ, j * SZ); ctx.stroke();
+    }
+    // comida
+    ctx.font = SZ + 'px Apple Color Emoji, Segoe UI Emoji, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('🦴', food.x * SZ + SZ / 2, food.y * SZ + SZ / 2);
+
+    // serpiente
+    snake.forEach((seg, i) => {
+      const head = i === 0;
+      ctx.fillStyle = head ? '#6C63FF' : (i % 2 === 0 ? '#9c94ff' : '#8880ee');
+      const p = 2, r = 4;
+      drawRoundRect(seg.x * SZ + p, seg.y * SZ + p, SZ - p * 2, SZ - p * 2, r);
+      ctx.fill();
+      if (head) {
+        const cx = seg.x * SZ + SZ / 2, cy = seg.y * SZ + SZ / 2;
+        let ex1, ey1, ex2, ey2;
+        if      (dir.x ===  1) { ex1 = cx + 4; ey1 = cy - 3; ex2 = cx + 4; ey2 = cy + 3; }
+        else if (dir.x === -1) { ex1 = cx - 4; ey1 = cy - 3; ex2 = cx - 4; ey2 = cy + 3; }
+        else if (dir.y === -1) { ex1 = cx - 3; ey1 = cy - 4; ex2 = cx + 3; ey2 = cy - 4; }
+        else                   { ex1 = cx - 3; ey1 = cy + 4; ex2 = cx + 3; ey2 = cy + 4; }
+        ctx.fillStyle = 'white';
+        ctx.beginPath(); ctx.arc(ex1, ey1, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(ex2, ey2, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#1a1a2e';
+        ctx.beginPath(); ctx.arc(ex1 + 0.6, ey1 + 0.6, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(ex2 + 0.6, ey2 + 0.6, 1.5, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+
+    const el = document.getElementById('snkScore');
+    if (el) el.textContent = '🦴 ' + score;
+  }
+
+  function drawOverlay(title, titleColor, subtitle, hint) {
+    ctx.fillStyle = 'rgba(0,0,0,0.62)'; ctx.fillRect(0, 0, COLS * SZ, ROWS * SZ);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = titleColor; ctx.font = 'bold 28px Fredoka One, cursive';
+    ctx.fillText(title, COLS * SZ / 2, ROWS * SZ / 2 - 22);
+    ctx.fillStyle = 'white'; ctx.font = 'bold 16px Nunito, sans-serif';
+    ctx.fillText(subtitle, COLS * SZ / 2, ROWS * SZ / 2 + 8);
+    ctx.fillStyle = '#FFE66D'; ctx.font = '13px Nunito, sans-serif';
+    ctx.fillText(hint, COLS * SZ / 2, ROWS * SZ / 2 + 38);
+  }
+
+  function startGame() {
+    snake    = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+    dir      = { x: 1, y: 0 };
+    nextDir  = { x: 1, y: 0 };
+    food     = randFood();
+    score    = 0;
+    gameState = 'running';
+    draw();
+  }
+
+  function step() {
+    if (gameState !== 'running') return;
+    dir = { ...nextDir };
+    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
+      gameState = 'dead'; draw();
+      drawOverlay('¡Fin!', '#FF6B6B', '🦴 ' + score + ' huesos recolectados', 'Espacio para reiniciar');
+      return;
+    }
+    if (snake.some(s => s.x === head.x && s.y === head.y)) {
+      gameState = 'dead'; draw();
+      drawOverlay('¡Fin!', '#FF6B6B', '🦴 ' + score + ' huesos recolectados', 'Espacio para reiniciar');
+      return;
+    }
+    snake.unshift(head);
+    if (head.x === food.x && head.y === food.y) { score++; food = randFood(); }
+    else snake.pop();
+    draw();
+  }
+
+  if (snakeInterval) clearInterval(snakeInterval);
+  gameState = 'idle';
+  food = { x: 10, y: 10 }; snake = [{ x: 10, y: 10 }]; dir = { x: 1, y: 0 }; score = 0;
+  draw();
+  drawOverlay('🐍 Snake de Milo', 'white', 'Flechas del teclado para mover', 'Espacio para empezar');
+  snakeInterval = setInterval(step, 135);
+
+  setKey(function(e) {
+    if (activeGame !== 'snake_milo') return;
+    const map = { ArrowUp:{x:0,y:-1}, ArrowDown:{x:0,y:1}, ArrowLeft:{x:-1,y:0}, ArrowRight:{x:1,y:0} };
+    if (map[e.key]) {
+      e.preventDefault();
+      const nd = map[e.key];
+      if (nd.x !== -dir.x || nd.y !== -dir.y) nextDir = nd;
+      if (gameState === 'idle') startGame();
+    }
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (gameState !== 'running') startGame();
+    }
+  });
+}
 </script>
 {% endblock %}

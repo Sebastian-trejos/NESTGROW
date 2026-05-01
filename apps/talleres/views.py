@@ -14,6 +14,7 @@ from .forms import TallerForm
 from apps.accounts.decorators import profesor_required, estudiante_required
 from apps.accounts.models import Salon
 from apps.games.models import Game, HuesoTransaccion
+from apps.content.utils import desbloquear_vocabulario_taller, verificar_hitos_vocabulario
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -371,6 +372,8 @@ def resultado_taller(request, pk):
         return redirect('talleres:mis_talleres')
 
     subio_nivel = False
+    palabras_nuevas = []
+    hitos_nuevos = []
 
     if not sesion.completada:
         sesion.completada = True
@@ -391,8 +394,14 @@ def resultado_taller(request, pk):
                 descripcion=f'🎓 Completaste el taller: {taller.titulo}',
             )
 
+        # Desbloquear vocabulario y verificar hitos
+        palabras_nuevas = desbloquear_vocabulario_taller(sesion)
+        hitos_nuevos = verificar_hitos_vocabulario(request.user)
+
     return render(request, 'talleres/estudiante/resultado.html', {
         'taller': taller,
         'sesion': sesion,
         'subio_nivel': subio_nivel,
+        'palabras_nuevas': palabras_nuevas,
+        'hitos_nuevos': hitos_nuevos,
     })

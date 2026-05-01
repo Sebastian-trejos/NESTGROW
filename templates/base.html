@@ -182,5 +182,71 @@
   }
   </script>
 
+  <!-- ══ TRANSICIÓN DE PÁGINA (círculos) ══ -->
+  <div id="pg-trans" aria-hidden="true" style="
+    position:fixed;inset:0;z-index:99999;
+    pointer-events:none;overflow:hidden;">
+    <div class="pg-c" style="background:#6C63FF"></div>
+    <div class="pg-c" style="background:#4ECDC4"></div>
+    <div class="pg-c" style="background:#FF6B6B"></div>
+    <div class="pg-c" style="background:#FFE66D"></div>
+    <div class="pg-c" style="background:#FFB347"></div>
+  </div>
+  <style>
+  .pg-c {
+    position: absolute;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    will-change: transform;
+  }
+  </style>
+  <script>
+  (function () {
+    const sizes   = [300, 240, 180, 120, 60]; /* vmax, de mayor a menor */
+    const circles = document.querySelectorAll('.pg-c');
+    circles.forEach((c, i) => {
+      c.style.width  = sizes[i] + 'vmax';
+      c.style.height = sizes[i] + 'vmax';
+    });
+
+    /* Cubre la pantalla con los círculos, luego llama doneCb */
+    function cubrir(doneCb) {
+      circles.forEach((c, i) => {
+        setTimeout(() => {
+          c.style.transition = 'transform 0.30s cubic-bezier(0.55,0,1,0.45)';
+          c.style.transform  = 'translate(-50%,-50%) scale(1)';
+        }, i * 60);
+      });
+      if (doneCb) setTimeout(doneCb, 60 * (circles.length - 1) + 360);
+    }
+
+    /* Descubre la pantalla (los círculos ya están cubiertos) */
+    function descubrir() {
+      [...circles].reverse().forEach((c, i) => {
+        setTimeout(() => {
+          c.style.transition = 'transform 0.38s cubic-bezier(0,0.55,0.45,1)';
+          c.style.transform  = 'translate(-50%,-50%) scale(0)';
+        }, i * 80);
+      });
+    }
+
+    /* ── Página destino: animación completa (cubrir → descubrir) ── */
+    if (sessionStorage.getItem('ngTransition') === '1') {
+      sessionStorage.removeItem('ngTransition');
+
+      /* Empieza con los círculos cubriendo la pantalla (sin animación) */
+      circles.forEach(c => {
+        c.style.transition = 'none';
+        c.style.transform  = 'translate(-50%,-50%) scale(1)';
+      });
+
+      /* Primero muestra la pantalla cubierta un instante,
+         luego descubre de pequeño a grande                */
+      setTimeout(descubrir, 120);
+    }
+  })();
+  </script>
+
 </body>
 </html>

@@ -236,6 +236,27 @@ def dashboard_estudiante(request):
 
 @login_required
 @estudiante_required
+def guardar_avatar(request):
+    """Guarda el avatar Emoji Kitchen del estudiante."""
+    import json
+    from django.http import JsonResponse
+    if request.method != 'POST':
+        return JsonResponse({'ok': False}, status=405)
+    try:
+        data = json.loads(request.body)
+        profile = request.user.estudiante_profile
+        profile.avatar_emoji1 = data.get('emoji1', '🐶')[:10]
+        profile.avatar_emoji2 = data.get('emoji2', '🐱')[:10]
+        profile.avatar_color = data.get('color', '#6C63FF')[:10]
+        profile.avatar_kitchen_url = data.get('kitchen_url', '')[:500]
+        profile.save(update_fields=['avatar_emoji1', 'avatar_emoji2', 'avatar_color', 'avatar_kitchen_url'])
+        return JsonResponse({'ok': True})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)}, status=400)
+
+
+@login_required
+@estudiante_required
 def editar_perfil_estudiante(request):
     user_form = EstudianteUserForm(instance=request.user)
     profile_form = EstudianteProfileForm(instance=request.user.estudiante_profile)

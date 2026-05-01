@@ -93,6 +93,12 @@ class EstudianteProfile(TimeStampedModel):
     puntos_totales = models.IntegerField(default=0)
     nivel = models.IntegerField(default=1)
 
+    # Avatar Emoji Kitchen
+    avatar_emoji1 = models.CharField(max_length=10, blank=True, default='🐶')
+    avatar_emoji2 = models.CharField(max_length=10, blank=True, default='🐱')
+    avatar_color = models.CharField(max_length=10, blank=True, default='#6C63FF')
+    avatar_kitchen_url = models.URLField(max_length=500, blank=True)
+
     # Points required to level up from each level
     PUNTOS_POR_NIVEL = {
         # Principiante (Niveles 1–10)
