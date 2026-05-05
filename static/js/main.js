@@ -214,24 +214,6 @@ async function showPendingBadgePopup() {
   } catch(e) {}
 }
 
-// --- Confetti ---
-function launchConfetti() {
-  const colors = ['#6C63FF','#FF6B6B','#4ECDC4','#FFE66D','#A8E6CF'];
-  for (let i = 0; i < 80; i++) {
-    const el = document.createElement('div');
-    el.style.cssText = `position:fixed;left:${Math.random()*100}vw;top:-10px;
-      width:${Math.random()*10+5}px;height:${Math.random()*10+5}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      border-radius:${Math.random()>0.5?'50%':'2px'};
-      animation:confettiFall ${Math.random()*2+2}s linear forwards;z-index:99999;`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 4000);
-  }
-}
-const s = document.createElement('style');
-s.textContent = '@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}';
-document.head.appendChild(s);
-
 // --- Timer ---
 class GameTimer {
   constructor(seconds, displayEl, onEnd) {

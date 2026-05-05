@@ -164,6 +164,17 @@
         Define las palabras/preguntas exactas de este juego. Si no añades nada, el juego usará el vocabulario de la categoría.
       </p>
 
+      <!-- Botón plantilla (solo cuando no hay ítems y el juego no es painting) -->
+      {% if not items_custom %}
+      <div class="text-center mb-3" id="plantilla-section">
+        <button type="button" class="btn btn-outline-primary rounded-pill px-4"
+                onclick="cargarPlantilla()" id="btn-plantilla">
+          🪄 Cargar contenido de ejemplo
+        </button>
+        <div class="text-muted small mt-1 fw-bold">Carga palabras de ejemplo para este tipo de juego (puedes editarlas después)</div>
+      </div>
+      {% endif %}
+
       <!-- Lista de ítems existentes -->
       <div id="items-list" class="d-flex flex-column gap-2 mb-4">
         {% for item in items_custom %}
@@ -241,6 +252,9 @@
 {% endif %}
 <script>
 const GAME_TYPE_SEL = document.getElementById('id_game_type');
+{% if juego %}
+const PLANTILLA_URL = "{% url 'games:cargar_plantilla' pk=juego.pk %}";
+{% endif %}
 const PAINTING_SEC  = document.getElementById('painting-words-section');
 const CONTENT_ED    = document.getElementById('content-editor');
 
@@ -460,6 +474,32 @@ async function eliminarItem(pk) {
 function updateBadge() {
   const b = document.getElementById('items-count-badge');
   if (b) b.textContent = `${itemsCount} ítem${itemsCount !== 1 ? 's' : ''}`;
+}
+{% endif %}
+
+// ── Plantilla de ejemplo ───────────────────────────────────────────────────
+{% if juego %}
+async function cargarPlantilla() {
+  const btn = document.getElementById('btn-plantilla');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Cargando...';
+  const res = await fetch(PLANTILLA_URL, {
+    method: 'POST',
+    headers: {'X-CSRFToken': CSRF},
+  });
+  const data = await res.json();
+  if (data.ok) {
+    document.getElementById('empty-msg')?.remove();
+    data.items.forEach(appendItemRow);
+    itemsCount += data.items.length;
+    updateBadge();
+    document.getElementById('plantilla-section')?.remove();
+  } else {
+    alert('❌ ' + (data.error || 'Error al cargar plantilla.'));
+    btn.disabled = false;
+    btn.textContent = '🪄 Cargar contenido de ejemplo';
+  }
 }
 {% endif %}
 

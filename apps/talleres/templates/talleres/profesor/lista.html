@@ -83,6 +83,7 @@
               <div class="d-flex gap-1 justify-content-center">
                 <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-sm btn-outline-primary rounded-pill" title="Editar">✏️</a>
                 <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill" title="Vista previa" target="_blank">👁️</a>
+                <a href="{% url 'talleres:resultados' pk=taller.pk %}" class="btn btn-sm btn-outline-success rounded-pill" title="Ver resultados">📊</a>
                 <a href="{% url 'talleres:eliminar' pk=taller.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">🗑️</a>
               </div>
             </td>

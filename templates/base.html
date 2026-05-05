@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   {% block extra_css %}{% endblock %}
 </head>
@@ -48,6 +49,14 @@
 </li>
 {% if user.role == 'estudiante' %}
 <li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'talleres:mis_talleres' %}"
+     style="background:#e8f4fd;color:#1e88e5;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,136,229,0.25)';this.style.background='#c8e6fb'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#e8f4fd'">
+    <i class="bi bi-journal-bookmark-fill"></i> Talleres
+  </a>
+</li>
+<li class="nav-item">
   <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:habitacion_milo' %}"
      style="background:#fff9ee;color:#FFB347;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,179,71,0.25)';this.style.background='#ffecd9'"
@@ -69,6 +78,15 @@
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(78,205,196,0.25)';this.style.background='#d9f7f5'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0fffe'">
     <i class="bi bi-palette-fill me-1"></i> Museo
+  </a>
+</li>
+{% elif user.role == 'profesor' %}
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'talleres:lista' %}"
+     style="background:#e8f4fd;color:#1e88e5;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,136,229,0.25)';this.style.background='#c8e6fb'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#e8f4fd'">
+    <i class="bi bi-journal-bookmark-fill"></i> Talleres
   </a>
 </li>
 {% endif %}
@@ -159,7 +177,11 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js"></script>
+  <script src="{% static 'js/milo-utils.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   {% block extra_js %}{% endblock %}
 

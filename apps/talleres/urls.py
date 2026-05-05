@@ -11,6 +11,7 @@ urlpatterns = [
     path('<int:pk>/eliminar/', views.eliminar_taller, name='eliminar'),
     path('<int:pk>/toggle/', views.toggle_taller, name='toggle'),
     path('<int:pk>/preview/', views.preview_taller, name='preview'),
+    path('<int:pk>/resultados/', views.resultados_taller, name='resultados'),
 
     # AJAX — bloques
     path('<int:pk>/bloque/nuevo/', views.agregar_bloque, name='agregar_bloque'),

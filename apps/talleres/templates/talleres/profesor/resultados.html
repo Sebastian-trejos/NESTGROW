@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resultados — {{ taller.titulo }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .stat-pill {
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+  }
+  .resp-correcta  { background:#d4edda; border-left:4px solid #28a745; }
+  .resp-incorrecta{ background:#f8d7da; border-left:4px solid #dc3545; }
+  .resp-parrafo   { background:#fff9ee; border-left:4px solid #FFB347; }
+  .resp-pendiente { background:#f0eeff; border-left:4px solid #9e9e9e; }
+
+  .accordion-button:not(.collapsed) {
+    background: #f0eeff;
+    color: var(--primary);
+    box-shadow: none;
+  }
+  .accordion-button::after {
+    filter: none;
+  }
+  .progreso-barra {
+    height: 6px;
+    border-radius: 99px;
+    background: #e8e4ff;
+    overflow: hidden;
+  }
+  .progreso-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #6C63FF, #9c94ff);
+    transition: width 0.6s ease;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:960px">
+
+  <!-- Encabezado -->
+  <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+    <a href="{% url 'talleres:lista' %}" class="btn btn-outline-secondary rounded-pill btn-sm">← Mis talleres</a>
+    <div>
+      <h4 class="font-fredoka mb-0" style="color:var(--primary)">📊 Resultados del taller</h4>
+      <div class="text-muted fw-bold small">{{ taller.titulo }}</div>
+    </div>
+    <div class="ms-auto d-flex gap-2">
+      <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-outline-primary rounded-pill btn-sm">✏️ Editar</a>
+      <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm" target="_blank">👁️ Preview</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="d-flex gap-3 flex-wrap mb-4">
+    <div class="stat-pill nestgrow-card">
+      <div style="font-size:1.8rem">👥</div>
+      <div class="font-fredoka" style="font-size:1.6rem;color:var(--primary)">{{ total }}</div>
+      <div class="text-muted small fw-bold">Estudiantes</div>
+    </div>
+    <div class="stat-pill nestgrow-card">
+      <div style="font-size:1.8rem">✅</div>
+      <div class="font-fredoka" style="font-size:1.6rem;color:var(--accent)">{{ completadas }}</div>
+      <div class="text-muted small fw-bold">Completados</div>
+    </div>
+    <div class="stat-pill nestgrow-card">
+      <div style="font-size:1.8rem">⏳</div>
+      <div class="font-fredoka" style="font-size:1.6rem;color:#FFB347">{{ en_progreso }}</div>
+      <div class="text-muted small fw-bold">En progreso</div>
+    </div>
+    <div class="stat-pill nestgrow-card">
+      <div style="font-size:1.8rem">⭐</div>
+      <div class="font-fredoka" style="font-size:1.6rem;color:var(--primary)">{{ promedio }}</div>
+      <div class="text-muted small fw-bold">Promedio pts</div>
+    </div>
+    {% if total_puntos_posibles > 0 %}
+    <div class="stat-pill nestgrow-card">
+      <div style="font-size:1.8rem">🏆</div>
+      <div class="font-fredoka" style="font-size:1.6rem;color:var(--secondary)">{{ total_puntos_posibles }}</div>
+      <div class="text-muted small fw-bold">Pts posibles</div>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if sesiones_data %}
+
+  <!-- Accordion de estudiantes -->
+  <div class="accordion nestgrow-card p-0 overflow-hidden" id="acordeonEstudiantes">
+    {% for item in sesiones_data %}
+    {% with sesion=item.sesion est=item.sesion.estudiante %}
+    <div class="accordion-item border-0 {% if not forloop.last %}border-bottom{% endif %}">
+
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed py-3 px-4 fw-bold"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#est{{ sesion.pk }}">
+
+          <div class="d-flex align-items-center gap-3 w-100 pe-3">
+            <!-- Avatar -->
+            <div style="width:38px;height:38px;border-radius:50%;background:#f0eeff;
+                        display:flex;align-items:center;justify-content:center;
+                        font-size:1.3rem;flex-shrink:0;border:2px solid #d8d0ff">
+              {% if est.estudiante_profile.avatar_kitchen_url %}
+                <img src="{{ est.estudiante_profile.avatar_kitchen_url }}"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:50%"
+                     alt="avatar">
+              {% else %}
+                {{ est.estudiante_profile.avatar_emoji1|default:'🐶' }}
+              {% endif %}
+            </div>
+
+            <!-- Nombre y nivel -->
+            <div class="flex-grow-1 min-width-0">
+              <div>{{ est.get_full_name|default:est.username }}</div>
+              <div class="text-muted small fw-bold" style="font-weight:500!important">
+                Nivel {{ est.estudiante_profile.nivel }}
+              </div>
+            </div>
+
+            <!-- Estado y puntos -->
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+              {% if sesion.completada %}
+                <span class="badge rounded-pill" style="background:#d4edda;color:#155724">✅ Completado</span>
+                <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">
+                  {{ sesion.puntos_obtenidos }}{% if total_puntos_posibles > 0 %}/{{ total_puntos_posibles }}{% endif %} pts
+                </span>
+              {% else %}
+                <span class="badge rounded-pill" style="background:#fff3cd;color:#856404">⏳ En progreso</span>
+                <span class="text-muted small fw-bold">Bloque {{ sesion.bloque_actual }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+        </button>
+      </h2>
+
+      <div id="est{{ sesion.pk }}" class="accordion-collapse collapse" data-bs-parent="#acordeonEstudiantes">
+        <div class="accordion-body pt-2 pb-3 px-4">
+
+          <!-- Mini stats del estudiante -->
+          <div class="d-flex gap-3 flex-wrap mb-3">
+            {% if sesion.completada %}
+            <div class="badge rounded-pill py-2 px-3" style="background:#fff3e0;color:#8B4513;font-size:0.85rem">
+              🦴 {{ sesion.huesos_ganados }} huesos ganados
+            </div>
+            {% if sesion.completada_en %}
+            <div class="badge rounded-pill py-2 px-3" style="background:#f0f8ff;color:#4a90d9;font-size:0.85rem">
+              🕐 {{ sesion.completada_en|date:"d M Y, H:i" }}
+            </div>
+            {% endif %}
+            {% if total_puntos_posibles > 0 %}
+            <div class="flex-grow-1">
+              <div class="text-muted small fw-bold mb-1">
+                {{ sesion.puntos_obtenidos }} / {{ total_puntos_posibles }} pts
+              </div>
+              <div class="progreso-barra">
+                <div class="progreso-fill"
+                     style="width:{% widthratio sesion.puntos_obtenidos total_puntos_posibles 100 %}%;max-width:100%">
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% endif %}
+          </div>
+
+          {% if item.bloques %}
+          <div class="d-flex flex-column gap-2">
+            {% for b_item in item.bloques %}
+            <div class="p-3 rounded-3
+              {% if b_item.respuesta %}
+                {% if b_item.pregunta.tipo_respuesta == 'parrafo' %}resp-parrafo
+                {% elif b_item.respuesta.es_correcta %}resp-correcta
+                {% else %}resp-incorrecta{% endif %}
+              {% else %}resp-pendiente{% endif %}">
+
+              <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                <div class="fw-bold small" style="flex:1">
+                  <span class="text-muted">Bloque {{ b_item.bloque.orden }} ·</span>
+                  {{ b_item.pregunta.enunciado|truncatechars:120 }}
+                </div>
+                <div class="flex-shrink-0">
+                  {% if not b_item.respuesta %}
+                    <span class="badge rounded-pill" style="background:#e0e0e0;color:#555">Sin respuesta</span>
+                  {% elif b_item.pregunta.tipo_respuesta == 'parrafo' %}
+                    <span class="badge rounded-pill" style="background:#FFB347;color:white">✍️ Párrafo</span>
+                  {% elif b_item.respuesta.es_correcta %}
+                    <span class="badge rounded-pill bg-success text-white">✅ Correcto · +{{ b_item.pregunta.puntaje_parcial }} pts</span>
+                  {% else %}
+                    <span class="badge rounded-pill bg-danger text-white">❌ Incorrecto</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if b_item.respuesta %}
+              <div class="mt-2 small">
+                {% if b_item.pregunta.tipo_respuesta == 'parrafo' %}
+                  {% if b_item.respuesta.texto_respuesta %}
+                  <div class="p-2 rounded-2" style="background:rgba(255,255,255,0.6)">
+                    {{ b_item.respuesta.texto_respuesta }}
+                  </div>
+                  {% else %}
+                    <span class="text-muted">Sin texto.</span>
+                  {% endif %}
+                {% else %}
+                  <div class="d-flex flex-wrap gap-1">
+                    {% for opcion in b_item.respuesta.opciones_elegidas.all %}
+                    <span class="badge rounded-pill"
+                          style="background:{% if opcion.es_correcta %}#d4edda;color:#155724{% else %}#f8d7da;color:#721c24{% endif %}">
+                      {% if opcion.es_correcta %}✅{% else %}❌{% endif %} {{ opcion.texto }}
+                    </span>
+                    {% empty %}
+                    <span class="text-muted">Sin opciones seleccionadas.</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+            </div>
+            {% endfor %}
+          </div>
+
+          {% else %}
+          <p class="text-muted small mb-0">Este taller no tiene preguntas.</p>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:4rem">📋</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">Ningún estudiante ha iniciado este taller todavía.</h5>
+    <p class="text-muted fw-bold small">Cuando publiques el taller, los estudiantes de tu salón podrán iniciarlo.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,64 +1,232 @@
 {% extends 'base.html' %}
-{% block title %}¡Taller Completado! — {{ taller.titulo }}{% endblock %}
+{% load static %}
+
+{% block title %}¡Taller completado! — {{ taller.titulo }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes boneFloat {
+    0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+    60%  { transform: scale(1.25) rotate(10deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes trofeoBounce {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-10px) scale(1.08); }
+  }
+  .hueso-anim {
+    display: inline-block;
+    animation: boneFloat 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  .reward-card {
+    border-radius: 20px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+  }
+  .trofeo-anim { animation: trofeoBounce 2s ease-in-out infinite; }
+
+  .resp-item {
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.6rem;
+    border-left: 5px solid;
+  }
+  .resp-correcta   { background: #d4f5e0; border-left-color: #28a745; }
+  .resp-incorrecta { background: #fde8ea; border-left-color: #dc3545; }
+  .resp-parrafo    { background: #fff9ee; border-left-color: #FFB347; }
+  .resp-sin        { background: #f4f4f4; border-left-color: #adb5bd; }
+
+  .palabra-card {
+    background: #f0eeff;
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: countUp 0.4s ease both;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5" style="max-width:640px">
+<div class="container py-4" style="max-width:680px">
 
+  <!-- ── Cabecera de celebración ──────────────────────────────────────────── -->
   <div class="nestgrow-card p-5 text-center mb-4">
-    <div style="font-size:5rem">🎓</div>
-    <h2 class="font-fredoka mt-3" style="color:var(--primary)">¡Taller completado!</h2>
-    <div class="fw-bold text-muted fs-5 mt-1">{{ taller.titulo }}</div>
+    <div class="trofeo-anim d-inline-block" style="font-size:5rem">🎓</div>
+    <h2 class="font-fredoka mt-3 mb-1" style="color:var(--primary)">¡Taller completado!</h2>
+    <div class="fw-bold text-muted">{{ taller.titulo }}</div>
 
     {% if subio_nivel %}
-    <div class="alert mt-3" style="background:#f0eeff;border:2px solid #d8d0ff">
-      <div class="font-fredoka" style="color:var(--primary);font-size:1.3rem">🚀 ¡Subiste de nivel!</div>
+    <div class="alert mt-3 mb-0" style="background:#f0eeff;border:2px solid #d8d0ff;border-radius:14px">
+      <div class="font-fredoka" style="color:var(--primary);font-size:1.2rem">🚀 ¡Subiste de nivel!</div>
       <div class="text-muted fw-bold small">+5 Huesos de Milo extra por subir de nivel</div>
     </div>
     {% endif %}
-
-    <!-- Recompensas -->
-    <div class="row g-3 mt-2 mb-4">
-      <div class="col-4">
-        <div class="p-3 rounded-3" style="background:#f0eeff">
-          <div style="font-size:2rem">⭐</div>
-          <div class="font-fredoka" style="font-size:1.8rem;color:var(--primary)">{{ taller.puntos_xp }}</div>
-          <div class="text-muted small fw-bold">XP ganado</div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="p-3 rounded-3" style="background:#fff3e0">
-          <div style="font-size:2rem">🦴</div>
-          <div class="font-fredoka" style="font-size:1.8rem;color:#8B4513">{{ sesion.huesos_ganados }}</div>
-          <div class="text-muted small fw-bold">Huesos ganados</div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="p-3 rounded-3" style="background:#f0fff0">
-          <div style="font-size:2rem">🏆</div>
-          <div class="font-fredoka" style="font-size:1.8rem;color:var(--accent)">{{ sesion.puntos_obtenidos }}</div>
-          <div class="text-muted small fw-bold">Pts de preguntas</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="d-flex gap-3 justify-content-center flex-wrap">
-      <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill px-4">
-        ← Mis Talleres
-      </a>
-      <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">
-        Ir a mi panel
-      </a>
-    </div>
   </div>
 
-  <!-- Milo banner -->
-  <div class="milo-banner">
+  <!-- ── Recompensas ──────────────────────────────────────────────────────── -->
+  <div class="d-flex gap-3 flex-wrap mb-4">
+    <div class="reward-card nestgrow-card">
+      <div style="font-size:2rem">⭐</div>
+      <div class="font-fredoka" style="font-size:2rem;color:var(--primary)">{{ taller.puntos_xp }}</div>
+      <div class="text-muted small fw-bold">XP ganado</div>
+    </div>
+
+    <div class="reward-card nestgrow-card" id="huesoCard">
+      <div class="hueso-anim" style="font-size:2rem;animation-delay:0.3s">🦴</div>
+      <div class="font-fredoka" style="font-size:2rem;color:#8B4513" id="huesoCount">0</div>
+      <div class="text-muted small fw-bold">Huesos ganados</div>
+    </div>
+
+    {% if sesion.puntos_obtenidos > 0 or taller.total_puntos_posibles > 0 %}
+    <div class="reward-card nestgrow-card">
+      <div style="font-size:2rem">🏆</div>
+      <div class="font-fredoka" style="font-size:2rem;color:var(--accent)">
+        {{ sesion.puntos_obtenidos }}{% if taller.total_puntos_posibles > 0 %}<span style="font-size:1rem;color:#aaa">/{{ taller.total_puntos_posibles }}</span>{% endif %}
+      </div>
+      <div class="text-muted small fw-bold">Pts de preguntas</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- ── Resumen de respuestas ─────────────────────────────────────────────── -->
+  {% if resumen_respuestas %}
+  <div class="nestgrow-card p-4 mb-4">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">📝 Mis respuestas</h5>
+
+    {% for item in resumen_respuestas %}
+    <div class="resp-item
+      {% if not item.respuesta %}resp-sin
+      {% elif item.pregunta.tipo_respuesta == 'parrafo' %}resp-parrafo
+      {% elif item.respuesta.es_correcta %}resp-correcta
+      {% else %}resp-incorrecta{% endif %}">
+
+      <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+        <div class="fw-bold small flex-grow-1">
+          <span class="text-muted">P{{ forloop.counter }}.</span> {{ item.pregunta.enunciado|truncatechars:100 }}
+        </div>
+        <div class="flex-shrink-0">
+          {% if not item.respuesta %}
+            <span class="badge rounded-pill" style="background:#dee2e6;color:#495057">Sin responder</span>
+          {% elif item.pregunta.tipo_respuesta == 'parrafo' %}
+            <span class="badge rounded-pill" style="background:#FFB347;color:white">✍️ Libre</span>
+          {% elif item.respuesta.es_correcta %}
+            <span class="badge rounded-pill bg-success text-white">✅ +{{ item.pregunta.puntaje_parcial }} pts</span>
+          {% else %}
+            <span class="badge rounded-pill bg-danger text-white">❌ 0 pts</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if item.respuesta %}
+      <div class="mt-2 small">
+        {% if item.pregunta.tipo_respuesta == 'parrafo' %}
+          {% if item.respuesta.texto_respuesta %}
+          <div class="p-2 rounded-2" style="background:rgba(255,255,255,0.55)">
+            {{ item.respuesta.texto_respuesta }}
+          </div>
+          {% endif %}
+        {% else %}
+          <div class="d-flex flex-wrap gap-1">
+            {% for opcion in item.respuesta.opciones_elegidas.all %}
+            <span class="badge rounded-pill fw-bold"
+                  style="background:rgba(255,255,255,0.6);color:#333">
+              {{ opcion.texto }}
+            </span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ── Vocabulario desbloqueado ─────────────────────────────────────────── -->
+  {% if palabras_nuevas %}
+  <div class="nestgrow-card p-4 mb-4">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">
+      📚 ¡Palabras desbloqueadas! ({{ palabras_nuevas|length }})
+    </h5>
+    <div class="d-flex flex-column gap-2">
+      {% for palabra in palabras_nuevas %}
+      <div class="palabra-card" style="animation-delay:{{ forloop.counter0 }}00ms">
+        <div style="font-size:1.6rem">{{ palabra.category.icon }}</div>
+        <div>
+          <div class="fw-bold" style="color:var(--primary)">{{ palabra.word_en }}</div>
+          <div class="text-muted small fw-bold">{{ palabra.word_es }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Hitos de vocabulario ─────────────────────────────────────────────── -->
+  {% if hitos_nuevos %}
+  <div class="nestgrow-card p-4 mb-4" style="border:2px solid #FFE66D">
+    <h5 class="font-fredoka mb-3" style="color:#8B4513">🏅 ¡Nuevos hitos de vocabulario!</h5>
+    {% for cantidad, huesos in hitos_nuevos %}
+    <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-2"
+         style="background:#fff9e6;border:1.5px solid #FFE66D">
+      <div style="font-size:2rem">🦴</div>
+      <div>
+        <div class="fw-bold">Desbloqueaste {{ cantidad }} palabras</div>
+        <div class="text-muted small fw-bold">+{{ huesos }} Huesos de Milo de recompensa</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ── Milo banner ───────────────────────────────────────────────────────── -->
+  <div class="milo-banner mb-4">
     <div class="milo-banner-owl">🐺</div>
     <div>
-      <div class="milo-banner-text">¡Excelente trabajo, {{ user.first_name }}!</div>
+      <div class="milo-banner-text">¡Excelente trabajo, {{ user.first_name|default:user.username }}!</div>
       <div class="text-muted fw-bold small">Milo está muy orgulloso de ti. ¡Sigue aprendiendo inglés!</div>
     </div>
   </div>
 
+  <!-- ── Botones ───────────────────────────────────────────────────────────── -->
+  <div class="d-flex gap-3 justify-content-center flex-wrap">
+    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill px-4">
+      ← Mis Talleres
+    </a>
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">
+      Ir a mi panel
+    </a>
+  </div>
+
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Confeti al cargar
+launchConfetti();
+
+// Contador animado de huesos
+(function () {
+  const target = {{ sesion.huesos_ganados }};
+  if (target <= 0) return;
+  const el = document.getElementById('huesoCount');
+  let current = 0;
+  const step = Math.max(1, Math.ceil(target / 20));
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 50);
+})();
+</script>
 {% endblock %}

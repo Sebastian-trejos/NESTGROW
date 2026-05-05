@@ -22,8 +22,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Terceros
+    'channels',
     'crispy_forms',
     'crispy_bootstrap5',
+    'django_filters',
+    'import_export',
+    # 'simple_history',  # requiere habilitar Windows Long Paths primero
     # Propias
     'apps.core',
     'apps.accounts',
@@ -39,6 +43,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'simple_history.middleware.HistoryRequestMiddleware',  # habilitar con simple_history
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

@@ -18,11 +18,6 @@
     0%,100% { transform: scale(1); }
     50%      { transform: scale(1.08); }
   }
-  @keyframes confettiFall {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-
   .ranking-hero {
     background: linear-gradient(135deg, #6C63FF, #9c94ff, #4ECDC4);
     border-radius: 28px;
@@ -183,20 +178,7 @@
     object-fit: cover;
   }
 
-  .confetti {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    overflow: hidden;
-  }
-  .confetti-piece {
-    position: absolute;
-    width: 10px; height: 10px;
-    top: -20px;
-    animation: confettiFall 3s ease-out forwards;
-  }
+
 </style>
 {% endblock %}
 
@@ -350,25 +332,6 @@
 
 </div>
 
-<script>
-(function() {
-  const colors = ['#6C63FF','#FF6B6B','#4ECDC4','#FFB347','#FFE66D','#9c94ff'];
-  const confetti = document.createElement('div');
-  confetti.className = 'confetti';
-  for (let i = 0; i < 60; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.left = Math.random() * 100 + '%';
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.animationDelay = Math.random() * 0.8 + 's';
-    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
-    piece.style.width = (Math.random() * 8 + 6) + 'px';
-    piece.style.height = (Math.random() * 8 + 6) + 'px';
-    confetti.appendChild(piece);
-  }
-  document.body.appendChild(confetti);
-  setTimeout(() => confetti.remove(), 4000);
-})();
-</script>
+<script>launchConfetti();</script>
 
 {% endblock %}

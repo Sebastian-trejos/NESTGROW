@@ -9,3 +9,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Debug Toolbar — solo en desarrollo
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+INTERNAL_IPS = ['127.0.0.1']
+
+# Channels — InMemory (sin Redis para desarrollo)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}

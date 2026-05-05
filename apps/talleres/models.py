@@ -77,6 +77,10 @@ class BloqueMinijuego(TimeStampedModel):
         BloqueTaller, on_delete=models.CASCADE, related_name='bloque_minijuego'
     )
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='bloques_taller')
+    instruccion_extra = models.TextField(
+        blank=True, verbose_name='Instrucción extra',
+        help_text='Contexto adicional que el profesor puede dar al estudiante antes del juego.',
+    )
 
     class Meta:
         verbose_name = 'Bloque Minijuego'
@@ -174,6 +178,7 @@ class SesionTaller(TimeStampedModel):
     puntos_obtenidos = models.IntegerField(default=0)
     huesos_ganados = models.IntegerField(default=0)
     bloque_actual = models.IntegerField(default=0)
+    completada_en = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Sesión de Taller'

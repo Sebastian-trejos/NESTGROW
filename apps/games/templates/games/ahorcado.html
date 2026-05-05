@@ -9,6 +9,13 @@
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🦴 {{ game.title }}</h3>
   </div>
 
+  {% if not embedded and user.role == 'estudiante' %}
+  <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
+    <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+  </div>
+  {% endif %}
+
   {% include 'games/includes/vocabulary_tab.html' %}
 
   <div id="gameSection" style="display:none">

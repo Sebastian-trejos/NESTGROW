@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db import models as db_models
+from django.utils import timezone
 
 from .models import (
     Taller, BloqueTaller, BloqueMinijuego, BloquePregunta,
@@ -219,6 +220,73 @@ def mover_bloques(request, pk):
 # ── Estudiante ────────────────────────────────────────────────────────────────
 
 @login_required
+@profesor_required
+def resultados_taller(request, pk):
+    taller = get_object_or_404(Taller, pk=pk, profesor=request.user)
+
+    sesiones = (
+        SesionTaller.objects
+        .filter(taller=taller)
+        .select_related('estudiante', 'estudiante__estudiante_profile')
+        .prefetch_related(
+            'estudiante__respuestas_taller__pregunta__opciones',
+            'estudiante__respuestas_taller__opciones_elegidas',
+        )
+        .order_by('-completada', '-puntos_obtenidos', 'estudiante__first_name')
+    )
+
+    bloques_pregunta = list(
+        taller.bloques
+        .filter(tipo='pregunta')
+        .select_related('bloque_pregunta')
+        .prefetch_related('bloque_pregunta__opciones')
+        .order_by('orden')
+    )
+
+    total = sesiones.count()
+    completadas = sesiones.filter(completada=True).count()
+    promedio = 0
+    if completadas:
+        from django.db.models import Avg
+        promedio = round(
+            sesiones.filter(completada=True).aggregate(p=Avg('puntos_obtenidos'))['p'] or 0, 1
+        )
+
+    # Armar datos por sesión: lista de respuestas ordenadas por bloque
+    sesiones_data = []
+    for sesion in sesiones:
+        respuestas_map = {
+            r.pregunta_id: r
+            for r in sesion.estudiante.respuestas_taller.filter(
+                pregunta__bloque__taller=taller
+            ).prefetch_related('opciones_elegidas')
+        }
+        bloques_con_respuesta = []
+        for b in bloques_pregunta:
+            pregunta = getattr(b, 'bloque_pregunta', None)
+            if pregunta:
+                bloques_con_respuesta.append({
+                    'bloque': b,
+                    'pregunta': pregunta,
+                    'respuesta': respuestas_map.get(pregunta.pk),
+                })
+        sesiones_data.append({
+            'sesion': sesion,
+            'bloques': bloques_con_respuesta,
+        })
+
+    return render(request, 'talleres/profesor/resultados.html', {
+        'taller': taller,
+        'sesiones_data': sesiones_data,
+        'total': total,
+        'completadas': completadas,
+        'en_progreso': total - completadas,
+        'promedio': promedio,
+        'total_puntos_posibles': taller.total_puntos_posibles(),
+    })
+
+
+@login_required
 @estudiante_required
 def mis_talleres(request):
     profile = request.user.estudiante_profile
@@ -377,8 +445,10 @@ def resultado_taller(request, pk):
 
     if not sesion.completada:
         sesion.completada = True
+        sesion.completada_en = timezone.now()
         sesion.huesos_ganados = taller.huesos_recompensa
-        sesion.save()
+        # Guardar con update_fields para que el signal de huesos se dispare correctamente
+        sesion.save(update_fields=['completada', 'completada_en', 'huesos_ganados', 'bloque_actual'])
 
         profile = request.user.estudiante_profile
         profile.puntos_totales += taller.puntos_xp
@@ -394,9 +464,48 @@ def resultado_taller(request, pk):
                 descripcion=f'🎓 Completaste el taller: {taller.titulo}',
             )
 
+        # Notificación WebSocket de nivel subido (se hace aquí porque la señal
+        # de SesionTaller se dispara antes de actualizar_nivel())
+        if subio_nivel:
+            try:
+                from asgiref.sync import async_to_sync
+                from channels.layers import get_channel_layer
+                channel_layer = get_channel_layer()
+                if channel_layer:
+                    async_to_sync(channel_layer.group_send)(
+                        f'usuario_{request.user.pk}',
+                        {'type': 'nivel_subido', 'nivel': profile.nivel},
+                    )
+            except Exception:
+                pass
+
         # Desbloquear vocabulario y verificar hitos
         palabras_nuevas = desbloquear_vocabulario_taller(sesion)
         hitos_nuevos = verificar_hitos_vocabulario(request.user)
+
+    # Resumen de respuestas ordenado por posición del bloque
+    bloques_pregunta = list(
+        taller.bloques
+        .filter(tipo='pregunta')
+        .select_related('bloque_pregunta')
+        .prefetch_related('bloque_pregunta__opciones')
+        .order_by('orden')
+    )
+    respuestas_map = {
+        r.pregunta_id: r
+        for r in RespuestaEstudiante.objects
+        .filter(estudiante=request.user, pregunta__bloque__taller=taller)
+        .prefetch_related('opciones_elegidas')
+    }
+    resumen_respuestas = []
+    for b in bloques_pregunta:
+        pregunta = getattr(b, 'bloque_pregunta', None)
+        if pregunta:
+            resumen_respuestas.append({
+                'bloque': b,
+                'pregunta': pregunta,
+                'respuesta': respuestas_map.get(pregunta.pk),
+            })
 
     return render(request, 'talleres/estudiante/resultado.html', {
         'taller': taller,
@@ -404,4 +513,5 @@ def resultado_taller(request, pk):
         'subio_nivel': subio_nivel,
         'palabras_nuevas': palabras_nuevas,
         'hitos_nuevos': hitos_nuevos,
+        'resumen_respuestas': resumen_respuestas,
     })

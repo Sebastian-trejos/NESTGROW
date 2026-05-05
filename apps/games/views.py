@@ -297,26 +297,12 @@ def save_score(request):
             progress.completed = True
         progress.save()
 
-        # Update student points + huesos
+        # Los juegos en solitario no otorgan XP ni Huesos (solo los Talleres lo hacen)
         nuevos_logros = []
         huesos_ganados = 0
         subio_nivel = False
         nuevo_nivel = 0
-        if request.user.role == 'estudiante' and hasattr(request.user, 'estudiante_profile'):
-            ep = request.user.estudiante_profile
-            ep.puntos_totales += score_val
-            # Don't call ep.save() here - actualizar_nivel() handles the save
-            subio_nivel = ep.actualizar_nivel()
-            nuevo_nivel = ep.nivel
-            request.user.refresh_from_db()
-
-            # Award Huesos based on classification
-            huesos_map = {'perfecto': 5, 'alto': 3, 'basico': 2, 'bajo': 1}
-            huesos_ganados = huesos_map.get(clasificacion[0], 1)
-            otorgar_huesos(request.user, huesos_ganados,
-                           f'Juego: {game.title} ({clasificacion[1]})')
-
-            # Check badges
+        if request.user.role == 'estudiante':
             nuevos_logros = verificar_logros(request.user)
 
         return JsonResponse({
@@ -590,6 +576,34 @@ def eliminar_item_contenido(request, item_pk):
 @login_required
 @profesor_required
 @require_POST
+def cargar_plantilla(request, pk):
+    """Carga ítems de contenido de ejemplo según el tipo de juego, solo si el juego aún no tiene ítems."""
+    game = get_object_or_404(Game, pk=pk)
+    if game.contenido_custom.exists():
+        return JsonResponse({'ok': False, 'error': 'El juego ya tiene contenido personalizado.'})
+    from .default_templates import TEMPLATES
+    items_data = TEMPLATES.get(game.game_type, [])
+    if not items_data:
+        return JsonResponse({'ok': False, 'error': 'No hay plantilla de ejemplo para este tipo de juego.'})
+    created = []
+    for i, d in enumerate(items_data):
+        item = ItemContenidoJuego.objects.create(
+            game=game, orden=i,
+            texto_principal=d['texto_principal'],
+            texto_secundario=d.get('texto_secundario', ''),
+        )
+        created.append({
+            'pk': item.pk, 'orden': item.orden,
+            'texto_principal': item.texto_principal,
+            'texto_secundario': item.texto_secundario,
+            'imagen': None, 'audio': None, 'es_correcto': False,
+        })
+    return JsonResponse({'ok': True, 'items': created})
+
+
+@login_required
+@profesor_required
+@require_POST
 def reordenar_contenido(request, game_pk):
     try:
         data = json.loads(request.body)
@@ -627,12 +641,7 @@ def guardar_obra(request):
             canvas_data=canvas_data, title=title,
         )
 
-        # Award points
-        if request.user.role == 'estudiante' and hasattr(request.user, 'estudiante_profile'):
-            ep = request.user.estudiante_profile
-            ep.puntos_totales += game.points_reward
-            ep.actualizar_nivel()
-            otorgar_huesos(request.user, 2, f'Juego de pintar: {game.title}')
+        # Los juegos en solitario no otorgan XP ni Huesos (solo los Talleres lo hacen)
 
         return JsonResponse({'status': 'ok'})
     except Exception as e:
