@@ -307,6 +307,24 @@
           <form method="post" onsubmit="window.scrollTo(0,0)">
             {% csrf_token %}
 
+            <!-- Errores generales -->
+            {% if form.errors %}
+            <div class="alert mb-3 rounded-3 fw-bold"
+                 style="background:#fff0f0;border:2px solid #FF6B6B;color:#c0392b;font-size:0.9rem">
+              <div class="mb-1">⚠️ Corrige los siguientes errores:</div>
+              <ul class="mb-0 ps-3">
+                {% for field in form %}
+                  {% for error in field.errors %}
+                  <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
             <!-- ROLES -->
             <div class="mb-4">
               <label class="fw-bold mb-2">
@@ -314,8 +332,9 @@
               </label>
               <div class="row g-3">
                 <div class="col-6">
-                  <label class="role-option p-3 text-center w-100">
-                    <input type="radio" name="role" value="profesor" class="d-none">
+                  <label class="role-option p-3 text-center w-100" id="label-profesor">
+                    <input type="radio" name="role" value="profesor" class="d-none" id="radio-profesor"
+                           {% if form.role.value == 'profesor' or not form.is_bound %}checked{% endif %}>
                     <div style="font-size:2rem">
                       <i class="bi bi-person-workspace" style="color:var(--primary)"></i>
                     </div>
@@ -323,8 +342,9 @@
                   </label>
                 </div>
                 <div class="col-6">
-                  <label class="role-option p-3 text-center w-100">
-                    <input type="radio" name="role" value="estudiante" class="d-none">
+                  <label class="role-option p-3 text-center w-100" id="label-estudiante">
+                    <input type="radio" name="role" value="estudiante" class="d-none" id="radio-estudiante"
+                           {% if form.role.value == 'estudiante' %}checked{% endif %}>
                     <div style="font-size:2rem">
                       <i class="bi bi-backpack3-fill" style="color:var(--primary)"></i>
                     </div>
@@ -474,6 +494,24 @@
     });
     // Forzar scroll arriba
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 50);
+
+    // Resaltar el label del rol que esté checked al cargar
+    function actualizarRoles() {
+      document.querySelectorAll('.role-option').forEach(label => {
+        const radio = label.querySelector('input[type=radio]');
+        if (radio && radio.checked) {
+          label.style.borderColor = 'var(--primary)';
+          label.style.background  = '#f0eeff';
+        } else {
+          label.style.borderColor = '';
+          label.style.background  = '';
+        }
+      });
+    }
+    actualizarRoles();
+    document.querySelectorAll('input[name="role"]').forEach(r => {
+      r.addEventListener('change', actualizarRoles);
+    });
   });
 
   /* ── Transición de círculos al registrarse ── */

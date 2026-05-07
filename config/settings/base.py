@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'apps.content',
     'apps.games',
     'apps.talleres',
+    'apps.historia',
 ]
 
 MIDDLEWARE = [
@@ -74,10 +75,7 @@ ASGI_APPLICATION = 'config.asgi.application'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'apps.accounts.validators.ContainsNumberValidator'},
 ]
 
 LANGUAGE_CODE = 'es-co'

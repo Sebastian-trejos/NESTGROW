@@ -12,7 +12,7 @@ from .forms import (RegistroForm, LoginForm,
                     SalonForm, UnirseClaseForm)
 from .models import CustomUser, ProfesorProfile, EstudianteProfile, Salon
 from .decorators import profesor_required, estudiante_required
-from apps.games.models import UserProgress, Score
+from apps.games.models import UserProgress, Score, pct_to_nota
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -178,12 +178,42 @@ def enviar_informe(request, estudiante_pk):
         messages.error(request, f'❌ El estudiante {estudiante.user.get_full_name()} no tiene correo del padre registrado.')
         return redirect('accounts:detalle_salon', pk=estudiante.salon.pk)
 
-    # Get student progress
+    # Get student game progress (minijuegos)
     progreso = UserProgress.objects.filter(user=estudiante.user).select_related('game')
-    scores = Score.objects.filter(user=estudiante.user).select_related('game').order_by('-created_at')[:5]
+
+    # Get taller sessions with nota calculation (exclude párrafo libre)
+    from apps.talleres.models import SesionTaller, BloquePregunta, RespuestaEstudiante
+    sesiones_taller = (
+        SesionTaller.objects
+        .filter(estudiante=estudiante.user)
+        .select_related('taller')
+        .order_by('-created_at')
+    )
+    talleres_data = []
+    for sesion in sesiones_taller:
+        preguntas_cal = BloquePregunta.objects.filter(
+            bloque__taller=sesion.taller,
+            tipo_respuesta__in=['opcion_multiple', 'casillas'],
+        )
+        total_cal = preguntas_cal.count()
+        nota_info = None
+        if total_cal > 0:
+            correctas = RespuestaEstudiante.objects.filter(
+                estudiante=estudiante.user,
+                pregunta__in=preguntas_cal,
+                es_correcta=True,
+            ).count()
+            pct = (correctas / total_cal) * 100
+            nota_info = {
+                'nota': pct_to_nota(pct),
+                'correctas': correctas,
+                'total': total_cal,
+                'pct': round(pct, 1),
+            }
+        talleres_data.append({'sesion': sesion, 'nota_info': nota_info})
 
     # Generate PDF
-    pdf_bytes = generar_pdf_informe(estudiante, progreso, scores)
+    pdf_bytes = generar_pdf_informe(estudiante, progreso, talleres_data)
 
     # Send email
     try:
@@ -223,6 +253,41 @@ def dashboard_estudiante(request):
     logros_recientes = LogroUsuario.objects.filter(
         user=request.user).select_related('logro').order_by('-created_at')[:4]
     logros_pendientes = LogroUsuario.objects.filter(user=request.user, visto=False).count()
+
+    # Historia: find the next incomplete accessible lesson for the continue button
+    historia_primera_incompleta = None
+    try:
+        from apps.historia.models import SeccionHistoria, SeccionDesbloqueada, ProgresoLeccion
+
+        def _sec_desbloqueada(sec):
+            if sec.is_desbloqueada_por_defecto:
+                return True
+            if not profile.salon:
+                return False
+            return SeccionDesbloqueada.objects.filter(seccion=sec, salon=profile.salon).exists()
+
+        completadas_ids = set(
+            ProgresoLeccion.objects.filter(estudiante=request.user, completada=True)
+            .values_list('leccion_id', flat=True)
+        )
+        for sec in SeccionHistoria.objects.prefetch_related('lecciones').order_by('orden'):
+            if not _sec_desbloqueada(sec):
+                continue
+            prev_ok = True
+            for lec in sec.lecciones.order_by('orden'):
+                if lec.pk not in completadas_ids and prev_ok:
+                    historia_primera_incompleta = {
+                        'leccion_pk': lec.pk,
+                        'seccion_titulo': sec.titulo,
+                        'seccion_emoji': sec.icono_emoji,
+                    }
+                    break
+                prev_ok = lec.pk in completadas_ids
+            if historia_primera_incompleta:
+                break
+    except Exception:
+        pass
+
     context = {
         'profile': profile,
         'progreso': progreso,
@@ -230,6 +295,7 @@ def dashboard_estudiante(request):
         'logros_recientes': logros_recientes,
         'logros_pendientes': logros_pendientes,
         'puntos_requeridos': profile.puntos_requeridos(),
+        'historia_primera_incompleta': historia_primera_incompleta,
     }
     return render(request, 'accounts/dashboard_estudiante.html', context)
 

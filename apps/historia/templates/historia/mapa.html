@@ -1,0 +1,472 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modo Historia — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ── Layout ── */
+  .historia-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  /* ── Hero ── */
+  .historia-hero {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff, #4ECDC4);
+    border-radius: 28px;
+    padding: 1.8rem 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .historia-hero::before {
+    content: '';
+    position: absolute;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    top: -70px; right: -50px;
+  }
+  .historia-hero::after {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+    bottom: -40px; left: 10%;
+  }
+  .estrellas-contador {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: rgba(255,255,255,0.2);
+    border-radius: 99px;
+    padding: .3rem .9rem;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+  }
+
+  /* ── Timeline ── */
+  .timeline {
+    position: relative;
+    padding-left: 56px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: repeating-linear-gradient(
+      180deg,
+      #c5bfff 0px, #c5bfff 8px,
+      transparent 8px, transparent 16px
+    );
+  }
+
+  /* ── Sección node ── */
+  .seccion-node {
+    position: relative;
+    margin-bottom: 0;
+  }
+  .seccion-node + .seccion-node {
+    margin-top: 8px;
+  }
+
+  .node-btn {
+    position: absolute;
+    left: -56px;
+    top: 14px;
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    border: 3px solid white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    z-index: 2;
+    background: var(--sec-color, #6C63FF);
+    text-decoration: none;
+  }
+  .node-btn:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .node-btn.locked {
+    background: #ccc !important;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+  }
+  .node-btn.locked:hover {
+    transform: none;
+  }
+  .node-btn.completa {
+    border-color: #FFE66D;
+    box-shadow: 0 4px 16px rgba(255,230,109,0.5);
+  }
+
+  /* ── Sección card ── */
+  .seccion-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
+    cursor: pointer;
+    transition: all .2s;
+    border-left: 4px solid var(--sec-color, #6C63FF);
+    margin-bottom: 8px;
+    user-select: none;
+  }
+  .seccion-card:hover:not(.locked-card) {
+    box-shadow: 0 8px 24px rgba(108,99,255,0.15);
+    transform: translateX(4px);
+  }
+  .seccion-card.locked-card {
+    opacity: .6;
+    cursor: not-allowed;
+    border-left-color: #ccc;
+  }
+  .seccion-card .sec-titulo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.05rem;
+    color: var(--sec-color, #6C63FF);
+    margin-bottom: 2px;
+  }
+  .seccion-card.locked-card .sec-titulo {
+    color: #999;
+  }
+
+  /* ── Progreso bar inside card ── */
+  .prog-bar-wrap {
+    height: 5px;
+    background: #e8e4ff;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .prog-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--sec-color, #6C63FF);
+    transition: width .5s ease;
+  }
+
+  /* ── Lecciones expandibles ── */
+  .lecciones-wrap {
+    display: none;
+    padding: .8rem 0 1rem;
+    animation: fadeInUp .3s ease;
+  }
+  .lecciones-wrap.open {
+    display: block;
+  }
+  .lecciones-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .lec-btn {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    position: relative;
+    border: none;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    text-decoration: none;
+    background: #f0eeff;
+    color: #444;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .lec-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .lec-btn.completada {
+    background: var(--sec-color, #6C63FF);
+    color: white;
+  }
+  .lec-btn.accesible {
+    background: white;
+    border: 2px solid var(--sec-color, #6C63FF);
+  }
+  .lec-btn.bloqueada {
+    opacity: .45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .lec-btn:hover.bloqueada {
+    transform: none;
+  }
+  .estrellas-overlay {
+    position: absolute;
+    bottom: 2px;
+    font-size: .55rem;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  /* Tooltip */
+  .lec-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    font-size: .75rem;
+    padding: .3rem .6rem;
+    border-radius: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 10;
+  }
+  .lec-btn:hover .lec-tooltip {
+    opacity: 1;
+  }
+
+  /* ── Continue button ── */
+  .continue-fab {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+    padding: .75rem 1.4rem;
+    border-radius: 99px;
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.4);
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .continue-fab:hover {
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 10px 28px rgba(108,99,255,0.5);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(8px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="historia-wrap">
+
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <div class="historia-hero mb-4">
+    <div class="position-relative" style="z-index:1">
+      <div class="d-flex align-items-center gap-3 flex-wrap">
+        <div>
+          <h2 class="font-fredoka mb-1" style="font-size:2rem">🗺️ Modo Historia</h2>
+          <p class="mb-0 fw-bold" style="opacity:.9;font-size:.95rem">
+            Aprende inglés viajando por el mundo de Milo
+          </p>
+        </div>
+        <div class="ms-auto">
+          <div class="estrellas-contador">
+            ⭐ {{ total_estrellas }} estrella{{ total_estrellas|pluralize:"s" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Timeline de secciones ─────────────────────────────────────────── -->
+  <div class="timeline">
+    {% for item in secciones_data %}
+    {% with sec=item.seccion %}
+
+    <div class="seccion-node"
+         style="--sec-color:{{ sec.color_hex }}">
+
+      <!-- Nodo circular -->
+      {% if item.desbloqueada %}
+      <button class="node-btn {% if item.completa %}completa{% endif %}"
+              onclick="toggleSeccion('sec{{ sec.pk }}')"
+              title="{{ sec.titulo }}"
+              aria-label="Sección {{ sec.titulo }}">
+        {{ sec.icono_emoji }}
+      </button>
+      {% else %}
+      <div class="node-btn locked" title="Sección bloqueada">🔒</div>
+      {% endif %}
+
+      <!-- Card de la sección -->
+      <div class="seccion-card {% if not item.desbloqueada %}locked-card{% endif %}"
+           {% if item.desbloqueada %}onclick="toggleSeccion('sec{{ sec.pk }}')"{% endif %}>
+
+        <div class="d-flex align-items-center justify-content-between gap-2">
+          <div>
+            <div class="sec-titulo">
+              {{ sec.icono_emoji }} {{ sec.titulo }}
+            </div>
+            <div class="text-muted small fw-bold">
+              {% if item.desbloqueada %}
+                {{ item.completadas }}/{{ item.total }} lecciones
+                · {{ item.estrellas }}/{{ item.max_estrellas }} ⭐
+              {% else %}
+                🔒 Bloqueada — pide a tu profesor que la desbloquee
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            {% if item.completa %}
+              <span style="font-size:1.4rem">🏆</span>
+            {% elif item.desbloqueada %}
+              <i class="bi bi-chevron-down text-muted"></i>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if item.desbloqueada and item.total > 0 %}
+        <div class="prog-bar-wrap">
+          <div class="prog-bar-fill"
+               style="width:{% widthratio item.completadas item.total 100 %}%">
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Lecciones expandibles -->
+        {% if item.desbloqueada %}
+        <div class="lecciones-wrap" id="sec{{ sec.pk }}">
+          <div class="lecciones-grid pt-2">
+            {% for lec_item in item.lecciones %}
+            {% with lec=lec_item.leccion %}
+            <div style="position:relative;display:inline-block">
+              {% if lec_item.accesible %}
+                <a href="{% url 'historia:ver_leccion' pk=lec.pk %}"
+                   class="lec-btn {% if lec_item.completada %}completada{% elif lec_item.accesible %}accesible{% else %}bloqueada{% endif %}"
+                   title="{{ lec.titulo }}">
+                  {{ lec.icono_emoji }}
+                  {% if lec_item.completada %}
+                  <span class="estrellas-overlay">
+                    {% for i in "123" %}{% if forloop.counter <= lec_item.estrellas %}⭐{% else %}☆{% endif %}{% endfor %}
+                  </span>
+                  {% endif %}
+                  <span class="lec-tooltip">{{ lec.titulo }}</span>
+                </a>
+              {% else %}
+                <div class="lec-btn bloqueada" title="Completa la lección anterior primero">
+                  🔒
+                  <span class="lec-tooltip">{{ lec.titulo }}</span>
+                </div>
+              {% endif %}
+            </div>
+            {% endwith %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div><!-- /card -->
+    </div><!-- /node -->
+
+    {% endwith %}
+    {% endfor %}
+  </div><!-- /timeline -->
+
+  <!-- Mensaje si todo está bloqueado -->
+  {% with desbloqueadas=secciones_data|length %}
+  {% if desbloqueadas == 0 %}
+  <div class="nestgrow-card p-5 text-center mt-3">
+    <div style="font-size:4rem">🔒</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">
+      Aún no tienes secciones disponibles
+    </h5>
+    <p class="text-muted fw-bold small">
+      Tu profesor desbloqueará las secciones cuando estés listo.
+    </p>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+</div><!-- /wrap -->
+
+<!-- ── Botón continuar (FAB) ──────────────────────────────────────────── -->
+{% if primera_incompleta %}
+<a href="{% url 'historia:ver_leccion' pk=primera_incompleta.1 %}"
+   class="continue-fab">
+  ▶ Continuar lección
+</a>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleSeccion(id) {
+  const wrap = document.getElementById(id);
+  if (!wrap) return;
+  const card = wrap.closest('.seccion-card');
+  const icon = card.querySelector('.bi-chevron-down, .bi-chevron-up');
+
+  if (wrap.classList.contains('open')) {
+    wrap.classList.remove('open');
+    if (icon) { icon.classList.remove('bi-chevron-up'); icon.classList.add('bi-chevron-down'); }
+  } else {
+    // Close all others first
+    document.querySelectorAll('.lecciones-wrap.open').forEach(el => {
+      el.classList.remove('open');
+      const ic = el.closest('.seccion-card').querySelector('.bi-chevron-down, .bi-chevron-up');
+      if (ic) { ic.classList.remove('bi-chevron-up'); ic.classList.add('bi-chevron-down'); }
+    });
+    wrap.classList.add('open');
+    if (icon) { icon.classList.remove('bi-chevron-down'); icon.classList.add('bi-chevron-up'); }
+  }
+}
+
+// Auto-open the first unlocked section that has pending lessons
+document.addEventListener('DOMContentLoaded', () => {
+  {% if primera_incompleta %}
+  // Find which section contains the first incomplete lesson and open it
+  document.querySelectorAll('.lecciones-wrap').forEach(wrap => {
+    const link = wrap.querySelector('a.accesible');
+    if (link && link.href.includes('/{{ primera_incompleta.1 }}/')) {
+      wrap.classList.add('open');
+    }
+  });
+  {% endif %}
+
+  // WebSocket: listen for seccion_desbloqueada events
+  const wsUrl = `ws://${window.location.host}/ws/notificaciones/`;
+  let ws;
+  try {
+    ws = new WebSocket(wsUrl);
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.tipo === 'seccion_desbloqueada') {
+        showMiloMessage(
+          `🎉 ¡Nueva sección desbloqueada! ${data.seccion_emoji} ${data.seccion_titulo}`
+        );
+        setTimeout(() => location.reload(), 2500);
+      }
+    };
+  } catch(e) {}
+});
+
+function showMiloMessage(msg) {
+  // Uses global Milo message from main.js if available
+  const bubble = document.querySelector('.milo-bubble');
+  if (bubble) {
+    bubble.textContent = msg;
+    bubble.style.display = 'block';
+    setTimeout(() => { bubble.style.display = 'none'; }, 4000);
+  }
+}
+</script>
+{% endblock %}

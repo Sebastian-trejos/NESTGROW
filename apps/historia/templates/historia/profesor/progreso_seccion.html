@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Progreso — {{ seccion.titulo }} — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .prog-wrap { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  .prog-hero {
+    border-radius: 24px;
+    padding: 1.4rem 1.8rem;
+    color: white;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--sec-color, #6C63FF), #9c94ff);
+  }
+
+  /* Salon filter pills */
+  .salon-filter { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+  .salon-pill {
+    border-radius: 99px;
+    padding: .3rem 1rem;
+    font-size: .82rem;
+    font-weight: 700;
+    border: 2px solid #6C63FF;
+    color: #6C63FF;
+    background: white;
+    text-decoration: none;
+    transition: all .15s;
+  }
+  .salon-pill.active,
+  .salon-pill:hover {
+    background: #6C63FF;
+    color: white;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .stat-pill {
+    background: white;
+    border-radius: 16px;
+    padding: .5rem 1.1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    font-size: .9rem;
+    font-weight: 700;
+    color: #444;
+  }
+  .stat-pill span { font-size: 1.2rem; }
+
+  /* Table */
+  .prog-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+  .prog-table thead th {
+    font-family: 'Fredoka One', cursive;
+    font-size: .88rem;
+    color: #6C63FF;
+    padding: .4rem .8rem;
+    text-align: left;
+  }
+  .prog-table tbody tr {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .prog-table tbody td {
+    padding: .7rem .9rem;
+    vertical-align: middle;
+  }
+  .prog-table tbody td:first-child { border-radius: 14px 0 0 14px; }
+  .prog-table tbody td:last-child  { border-radius: 0 14px 14px 0; }
+
+  .avatar-sm {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+  }
+  .avatar-placeholder {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: .9rem; font-weight: 700;
+  }
+
+  /* Progress bar */
+  .mini-bar-wrap {
+    height: 8px;
+    background: #eee;
+    border-radius: 99px;
+    overflow: hidden;
+    min-width: 80px;
+  }
+  .mini-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--sec-color, #6C63FF);
+    transition: width .4s ease;
+  }
+
+  .pct-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: .9rem;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .empty-state { text-align: center; padding: 3rem 1rem; color: #999; }
+
+  /* Medal colors */
+  .medal-1 { color: #FFD700; }
+  .medal-2 { color: #C0C0C0; }
+  .medal-3 { color: #CD7F32; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="prog-wrap" style="--sec-color: {{ seccion.color_hex }}">
+
+  <!-- Back link -->
+  <a href="{% url 'historia:panel_historia_profesor' %}"
+     class="btn btn-sm btn-outline-secondary mb-3"
+     style="border-radius:99px">
+    ← Volver al panel
+  </a>
+
+  <!-- Hero -->
+  <div class="prog-hero">
+    <h2 class="font-fredoka mb-1" style="font-size:1.8rem">
+      {{ seccion.icono_emoji }} {{ seccion.titulo }}
+    </h2>
+    <p class="mb-0 fw-bold" style="opacity:.9;font-size:.88rem">
+      Progreso de estudiantes en esta sección
+    </p>
+  </div>
+
+  <!-- Salon filter -->
+  {% if salones|length > 1 %}
+  <div class="salon-filter">
+    <a href="?" class="salon-pill {% if not salon_seleccionado %}active{% endif %}">
+      Todos los salones
+    </a>
+    {% for s in salones %}
+    <a href="?salon={{ s.pk }}"
+       class="salon-pill {% if salon_seleccionado == s.pk %}active{% endif %}">
+      {{ s.nombre }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Stats bar -->
+  {% if estudiantes_data %}
+  <div class="stats-bar">
+    <div class="stat-pill"><span>👥</span> {{ estudiantes_data|length }} estudiante{{ estudiantes_data|length|pluralize:"s" }}</div>
+    <div class="stat-pill"><span>📚</span> {{ seccion.lecciones.count }} lección{{ seccion.lecciones.count|pluralize:"es" }} en la sección</div>
+    {% with top=estudiantes_data|first %}
+    {% if top %}<div class="stat-pill"><span>🏆</span> Líder: {{ top.estudiante.user.first_name }} — {{ top.pct }}%</div>{% endif %}
+    {% endwith %}
+  </div>
+  {% endif %}
+
+  <!-- Table -->
+  {% if not estudiantes_data %}
+  <div class="empty-state nestgrow-card p-5">
+    <div style="font-size:3rem">🎓</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">
+      No hay estudiantes aún
+    </h5>
+    <p class="text-muted fw-bold small">
+      Cuando los estudiantes empiecen a jugar aparecerán aquí.
+    </p>
+  </div>
+  {% else %}
+
+  <div class="nestgrow-card p-3">
+    <table class="prog-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Estudiante</th>
+          <th>Salón</th>
+          <th>Progreso</th>
+          <th>Lecciones</th>
+          <th>Estrellas</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in estudiantes_data %}
+        <tr>
+          <!-- Rank -->
+          <td style="width:36px; text-align:center">
+            {% if forloop.counter == 1 %}
+              <span class="medal-1" style="font-size:1.2rem">🥇</span>
+            {% elif forloop.counter == 2 %}
+              <span class="medal-2" style="font-size:1.2rem">🥈</span>
+            {% elif forloop.counter == 3 %}
+              <span class="medal-3" style="font-size:1.2rem">🥉</span>
+            {% else %}
+              <span class="text-muted fw-bold">{{ forloop.counter }}</span>
+            {% endif %}
+          </td>
+
+          <!-- Student -->
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              {% if item.estudiante.user.avatar %}
+                <img src="{{ item.estudiante.user.avatar.url }}"
+                     class="avatar-sm" alt="avatar">
+              {% else %}
+                <div class="avatar-placeholder">
+                  {{ item.estudiante.user.first_name|first|upper }}{{ item.estudiante.user.last_name|first|upper }}
+                </div>
+              {% endif %}
+              <div>
+                <div class="fw-bold" style="font-size:.9rem">
+                  {{ item.estudiante.user.get_full_name }}
+                </div>
+                <div class="text-muted" style="font-size:.75rem">
+                  Nivel {{ item.estudiante.nivel }}
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Salon -->
+          <td class="text-muted fw-bold" style="font-size:.82rem">
+            {{ item.estudiante.salon.nombre }}
+          </td>
+
+          <!-- Progress bar -->
+          <td style="min-width: 110px">
+            <div class="d-flex align-items-center gap-2">
+              <div class="mini-bar-wrap flex-grow-1">
+                <div class="mini-bar-fill" style="width:{{ item.pct }}%"></div>
+              </div>
+              <span class="pct-label"
+                    style="color:{% if item.pct == 100 %}#388e3c{% elif item.pct >= 50 %}#6C63FF{% else %}#999{% endif %}">
+                {{ item.pct }}%
+              </span>
+            </div>
+          </td>
+
+          <!-- Lessons -->
+          <td style="font-size:.88rem; font-weight:700; color:#444">
+            {{ item.completadas }}/{{ item.total }}
+            {% if item.completadas == item.total and item.total > 0 %}
+              🏆
+            {% endif %}
+          </td>
+
+          <!-- Stars -->
+          <td>
+            <span style="font-size:.88rem; font-weight:700; color:#f5a623">
+              ⭐ {{ item.estrellas }}
+            </span>
+            <span class="text-muted" style="font-size:.75rem">
+              / {{ item.total|add:item.total|add:item.total }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -399,6 +399,15 @@
         <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tus actividades</div>
       </a>
     </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'historia:mapa_historia' %}" class="quick-card">
+        <div class="quick-icon" style="background:linear-gradient(135deg,#f0eeff,#ddd8ff)">
+          🗺️
+        </div>
+        <div class="fw-bold small" style="color:#6C63FF">Modo Historia</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Viaja con Milo</div>
+      </a>
+    </div>
   </div>
 
   <!-- ══════════════════════════════════
@@ -470,6 +479,54 @@
         </div>
       </div>
       {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════
+       MODO HISTORIA (si tiene estrellas o secciones)
+  ══════════════════════════════════ -->
+  {% if profile.total_estrellas_historia > 0 or historia_primera_incompleta %}
+  <div class="nestgrow-card p-4 mb-4"
+       style="border-left:5px solid #6C63FF;
+              background:linear-gradient(135deg,#f6f4ff,#fff)">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="section-title mb-0">
+        🗺️ Modo Historia
+      </div>
+      {% if historia_primera_incompleta %}
+      <a href="{% url 'historia:ver_leccion' pk=historia_primera_incompleta.leccion_pk %}"
+         class="btn btn-sm rounded-pill"
+         style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;font-weight:700">
+        ▶ Continuar
+      </a>
+      {% else %}
+      <a href="{% url 'historia:mapa_historia' %}"
+         class="btn btn-sm rounded-pill"
+         style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;font-weight:700">
+        Ver mapa
+      </a>
+      {% endif %}
+    </div>
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div class="text-center px-3 py-2 rounded-3"
+           style="background:rgba(108,99,255,0.08);min-width:90px">
+        <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;color:#6C63FF;line-height:1">
+          ⭐ {{ profile.total_estrellas_historia }}
+        </div>
+        <div style="font-size:.72rem;color:#888;font-weight:700">estrellas</div>
+      </div>
+      {% if historia_primera_incompleta %}
+      <div style="font-size:.88rem;font-weight:700;color:#555">
+        <span style="color:#6C63FF">{{ historia_primera_incompleta.seccion_titulo }}</span><br>
+        <span style="font-size:.78rem;color:#999">Próxima lección desbloqueada</span>
+      </div>
+      {% else %}
+      <div style="font-size:.88rem;font-weight:700;color:#555">
+        ¡Sigue así!<br>
+        <span style="font-size:.78rem;color:#999">Sigue coleccionando estrellas</span>
+      </div>
+      {% endif %}
     </div>
   </div>
   {% endif %}

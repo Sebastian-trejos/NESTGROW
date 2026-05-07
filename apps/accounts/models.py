@@ -92,6 +92,7 @@ class EstudianteProfile(TimeStampedModel):
     correo_padre = models.EmailField(blank=True, verbose_name='Correo del padre/madre de familia')
     puntos_totales = models.IntegerField(default=0)
     nivel = models.IntegerField(default=1)
+    total_estrellas_historia = models.IntegerField(default=0, verbose_name='Estrellas Modo Historia')
 
     # Avatar Emoji Kitchen
     avatar_emoji1 = models.CharField(max_length=10, blank=True, default='🐶')

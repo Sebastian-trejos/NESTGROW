@@ -37,3 +37,11 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             'taller_id': event['taller_id'],
             'titulo': event['titulo'],
         }))
+
+    async def seccion_desbloqueada(self, event):
+        await self.send(text_data=json.dumps({
+            'tipo':           'seccion_desbloqueada',
+            'seccion_titulo': event['seccion_titulo'],
+            'seccion_emoji':  event['seccion_emoji'],
+            'seccion_pk':     event['seccion_pk'],
+        }))

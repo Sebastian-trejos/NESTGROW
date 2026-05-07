@@ -15,6 +15,11 @@ python manage.py migrate
 # Load initial data
 python manage.py loaddata apps/content/fixtures/initial_vocabulary.json
 python manage.py loaddata apps/games/fixtures/logros_iniciales.json
+python manage.py loaddata apps/historia/fixtures/logros_historia.json
+python manage.py loaddata apps/historia/fixtures/modo_historia.json
+
+# Seed historia content (custom management commands)
+python manage.py seed_historia
 
 # Dev server
 python manage.py runserver  # http://127.0.0.1:8000/
@@ -28,12 +33,14 @@ python manage.py test apps.games  # single app
 
 **Project layout:** `config/` holds settings and root URLs; `apps/` holds all Django apps; `manage.py` is at the root.
 
-**Settings:** `config/settings/base.py` (shared) + `config/settings/development.py` (SQLite, DEBUG=True). `config/settings/__init__.py` imports from development by default.
+**Settings:** `config/settings/base.py` (shared) + `config/settings/development.py` (SQLite, DEBUG=True). `config/settings/__init__.py` imports from development by default. Environment variables are loaded from `.env` via `django-environ`. External API keys: `GEMINI_API_KEY`, `GROQ_API_KEY`, `MYMEMORY_API_KEY`.
 
 **Apps:**
 - `accounts` — custom user model with profesor/estudiante roles, profiles, salones (classrooms)
 - `content` — bilingual (ES/EN) vocabulary categories and items with images/audio
 - `games` — all game logic: scoring, achievements, store (tienda), virtual room (habitación), artwork gallery (museo)
+- `talleres` — professor-created workshops composed of ordered blocks (questions + embedded minigames)
+- `historia` — story mode with unlockable sections, lessons, and per-activity progress tracking
 - `core` — abstract base models, context processors, static pages
 
 **URL prefixes:**
@@ -41,6 +48,8 @@ python manage.py test apps.games  # single app
 /accounts/   → auth, dashboards, profiles, salones
 /contenido/  → vocabulary categories
 /juegos/     → games, ranking, tienda, habitacion, museo, logros
+/talleres/   → professor workshop management + student resolver
+/historia/   → story mode map, lesson player, professor unlock panel
 /admin/      → Django admin
 ```
 
@@ -56,12 +65,20 @@ python manage.py test apps.games  # single app
 
 **Game types** (defined in `Game.GAME_TYPES`): `drag_and_drop`, `word_search`, `puzzle`, `audio_matching`, `painting`, `memoria`, `ahorcado`, `quiz`, `ordenar_letras`, `globos`. Each type maps to its own template in `apps/games/templates/games/`. Professors select the type when creating a game; `game_detail` view routes to the correct template via `template_map`.
 
-**Game scoring utilities** (in `apps/games/`): `clasificar_puntaje()` converts score% to letter grade; `pct_to_nota()` converts to Colombian 1–5 scale.
+**Game scoring utilities** (in `apps/games/models.py`): `clasificar_puntaje()` converts score% to letter grade; `pct_to_nota()` converts to Colombian 1–5 scale.
 
 **Abstract base models** (`apps/core/models.py`): `TimeStampedModel` (adds `created_at`/`updated_at`) and `ActiveModel` (adds `is_active` + custom manager). Most models inherit from one or both.
 
 **Context processors** (registered globally): `milo_messages` (random Milo character greetings) and `global_context` (app name, slogan, user role) — available in all templates.
 
-**Static/media:** WhiteNoise serves static files. Media root is `/media/` (avatars, vocabulary images, artwork). Run `collectstatic` before deploying.
+**WebSockets (Django Channels):** `apps/core/consumers.py` — `NotificationConsumer` pushes real-time events per user via group `usuario_<pk>`. Events: `nivel_subido`, `huesos_ganados`, `taller_disponible`, `seccion_desbloqueada`.
+
+**Talleres (Workshops):** A `Taller` has ordered `BloqueTaller` records. Each bloque has `tipo` = `pregunta` or `minijuego`. The detail is a one-to-one `BloquePregunta` (multiple choice, checkboxes, or free text) or `BloqueMinijuego` (links to an existing `Game`). Student answers go into `RespuestaEstudiante`; session state is tracked in `SesionTaller`. Completing a taller unlocks vocabulary from linked `categorias_vocabulario`.
+
+**Historia (Story Mode):** Content hierarchy: `SeccionHistoria` → `Leccion` → `ActividadLeccion`. Sections must be unlocked per `Salon` by a professor (via `SeccionDesbloqueada`), or flagged `is_desbloqueada_por_defecto`. Activity `datos` is a free-form JSONField whose schema depends on `tipo` (introductcion, vocabulario, listening, reading, writing, minijuego_embed, dialogo, pronunciacion). Progress is tracked in `ProgresoLeccion` (per student × lesson, with estrellas 1–3) and `RespuestaActividad`. Achievement logic lives in `apps/historia/services.py` (`verificar_logros_historia`); historia achievement PKs 101–118 are defined there and must match `logros_historia.json`.
+
+**Custom password validator:** `apps/accounts/validators.ContainsNumberValidator` — enforces at least one digit. Registered in `AUTH_PASSWORD_VALIDATORS`.
+
+**Static/media:** WhiteNoise serves static files. Media root is `/media/` (avatars, vocabulary images, artwork, taller question images/videos). Run `collectstatic` before deploying.
 
 **Language/locale:** Spanish (es-co), timezone America/Bogota. All user-facing strings should be in Spanish.

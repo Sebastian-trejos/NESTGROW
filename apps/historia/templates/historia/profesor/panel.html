@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panel Historia — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .panel-wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  .panel-hero {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff, #4ECDC4);
+    border-radius: 28px;
+    padding: 1.6rem 2rem;
+    color: white;
+    margin-bottom: 2rem;
+  }
+
+  .sec-row {
+    background: white;
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
+    margin-bottom: 1rem;
+    border-left: 5px solid var(--sec-color, #6C63FF);
+  }
+  .sec-row-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: .8rem;
+  }
+  .sec-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+  .sec-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: var(--sec-color, #6C63FF);
+  }
+  .sec-meta { font-size: .8rem; color: #888; }
+  .auto-badge {
+    background: #e8f5e9;
+    color: #388e3c;
+    border-radius: 99px;
+    padding: .2rem .7rem;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+
+  /* Toggle button */
+  .toggle-btn {
+    min-width: 120px;
+    border-radius: 99px;
+    font-size: .82rem;
+    font-weight: 700;
+    border: none;
+    padding: .35rem .9rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .toggle-btn.desbloqueado {
+    background: #e8f5e9;
+    color: #388e3c;
+  }
+  .toggle-btn.bloqueado {
+    background: #fce4ec;
+    color: #c62828;
+  }
+  .toggle-btn.auto-lock {
+    background: #e0e0e0;
+    color: #888;
+    cursor: default;
+  }
+  .toggle-btn:not(.auto-lock):hover {
+    filter: brightness(0.92);
+    transform: scale(1.03);
+  }
+
+  .salon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+  }
+  .salon-chip {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: #f5f4ff;
+    border-radius: 14px;
+    padding: .5rem .9rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #444;
+  }
+  .salon-chip .salon-name { font-size: .78rem; color: #666; }
+
+  .progreso-link {
+    font-size: .8rem;
+    color: #6C63FF;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .progreso-link:hover { text-decoration: underline; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #999;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="panel-wrap">
+
+  <!-- Hero -->
+  <div class="panel-hero">
+    <div class="d-flex align-items-center gap-3 flex-wrap">
+      <div>
+        <h2 class="font-fredoka mb-1" style="font-size:1.9rem">🗺️ Modo Historia — Panel Profesor</h2>
+        <p class="mb-0 fw-bold" style="opacity:.9;font-size:.9rem">
+          Desbloquea secciones para tus salones
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {% if not secciones_data %}
+  <div class="empty-state nestgrow-card p-5">
+    <div style="font-size:3rem">📚</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">No hay secciones creadas</h5>
+    <p class="text-muted fw-bold small">El administrador debe crear las secciones en el panel de Django.</p>
+  </div>
+  {% elif not salones %}
+  <div class="empty-state nestgrow-card p-5">
+    <div style="font-size:3rem">🏫</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">No tienes salones activos</h5>
+    <p class="text-muted fw-bold small">Crea o activa un salón desde tu perfil para gestionar el modo historia.</p>
+  </div>
+  {% else %}
+
+  <p class="text-muted fw-bold small mb-3">
+    💡 Haz clic en el botón de cada salón para desbloquear o bloquear la sección.
+    Las secciones marcadas como <strong>Auto</strong> están desbloqueadas por defecto para todos.
+  </p>
+
+  {% for item in secciones_data %}
+  {% with sec=item.seccion %}
+  <div class="sec-row" style="--sec-color:{{ sec.color_hex }}">
+
+    <div class="sec-row-header">
+      <span class="sec-icon">{{ sec.icono_emoji }}</span>
+      <div>
+        <div class="sec-name">{{ sec.titulo }}</div>
+        <div class="sec-meta">
+          {{ sec.lecciones.count }} lección{{ sec.lecciones.count|pluralize:"es" }}
+          · Orden {{ sec.orden }}
+        </div>
+      </div>
+      {% if sec.is_desbloqueada_por_defecto %}
+        <span class="auto-badge ms-auto">✅ Auto — todos los salones</span>
+      {% else %}
+        <a href="{% url 'historia:progreso_seccion_profesor' pk=sec.pk %}"
+           class="progreso-link ms-auto">
+          📊 Ver progreso →
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Salon chips -->
+    <div class="salon-grid">
+      {% for si in item.salones_info %}
+      <div class="salon-chip">
+        <div>
+          <div>🏫 {{ si.salon.nombre }}</div>
+          <div class="salon-name">{{ si.salon.grado }}</div>
+        </div>
+        {% if si.auto %}
+          <button class="toggle-btn auto-lock" disabled>🔓 Auto</button>
+        {% elif si.desbloqueada %}
+          <button class="toggle-btn desbloqueado"
+                  data-seccion="{{ sec.pk }}"
+                  data-salon="{{ si.salon.pk }}"
+                  data-accion="bloquear"
+                  onclick="toggleSeccion(this)">
+            🔓 Desbloqueada
+          </button>
+        {% else %}
+          <button class="toggle-btn bloqueado"
+                  data-seccion="{{ sec.pk }}"
+                  data-salon="{{ si.salon.pk }}"
+                  data-accion="desbloquear"
+                  onclick="toggleSeccion(this)">
+            🔒 Bloqueada
+          </button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+  {% endwith %}
+  {% endfor %}
+
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const CSRF = document.cookie.match(/csrftoken=([^;]+)/)?.[1] ?? '';
+
+async function toggleSeccion(btn) {
+  const seccionPk = btn.dataset.seccion;
+  const salonPk   = btn.dataset.salon;
+  const accion    = btn.dataset.accion;
+  const url       = accion === 'desbloquear'
+    ? `/historia/profesor/desbloquear/${seccionPk}/`
+    : `/historia/profesor/bloquear/${seccionPk}/`;
+
+  btn.disabled = true;
+  btn.textContent = '⏳ …';
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+      body: JSON.stringify({ salon_pk: parseInt(salonPk) }),
+    });
+    const data = await res.json();
+
+    if (data.status === 'ok') {
+      if (accion === 'desbloquear') {
+        btn.className   = 'toggle-btn desbloqueado';
+        btn.textContent = '🔓 Desbloqueada';
+        btn.dataset.accion = 'bloquear';
+      } else {
+        btn.className   = 'toggle-btn bloqueado';
+        btn.textContent = '🔒 Bloqueada';
+        btn.dataset.accion = 'desbloquear';
+      }
+    } else {
+      btn.textContent = '❌ Error';
+      setTimeout(() => btn.textContent = accion === 'desbloquear' ? '🔒 Bloqueada' : '🔓 Desbloqueada', 1500);
+    }
+  } catch {
+    btn.textContent = '❌ Error';
+    setTimeout(() => btn.textContent = accion === 'desbloquear' ? '🔒 Bloqueada' : '🔓 Desbloqueada', 1500);
+  }
+  btn.disabled = false;
+}
+</script>
+{% endblock %}

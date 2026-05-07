@@ -1,0 +1,733 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ leccion.titulo }} — Modo Historia{% endblock %}
+
+{% block extra_css %}
+<style>
+  body { background: #F8F6FF; }
+
+  /* ── Shell ── */
+  .leccion-shell {
+    max-width: 680px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem 2rem;
+  }
+
+  /* ── Top bar ── */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0 .5rem;
+    position: sticky;
+    top: 0;
+    background: #F8F6FF;
+    z-index: 10;
+  }
+  .back-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid #d8d0ff;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+  .back-btn:hover { background: #f0eeff; color: var(--primary); }
+  .prog-outer {
+    flex: 1;
+    height: 10px;
+    background: #e8e4ff;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .prog-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #6C63FF, #9c94ff);
+    border-radius: 99px;
+    transition: width .4s ease;
+  }
+  .prog-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: .9rem;
+    color: var(--primary);
+    flex-shrink: 0;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* ── Activity card ── */
+  .activity-card {
+    background: white;
+    border-radius: 28px;
+    padding: 1.8rem 1.5rem;
+    box-shadow: 0 8px 30px rgba(108,99,255,0.1);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    animation: fadeIn .35s ease;
+    margin-top: .8rem;
+  }
+  @keyframes fadeIn {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .act-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin: 0;
+  }
+  .act-instruccion {
+    color: #666;
+    font-size: .95rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* Vocabulario flip cards */
+  .vocab-grid { display:flex; flex-wrap:wrap; gap:12px; }
+  .flip-card {
+    width: 110px; height: 90px;
+    perspective: 600px;
+    cursor: pointer;
+  }
+  .flip-inner {
+    position: relative;
+    width:100%; height:100%;
+    transition: transform .5s;
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-face {
+    position:absolute; width:100%; height:100%;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size: .85rem; font-weight: 700; text-align: center; padding: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .flip-front { background:#f0eeff; color:#444; }
+  .flip-back  { background: var(--primary); color:white; transform:rotateY(180deg); }
+  .flip-emoji { font-size: 1.6rem; margin-bottom: 4px; }
+
+  /* Dialogo chat bubbles */
+  .dialogo-wrap { display:flex; flex-direction:column; gap:10px; }
+  .burbuja {
+    max-width:80%; padding:.7rem 1rem;
+    border-radius:18px; font-size:.93rem; font-weight:600;
+    animation: slideIn .3s ease both;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:translateX(0)} }
+  .burbuja.milo  { background:#f0eeff; color:#444; border-radius:18px 18px 18px 4px; align-self:flex-start; }
+  .burbuja.yo    { background:var(--primary); color:white; border-radius:18px 18px 4px 18px; align-self:flex-end; }
+  .burbuja-author { font-size:.75rem; color:#999; margin-bottom:2px; }
+
+  /* Listening */
+  .play-btn {
+    width:64px; height:64px; border-radius:50%;
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    border:none; color:white; font-size:1.6rem;
+    cursor:pointer; transition:transform .15s, box-shadow .15s;
+    box-shadow: 0 4px 14px rgba(108,99,255,0.4);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .play-btn:hover { transform:scale(1.07); box-shadow:0 8px 20px rgba(108,99,255,0.5); }
+  .play-btn:active { transform:scale(.95); }
+  .opciones-grid { display:flex; flex-direction:column; gap:8px; }
+  .opcion-btn {
+    padding:.7rem 1rem; border-radius:14px;
+    border:2px solid #e8e4ff; background:white;
+    font-size:.95rem; font-weight:700; color:#444;
+    cursor:pointer; text-align:left; transition:all .15s;
+  }
+  .opcion-btn:hover { border-color:var(--primary); background:#f0eeff; }
+  .opcion-btn.selected { border-color:var(--primary); background:#f0eeff; color:var(--primary); }
+  .opcion-btn.disabled { pointer-events:none; }
+
+  /* Pronunciacion */
+  .pron-list { display:flex; flex-direction:column; gap:10px; }
+  .pron-item {
+    display:flex; align-items:center; gap:1rem;
+    background:#f8f6ff; border-radius:14px; padding:.8rem 1rem;
+  }
+  .pron-word { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--primary); flex:1; }
+  .pron-trans { font-size:.85rem; color:#888; font-weight:600; }
+  .pron-play {
+    width:38px; height:38px; border-radius:50%; border:none;
+    background:#f0eeff; color:var(--primary); cursor:pointer;
+    font-size:1rem; display:flex; align-items:center; justify-content:center;
+    transition:background .15s;
+  }
+  .pron-play:hover { background:#e0d8ff; }
+
+  /* Reading */
+  .reading-texto {
+    background:#f8f6ff; border-radius:16px; padding:1rem 1.2rem;
+    font-size:.95rem; line-height:1.7; color:#444; font-weight:500;
+  }
+  .reading-pregs { display:flex; flex-direction:column; gap:14px; }
+  .preg-num { font-size:.8rem; color:#888; font-weight:700; margin-bottom:4px; }
+
+  /* Writing */
+  .writing-list { display:flex; flex-direction:column; gap:12px; }
+  .writing-item {
+    background:#f8f6ff; border-radius:14px; padding:.9rem 1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  .writing-emoji { font-size:1.6rem; }
+  .writing-label { font-weight:700; color:#444; font-size:.9rem; flex:1; }
+  .writing-input {
+    border:2px solid #e8e4ff; border-radius:10px; padding:.4rem .7rem;
+    font-size:.95rem; width:130px; outline:none; font-weight:600;
+    transition:border-color .15s;
+  }
+  .writing-input:focus { border-color:var(--primary); }
+
+  /* Memoria minijuego */
+  .memo-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .memo-card {
+    aspect-ratio:1; border-radius:14px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem; font-weight:700;
+    background:#e8e4ff; color:transparent;
+    border:2px solid #d8d0ff;
+    transition:all .25s;
+    user-select:none;
+  }
+  .memo-card.face-up   { background:white; color:#444; border-color:var(--primary); }
+  .memo-card.matched   { background:#d4edda; color:#155724; border-color:#28a745; cursor:default; }
+  .memo-card.unmatched { background:#f8d7da; animation:shake .3s; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)}
+  }
+  .memo-card span { pointer-events:none; }
+
+  /* ── Continue button ── */
+  .continue-wrap { padding-top:1rem; }
+  .btn-continue {
+    width:100%; padding:.9rem; border-radius:16px;
+    background:linear-gradient(135deg, #6C63FF, #9c94ff);
+    border:none; color:white; font-family:'Fredoka One',cursive;
+    font-size:1.1rem; cursor:pointer;
+    box-shadow:0 6px 18px rgba(108,99,255,0.35);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .btn-continue:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(108,99,255,0.45); }
+  .btn-continue:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+  /* ── Correction overlay ── */
+  .correction-panel {
+    position:fixed; left:0; right:0; bottom:0;
+    padding:1.2rem 1.5rem; z-index:200;
+    display:none; flex-direction:column; align-items:center; gap:.3rem;
+    animation:slideUp .25s ease;
+  }
+  @keyframes slideUp {
+    from{transform:translateY(100%)} to{transform:translateY(0)}
+  }
+  .correction-panel.correct { background:#d4edda; }
+  .correction-panel.incorrect { background:#f8d7da; }
+  .correction-panel.neutral { background:#f0eeff; }
+  .corr-icon { font-size:2rem; }
+  .corr-msg  { font-family:'Fredoka One',cursive; font-size:1.2rem; }
+  .corr-sub  { font-size:.9rem; font-weight:600; color:#555; }
+
+  /* ── Final screen ── */
+  .final-screen {
+    display:none; flex-direction:column; align-items:center; justify-content:center;
+    min-height:70vh; text-align:center; gap:1rem; padding:2rem;
+  }
+  .stars-row { display:flex; gap:8px; justify-content:center; }
+  .star-big {
+    font-size:3.5rem; transition:transform .4s;
+    filter:drop-shadow(0 4px 8px rgba(255,230,109,0.5));
+  }
+  .star-big.active { animation:popStar .4s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes popStar { from{transform:scale(0)rotate(-30deg)} to{transform:scale(1)rotate(0)} }
+  .recompensas { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+  .recomp-pill {
+    background:white; border-radius:14px; padding:.6rem 1.2rem;
+    font-family:'Fredoka One',cursive; font-size:1rem;
+    box-shadow:0 4px 14px rgba(108,99,255,0.1);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="leccion-shell">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Volver al mapa">←</a>
+    <div class="prog-outer">
+      <div class="prog-inner" id="progBar" style="width:0%"></div>
+    </div>
+    <div class="prog-label" id="progLabel">0/{{ total_actividades }}</div>
+  </div>
+
+  <!-- Activity area -->
+  <div class="activity-card" id="activityCard">
+    <div style="text-align:center;padding:2rem">
+      <div style="font-size:2.5rem">⏳</div>
+      <p class="fw-bold text-muted mt-2">Cargando lección…</p>
+    </div>
+  </div>
+
+  <!-- Continue button -->
+  <div class="continue-wrap">
+    <button class="btn-continue" id="btnContinue" onclick="onContinue()">
+      Continuar ▶
+    </button>
+  </div>
+
+  <!-- Final screen (hidden) -->
+  <div class="final-screen" id="finalScreen">
+    <div style="font-size:3rem" id="finalEmoji">🎉</div>
+    <h2 class="font-fredoka" style="color:var(--primary);font-size:1.8rem">¡Lección completada!</h2>
+    <div class="stars-row" id="starsRow"></div>
+    <div class="recompensas" id="recompensas"></div>
+    <div id="logrosNuevos" class="d-flex flex-column gap-2 w-100"></div>
+    <div class="d-flex gap-3 mt-2 w-100 justify-content-center">
+      <a href="{% url 'historia:mapa_historia' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
+        🗺️ Volver al mapa
+      </a>
+      <a href="{% url 'historia:ver_leccion' pk=leccion.pk %}" class="btn rounded-pill px-4 fw-bold text-white"
+         style="background:var(--primary)">
+        🔄 Reintentar
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Correction panel -->
+<div class="correction-panel" id="corrPanel">
+  <div class="corr-icon" id="corrIcon"></div>
+  <div class="corr-msg"  id="corrMsg"></div>
+  <div class="corr-sub"  id="corrSub"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Data from Django ──────────────────────────────────────────────────────────
+const ACTIVIDADES    = {{ actividades_json|safe }};
+const LECCION_PK     = {{ leccion.pk }};
+const TOTAL          = ACTIVIDADES.length;
+let   currentIdx     = {{ actividad_inicial }};  // 0-based index of next activity
+
+// ── Speak helper (SpeechSynthesis) ───────────────────────────────────────────
+function speak(text, lang='en-US') {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = lang;
+  utt.rate = 0.85;
+  window.speechSynthesis.speak(utt);
+}
+
+// ── Progress bar ─────────────────────────────────────────────────────────────
+function updateProgress(idx) {
+  const pct = Math.round((idx / TOTAL) * 100);
+  document.getElementById('progBar').style.width   = pct + '%';
+  document.getElementById('progLabel').textContent = idx + '/' + TOTAL;
+}
+
+// ── Activity renderers ────────────────────────────────────────────────────────
+function renderActivity(act) {
+  const renderers = {
+    introduccion:    renderIntroduccion,
+    vocabulario:     renderVocabulario,
+    dialogo:         renderDialogo,
+    listening:       renderListening,
+    pronunciacion:   renderPronunciacion,
+    reading:         renderReading,
+    writing:         renderWriting,
+    minijuego_embed: renderMinijuego,
+  };
+  const fn = renderers[act.tipo];
+  if (!fn) return `<p class="text-muted">Actividad no reconocida: ${act.tipo}</p>`;
+  return fn(act.datos);
+}
+
+function renderIntroduccion(d) {
+  const palabras = (d.palabras_clave||[]).map(p =>
+    `<span class="badge rounded-pill me-1 mb-1" style="background:#f0eeff;color:var(--primary);font-size:.85rem;padding:.4rem .7rem">
+       ${p.es} → <strong>${p.en}</strong>
+     </span>`
+  ).join('');
+  return `
+    <p class="act-title">${d.titulo||'Introducción'}</p>
+    ${d.imagen_url ? `<img src="${d.imagen_url}" onerror="this.style.display='none'"
+      style="width:100%;max-height:180px;object-fit:cover;border-radius:16px">` : ''}
+    <p class="act-instruccion">${d.texto||''}</p>
+    ${palabras ? `<div class="d-flex flex-wrap">${palabras}</div>` : ''}
+  `;
+}
+
+function renderVocabulario(d) {
+  const tarjetas = (d.tarjetas||[]).map(t => `
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <div class="flip-emoji">${t.emoji||'📝'}</div>
+          <div>${t.es}</div>
+        </div>
+        <div class="flip-face flip-back">
+          <div class="flip-emoji">${t.emoji||'📝'}</div>
+          <div>${t.en}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  return `
+    <p class="act-title">${d.titulo||'Vocabulario'}</p>
+    <p class="act-instruccion">Toca cada tarjeta para ver la palabra en inglés.</p>
+    <div class="vocab-grid">${tarjetas}</div>
+  `;
+}
+
+function renderDialogo(d) {
+  const lineas = (d.lineas||[]).map((l,i) => {
+    const tipo = l.personaje === 'Milo' ? 'milo' : 'yo';
+    return `
+      <div style="animation-delay:${i*0.15}s">
+        <div class="burbuja-author" style="text-align:${tipo==='yo'?'right':'left'}">
+          ${l.avatar||''} ${l.personaje}
+        </div>
+        <div class="burbuja ${tipo}">${l.texto}</div>
+      </div>
+    `;
+  }).join('');
+  return `
+    <p class="act-title">${d.titulo||'Diálogo'}</p>
+    <div class="dialogo-wrap">${lineas}</div>
+  `;
+}
+
+function renderListening(d) {
+  const preguntas = d.preguntas || [];
+  const bloques = preguntas.map((p,i) => {
+    const opciones = [...p.opciones].sort(() => Math.random() - .5);
+    return `
+      <div class="mb-3">
+        <div class="d-flex align-items-center gap-3 mb-2">
+          <button class="play-btn" onclick="speak('${p.audio_texto.replace(/'/g,"\\'")}')">🔊</button>
+          <span class="fw-bold text-muted" style="font-size:.9rem">Pregunta ${i+1}</span>
+        </div>
+        <div class="opciones-grid" data-qidx="${i}">
+          ${opciones.map(op => `
+            <button class="opcion-btn" data-val="${op}" onclick="selectOpcion(this, ${i})">${op}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+  return `
+    <p class="act-title">${d.titulo||'Listening'}</p>
+    <p class="act-instruccion">${d.instruccion||'Escucha y selecciona la respuesta correcta.'}</p>
+    ${bloques}
+  `;
+}
+
+function selectOpcion(btn, qidx) {
+  const grid = document.querySelector(`[data-qidx="${qidx}"]`);
+  grid.querySelectorAll('.opcion-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function renderPronunciacion(d) {
+  const palabras = (d.palabras||[]).map(p => `
+    <div class="pron-item">
+      <button class="pron-play" onclick="speak('${p.en.replace(/'/g,"\\'")}')">🔊</button>
+      <div>
+        <div class="pron-word">${p.en}</div>
+        <div class="pron-trans">${p.es}</div>
+      </div>
+    </div>
+  `).join('');
+  return `
+    <p class="act-title">${d.titulo||'Pronunciación'}</p>
+    <p class="act-instruccion">${d.instruccion||'Escucha y repite cada palabra en voz alta.'}</p>
+    <div class="pron-list">${palabras}</div>
+  `;
+}
+
+function renderReading(d) {
+  const preguntas = (d.preguntas||[]).map((p,i) => {
+    const opciones = [...p.opciones].sort(() => Math.random() - .5);
+    return `
+      <div>
+        <div class="preg-num">Pregunta ${i+1}</div>
+        <div class="fw-bold mb-2 small">${p.pregunta}</div>
+        <div class="opciones-grid" data-qidx="${i}">
+          ${opciones.map(op => `
+            <button class="opcion-btn" data-val="${op}" onclick="selectOpcion(this, ${i})">${op}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+  return `
+    <p class="act-title">${d.titulo||'Reading'}</p>
+    <div class="reading-texto">${d.texto||''}</div>
+    <div class="reading-pregs">${preguntas}</div>
+  `;
+}
+
+function renderWriting(d) {
+  const ejercicios = (d.ejercicios||[]).map((e,i) => `
+    <div class="writing-item">
+      <div class="writing-emoji">${e.emoji||'📝'}</div>
+      <div class="writing-label">${e.es}</div>
+      <input class="writing-input" type="text" placeholder="en inglés…"
+             data-eidx="${i}" autocomplete="off" spellcheck="false">
+    </div>
+  `).join('');
+  return `
+    <p class="act-title">${d.titulo||'Writing'}</p>
+    <p class="act-instruccion">${d.instruccion||'Escribe la traducción en inglés.'}</p>
+    <div class="writing-list">${ejercicios}</div>
+  `;
+}
+
+// ── Memory card minijuego ─────────────────────────────────────────────────────
+let memoState = { flipped:[], matched:0, total:0, locked:false, done:false };
+
+function renderMinijuego(d) {
+  const pares = (d.pares||[]).slice(0,6);
+  memoState = { flipped:[], matched:0, total:pares.length, locked:false, done:false };
+
+  // Build cards: [emoji-side, word-side] per pair, shuffled
+  const cards = [];
+  pares.forEach((p,i) => {
+    cards.push({ id:i, face:p.emoji||'📝', tipo:'emoji', pairId:i });
+    cards.push({ id:i+'w', face:p.en,      tipo:'word',  pairId:i });
+  });
+  cards.sort(() => Math.random() - .5);
+
+  const grid = cards.map((c,idx) => `
+    <div class="memo-card" data-pair="${c.pairId}" data-idx="${idx}"
+         onclick="memoClick(this)">
+      <span style="display:none">${c.face}</span>
+    </div>
+  `).join('');
+
+  return `
+    <p class="act-title">${d.titulo||'Minijuego'}</p>
+    <p class="act-instruccion">${d.instruccion||'Encuentra los pares que coinciden.'}</p>
+    <div class="memo-grid">${grid}</div>
+    <div id="memoMsg" class="text-center fw-bold mt-2" style="color:var(--primary);min-height:1.5rem"></div>
+  `;
+}
+
+function memoClick(card) {
+  if (memoState.locked || card.classList.contains('matched') ||
+      card.classList.contains('face-up') || memoState.done) return;
+
+  card.classList.add('face-up');
+  card.querySelector('span').style.display = 'inline';
+  memoState.flipped.push(card);
+
+  if (memoState.flipped.length < 2) return;
+
+  memoState.locked = true;
+  const [a, b] = memoState.flipped;
+
+  if (a.dataset.pair === b.dataset.pair && a !== b) {
+    a.classList.add('matched'); b.classList.add('matched');
+    memoState.matched++;
+    memoState.flipped = [];
+    memoState.locked  = false;
+    if (memoState.matched >= memoState.total) {
+      memoState.done = true;
+      document.getElementById('memoMsg').textContent = '🎉 ¡Todos los pares encontrados!';
+      document.getElementById('btnContinue').disabled = false;
+    }
+  } else {
+    setTimeout(() => {
+      a.classList.remove('face-up'); a.querySelector('span').style.display='none';
+      b.classList.remove('face-up'); b.querySelector('span').style.display='none';
+      a.classList.add('unmatched'); b.classList.add('unmatched');
+      setTimeout(() => { a.classList.remove('unmatched'); b.classList.remove('unmatched'); }, 350);
+      memoState.flipped = [];
+      memoState.locked  = false;
+    }, 900);
+  }
+}
+
+// ── Answer collector ──────────────────────────────────────────────────────────
+function collectAnswer(act) {
+  if (act.tipo === 'listening' || act.tipo === 'reading') {
+    const grids = document.querySelectorAll('[data-qidx]');
+    const respuestas = [];
+    grids.forEach(g => {
+      const sel = g.querySelector('.opcion-btn.selected');
+      respuestas.push(sel ? sel.dataset.val : '');
+    });
+    return { respuestas };
+  }
+  if (act.tipo === 'writing') {
+    const inputs = document.querySelectorAll('.writing-input');
+    return { respuestas: [...inputs].map(i => i.value) };
+  }
+  return {};  // intro, vocab, dialogo, pronunciacion, minijuego → no answer needed
+}
+
+// ── Show correction panel ─────────────────────────────────────────────────────
+function showCorrection(tipo, msg, sub, duration=2500) {
+  const panel = document.getElementById('corrPanel');
+  panel.className = 'correction-panel ' + tipo;
+  document.getElementById('corrIcon').textContent = tipo === 'correct' ? '✅' : tipo === 'incorrect' ? '❌' : '✨';
+  document.getElementById('corrMsg').textContent  = msg;
+  document.getElementById('corrSub').textContent  = sub || '';
+  panel.style.display = 'flex';
+  return new Promise(res => setTimeout(() => {
+    panel.style.display = 'none';
+    res();
+  }, duration));
+}
+
+// ── Main flow ─────────────────────────────────────────────────────────────────
+function showActivity(idx) {
+  if (idx >= TOTAL) return;
+  const act = ACTIVIDADES[idx];
+  const card = document.getElementById('activityCard');
+  card.innerHTML = renderActivity(act);
+
+  // Minijuego: disable continue until completed
+  if (act.tipo === 'minijuego_embed') {
+    document.getElementById('btnContinue').disabled = true;
+  } else {
+    document.getElementById('btnContinue').disabled = false;
+  }
+
+  updateProgress(idx);
+}
+
+async function onContinue() {
+  const btn = document.getElementById('btnContinue');
+  btn.disabled = true;
+
+  const act = ACTIVIDADES[currentIdx];
+  const respuesta_dada = collectAnswer(act);
+
+  try {
+    const resp = await fetch("{% url 'historia:guardar_respuesta' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken(),
+      },
+      body: JSON.stringify({
+        leccion_pk:    LECCION_PK,
+        actividad_pk:  act.pk,
+        respuesta_dada: respuesta_dada,
+      }),
+    });
+    const data = await resp.json();
+
+    if (act.tiene_correcta && data.es_correcta !== null) {
+      if (data.es_correcta) {
+        await showCorrection('correct', '¡Correcto!',
+          data.puntos > 0 ? `+${data.puntos} puntos` : '');
+      } else {
+        await showCorrection('incorrect', '¡Incorrecto!', '');
+      }
+    } else if (['vocabulario','dialogo','introduccion','pronunciacion'].includes(act.tipo)) {
+      await showCorrection('neutral', '¡Muy bien!', '', 1200);
+    }
+
+    currentIdx++;
+
+    if (data.es_ultima_actividad) {
+      await finalizarLeccion();
+    } else {
+      showActivity(currentIdx);
+    }
+
+  } catch(e) {
+    btn.disabled = false;
+    console.error(e);
+  }
+}
+
+async function finalizarLeccion() {
+  document.getElementById('activityCard').style.display   = 'none';
+  document.getElementById('continue-wrap') && (document.querySelector('.continue-wrap').style.display='none');
+  document.querySelector('.continue-wrap').style.display  = 'none';
+  updateProgress(TOTAL);
+
+  try {
+    const resp = await fetch(`{% url 'historia:completar_leccion' pk=leccion.pk %}`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCsrfToken() },
+      body: '{}',
+    });
+    const data = await resp.json();
+
+    // Show stars
+    const starsRow = document.getElementById('starsRow');
+    for (let i = 1; i <= 3; i++) {
+      const s = document.createElement('span');
+      s.className = 'star-big';
+      s.textContent = i <= data.estrellas ? '⭐' : '☆';
+      starsRow.appendChild(s);
+      setTimeout(() => s.classList.add('active'), i * 300);
+    }
+
+    // Rewards
+    document.getElementById('recompensas').innerHTML = `
+      <div class="recomp-pill">+${data.puntos_xp} XP</div>
+      <div class="recomp-pill">+${data.huesos} 🦴</div>
+      ${data.nivel_subio ? `<div class="recomp-pill">🎉 ¡Nivel ${data.nivel_nuevo}!</div>` : ''}
+    `;
+
+    // Logros
+    if (data.logros_nuevos && data.logros_nuevos.length) {
+      document.getElementById('logrosNuevos').innerHTML = data.logros_nuevos.map(l =>
+        `<div class="nestgrow-card p-2 px-3 fw-bold" style="font-size:.9rem">
+           ${l.icono} ¡Nuevo logro! ${l.nombre}
+         </div>`
+      ).join('');
+    }
+
+    document.getElementById('finalScreen').style.display = 'flex';
+
+    // Confetti!
+    if (data.estrellas >= 3) {
+      setTimeout(lanzarConfetiFuerte, 600);
+    } else {
+      setTimeout(() => launchConfetti({ particleCount: 80 }), 600);
+    }
+
+    if (data.nivel_subio && data.nivel_nuevo && typeof showLevelUpPopup === 'function') {
+      setTimeout(() => showLevelUpPopup(data.nivel_nuevo), 1500);
+    }
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('finalScreen').style.display = 'flex';
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (currentIdx >= TOTAL) {
+    // Edge case: all activities already submitted but lesson not yet completed
+    finalizarLeccion();
+  } else {
+    showActivity(currentIdx);
+  }
+});
+</script>
+{% endblock %}
