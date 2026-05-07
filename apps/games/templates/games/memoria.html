@@ -48,8 +48,7 @@
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
     <p class="text-muted mt-2">Tiempo: <span id="winTime">0</span>s</p>
-    <button class="btn btn-nestgrow btn-primary-nestgrow mt-3" onclick="location.reload()">🔄 Jugar de nuevo</button>
-    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
   </div>
 </div>
 {% endblock %}
@@ -123,7 +122,7 @@ function flipCard(el) {
   }
 }
 
-function endGame() {
+async function endGame() {
   clearInterval(timerInterval);
   const totalPairs = parseInt(document.getElementById('totalPairs').textContent);
   const maxScore = totalPairs * POINTS_REWARD;
@@ -132,11 +131,18 @@ function endGame() {
   document.getElementById('winTime').textContent = timeSpent;
   document.getElementById('winStars').textContent = pct >= 90 ? '⭐⭐⭐' : pct >= 60 ? '⭐⭐' : '⭐';
   document.getElementById('winOverlay').style.display = 'flex';
-  fetch(SAVE_URL, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
-    body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: timeSpent, completed: true })
-  });
+  try {
+    const res = await fetch(SAVE_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+      body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: timeSpent, completed: true })
+    });
+    const data = await res.json();
+    if (data.registro_pk) {
+      document.getElementById('btnVolverPanel').href =
+        '/talleres/mis-talleres/?revisado=' + data.registro_pk;
+    }
+  } catch(e) {}
 }
 
 document.addEventListener('DOMContentLoaded', () => {

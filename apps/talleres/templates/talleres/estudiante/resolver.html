@@ -127,6 +127,7 @@
 const CSRF = "{{ csrf_token }}";
 const TALLER_PK = {{ taller.pk }};
 const RESULTADO_URL = "{% url 'talleres:resultado' pk=taller.pk %}";
+const RESULTADO_SESION_BASE = "/talleres/sesion/";
 const RESOLVER_URL  = "{% url 'talleres:resolver' pk=taller.pk %}";
 
 function marcarOpcionSeleccionada(radio) {
@@ -182,7 +183,9 @@ async function completarMinijuego(bloquePk) {
   const data = await res.json();
   if (data.ok) {
     if (data.next === 'resultado') {
-      window.location.href = RESULTADO_URL;
+      window.location.href = data.sesion_pk
+        ? RESULTADO_SESION_BASE + data.sesion_pk + '/resultado/'
+        : RESULTADO_URL;
     } else {
       window.location.href = RESOLVER_URL;
     }

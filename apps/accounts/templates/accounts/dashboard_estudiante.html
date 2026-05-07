@@ -333,7 +333,7 @@
         <div class="quick-icon" style="background:linear-gradient(135deg,#f0eeff,#e0d9ff)">
           <i class="bi bi-controller" style="color:#6C63FF"></i>
         </div>
-        <div class="fw-bold small" style="color:var(--primary)">Jugar</div>
+        <div class="fw-bold small" style="color:var(--primary)">Minijuegos</div>
         <div style="font-size:0.75rem;color:#aaa;font-weight:700">¡A aprender!</div>
       </a>
     </div>
@@ -395,8 +395,8 @@
         <div class="quick-icon" style="background:linear-gradient(135deg,#f0fff4,#d9f7e2)">
           <i class="bi bi-clipboard2-check-fill" style="color:#2e7d52"></i>
         </div>
-        <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tus actividades</div>
+        <div class="fw-bold small" style="color:#2e7d52">Mis Actividades</div>
+        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Talleres y minijuegos</div>
       </a>
     </div>
     <div class="col-6 col-md-3">
@@ -531,79 +531,6 @@
   </div>
   {% endif %}
 
-  <!-- ══════════════════════════════════
-       MIS JUEGOS
-  ══════════════════════════════════ -->
-  <div class="nestgrow-card p-4 mb-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div class="section-title mb-0">
-        <i class="bi bi-controller-fill" style="color:var(--primary)"></i>
-        Mis Juegos
-      </div>
-      <a href="{% url 'games:game_list' %}"
-         class="btn btn-nestgrow btn-primary-nestgrow btn-sm">Ver todos</a>
-    </div>
-    {% if progreso %}
-    <div class="row g-3">
-      {% for p in progreso %}
-      <div class="col-md-6">
-        <div class="game-progress-card">
-          <div class="d-flex align-items-center gap-3">
-            <div style="width:48px;height:48px;border-radius:14px;flex-shrink:0;
-                        display:flex;align-items:center;justify-content:center;font-size:1.5rem;
-                        {% if p.game.game_type == 'drag_and_drop' %}background:#f0eeff{% elif p.game.game_type == 'word_search' %}background:#fff0f0{% elif p.game.game_type == 'puzzle' %}background:#f0fffe{% else %}background:#fff9ee{% endif %}">
-              {% if p.game.game_type == 'drag_and_drop' %}
-                <i class="bi bi-bug-fill" style="color:#6C63FF"></i>
-              {% elif p.game.game_type == 'word_search' %}
-                <i class="bi bi-search-heart-fill" style="color:#FF6B6B"></i>
-              {% elif p.game.game_type == 'puzzle' %}
-                <i class="bi bi-paint-bucket" style="color:#4ECDC4"></i>
-              {% else %}
-                <i class="bi bi-brush-fill" style="color:#FFB347"></i>
-              {% endif %}
-            </div>
-            <div class="flex-grow-1">
-              <div class="fw-bold" style="font-size:0.95rem">{{ p.game.title }}</div>
-              <div class="progress-nestgrow mt-1" style="height:10px">
-                <div class="progress-fill-new" style="width:{{ p.percentage }}%"></div>
-              </div>
-              <div class="d-flex gap-2 mt-1 align-items-center">
-                <span class="text-muted small fw-bold">{{ p.score }} pts</span>
-                {% with cls=p.clasificacion %}
-                <span class="badge rounded-pill small fw-bold"
-                      style="background:{{ cls.2 }}20;color:{{ cls.2 }}">{{ cls.1 }}</span>
-                {% endwith %}
-              </div>
-            </div>
-            <div class="d-flex flex-column gap-2 align-items-center">
-              {% if p.completed %}
-              <i class="bi bi-check-circle-fill" style="color:#4CAF50;font-size:1.2rem"></i>
-              {% endif %}
-              <a href="{{ p.game.get_absolute_url }}"
-                 class="btn btn-sm rounded-pill"
-                 style="background:var(--primary);color:white;padding:4px 12px">
-                <i class="bi bi-play-fill"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="text-center py-5">
-      <img src="{% static 'img/milo_duda1.png' %}" alt="Milo"
-           style="width:120px;filter:drop-shadow(0 8px 15px rgba(108,99,255,0.2));
-                  animation:miloFloat 4s ease-in-out infinite;margin-bottom:1rem">
-      <p class="fw-bold text-muted">
-        ¡Aún no has jugado!
-        <a href="{% url 'games:game_list' %}" style="color:var(--primary)">
-          ¡Empieza ahora!
-        </a>
-      </p>
-    </div>
-    {% endif %}
-  </div>
 
 </div>
 

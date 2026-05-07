@@ -10,8 +10,9 @@ from django.utils import timezone
 from .models import (
     Taller, BloqueTaller, BloqueMinijuego, BloquePregunta,
     OpcionRespuesta, RespuestaEstudiante, SesionTaller,
+    Periodo, AsignacionTaller, AsignacionMinijuego, RegistroMinijuegoPeriodo,
 )
-from .forms import TallerForm
+from .forms import TallerForm, PeriodoForm
 from apps.accounts.decorators import profesor_required, estudiante_required
 from apps.accounts.models import Salon
 from apps.games.models import Game, HuesoTransaccion
@@ -289,31 +290,74 @@ def resultados_taller(request, pk):
 @login_required
 @estudiante_required
 def mis_talleres(request):
+    """Panel principal del estudiante: muestra actividades del período activo."""
+    from django.utils import timezone as tz
+
     profile = request.user.estudiante_profile
+    periodo_activo = None
+    talleres_pendientes = []
+    minijuegos_pendientes = []
+
+    # Marcar minijuego como revisado si viene del overlay de victoria
+    registro_pk = request.GET.get('revisado')
+    if registro_pk:
+        RegistroMinijuegoPeriodo.objects.filter(
+            pk=registro_pk, estudiante=request.user
+        ).update(revisado=True)
+
     if profile.salon:
-        talleres = Taller.objects.filter(
-            salon=profile.salon, is_active=True
-        ).order_by('-created_at')
-    else:
-        talleres = Taller.objects.none()
+        hoy = tz.now().date()
+        periodo_activo = Periodo.objects.filter(
+            salon=profile.salon,
+            is_activo=True,
+            cerrado=False,
+            fecha_fin__gte=hoy,
+        ).order_by('-fecha_inicio').first()
 
-    sesiones = {
-        s.taller_id: s
-        for s in SesionTaller.objects.filter(estudiante=request.user, taller__in=talleres)
-    }
+        if periodo_activo:
+            # Talleres asignados que no estén completados+revisados
+            sesiones_map = {
+                s.taller_id: s
+                for s in SesionTaller.objects.filter(
+                    estudiante=request.user,
+                    taller__in=periodo_activo.talleres_asignados.values_list('taller_id', flat=True),
+                )
+            }
+            for asig in periodo_activo.talleres_asignados.select_related('taller').order_by('orden'):
+                sesion = sesiones_map.get(asig.taller_id)
+                completado = sesion.completada if sesion else False
+                revisado = sesion.revisado if sesion else False
+                if not (completado and revisado):
+                    talleres_pendientes.append({
+                        'asignacion': asig,
+                        'taller': asig.taller,
+                        'sesion': sesion,
+                        'completado': completado,
+                        'en_progreso': bool(sesion and not sesion.completada and sesion.bloque_actual > 0),
+                    })
 
-    talleres_con_estado = []
-    for t in talleres:
-        sesion = sesiones.get(t.pk)
-        talleres_con_estado.append({
-            'taller': t,
-            'sesion': sesion,
-            'completado': sesion.completada if sesion else False,
-            'en_progreso': bool(sesion and not sesion.completada and sesion.bloque_actual > 0),
-        })
+            # Minijuegos asignados que no estén revisados
+            registros_map = {
+                r.asignacion_id: r
+                for r in RegistroMinijuegoPeriodo.objects.filter(
+                    periodo=periodo_activo, estudiante=request.user
+                )
+            }
+            for asig in periodo_activo.minijuegos_asignados.select_related('game').order_by('orden'):
+                registro = registros_map.get(asig.pk)
+                revisado = registro.revisado if registro else False
+                if not revisado:
+                    minijuegos_pendientes.append({
+                        'asignacion': asig,
+                        'game': asig.game,
+                        'registro': registro,
+                        'completado': registro.completado if registro else False,
+                    })
 
     return render(request, 'talleres/estudiante/mis_talleres.html', {
-        'talleres_con_estado': talleres_con_estado,
+        'periodo_activo': periodo_activo,
+        'talleres_pendientes': talleres_pendientes,
+        'minijuegos_pendientes': minijuegos_pendientes,
     })
 
 
@@ -333,7 +377,10 @@ def resolver_taller(request, pk):
     )
 
     if sesion.completada:
-        return redirect('talleres:resultado', pk=taller.pk)
+        # Si la sesión no fue revisada aún, ir a la pantalla de resultado_sesion (flujo Periodo)
+        if not sesion.revisado:
+            return redirect('talleres:resultado_sesion', pk=sesion.pk)
+        return redirect('talleres:mis_talleres')
 
     bloques = list(
         taller.bloques.order_by('orden')
@@ -400,7 +447,7 @@ def guardar_respuesta(request, pk, bpk):
     sesion.save()
 
     if sesion.bloque_actual >= len(bloques_ids):
-        return JsonResponse({'ok': True, 'next': 'resultado', 'es_correcta': es_correcta, 'puntos': puntos})
+        return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk, 'es_correcta': es_correcta, 'puntos': puntos})
 
     return JsonResponse({'ok': True, 'next': 'siguiente', 'es_correcta': es_correcta, 'puntos': puntos})
 
@@ -425,7 +472,7 @@ def score_bloque_minijuego(request, pk, bpk):
     sesion.save()
 
     if sesion.bloque_actual >= len(bloques_ids):
-        return JsonResponse({'ok': True, 'next': 'resultado'})
+        return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk})
 
     return JsonResponse({'ok': True, 'next': 'siguiente'})
 
@@ -514,4 +561,204 @@ def resultado_taller(request, pk):
         'palabras_nuevas': palabras_nuevas,
         'hitos_nuevos': hitos_nuevos,
         'resumen_respuestas': resumen_respuestas,
+    })
+
+
+# ── Periodos — Profesor ────────────────────────────────────────────────────────
+
+@login_required
+@profesor_required
+def lista_periodos(request):
+    """Lista todos los períodos del profesor, agrupados por salón."""
+    from django.utils import timezone as tz
+    salones = _salon_qs(request.user).prefetch_related('periodos')
+    periodos = Periodo.objects.filter(
+        salon__in=salones
+    ).select_related('salon').prefetch_related(
+        'talleres_asignados__taller', 'minijuegos_asignados__game'
+    ).order_by('-fecha_inicio')
+
+    return render(request, 'talleres/profesor/lista_periodos.html', {
+        'periodos': periodos,
+        'hoy': tz.now().date(),
+    })
+
+
+@login_required
+@profesor_required
+def crear_periodo(request):
+    """El profesor crea un nuevo período con sus asignaciones."""
+    salon_qs = _salon_qs(request.user)
+    if request.method == 'POST':
+        form = PeriodoForm(request.POST, salon_qs=salon_qs)
+        # Filtrar talleres del salón seleccionado dinámicamente
+        salon_id = request.POST.get('salon')
+        if salon_id:
+            form.fields['talleres_asignados'].queryset = Taller.objects.filter(
+                salon_id=salon_id, is_active=True
+            )
+        if form.is_valid():
+            periodo = form.save()
+            # Crear asignaciones
+            for i, taller in enumerate(form.cleaned_data['talleres_asignados'], start=1):
+                AsignacionTaller.objects.create(periodo=periodo, taller=taller, orden=i)
+            for i, game in enumerate(form.cleaned_data['minijuegos_asignados'], start=1):
+                AsignacionMinijuego.objects.create(periodo=periodo, game=game, orden=i)
+            messages.success(request, f'✅ Período "{periodo.titulo}" creado exitosamente.')
+            return redirect('talleres:lista_periodos')
+    else:
+        form = PeriodoForm(salon_qs=salon_qs)
+    # Para el JS que filtra talleres por salón
+    talleres_por_salon = {}
+    for salon in salon_qs:
+        talleres_por_salon[salon.pk] = list(
+            Taller.objects.filter(salon=salon, is_active=True).values('pk', 'titulo')
+        )
+    import json as _json
+    return render(request, 'talleres/profesor/crear_periodo.html', {
+        'form': form,
+        'talleres_por_salon_json': _json.dumps(talleres_por_salon),
+    })
+
+
+@login_required
+@profesor_required
+def resultados_periodo(request, pk):
+    """Vista consolidada: por cada estudiante del salón, muestra su avance en el período."""
+    salon_qs = _salon_qs(request.user)
+    periodo = get_object_or_404(Periodo, pk=pk, salon__in=salon_qs)
+
+    from django.utils import timezone as tz
+    from apps.accounts.models import CustomUser
+
+    # Estudiantes del salón
+    estudiantes = CustomUser.objects.filter(
+        estudiante_profile__salon=periodo.salon, role='estudiante'
+    ).select_related('estudiante_profile').order_by('first_name', 'last_name', 'username')
+
+    talleres_asig = list(periodo.talleres_asignados.select_related('taller').order_by('orden'))
+    minijuegos_asig = list(periodo.minijuegos_asignados.select_related('game').order_by('orden'))
+
+    # Precargar sesiones y registros
+    sesiones_all = {
+        (s.taller_id, s.estudiante_id): s
+        for s in SesionTaller.objects.filter(
+            taller__in=[a.taller for a in talleres_asig],
+            estudiante__in=estudiantes,
+        )
+    }
+    registros_all = {
+        (r.asignacion_id, r.estudiante_id): r
+        for r in RegistroMinijuegoPeriodo.objects.filter(
+            periodo=periodo, estudiante__in=estudiantes,
+        )
+    }
+
+    filas = []
+    for est in estudiantes:
+        fila_talleres = []
+        for asig in talleres_asig:
+            sesion = sesiones_all.get((asig.taller_id, est.pk))
+            pts = sesion.puntos_obtenidos if sesion else 0
+            max_pts = asig.taller.total_puntos_posibles() or 1
+            pct = round((pts / max_pts) * 100) if sesion and sesion.completada else None
+            from apps.games.models import pct_to_nota
+            nota = pct_to_nota(pct) if pct is not None else None
+            fila_talleres.append({
+                'asig': asig,
+                'sesion': sesion,
+                'pct': pct,
+                'nota': nota,
+            })
+
+        fila_minijuegos = []
+        for asig in minijuegos_asig:
+            registro = registros_all.get((asig.pk, est.pk))
+            fila_minijuegos.append({
+                'asig': asig,
+                'registro': registro,
+            })
+
+        estrellas = getattr(getattr(est, 'estudiante_profile', None), 'total_estrellas_historia', 0) or 0
+        filas.append({
+            'estudiante': est,
+            'talleres': fila_talleres,
+            'minijuegos': fila_minijuegos,
+            'estrellas_historia': estrellas,
+        })
+
+    return render(request, 'talleres/profesor/resultados_periodo.html', {
+        'periodo': periodo,
+        'talleres_asig': talleres_asig,
+        'minijuegos_asig': minijuegos_asig,
+        'filas': filas,
+        'hoy': tz.now().date(),
+    })
+
+
+@login_required
+@profesor_required
+@require_POST
+def cerrar_periodo(request, pk):
+    """Cierra un período — congela resultados."""
+    salon_qs = _salon_qs(request.user)
+    periodo = get_object_or_404(Periodo, pk=pk, salon__in=salon_qs)
+    if not periodo.cerrado:
+        periodo.cerrado = True
+        periodo.is_activo = False
+        periodo.save(update_fields=['cerrado', 'is_activo'])
+        messages.success(request, f'🔒 Período "{periodo.titulo}" cerrado. Los resultados quedaron congelados.')
+    return redirect('talleres:resultados_periodo', pk=pk)
+
+
+# ── Periodos — Estudiante ─────────────────────────────────────────────────────
+
+@login_required
+@estudiante_required
+def resultado_sesion(request, pk):
+    """Pantalla de resultado post-taller. Al volver al panel marca la sesión como revisada."""
+    sesion = get_object_or_404(SesionTaller, pk=pk, estudiante=request.user)
+    taller = sesion.taller
+
+    if request.method == 'POST':
+        # El estudiante hizo clic en "Volver al panel"
+        sesion.revisado = True
+        sesion.save(update_fields=['revisado'])
+        return redirect('talleres:mis_talleres')
+
+    # Calcular nota
+    max_pts = taller.total_puntos_posibles() or 1
+    pct = round((sesion.puntos_obtenidos / max_pts) * 100) if sesion.completada else 0
+    from apps.games.models import pct_to_nota
+    nota = pct_to_nota(pct) if sesion.completada else None
+
+    # Resumen de respuestas
+    bloques_pregunta = list(
+        taller.bloques.filter(tipo='pregunta')
+        .select_related('bloque_pregunta')
+        .prefetch_related('bloque_pregunta__opciones')
+        .order_by('orden')
+    )
+    respuestas_map = {
+        r.pregunta_id: r
+        for r in RespuestaEstudiante.objects.filter(
+            estudiante=request.user, pregunta__bloque__taller=taller
+        ).prefetch_related('opciones_elegidas')
+    }
+    resumen = []
+    for b in bloques_pregunta:
+        pregunta = getattr(b, 'bloque_pregunta', None)
+        if pregunta:
+            resumen.append({
+                'bloque': b,
+                'pregunta': pregunta,
+                'respuesta': respuestas_map.get(pregunta.pk),
+            })
+
+    return render(request, 'talleres/estudiante/resultado_sesion.html', {
+        'sesion': sesion,
+        'taller': taller,
+        'pct': pct,
+        'nota': nota,
+        'resumen': resumen,
     })

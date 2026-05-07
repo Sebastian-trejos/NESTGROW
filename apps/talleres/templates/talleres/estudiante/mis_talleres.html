@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Mis Talleres{% endblock %}
+{% block title %}Mis Actividades{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -7,105 +7,173 @@
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl">🐺</div>
     <div>
-      <div class="milo-banner-text">¡Aquí están tus talleres, {{ user.first_name }}! 🎓</div>
-      <div class="text-muted fw-bold small">Completa cada taller para ganar XP y Huesos de Milo. ¡Puedes retomarlo donde lo dejaste!</div>
+      <div class="milo-banner-text">¡Hola, {{ user.first_name }}! Aquí están tus actividades pendientes. 🎓</div>
+      <div class="text-muted fw-bold small">Completa talleres y minijuegos asignados por tu profesor para ganar XP y Huesos de Milo.</div>
     </div>
   </div>
 
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="font-fredoka mb-0" style="color:var(--primary)">📋 Talleres de mi salón</h4>
+    <h4 class="font-fredoka mb-0" style="color:var(--primary)">📋 Mis actividades</h4>
     <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary rounded-pill btn-sm">← Mi panel</a>
   </div>
 
-  {% if talleres_con_estado %}
-  <div class="row g-4">
-    {% for item in talleres_con_estado %}
-    {% with t=item.taller s=item.sesion %}
-    <div class="col-md-6">
-      <div class="nestgrow-card p-4 h-100 d-flex flex-column"
-           style="border-left:5px solid {% if item.completado %}var(--accent){% elif item.en_progreso %}var(--orange){% else %}var(--primary){% endif %}">
+  {% if periodo_activo %}
 
-        <!-- Estado -->
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <div>
-            <h5 class="font-fredoka mb-1" style="color:var(--primary)">{{ t.titulo }}</h5>
-            {% if t.descripcion %}
-            <p class="text-muted small fw-bold mb-0">{{ t.descripcion|truncatechars:80 }}</p>
-            {% endif %}
-          </div>
-          {% if item.completado %}
-          <span class="badge rounded-pill" style="background:#d4edda;color:#155724;white-space:nowrap">✅ Completado</span>
-          {% elif item.en_progreso %}
-          <span class="badge rounded-pill" style="background:#fff3cd;color:#856404;white-space:nowrap">⏳ En progreso</span>
-          {% else %}
-          <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);white-space:nowrap">🆕 Nuevo</span>
-          {% endif %}
-        </div>
-
-        <!-- Info -->
-        <div class="d-flex gap-2 flex-wrap mb-3">
-          <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} bloques</span>
-          <span class="badge rounded-pill" style="background:#f0f8ff;color:#4a90d9">⭐ {{ t.puntos_xp }} XP</span>
-          <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ t.huesos_recompensa }} Huesos</span>
-        </div>
-
-        <!-- Progreso si hay sesión -->
-        {% if s and not item.completado %}
-        <div class="mb-3">
-          <div class="d-flex justify-content-between text-muted small fw-bold mb-1">
-            <span>Progreso</span>
-            <span>{{ s.bloque_actual }} / {{ t.total_bloques }}</span>
-          </div>
-          <div class="progress-bar-nestgrow">
-            <div class="progress-fill" style="width:{% widthratio s.bloque_actual t.total_bloques 100 %}%;max-width:100%"></div>
-          </div>
-        </div>
-        {% endif %}
-
-        {% if item.completado and s %}
-        <div class="p-3 rounded-3 mb-3" style="background:#d4edda">
-          <div class="fw-bold text-success">🎉 ¡Taller completado!</div>
-          <div class="small text-muted mt-1">Ganaste {{ s.huesos_ganados }} Huesos y {{ t.puntos_xp }} XP</div>
-        </div>
-        {% endif %}
-
-        <div class="mt-auto">
-          {% if item.completado %}
-          <a href="{% url 'talleres:resultado' pk=t.pk %}" class="btn btn-outline-success rounded-pill w-100">
-            📊 Ver mis resultados
-          </a>
-          {% elif item.en_progreso %}
-          <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow rounded-pill w-100 fw-bold"
-             style="background:var(--orange);color:white">
-            ▶ Continuar taller →
-          </a>
-          {% else %}
-          <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill w-100 fw-bold">
-            🚀 Iniciar taller →
-          </a>
-          {% endif %}
-        </div>
+  <!-- Encabezado del período activo -->
+  <div class="nestgrow-card p-3 mb-4 d-flex align-items-center gap-3 flex-wrap"
+       style="background:linear-gradient(135deg,#f0ebff,#e8f4ff);border-left:5px solid var(--primary)">
+    <div style="font-size:2rem">📅</div>
+    <div class="flex-grow-1">
+      <div class="fw-bold font-fredoka" style="color:var(--primary);font-size:1.1rem">{{ periodo_activo.titulo }}</div>
+      <div class="text-muted small">
+        Fecha límite: <strong>{{ periodo_activo.fecha_fin|date:"d \d\e F \d\e Y" }}</strong>
+        &nbsp;·&nbsp; {{ periodo_activo.salon }}
       </div>
     </div>
-    {% endwith %}
-    {% endfor %}
+    {% if periodo_activo.meta_historia > 0 %}
+    <div class="badge rounded-pill px-3 py-2" style="background:#fff9c4;color:#f57f17;font-size:.85rem">
+      ⭐ Meta historia: {{ periodo_activo.meta_historia }} estrellas
+    </div>
+    {% endif %}
   </div>
 
+  {% if talleres_pendientes or minijuegos_pendientes %}
+
+    <!-- Talleres -->
+    {% if talleres_pendientes %}
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎓 Talleres</h5>
+    <div class="row g-4 mb-4">
+      {% for item in talleres_pendientes %}
+      {% with t=item.taller s=item.sesion %}
+      <div class="col-md-6">
+        <div class="nestgrow-card p-4 h-100 d-flex flex-column"
+             style="border-left:5px solid {% if item.completado %}var(--accent){% elif item.en_progreso %}var(--orange){% else %}var(--primary){% endif %}">
+
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h5 class="font-fredoka mb-1" style="color:var(--primary)">{{ t.titulo }}</h5>
+              {% if t.descripcion %}
+              <p class="text-muted small fw-bold mb-0">{{ t.descripcion|truncatechars:80 }}</p>
+              {% endif %}
+            </div>
+            {% if item.completado %}
+            <span class="badge rounded-pill" style="background:#fff3cd;color:#856404;white-space:nowrap">⏳ Ver resultado</span>
+            {% elif item.en_progreso %}
+            <span class="badge rounded-pill" style="background:#fff3cd;color:#856404;white-space:nowrap">⏳ En progreso</span>
+            {% else %}
+            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);white-space:nowrap">🆕 Nuevo</span>
+            {% endif %}
+          </div>
+
+          <div class="d-flex gap-2 flex-wrap mb-3">
+            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} bloques</span>
+            <span class="badge rounded-pill" style="background:#f0f8ff;color:#4a90d9">⭐ {{ t.puntos_xp }} XP</span>
+            <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ t.huesos_recompensa }} Huesos</span>
+          </div>
+
+          {% if s and not item.completado %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between text-muted small fw-bold mb-1">
+              <span>Progreso</span>
+              <span>{{ s.bloque_actual }} / {{ t.total_bloques }}</span>
+            </div>
+            <div class="progress-bar-nestgrow">
+              <div class="progress-fill" style="width:{% widthratio s.bloque_actual t.total_bloques 100 %}%;max-width:100%"></div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="mt-auto">
+            {% if item.completado %}
+            {# Completado pero no revisado → ir a resultado_sesion para marcar revisado #}
+            <a href="{% url 'talleres:resultado_sesion' pk=s.pk %}" class="btn btn-outline-warning rounded-pill w-100 fw-bold">
+              📊 Ver resultado →
+            </a>
+            {% elif item.en_progreso %}
+            <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow rounded-pill w-100 fw-bold"
+               style="background:var(--orange);color:white">
+              ▶ Continuar →
+            </a>
+            {% else %}
+            <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill w-100 fw-bold">
+              🚀 Iniciar →
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endwith %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Minijuegos -->
+    {% if minijuegos_pendientes %}
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎮 Minijuegos</h5>
+    <div class="row g-3 mb-4">
+      {% for item in minijuegos_pendientes %}
+      {% with g=item.game r=item.registro %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="nestgrow-card p-3 h-100 d-flex flex-column"
+             style="border-left:5px solid {% if item.completado %}var(--accent){% else %}#6c63ff{% endif %}">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="font-fredoka mb-0" style="color:var(--primary)">{{ g.title }}</h6>
+            {% if item.completado %}
+            <span class="badge rounded-pill" style="background:#d4edda;color:#155724;white-space:nowrap">✅ Hecho</span>
+            {% else %}
+            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);white-space:nowrap">🆕 Nuevo</span>
+            {% endif %}
+          </div>
+          <div class="text-muted small mb-3">{{ g.get_game_type_display }}</div>
+          {% if r and r.completado and r.max_score > 0 %}
+          <div class="text-muted small mb-2">Puntaje: {{ r.score }} / {{ r.max_score }} ({{ r.porcentaje }}%)</div>
+          {% endif %}
+          <div class="mt-auto">
+            {% if item.completado %}
+            {# Completado, mostrar score y botón para marcar revisado #}
+            <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}"
+               class="btn btn-outline-success rounded-pill w-100 btn-sm fw-bold">
+              ✔️ Entendido
+            </a>
+            {% else %}
+            <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1"
+               class="btn btn-nestgrow btn-primary-nestgrow rounded-pill w-100 btn-sm fw-bold">
+              🎮 Jugar →
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endwith %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
   {% else %}
+  <!-- Período activo pero todo completado/revisado -->
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:4rem">🎉</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Todo listo!</h4>
+    <p class="text-muted fw-bold">Completaste todas las actividades de este período. ¡Excelente trabajo!</p>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <!-- Sin período activo -->
   <div class="nestgrow-card p-5 text-center">
     <div style="font-size:5rem">📋</div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">
       {% if request.user.estudiante_profile.salon %}
-        ¡Tu profesor aún no ha publicado talleres!
+        Tu profesor no ha asignado actividades todavía
       {% else %}
         Primero únete a un salón
       {% endif %}
     </h4>
     <p class="text-muted fw-bold">
       {% if request.user.estudiante_profile.salon %}
-        Cuando tu profesor publique talleres, aparecerán aquí.
+        Cuando tu profesor cree un período con actividades, aparecerán aquí.
       {% else %}
-        Pídele el código de clase a tu profe y únete para ver los talleres.
+        Pídele el código de clase a tu profe y únete para ver las actividades.
       {% endif %}
     </p>
     {% if not request.user.estudiante_profile.salon %}

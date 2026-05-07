@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Resultados — {{ periodo.titulo }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3 px-md-4">
+
+  <!-- Encabezado -->
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill btn-sm mb-2">← Períodos</a>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">📊 {{ periodo.titulo }}</h3>
+      <div class="text-muted small">
+        {{ periodo.salon }} &nbsp;·&nbsp;
+        {{ periodo.fecha_inicio|date:"d/m/Y" }} → {{ periodo.fecha_fin|date:"d/m/Y" }}
+      </div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      {% if not periodo.cerrado %}
+        {% if periodo.fecha_fin < hoy %}
+        <div class="alert alert-warning py-1 px-3 mb-0 rounded-pill small fw-bold">
+          ⚠️ Este período venció. Ciérralo para congelar resultados.
+        </div>
+        {% endif %}
+        <form method="post" action="{% url 'talleres:cerrar_periodo' periodo.pk %}"
+              onsubmit="return confirm('¿Cerrar este período? Los resultados quedarán congelados y los estudiantes no verán más estas actividades.')">
+          {% csrf_token %}
+          <button class="btn btn-outline-danger rounded-pill btn-sm">🔒 Cerrar período</button>
+        </form>
+      {% else %}
+        <span class="badge bg-secondary px-3 py-2">⚫ Período cerrado</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if filas %}
+  <div class="nestgrow-card p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" style="min-width:700px">
+        <thead style="background:#f8f6ff">
+          <tr>
+            <th class="ps-3 py-3" style="min-width:160px">Estudiante</th>
+            {% for asig in talleres_asig %}
+            <th class="text-center py-3" style="min-width:120px">
+              🎓 <span title="{{ asig.taller.titulo }}">{{ asig.taller.titulo|truncatechars:18 }}</span>
+            </th>
+            {% endfor %}
+            {% for asig in minijuegos_asig %}
+            <th class="text-center py-3" style="min-width:110px">
+              🎮 <span title="{{ asig.game.title }}">{{ asig.game.title|truncatechars:16 }}</span>
+            </th>
+            {% endfor %}
+            {% if periodo.meta_historia > 0 %}
+            <th class="text-center py-3" style="min-width:100px">⭐ Historia</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for fila in filas %}
+          <tr>
+            <td class="ps-3 fw-bold">
+              {{ fila.estudiante.get_full_name|default:fila.estudiante.username }}
+            </td>
+
+            {% for t in fila.talleres %}
+            <td class="text-center">
+              {% if t.sesion and t.sesion.completada %}
+                {% if t.nota %}
+                  <span class="fw-bold" style="color:{% if t.nota >= 4.0 %}#28a745{% elif t.nota >= 3.0 %}#e67e22{% else %}#e53935{% endif %}">
+                    {{ t.nota }}
+                  </span>
+                  <div class="text-muted" style="font-size:.7rem">{{ t.pct }}%</div>
+                {% else %}
+                  <span class="text-success">✅</span>
+                {% endif %}
+              {% elif t.sesion and t.sesion.bloque_actual > 0 %}
+                <span class="text-warning" title="En progreso">⏳</span>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            {% endfor %}
+
+            {% for m in fila.minijuegos %}
+            <td class="text-center">
+              {% if m.registro and m.registro.completado %}
+                <span class="text-success fw-bold">✅</span>
+                {% if m.registro.max_score > 0 %}
+                <div class="text-muted" style="font-size:.7rem">{{ m.registro.porcentaje }}%</div>
+                {% endif %}
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            {% endfor %}
+
+            {% if periodo.meta_historia > 0 %}
+            <td class="text-center">
+              <span class="fw-bold {% if fila.estrellas_historia >= periodo.meta_historia %}text-success{% else %}text-muted{% endif %}">
+                {{ fila.estrellas_historia }} / {{ periodo.meta_historia }}
+              </span>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Leyenda -->
+  <div class="d-flex gap-3 flex-wrap mt-3 text-muted small">
+    <span>✅ Completado</span>
+    <span>⏳ En progreso</span>
+    <span>— Sin iniciar</span>
+    <span>Nota: escala colombiana 1.0–5.0</span>
+  </div>
+
+  {% else %}
+  <div class="nestgrow-card p-5 text-center">
+    <div style="font-size:3rem">👩‍🎓</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">Este salón no tiene estudiantes aún</h5>
+    <p class="text-muted">Agrega estudiantes al salón desde el panel de cuentas.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

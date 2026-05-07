@@ -18,10 +18,17 @@ urlpatterns = [
     path('bloque/<int:bpk>/eliminar/', views.eliminar_bloque, name='eliminar_bloque'),
     path('<int:pk>/bloques/ordenar/', views.mover_bloques, name='mover_bloques'),
 
+    # ── Periodos — Profesor ───────────────────────────────────────────────────
+    path('periodos/', views.lista_periodos, name='lista_periodos'),
+    path('periodos/crear/', views.crear_periodo, name='crear_periodo'),
+    path('periodos/<int:pk>/resultados/', views.resultados_periodo, name='resultados_periodo'),
+    path('periodos/<int:pk>/cerrar/', views.cerrar_periodo, name='cerrar_periodo'),
+
     # ── Estudiante ────────────────────────────────────────────────────────────
     path('mis-talleres/', views.mis_talleres, name='mis_talleres'),
     path('<int:pk>/resolver/', views.resolver_taller, name='resolver'),
     path('<int:pk>/bloque/<int:bpk>/responder/', views.guardar_respuesta, name='responder'),
     path('<int:pk>/bloque/<int:bpk>/completar-minijuego/', views.score_bloque_minijuego, name='score_minijuego'),
     path('<int:pk>/resultado/', views.resultado_taller, name='resultado'),
+    path('sesion/<int:pk>/resultado/', views.resultado_sesion, name='resultado_sesion'),
 ]

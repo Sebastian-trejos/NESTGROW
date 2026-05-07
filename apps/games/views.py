@@ -71,6 +71,25 @@ def game_list(request):
             user=request.user, visto=False
         ).select_related('logro')
 
+        # Ocultar minijuegos del período activo que ya fueron completados y revisados
+        try:
+            from apps.talleres.models import RegistroMinijuegoPeriodo
+            from django.utils import timezone as tz
+            perfil = request.user.estudiante_profile
+            if perfil.salon_id:
+                hoy = tz.now().date()
+                juegos_revisados_ids = RegistroMinijuegoPeriodo.objects.filter(
+                    estudiante=request.user,
+                    revisado=True,
+                    periodo__salon_id=perfil.salon_id,
+                    periodo__is_activo=True,
+                    periodo__cerrado=False,
+                    periodo__fecha_fin__gte=hoy,
+                ).values_list('asignacion__game_id', flat=True)
+                games = games.exclude(pk__in=juegos_revisados_ids)
+        except Exception:
+            pass
+
     return render(request, 'games/game_list.html', {
         'games': games,
         'categories': categories,
@@ -302,8 +321,39 @@ def save_score(request):
         huesos_ganados = 0
         subio_nivel = False
         nuevo_nivel = 0
+        registro_pk = None
         if request.user.role == 'estudiante':
             nuevos_logros = verificar_logros(request.user)
+
+            # Registrar completado en período activo (si existe asignación)
+            registro_pk = None
+            try:
+                from apps.talleres.models import AsignacionMinijuego, RegistroMinijuegoPeriodo
+                from django.utils import timezone as tz
+                perfil = request.user.estudiante_profile
+                if perfil.salon_id:
+                    hoy = tz.now().date()
+                    asignacion = AsignacionMinijuego.objects.filter(
+                        game_id=game_id,
+                        periodo__salon_id=perfil.salon_id,
+                        periodo__is_activo=True,
+                        periodo__cerrado=False,
+                        periodo__fecha_fin__gte=hoy,
+                    ).select_related('periodo').first()
+                    if asignacion:
+                        registro, _ = RegistroMinijuegoPeriodo.objects.update_or_create(
+                            asignacion=asignacion,
+                            estudiante=request.user,
+                            defaults={
+                                'periodo': asignacion.periodo,
+                                'score': score_val,
+                                'max_score': max_score_val,
+                                'completado': True,
+                            },
+                        )
+                        registro_pk = registro.pk
+            except Exception:
+                registro_pk = None  # No interrumpir el flujo del juego por errores de período
 
         return JsonResponse({
             'status': 'ok',
@@ -317,6 +367,7 @@ def save_score(request):
             'total_huesos': request.user.huesos,
             'subio_nivel': subio_nivel,
             'nuevo_nivel': nuevo_nivel,
+            'registro_pk': registro_pk,  # pk del RegistroMinijuegoPeriodo, o null si no hay periodo
             'nuevos_logros': [
                 {'nombre': l.nombre, 'icono': l.icono, 'descripcion': l.descripcion}
                 for l in nuevos_logros

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}Nuevo Período — NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:780px">
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">📅 Nuevo Período</h3>
+  </div>
+
+  <form method="post" id="formPeriodo">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <!-- Datos generales -->
+    <div class="nestgrow-card p-4 mb-4">
+      <h5 class="font-fredoka mb-3" style="color:var(--primary)">📋 Datos del período</h5>
+      <div class="mb-3">
+        <label class="form-label fw-bold">{{ form.titulo.label }}</label>
+        {{ form.titulo }}
+        {% if form.titulo.errors %}<div class="text-danger small mt-1">{{ form.titulo.errors }}</div>{% endif %}
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-bold">{{ form.salon.label }}</label>
+        {{ form.salon }}
+        {% if form.salon.errors %}<div class="text-danger small mt-1">{{ form.salon.errors }}</div>{% endif %}
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6">
+          <label class="form-label fw-bold">{{ form.fecha_inicio.label }}</label>
+          {{ form.fecha_inicio }}
+          {% if form.fecha_inicio.errors %}<div class="text-danger small mt-1">{{ form.fecha_inicio.errors }}</div>{% endif %}
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label fw-bold">{{ form.fecha_fin.label }}</label>
+          {{ form.fecha_fin }}
+          {% if form.fecha_fin.errors %}<div class="text-danger small mt-1">{{ form.fecha_fin.errors }}</div>{% endif %}
+        </div>
+      </div>
+      <div class="mb-0">
+        <label class="form-label fw-bold">{{ form.meta_historia.label }}</label>
+        {{ form.meta_historia }}
+        <div class="form-text">{{ form.fields.meta_historia.help_text }}</div>
+        {% if form.meta_historia.errors %}<div class="text-danger small mt-1">{{ form.meta_historia.errors }}</div>{% endif %}
+      </div>
+    </div>
+
+    <!-- Talleres -->
+    <div class="nestgrow-card p-4 mb-4">
+      <h5 class="font-fredoka mb-1" style="color:var(--primary)">🎓 Talleres asignados <span class="text-muted fw-normal fs-6">(máx. 5)</span></h5>
+      <p class="text-muted small mb-3">Selecciona un salón primero para ver sus talleres publicados.</p>
+      <div id="talleresContainer">
+        {% if form.talleres_asignados.field.queryset.exists %}
+          {% for taller in form.talleres_asignados.field.queryset %}
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="talleres_asignados"
+                   value="{{ taller.pk }}" id="t_{{ taller.pk }}"
+                   {% if taller in form.talleres_asignados.value %}checked{% endif %}>
+            <label class="form-check-label" for="t_{{ taller.pk }}">{{ taller.titulo }}</label>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted small" id="noTalleres">Selecciona un salón para ver sus talleres.</p>
+        {% endif %}
+      </div>
+      {% if form.talleres_asignados.errors %}<div class="text-danger small mt-1">{{ form.talleres_asignados.errors }}</div>{% endif %}
+    </div>
+
+    <!-- Minijuegos -->
+    <div class="nestgrow-card p-4 mb-4">
+      <h5 class="font-fredoka mb-1" style="color:var(--primary)">🎮 Minijuegos asignados <span class="text-muted fw-normal fs-6">(máx. 5)</span></h5>
+      <p class="text-muted small mb-3">Elige los minijuegos que formarán parte de este período.</p>
+      <div style="max-height:260px;overflow-y:auto;padding-right:4px">
+        {% for game in form.minijuegos_asignados.field.queryset %}
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" name="minijuegos_asignados"
+                 value="{{ game.pk }}" id="g_{{ game.pk }}"
+                 {% if game.pk in form.minijuegos_asignados.value %}checked{% endif %}>
+          <label class="form-check-label" for="g_{{ game.pk }}">
+            {{ game.get_game_type_display }} — <strong>{{ game.title }}</strong>
+          </label>
+        </div>
+        {% empty %}
+        <p class="text-muted small">No hay minijuegos disponibles.</p>
+        {% endfor %}
+      </div>
+      {% if form.minijuegos_asignados.errors %}<div class="text-danger small mt-1">{{ form.minijuegos_asignados.errors }}</div>{% endif %}
+    </div>
+
+    <div class="d-flex gap-3">
+      <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow px-4">✅ Crear Período</button>
+      <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const TALLERES_POR_SALON = {{ talleres_por_salon_json|safe }};
+
+document.getElementById('id_salon').addEventListener('change', function() {
+  const salonId = this.value;
+  const container = document.getElementById('talleresContainer');
+  const talleres = TALLERES_POR_SALON[salonId] || [];
+
+  if (talleres.length === 0) {
+    container.innerHTML = '<p class="text-muted small">Este salón no tiene talleres publicados.</p>';
+    return;
+  }
+
+  container.innerHTML = talleres.map(t => `
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" name="talleres_asignados"
+             value="${t.pk}" id="t_${t.pk}">
+      <label class="form-check-label" for="t_${t.pk}">${t.titulo}</label>
+    </div>
+  `).join('');
+});
+</script>
+{% endblock %}

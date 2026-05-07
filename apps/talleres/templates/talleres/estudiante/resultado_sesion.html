@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}¡Taller completado! — {{ taller.titulo }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes boneFloat {
+    0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+    60%  { transform: scale(1.25) rotate(10deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes trofeoBounce {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-10px) scale(1.08); }
+  }
+  .hueso-anim { display: inline-block; animation: boneFloat 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  .trofeo-anim { animation: trofeoBounce 2s ease-in-out infinite; }
+  .reward-card { border-radius: 20px; padding: 1.25rem 1rem; text-align: center; flex: 1; min-width: 110px; }
+  .resp-item { border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 0.6rem; border-left: 5px solid; }
+  .resp-correcta   { background: #d4f5e0; border-left-color: #28a745; }
+  .resp-incorrecta { background: #ffe5e5; border-left-color: #e53935; }
+  .resp-parrafo    { background: #e8f4ff; border-left-color: #1565c0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:720px">
+
+  <!-- Trofeo + título -->
+  <div class="text-center mb-4">
+    <div class="trofeo-anim" style="font-size:4rem">🏆</div>
+    <h2 class="font-fredoka mt-2" style="color:var(--primary)">¡Taller completado!</h2>
+    <p class="text-muted">{{ taller.titulo }}</p>
+  </div>
+
+  <!-- Recompensas -->
+  <div class="nestgrow-card p-4 mb-4">
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      {% if nota is not None %}
+      <div class="reward-card" style="background:#f0ebff">
+        <div class="fw-bold" style="font-size:2rem;color:{% if nota >= 4.0 %}#28a745{% elif nota >= 3.0 %}#e67e22{% else %}#e53935{% endif %}">
+          {{ nota }}
+        </div>
+        <div class="text-muted small fw-bold">Nota</div>
+      </div>
+      <div class="reward-card" style="background:#e8f4ff">
+        <div class="fw-bold" style="font-size:2rem;color:var(--primary)">{{ pct }}%</div>
+        <div class="text-muted small fw-bold">Porcentaje</div>
+      </div>
+      {% endif %}
+      <div class="reward-card" style="background:#fff9ee">
+        <div class="fw-bold" style="font-size:2rem;color:#e67e22">{{ sesion.puntos_obtenidos }}</div>
+        <div class="text-muted small fw-bold">Puntos XP</div>
+      </div>
+      {% if sesion.huesos_ganados %}
+      <div class="reward-card" style="background:#fff3e0">
+        <div class="hueso-anim fw-bold" style="font-size:2rem">🦴 {{ sesion.huesos_ganados }}</div>
+        <div class="text-muted small fw-bold">Huesos</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Resumen de respuestas -->
+  {% if resumen %}
+  <div class="nestgrow-card p-4 mb-4">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">📝 Resumen de respuestas</h5>
+    {% for item in resumen %}
+    {% with resp=item.respuesta preg=item.pregunta %}
+    <div class="resp-item {% if preg.tipo_respuesta == 'parrafo' %}resp-parrafo{% elif resp and resp.es_correcta %}resp-correcta{% else %}resp-incorrecta{% endif %}">
+      <div class="fw-bold mb-1" style="font-size:.95rem">{{ preg.enunciado }}</div>
+      {% if resp %}
+        {% if preg.tipo_respuesta == 'parrafo' %}
+          <div class="text-muted small">✍️ {{ resp.texto_respuesta|default:"Sin respuesta" }}</div>
+        {% else %}
+          {% for op in resp.opciones_elegidas.all %}
+          <div class="small">{% if op.es_correcta %}✅{% else %}❌{% endif %} {{ op.texto }}</div>
+          {% empty %}
+          <div class="text-muted small">Sin respuesta</div>
+          {% endfor %}
+        {% endif %}
+      {% else %}
+        <div class="text-muted small">Sin respuesta</div>
+      {% endif %}
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Botón para volver al panel (marca como revisado) -->
+  <form method="post" action="{% url 'talleres:resultado_sesion' sesion.pk %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 py-3" style="font-size:1.1rem">
+      ✔️ Entendido — Volver al panel
+    </button>
+  </form>
+  <p class="text-center text-muted small mt-2">Este taller desaparecerá de tu panel al volver.</p>
+
+</div>
+{% endblock %}

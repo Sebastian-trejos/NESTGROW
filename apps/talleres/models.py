@@ -175,6 +175,7 @@ class SesionTaller(TimeStampedModel):
         related_name='sesiones_taller'
     )
     completada = models.BooleanField(default=False)
+    revisado = models.BooleanField(default=False)  # True = vio resultado, desaparece del panel
     puntos_obtenidos = models.IntegerField(default=0)
     huesos_ganados = models.IntegerField(default=0)
     bloque_actual = models.IntegerField(default=0)
@@ -187,3 +188,110 @@ class SesionTaller(TimeStampedModel):
 
     def __str__(self):
         return f"{self.estudiante.username} — {self.taller.titulo}"
+
+
+# ── Sistema de Periodos ────────────────────────────────────────────────────────
+
+class Periodo(TimeStampedModel):
+    """Ciclo de trabajo con fecha límite que el profesor asigna a un salón."""
+    salon = models.ForeignKey(
+        'accounts.Salon', on_delete=models.CASCADE, related_name='periodos',
+        verbose_name='Salón',
+    )
+    titulo = models.CharField(max_length=120, verbose_name='Título',
+                              help_text='Ej: Periodo 1 — Mayo 2026')
+    fecha_inicio = models.DateField(verbose_name='Fecha de inicio')
+    fecha_fin = models.DateField(verbose_name='Fecha límite')
+    meta_historia = models.PositiveIntegerField(
+        default=0, verbose_name='Meta de estrellas (Historia)',
+        help_text='Número de estrellas de historia que el estudiante debe alcanzar. 0 = sin meta.',
+    )
+    is_activo = models.BooleanField(default=True, verbose_name='Activo')
+    cerrado = models.BooleanField(default=False, verbose_name='Cerrado',
+                                  help_text='Un período cerrado congela los resultados.')
+
+    class Meta:
+        verbose_name = 'Período'
+        verbose_name_plural = 'Períodos'
+        ordering = ['-fecha_inicio']
+
+    def __str__(self):
+        return f"{self.titulo} ({self.salon})"
+
+    @property
+    def estado(self):
+        from django.utils import timezone
+        hoy = timezone.now().date()
+        if self.cerrado:
+            return 'cerrado'
+        if hoy > self.fecha_fin:
+            return 'vencido'
+        if hoy < self.fecha_inicio:
+            return 'futuro'
+        return 'activo'
+
+
+class AsignacionTaller(models.Model):
+    """Relaciona un Taller con un Período."""
+    periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE,
+                                related_name='talleres_asignados')
+    taller = models.ForeignKey(Taller, on_delete=models.CASCADE,
+                               related_name='asignaciones_periodo')
+    orden = models.PositiveSmallIntegerField(default=1)
+
+    class Meta:
+        verbose_name = 'Taller asignado'
+        verbose_name_plural = 'Talleres asignados'
+        unique_together = ('periodo', 'taller')
+        ordering = ['orden']
+
+    def __str__(self):
+        return f"{self.periodo.titulo} → {self.taller.titulo}"
+
+
+class AsignacionMinijuego(models.Model):
+    """Relaciona un Game con un Período."""
+    periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE,
+                                related_name='minijuegos_asignados')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE,
+                             related_name='asignaciones_periodo')
+    orden = models.PositiveSmallIntegerField(default=1)
+
+    class Meta:
+        verbose_name = 'Minijuego asignado'
+        verbose_name_plural = 'Minijuegos asignados'
+        unique_together = ('periodo', 'game')
+        ordering = ['orden']
+
+    def __str__(self):
+        return f"{self.periodo.titulo} → {self.game.title}"
+
+
+class RegistroMinijuegoPeriodo(TimeStampedModel):
+    """Rastrea si un estudiante completó un minijuego dentro de un período."""
+    periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE,
+                                related_name='registros_minijuego')
+    asignacion = models.ForeignKey(AsignacionMinijuego, on_delete=models.CASCADE,
+                                   related_name='registros')
+    estudiante = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name='registros_minijuego_periodo',
+    )
+    score = models.PositiveIntegerField(default=0)
+    max_score = models.PositiveIntegerField(default=0)
+    completado = models.BooleanField(default=False)
+    revisado = models.BooleanField(default=False)  # True = vio resultado, desaparece del panel
+
+    class Meta:
+        verbose_name = 'Registro de minijuego en período'
+        verbose_name_plural = 'Registros de minijuegos en período'
+        unique_together = ('asignacion', 'estudiante')
+
+    def __str__(self):
+        return f"{self.estudiante.username} — {self.asignacion.game.title} ({self.periodo.titulo})"
+
+    @property
+    def porcentaje(self):
+        if self.max_score:
+            return round((self.score / self.max_score) * 100)
+        return 0

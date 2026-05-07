@@ -44,8 +44,7 @@
     <div class="win-title">¡Globos reventados!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
-    <button class="btn btn-nestgrow btn-primary-nestgrow mt-3" onclick="location.reload()">🔄 Jugar de nuevo</button>
-    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
   </div>
 </div>
 {% endblock %}
@@ -142,18 +141,25 @@ function loseLife() {
   setTimeout(buildRound, 900);
 }
 
-function endGame() {
+async function endGame() {
   cancelAnimationFrame(animFrame);
   const maxScore = questions.length * POINTS_REWARD;
   const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
   document.getElementById('winScore').textContent = score;
   document.getElementById('winStars').textContent = pct >= 80 ? '⭐⭐⭐' : pct >= 50 ? '⭐⭐' : '⭐';
   document.getElementById('winOverlay').style.display = 'flex';
-  fetch(SAVE_URL, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
-    body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed: true })
-  });
+  try {
+    const res = await fetch(SAVE_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
+      body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed: true })
+    });
+    const data = await res.json();
+    if (data.registro_pk) {
+      document.getElementById('btnVolverPanel').href =
+        '/talleres/mis-talleres/?revisado=' + data.registro_pk;
+    }
+  } catch(e) {}
 }
 
 document.addEventListener('DOMContentLoaded', () => {

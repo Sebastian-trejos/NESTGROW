@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import (
     Taller, BloqueTaller, BloqueMinijuego, BloquePregunta,
     OpcionRespuesta, RespuestaEstudiante, SesionTaller,
+    Periodo, AsignacionTaller, AsignacionMinijuego, RegistroMinijuegoPeriodo,
 )
 
 
@@ -51,3 +52,45 @@ class SesionTallerAdmin(admin.ModelAdmin):
 class RespuestaEstudianteAdmin(admin.ModelAdmin):
     list_display = ('estudiante', 'pregunta', 'es_correcta', 'created_at')
     list_filter = ('es_correcta',)
+
+
+# ── Periodos ──────────────────────────────────────────────────────────────────
+
+class AsignacionTallerInline(admin.TabularInline):
+    model = AsignacionTaller
+    extra = 1
+    fields = ('taller', 'orden')
+    ordering = ['orden']
+
+
+class AsignacionMinijuegoInline(admin.TabularInline):
+    model = AsignacionMinijuego
+    extra = 1
+    fields = ('game', 'orden')
+    ordering = ['orden']
+
+
+@admin.register(Periodo)
+class PeriodoAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'salon', 'fecha_inicio', 'fecha_fin', 'is_activo', 'cerrado', 'estado')
+    list_filter = ('is_activo', 'cerrado', 'salon')
+    search_fields = ('titulo', 'salon__nombre')
+    inlines = [AsignacionTallerInline, AsignacionMinijuegoInline]
+    readonly_fields = ('estado',)
+
+    def estado(self, obj):
+        estados = {
+            'activo': '🟢 Activo',
+            'cerrado': '⚫ Cerrado',
+            'vencido': '🔴 Vencido',
+            'futuro': '🔵 Futuro',
+        }
+        return estados.get(obj.estado, obj.estado)
+    estado.short_description = 'Estado'
+
+
+@admin.register(RegistroMinijuegoPeriodo)
+class RegistroMinijuegoPeriodoAdmin(admin.ModelAdmin):
+    list_display = ('estudiante', 'asignacion', 'periodo', 'score', 'max_score', 'completado', 'revisado', 'created_at')
+    list_filter = ('completado', 'revisado', 'periodo')
+    search_fields = ('estudiante__username', 'asignacion__game__title')
