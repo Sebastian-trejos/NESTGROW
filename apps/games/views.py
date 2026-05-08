@@ -12,6 +12,46 @@ from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required
 
 
+# ── Vocabulario (JSON cliente) ───────────────────────────────────────────────
+
+def vocabulary_payload_for_game(game, vocabulary):
+    """
+    Lista de objetos coherentes para minijuegos. Campos opcionales (orden,
+    item_difficulty) los usa Memorama para modo medio; el resto de juegos pueden ignorarlos.
+    """
+    items_custom = game.contenido_custom.order_by('orden')
+    if items_custom.exists():
+        return [
+            {
+                'id': item.pk,
+                'word_en': item.texto_principal,
+                'word_es': item.texto_secundario,
+                'image': item.imagen.url if item.imagen else None,
+                'audio': item.audio.url if item.audio else None,
+                'es_correcto': item.es_correcto,
+                'orden': item.orden,
+                'item_difficulty': None,
+            }
+            for item in items_custom
+        ]
+    return [
+        {
+            'id': v.id,
+            'word_en': v.word_en,
+            'word_es': v.word_es,
+            'image': v.image.url if v.image else None,
+            'audio': v.audio.url if v.audio else None,
+            'orden': getattr(v, 'orden', 0),
+            'item_difficulty': v.difficulty,
+        }
+        for v in vocabulary.order_by('orden', 'word_en')
+    ]
+
+
+def vocabulary_json_for_game(game, vocabulary):
+    return json.dumps(vocabulary_payload_for_game(game, vocabulary))
+
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def verificar_logros(user):
@@ -124,31 +164,7 @@ def game_detail(request, pk):
     if game.game_type == 'painting':
         painting_words = list(game.painting_words.values_list('word', flat=True))
 
-    # Custom content overrides vocabulary when defined
-    items_custom = game.contenido_custom.order_by('orden')
-    if items_custom.exists():
-        vocabulary_json = json.dumps([
-            {
-                'id': item.pk,
-                'word_en': item.texto_principal,
-                'word_es': item.texto_secundario,
-                'image': item.imagen.url if item.imagen else None,
-                'audio': item.audio.url if item.audio else None,
-                'es_correcto': item.es_correcto,
-            }
-            for item in items_custom
-        ])
-    else:
-        vocabulary_json = json.dumps([
-            {
-                'id': v.id,
-                'word_en': v.word_en,
-                'word_es': v.word_es,
-                'image': v.image.url if v.image else None,
-                'audio': v.audio.url if v.audio else None,
-            }
-            for v in vocabulary
-        ])
+    vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
     logros_nuevos = []
     if request.user.role == 'estudiante':
@@ -194,22 +210,7 @@ def game_embed(request, pk):
     if game.game_type == 'painting':
         painting_words = list(game.painting_words.values_list('word', flat=True))
 
-    items_custom = game.contenido_custom.order_by('orden')
-    if items_custom.exists():
-        vocabulary_json = json.dumps([
-            {'id': item.pk, 'word_en': item.texto_principal, 'word_es': item.texto_secundario,
-             'image': item.imagen.url if item.imagen else None,
-             'audio': item.audio.url if item.audio else None,
-             'es_correcto': item.es_correcto}
-            for item in items_custom
-        ])
-    else:
-        vocabulary_json = json.dumps([
-            {'id': v.id, 'word_en': v.word_en, 'word_es': v.word_es,
-             'image': v.image.url if v.image else None,
-             'audio': v.audio.url if v.audio else None}
-            for v in vocabulary
-        ])
+    vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
     return render(request, template, {
         'game': game,

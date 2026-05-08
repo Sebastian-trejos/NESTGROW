@@ -2,8 +2,12 @@
 {% load static %}
 {% block title %}{{ game.title }} - NestGrow{% endblock %}
 
+{% block extra_css %}
+<link href="{% static 'games/css/games.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
-<div class="container py-4">
+<div class="container py-4 memoria-page">
   <div class="d-flex align-items-center gap-3 mb-4">
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🃏 {{ game.title }}</h3>
@@ -19,32 +23,69 @@
   {% include 'games/includes/vocabulary_tab.html' %}
 
   <div id="gameSection" style="display:none">
-    <div class="game-score-bar">
-      <span>🃏 Memoria</span>
+    <div class="game-score-bar flex-wrap gap-2">
+      <span>🃏 Memorama</span>
+      <span class="badge rounded-pill mem-diff-chip" title="Define el profesor al crear el minijuego">
+        {% if game.difficulty == 1 %}⭐ Fácil — 4 parejas{% elif game.difficulty == 2 %}⭐⭐ Medio — 6 parejas{% else %}⭐⭐⭐ Difícil — 8 parejas{% endif %}
+      </span>
       <span>Parejas: <strong id="matchCount">0</strong> / <strong id="totalPairs">0</strong></span>
       <span>⏱ <span id="timerDisplay">00:00</span></span>
     </div>
 
-    <div class="milo-banner mb-4">
-      <div class="milo-banner-owl">🐺</div>
-      <div class="milo-banner-text">¡Encuentra todas las parejas! Voltea las tarjetas y memoriza.</div>
+    <div class="milo-banner mb-3 mem-milo-tip">
+      <div class="milo-banner-owl mem-milo-owl-wrap">
+        <img src="{% static 'img/milo_hablando.png' %}" alt="" class="mem-milo-face" width="56" height="56" draggable="false">
+      </div>
+      <div class="milo-banner-text" id="memBannerText">¡Encuentra todas las parejas! Voltea las tarjetas y memoriza.</div>
     </div>
 
+    {% if game.difficulty == 2 %}
+    <div class="nestgrow-card mem-phase-card px-4 py-3 mb-3 text-center" role="status" aria-live="polite">
+      <div id="memPhaseHint" class="font-fredoka mb-0" style="color:var(--dark);font-size:1rem"></div>
+      <small class="text-muted">Si intentas parear la segunda zona antes de tiempo, ¡te guiaré con un mensajito!</small>
+    </div>
+    {% endif %}
+
+    {% if game.difficulty == 3 %}
+    <p class="text-center small text-muted mb-2">💡 Cada ~15 s las cartas del tablero se reordenan. En modo difícil, cada ~30 s ¡se fue la luz dentro de la arena!</p>
+    {% elif game.difficulty == 2 %}
+    <p class="text-center small text-muted mb-2">💡 Cada ~15 s el tablero mezcla las cartas pendientes dentro del recuadro.</p>
+    {% elif game.difficulty == 1 %}
+    <p class="text-center small text-muted mb-2">💡 Cada ~15 s las cartas se reordenan solas ¡dentro del recuadro de Milo!</p>
+    {% endif %}
+
     <div class="text-center mb-3">
-      <div class="stat-card d-inline-block px-5">
-        <div class="stat-number" id="scoreDisplay">0</div>
+      <div class="stat-card d-inline-block px-5 shadow-sm">
+        <div class="stat-number mem-score-pop" id="scoreDisplay">0</div>
         <div class="stat-label">Puntos</div>
       </div>
     </div>
 
-    <div id="memoryGrid" class="d-flex flex-wrap justify-content-center gap-2 mb-4"></div>
+    <div class="mem-board-shell nestgrow-card mb-5" aria-label="Zona del tablero Memorama">
+      <div class="mem-board-corner mem-board-corner-tl"></div>
+      <div class="mem-board-corner mem-board-corner-br"></div>
+      <p class="mem-board-tagline mb-0">
+        🎯 <strong>Arena de Milo</strong> — ¡todo pasa dentro de esta caja mágica!
+      </p>
+      <div class="mem-board-stage">
+        <div id="memoryGrid" class="memory-grid" aria-label="Cartas Memorama dentro del tablero"></div>
+        <div id="memBlackout" class="mem-blackout mem-blackout--board" aria-hidden="true">
+          <div class="mem-blackout-inner animate__animated animate__pulse">
+            <span class="mem-blackout-icon" aria-hidden="true">⚡</span>
+            <p class="mem-blackout-text">¡Se fue la luz!</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<div id="memToast" class="mem-toast nestgrow-card" role="status" aria-live="polite"></div>
+
 <div class="win-overlay" id="winOverlay" style="display:none">
   <div class="win-card text-center">
-    <div class="win-owl">🐺</div>
-    <div class="win-title">¡Memoria increíble!</div>
+    <div class="win-owl"><img src="{% static 'img/milo_fest.png' %}" alt="" style="width:72px;height:72px;object-fit:contain" draggable="false"></div>
+    <div class="win-title">¡Memorama increíble!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
     <p class="text-muted mt-2">Tiempo: <span id="winTime">0</span>s</p>
@@ -54,115 +95,22 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/memoria.js' %}"></script>
 <script>
-const VOCABULARY = {{ vocabulary_json|safe }};
-const GAME_ID = {{ game.id }};
-const POINTS_REWARD = {{ game.points_reward }};
-const SAVE_URL = "{% url 'games:save_score' %}";
-const CSRF = "{{ csrf_token }}";
-
-let flipped = [], matched = 0, score = 0, startTime, timerInterval, timeSpent = 0;
-let canFlip = true;
-
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-
-function init() {
-  const words = VOCABULARY.slice(0, 8); // max 8 pairs = 16 cards
-  const totalPairs = words.length;
-  document.getElementById('totalPairs').textContent = totalPairs;
-
-  const cards = shuffle([
-    ...words.map((w, i) => ({ id: i, face: w.word_en, type: 'en', pairId: i })),
-    ...words.map((w, i) => ({ id: i + totalPairs, face: w.word_es, type: 'es', pairId: i })),
-  ]);
-
-  const grid = document.getElementById('memoryGrid');
-  grid.innerHTML = '';
-  cards.forEach(card => {
-    const el = document.createElement('div');
-    el.className = 'memory-card';
-    el.dataset.pairId = card.pairId;
-    el.dataset.type = card.type;
-    el.innerHTML = `<div class="memory-front">🐺</div><div class="memory-back">${card.face}</div>`;
-    el.addEventListener('click', () => flipCard(el));
-    grid.appendChild(el);
+document.addEventListener('DOMContentLoaded', function () {
+  initMemoria({
+    VOCABULARY: {{ vocabulary_json|safe }},
+    DIFFICULTY: {{ game.difficulty }},
+    GAME_ID: {{ game.id }},
+    POINTS_REWARD: {{ game.points_reward }},
+    SAVE_URL: "{% url 'games:save_score' %}",
+    CSRF: "{{ csrf_token }}",
+    MILO_CARD_BACK_URL: "{% static 'img/milo_rostro.png' %}",
+    CATEGORY_ICON: "{{ game.category.icon|escapejs }}",
+    CATEGORY_NAME_ES: "{{ game.category.name|escapejs }}",
+    categoryColor: "{{ game.category.color|default:'#6C63FF'|escapejs }}",
+    autoStartPlay: {% if embedded %}true{% else %}false{% endif %},
   });
-
-  startTime = Date.now();
-  timerInterval = setInterval(() => {
-    timeSpent = Math.floor((Date.now() - startTime) / 1000);
-    const m = String(Math.floor(timeSpent / 60)).padStart(2, '0');
-    const s = String(timeSpent % 60).padStart(2, '0');
-    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
-  }, 1000);
-}
-
-function flipCard(el) {
-  if (!canFlip || el.classList.contains('matched') || el.classList.contains('flipped')) return;
-  el.classList.add('flipped');
-  flipped.push(el);
-  if (flipped.length === 2) {
-    canFlip = false;
-    const [a, b] = flipped;
-    if (a.dataset.pairId === b.dataset.pairId && a.dataset.type !== b.dataset.type) {
-      a.classList.add('matched'); b.classList.add('matched');
-      matched++;
-      score += POINTS_REWARD;
-      document.getElementById('matchCount').textContent = matched;
-      document.getElementById('scoreDisplay').textContent = score;
-      flipped = []; canFlip = true;
-      const totalPairs = parseInt(document.getElementById('totalPairs').textContent);
-      if (matched === totalPairs) endGame();
-    } else {
-      setTimeout(() => {
-        a.classList.remove('flipped'); b.classList.remove('flipped');
-        flipped = []; canFlip = true;
-      }, 900);
-    }
-  }
-}
-
-async function endGame() {
-  clearInterval(timerInterval);
-  const totalPairs = parseInt(document.getElementById('totalPairs').textContent);
-  const maxScore = totalPairs * POINTS_REWARD;
-  const pct = Math.round((score / maxScore) * 100);
-  document.getElementById('winScore').textContent = score;
-  document.getElementById('winTime').textContent = timeSpent;
-  document.getElementById('winStars').textContent = pct >= 90 ? '⭐⭐⭐' : pct >= 60 ? '⭐⭐' : '⭐';
-  document.getElementById('winOverlay').style.display = 'flex';
-  try {
-    const res = await fetch(SAVE_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
-      body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: timeSpent, completed: true })
-    });
-    const data = await res.json();
-    if (data.registro_pk) {
-      document.getElementById('btnVolverPanel').href =
-        '/talleres/mis-talleres/?revisado=' + data.registro_pk;
-    }
-  } catch(e) {}
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('gameSection').style.display = 'block';
-  init();
 });
 </script>
-<style>
-.memory-card { width:100px; height:100px; cursor:pointer; perspective:600px; }
-.memory-card .memory-front,.memory-card .memory-back {
-  position:absolute; width:100%; height:100%; border-radius:12px;
-  display:flex; align-items:center; justify-content:center;
-  backface-visibility:hidden; transition:transform .4s; font-size:1.1rem; font-weight:600; padding:8px; text-align:center;
-}
-.memory-card { position:relative; transform-style:preserve-3d; }
-.memory-card .memory-front { background:var(--primary); color:white; font-size:2rem; }
-.memory-card .memory-back { background:white; border:3px solid var(--primary); color:var(--dark); transform:rotateY(180deg); }
-.memory-card.flipped { transform:rotateY(180deg); }
-.memory-card.matched .memory-back { background:#d4edda; border-color:#28a745; }
-.win-overlay { display:flex; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; align-items:center; justify-content:center; }
-.win-card { background:white; border-radius:24px; padding:2rem; max-width:380px; width:90%; }
-</style>
 {% endblock %}

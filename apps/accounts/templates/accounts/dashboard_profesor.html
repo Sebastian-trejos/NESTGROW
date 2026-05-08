@@ -159,13 +159,13 @@
              onmouseout="this.style.transform='translateY(0)'">
             <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Salón
           </a>
-          <a href="{% url 'games:gestionar_juegos' %}"
+          <a href="{% url 'talleres:lista_periodos' %}"
              style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.5);
                     border-radius:50px;padding:10px 24px;font-family:'Fredoka One',cursive;
                     font-size:1rem;text-decoration:none;transition:all 0.3s;display:inline-block"
              onmouseover="this.style.background='rgba(255,255,255,0.3)'"
              onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-            <i class="bi bi-controller-fill me-1"></i>Gestionar Juegos
+            <i class="bi bi-calendar2-week-fill me-1"></i>Períodos
           </a>
         </div>
       </div>
@@ -211,10 +211,12 @@
     <div class="col-6 col-md-3">
       <div class="stat-card-prof" style="border-top-color:#FFB347">
         <div class="stat-icon-wrap" style="background:#fff9ee">
-          <i class="bi bi-key-fill" style="color:#FFB347"></i>
+          <i class="bi bi-lightning-charge-fill" style="color:#FFB347"></i>
         </div>
-        <div class="codigo-badge">{{ profile.codigo_clase }}</div>
-        <div style="font-size:0.8rem;font-weight:700;color:#888;margin-top:4px">Código Profe</div>
+        <div style="font-size:0.85rem;font-weight:800;color:#FFB347;margin-top:4px">Atajos</div>
+        <div style="font-size:0.8rem;font-weight:700;color:#888;margin-top:2px">
+          Usa “Gestión” en la barra superior
+        </div>
       </div>
     </div>
   </div>
@@ -225,28 +227,6 @@
       <i class="bi bi-lightning-charge-fill me-2" style="color:#FFB347"></i>Acciones Rápidas
     </h5>
     <div class="row g-3">
-      <div class="col-6 col-md-3">
-        <a href="{% url 'accounts:crear_salon' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#6C63FF'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f0eeff">
-            <i class="bi bi-building-fill" style="color:#6C63FF"></i>
-          </div>
-          <div class="fw-bold small" style="color:#6C63FF">Nuevo Salón</div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:gestionar_juegos' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#FF6B6B'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#fff0f0">
-            <i class="bi bi-controller" style="color:#FF6B6B"></i>
-          </div>
-          <div class="fw-bold small" style="color:#FF6B6B">Gestionar Juegos</div>
-        </a>
-      </div>
       <div class="col-6 col-md-3">
         <a href="{% url 'games:gestionar_categorias' %}" class="quick-card-prof"
            style="border-color:transparent"
@@ -292,14 +272,25 @@
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'talleres:lista_periodos' %}" class="quick-card-prof"
+        <a href="{% url 'historia:panel_historia_profesor' %}" class="quick-card-prof"
            style="border-color:transparent"
-           onmouseover="this.style.borderColor='#7b1fa2'"
+           onmouseover="this.style.borderColor='#6C63FF'"
            onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f3e5f5">
-            <i class="bi bi-calendar2-week-fill" style="color:#7b1fa2"></i>
+          <div class="quick-icon-prof" style="background:#f0eeff">
+            <i class="bi bi-map-fill" style="color:#6C63FF"></i>
           </div>
-          <div class="fw-bold small" style="color:#7b1fa2">Períodos</div>
+          <div class="fw-bold small" style="color:#6C63FF">Modo Historia</div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'games:gestionar_juegos' %}" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#FF6B6B'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#fff0f0">
+            <i class="bi bi-controller" style="color:#FF6B6B"></i>
+          </div>
+          <div class="fw-bold small" style="color:#FF6B6B">Juegos</div>
         </a>
       </div>
     </div>
@@ -310,10 +301,6 @@
     <h4 class="font-fredoka mb-0" style="color:var(--primary)">
       <i class="bi bi-building-fill me-2"></i>Mis Salones
     </h4>
-    <a href="{% url 'accounts:crear_salon' %}"
-       class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
-      <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Salón
-    </a>
   </div>
 
   {% if salones %}

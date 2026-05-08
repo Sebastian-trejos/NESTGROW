@@ -1,0 +1,45 @@
+---
+description: Project architecture awareness
+alwaysApply: true
+---
+
+# ARCHITECTURE AWARENESS
+
+Before making changes:
+
+- analyze the project structure
+- understand component relationships
+- understand folder organization
+- preserve current architecture
+
+# CODE STYLE
+
+Prefer:
+- reusable UI components
+- modular structure
+- maintainable code
+- clean component separation
+
+# CONSISTENCY
+
+Maintain consistency with:
+- existing UI patterns
+- current styling system
+- design language
+- component structure
+
+# IMPORTANT
+
+Do NOT introduce:
+- random design systems
+- conflicting styling patterns
+- duplicated components
+- unnecessary dependencies
+
+# WORKFLOW
+
+When editing:
+1. understand the existing implementation
+2. improve visually
+3. preserve behavior
+4. minimize risk

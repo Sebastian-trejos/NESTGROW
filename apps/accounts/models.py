@@ -59,17 +59,6 @@ class Salon(TimeStampedModel):
 class ProfesorProfile(TimeStampedModel):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profesor_profile')
     institucion = models.CharField(max_length=200, blank=True)
-    codigo_clase = models.CharField(max_length=10, unique=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if not self.codigo_clase:
-            import random, string
-            while True:
-                code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-                if not ProfesorProfile.objects.filter(codigo_clase=code).exists():
-                    self.codigo_clase = code
-                    break
-        super().save(*args, **kwargs)
 
     def get_total_estudiantes(self):
         return EstudianteProfile.objects.filter(salon__profesor=self).count()

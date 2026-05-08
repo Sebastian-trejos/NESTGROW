@@ -21,3 +21,409 @@
 }
 .puzzle-piece:hover { transform: scale(1.05); }
 .puzzle-piece.selected { box-shadow: 0 0 0 4px var(--accent); }
+
+/* ── Memorama ─────────────────────────────────────────── */
+.mem-board-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px !important;
+  padding: 1rem 1.25rem 1.35rem;
+  border: 4px solid rgba(108, 99, 255, 0.35) !important;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.45),
+    0 20px 50px rgba(70, 60, 150, 0.18),
+    0 6px 0 rgba(85, 70, 200, 0.12);
+  background:
+    radial-gradient(circle at 12% -10%, rgba(255, 255, 255, 0.55), transparent 42%),
+    linear-gradient(168deg, #fbfaff 0%, #eef4ff 45%, #f6faff 100%);
+}
+
+.mem-shell--shuffle-pulse {
+  animation: memShellShake 0.55s cubic-bezier(0.36, 1.56, 0.64, 1);
+}
+
+@keyframes memShellShake {
+  0%, 100% { box-shadow: 0 20px 50px rgba(70, 60, 150, 0.18); }
+  40% {
+    border-color: rgba(255, 183, 71, 0.75) !important;
+    box-shadow:
+      inset 0 0 0 2px rgba(255, 255, 255, 0.5),
+      0 26px 60px rgba(255, 160, 60, 0.28);
+    transform: scale(1.01);
+  }
+}
+
+.mem-board-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 1;
+}
+.mem-board-corner-tl {
+  top: 14px;
+  left: 14px;
+  border-top: 4px solid var(--primary);
+  border-left: 4px solid var(--primary);
+}
+.mem-board-corner-br {
+  bottom: 14px;
+  right: 14px;
+  border-bottom: 4px solid #ffb347;
+  border-right: 4px solid #ffb347;
+}
+
+.mem-board-tagline {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #4a4664;
+  font-size: 0.95rem;
+  margin-bottom: 0.95rem !important;
+}
+
+.mem-board-stage {
+  position: relative;
+  z-index: 3;
+  border-radius: 20px;
+  padding: 0.75rem;
+  margin-top: 0.35rem;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 0 0 2px rgba(108, 99, 255, 0.12),
+    inset 0 -4px 0 rgba(255, 255, 255, 0.6);
+}
+
+.memory-grid {
+  --mem-accent: #6c63ff;
+  position: relative;
+  z-index: 4;
+  display: grid;
+  gap: 1.15rem 1.05rem;
+  justify-items: center;
+  align-items: stretch;
+  width: 100%;
+}
+
+.memory-grid.memory-grid--pairs4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+.memory-grid.memory-grid--pairs6 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.memory-grid.memory-grid--pairs8 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+@media (max-width: 991px) {
+  .memory-grid.memory-grid--pairs6,
+  .memory-grid.memory-grid--pairs8 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .memory-grid.memory-grid--pairs4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.95rem;
+  }
+  .memory-grid.memory-grid--pairs6,
+  .memory-grid.memory-grid--pairs8 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.mem-diff-chip {
+  background: linear-gradient(135deg, #ffe9c9, #ffc8dc);
+  color: #5c3566 !important;
+  font-weight: 800;
+}
+
+.mem-milo-tip.milo-banner {
+  align-items: center;
+  border-radius: 22px;
+  box-shadow: 0 14px 40px rgba(108, 99, 255, 0.12);
+}
+
+.mem-milo-owl-wrap.mem-milo-owl-wrap {
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mem-milo-face {
+  border-radius: 50%;
+  object-fit: cover;
+  filter: drop-shadow(0 4px 12px rgba(108, 99, 255, 0.25));
+  animation: memMiloPeek 4s ease-in-out infinite;
+}
+
+@keyframes memMiloPeek {
+  0%, 100% { transform: rotate(-4deg) translateY(0); }
+  50% { transform: rotate(3deg) translateY(-6px); }
+}
+
+.mem-phase-card {
+  border-radius: 20px !important;
+  border: 3px dashed rgba(108, 99, 255, 0.45) !important;
+  animation: memPhaseGlow 6s ease-in-out infinite alternate;
+}
+
+@keyframes memPhaseGlow {
+  from { box-shadow: 0 10px 32px rgba(255, 183, 77, 0.15); }
+  to { box-shadow: 0 14px 40px rgba(108, 99, 255, 0.2); }
+}
+
+.mem-phase-chip {
+  display: inline-block;
+  padding: 0.15rem 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fde68a, #fbcfe8);
+  font-weight: 800;
+  margin-right: 0.35rem;
+}
+
+.memory-slot {
+  width: 100%;
+  max-width: 174px;
+  perspective: 1000px;
+}
+
+.memory-slot.slot-matched {
+  pointer-events: none;
+}
+
+.memory-slot.slot-matched .memory-inner {
+  filter: saturate(1.15) brightness(1.06);
+}
+
+.memory-slot--shuffling {
+  filter: brightness(1.05);
+}
+
+.memory-card {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+  transform-origin: center center;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease;
+}
+
+.memory-card:hover:not(.matched) {
+  transform: translateY(-6px) rotate(-1.8deg);
+}
+
+.memory-card.matched:hover {
+  transform: none;
+}
+
+.memory-card.memory-wrong-tier {
+  animation: memShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes memShake {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(-10px); }
+  60% { transform: translateX(10px); }
+}
+
+.memory-inner {
+  position: relative;
+  aspect-ratio: 1 / 1.12;
+  width: 100%;
+  transition: transform 0.54s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.memory-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.memory-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  padding: 0.55rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: 0 10px 26px rgba(40, 32, 80, 0.18);
+}
+
+.memory-cover {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.92), transparent 40%),
+    linear-gradient(140deg, #8b83ff 0%, var(--mem-accent, #6c63ff) 52%, #4f46e5 100%);
+  border: 4px solid rgba(255, 255, 255, 0.55);
+}
+
+.mem-cover-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    radial-gradient(circle at 20% 30%, white 10%, transparent 11%),
+    radial-gradient(circle at 72% 64%, white 11%, transparent 12%);
+}
+
+.memory-milo-thumb {
+  position: relative;
+  z-index: 2;
+  width: 70% !important;
+  height: auto !important;
+  max-height: 78%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  animation: miloTinyWiggle 5s ease-in-out infinite;
+}
+
+@keyframes miloTinyWiggle {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(8deg); }
+}
+
+.memory-deco {
+  position: absolute;
+  bottom: 12%;
+  right: 10%;
+  font-size: 1.15rem;
+  opacity: 0.92;
+}
+
+.memory-reveal {
+  transform: rotateY(180deg);
+  background: linear-gradient(155deg, #fffef9 6%, #f3f9ff 100%);
+  border: 4px solid var(--mem-accent, #6c63ff);
+  gap: 0.15rem;
+}
+
+.memory-emoji {
+  font-size: 2.45rem;
+  line-height: 1;
+}
+
+.memory-lang {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.9rem, 2.75vw, 1.14rem);
+  text-align: center;
+  line-height: 1.22;
+  color: #38344a;
+  word-break: break-word;
+}
+
+.memory-card.matched .memory-reveal {
+  background: linear-gradient(155deg, #ecfdf5, #ecfdf9);
+  border-color: #22c55e;
+  animation: memMatchBurst 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes memMatchBurst {
+  from { transform: rotateY(180deg) scale(0.9); opacity: 0.75; }
+  to { transform: rotateY(180deg) scale(1); opacity: 1; }
+}
+
+.mem-score-pop.stats-up {
+  animation: memScorePopKey 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes memScorePopKey {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.12); color: var(--accent); }
+}
+
+.mem-blackout {
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity 0.42s ease,
+    visibility 0.42s;
+}
+
+/** Apagón solo sobre el tablero (dentro de .mem-board-shell) */
+.mem-blackout.mem-blackout--board {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  z-index: 60;
+  background: #000000;
+}
+
+.mem-blackout.mem-blackout--board .mem-blackout-inner {
+  position: relative;
+  z-index: 70;
+}
+
+.mem-blackout.mem-blackout--board.mem-blackout--on {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mem-blackout-inner {
+  text-align: center;
+  padding: 0.5rem 1rem;
+}
+
+.mem-blackout-icon {
+  font-size: clamp(4rem, 18vw, 7rem);
+  display: block;
+  filter: drop-shadow(0 0 24px rgba(255, 220, 100, 0.9));
+}
+
+.mem-blackout-text {
+  margin: 0;
+  margin-top: 0.85rem;
+  font-family: "Fredoka One", system-ui;
+  font-size: clamp(1.85rem, 7vw, 3rem);
+  color: #fff8d4;
+  text-shadow:
+    0 0 20px rgba(255, 200, 60, 0.9),
+    0 8px 0 #3b2f6b;
+}
+
+.mem-toast {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  z-index: 12010;
+  max-width: min(560px, 94vw);
+  padding: 0.75rem 1.25rem;
+  opacity: 0;
+  transition: opacity 0.42s ease, transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-weight: 800;
+  text-align: center;
+  pointer-events: none;
+  border-radius: 18px !important;
+  border: 3px solid rgba(108, 99, 255, 0.35) !important;
+}
+
+@media (max-width: 576px) {
+  .mem-board-shell {
+    padding: 0.85rem 0.65rem;
+  }
+}

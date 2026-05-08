@@ -1,0 +1,148 @@
+---
+description: UI/UX rules for the children's educational app
+alwaysApply: true
+---
+
+# UI/UX PRIORITY
+
+This project is a highly visual and interactive educational application for children.
+
+The AI must constantly improve the visual experience while preserving all business logic.
+
+# VISUAL GOALS
+
+Every screen, activity, game, panel, modal, card, menu, dashboard, reward system, or interaction should feel:
+
+- Colorful
+- Friendly
+- Stimulating
+- Dynamic
+- Emotionally positive
+- Highly visual
+- Child-oriented
+- Interactive
+- Playful
+- Gamified
+
+# UI STYLE
+
+Prefer:
+
+- Rounded corners
+- Large buttons
+- Soft shadows
+- Bright but balanced colors
+- Animated feedback
+- Smooth transitions
+- Visual hierarchy
+- Cute illustrations
+- Large readable typography
+- Friendly spacing
+- Playful layouts
+- Visual rewards
+- Fun empty states
+- Interactive hover/tap states
+- Floating elements
+- Progress indicators
+- XP bars
+- Stars
+- Coins
+- Achievement systems
+- Mascots
+- Cartoon-like UI
+
+# CHILDREN EXPERIENCE RULES
+
+The interface should feel similar in emotional quality to:
+
+- Duolingo Kids
+- PBS Kids
+- Toca Boca
+- Khan Academy Kids
+- Pou minigames
+- Nintendo-like interfaces
+
+The app should prioritize:
+- dopamine feedback
+- positive reinforcement
+- curiosity
+- reward sensation
+- exploration
+- visual stimulation
+
+# IMAGES & VISUAL ASSETS
+
+ALWAYS take advantage of:
+
+- existing images
+- illustrations
+- icons
+- stickers
+- emojis
+- gradients
+- SVGs
+- animations
+- visual assets already available in the project
+
+Never leave sections visually empty if assets can improve them.
+
+# LIBRARIES
+
+Prefer using modern UI/animation libraries when needed:
+
+- Framer Motion
+- Lottie
+- GSAP
+- TailwindCSS
+- shadcn/ui
+- Lucide Icons
+
+Only use libraries already compatible with the project stack unless explicitly approved.
+
+# UX RULES
+
+Every interaction should:
+- feel rewarding
+- feel responsive
+- provide visual feedback
+- avoid boredom
+- avoid visually flat layouts
+- avoid corporate/minimal sterile design
+
+Always improve:
+- spacing
+- visual rhythm
+- hierarchy
+- accessibility
+- clarity
+- readability
+
+# EMOJIS
+
+Use emojis strategically when appropriate in:
+- rewards
+- badges
+- notifications
+- achievements
+- onboarding
+- positive feedback
+
+Avoid emoji spam.
+
+# RESPONSIVE DESIGN
+
+UI must work correctly on:
+- desktop
+- tablet
+- mobile
+
+# IMPORTANT
+
+The goal is NOT minimalism.
+
+The goal is:
+- engagement
+- stimulation
+- delight
+- emotional connection
+- playful learning

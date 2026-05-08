@@ -39,8 +39,8 @@ class SalonAdmin(admin.ModelAdmin):
 
 @admin.register(ProfesorProfile)
 class ProfesorProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'institucion', 'codigo_clase')
-    search_fields = ('user__username', 'user__first_name', 'codigo_clase')
+    list_display = ('user', 'institucion')
+    search_fields = ('user__username', 'user__first_name')
 
 
 @admin.register(EstudianteProfile)

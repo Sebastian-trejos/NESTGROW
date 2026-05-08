@@ -1,0 +1,108 @@
+---
+description: Minigame systems and gameplay logic
+alwaysApply: true
+---
+
+# MINIGAME DESIGN RULES
+
+This application contains educational minigames for children.
+
+All minigames must prioritize:
+- fun
+- clarity
+- responsiveness
+- dopamine feedback
+- replayability
+- learning reinforcement
+
+# GAMEPLAY PRINCIPLES
+
+Minigames should:
+- feel intuitive
+- have immediate feedback
+- reward participation
+- avoid frustration
+- encourage curiosity
+- maintain engagement
+
+# GAME FLOW
+
+Every minigame should contain:
+- clear objective
+- visual onboarding
+- rewarding interactions
+- progression systems
+- completion feedback
+- retry encouragement
+
+# EDUCATIONAL PURPOSE
+
+Minigames must reinforce:
+- English vocabulary
+- pronunciation
+- listening
+- memory
+- association
+- fast recognition
+- sentence building
+
+# GAME MECHANICS
+
+Prefer:
+- drag and drop
+- matching systems
+- reaction mechanics
+- memory games
+- quizzes
+- puzzle mechanics
+- collection systems
+- rewards
+- XP systems
+- stars
+- streaks
+- achievements
+
+# IMPORTANT
+
+Avoid:
+- overly complex mechanics
+- confusing interfaces
+- punishing systems
+- frustrating fail states
+
+# FAIL STATES
+
+Children should never feel punished.
+
+Prefer:
+- soft failure
+- encouragement
+- retries
+- positive reinforcement
+
+# PERFORMANCE
+
+Games must:
+- feel smooth
+- minimize latency
+- avoid freezes
+- provide instant feedback
+
+# CODE STRUCTURE
+
+Gameplay logic must:
+- remain modular
+- reusable
+- isolated
+- maintainable
+
+Avoid duplicated game logic.
+
+# GAME SAFETY
+
+Never break:
+- score systems
+- rewards
+- progression
+- save systems
+- student progress tracking
