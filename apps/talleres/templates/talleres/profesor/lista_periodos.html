@@ -57,9 +57,14 @@
           </span>
           {% endif %}
         </div>
-        <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm w-100">
-          📊 Ver resultados
-        </a>
+        <div class="d-flex gap-2">
+          <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm flex-grow-1">
+            📊 Ver resultados
+          </a>
+          <a href="{% url 'talleres:eliminar_periodo' p.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">
+            🗑️
+          </a>
+        </div>
       </div>
     </div>
     {% endwith %}

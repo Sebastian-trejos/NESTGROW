@@ -711,6 +711,22 @@ def cerrar_periodo(request, pk):
     return redirect('talleres:resultados_periodo', pk=pk)
 
 
+@login_required
+@profesor_required
+def eliminar_periodo(request, pk):
+    """Permite al profesor borrar un período propio (con confirmación)."""
+    salon_qs = _salon_qs(request.user)
+    periodo = get_object_or_404(Periodo, pk=pk, salon__in=salon_qs)
+    if request.method == 'POST':
+        titulo = periodo.titulo
+        periodo.delete()
+        messages.success(request, f'🗑️ Período "{titulo}" eliminado.')
+        return redirect('talleres:lista_periodos')
+    return render(request, 'talleres/profesor/confirmar_eliminar_periodo.html', {
+        'periodo': periodo
+    })
+
+
 # ── Periodos — Estudiante ─────────────────────────────────────────────────────
 
 @login_required

@@ -235,7 +235,7 @@ def ranking_salon(request):
         messages.info(request, 'Únete a un salón para ver el ranking.')
         return redirect('accounts:dashboard_estudiante')
 
-    compañeros = sorted(
+    ranking = sorted(
         salon.estudiantes.select_related('user').all(),
         key=lambda p: p.puntos_acumulados,
         reverse=True,
@@ -248,7 +248,7 @@ def ranking_salon(request):
     return render(request, 'games/ranking_salon.html', {
         'logros_nuevos': logros_nuevos,
         'salon': salon,
-        'compañeros': compañeros,
+        'ranking': ranking,
         'mi_perfil': estudiante,
     })
 

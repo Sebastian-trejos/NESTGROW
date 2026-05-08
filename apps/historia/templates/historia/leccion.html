@@ -675,6 +675,15 @@ async function finalizarLeccion() {
     });
     const data = await resp.json();
 
+    // Replay de una lección ya completada: solo felicita, no da recompensas ni cambia estrellas.
+    if (data.status === 'ya_completada') {
+      data.puntos_xp = 0;
+      data.huesos = 0;
+      data.nivel_subio = false;
+      data.nivel_nuevo = null;
+      data.logros_nuevos = [];
+    }
+
     // Show stars
     const starsRow = document.getElementById('starsRow');
     for (let i = 1; i <= 3; i++) {

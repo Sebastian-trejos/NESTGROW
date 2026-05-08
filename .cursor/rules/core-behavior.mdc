@@ -1,0 +1,31 @@
+---
+description: Core AI behavior and safety rules
+alwaysApply: true
+---
+
+# Core Behavior Rules
+
+Read CLAUDE.md before making changes.
+
+Understand architecture before editing files.
+
+Never rewrite unrelated files.
+
+Do a little explain of the plan before major refactors.
+
+Preserve naming conventions and project structure.
+
+Avoid introducing unnecessary libraries.
+
+Ask before modifying:
+- auth
+- database
+- routing
+- deployment
+- environment configs
+
+Prefer focused edits.
+
+Do not create duplicate logic.
+
+Check existing utilities before creating new ones.

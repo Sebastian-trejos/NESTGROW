@@ -222,22 +222,12 @@ def ver_leccion(request, pk):
         defaults={'intentos': 1, 'actividad_actual': 0},
     )
 
-    # New attempt: if just created OR restarting a completed lesson
-    if not created:
-        if progreso.completada:
-            # Retry: reset progress
-            progreso.completada      = False
-            progreso.actividad_actual = 0
-            progreso.puntos_obtenidos = 0
-            progreso.intentos        += 1
-            progreso.save(update_fields=[
-                'completada', 'actividad_actual', 'puntos_obtenidos', 'intentos'
-            ])
-            # Clear previous answers for a clean retry
-            RespuestaActividad.objects.filter(progreso=progreso).delete()
-        elif created is False and progreso.actividad_actual == 0 and progreso.intentos == 0:
-            progreso.intentos = 1
-            progreso.save(update_fields=['intentos'])
+    # Si la lección ya está completada, NO se debe resetear el progreso.
+    # Rehacerla debe ser un "replay" que felicita al estudiante sin alterar
+    # bloqueos del mapa ni estrellas ya ganadas.
+    if not created and progreso.intentos == 0:
+        progreso.intentos = 1
+        progreso.save(update_fields=['intentos'])
 
     actividades_json = json.dumps([
         {
@@ -279,6 +269,15 @@ def guardar_respuesta(request):
             estudiante=request.user,
             leccion=leccion,
         )
+
+        if progreso.completada:
+            total_acts = leccion.actividades.count()
+            return JsonResponse({
+                'status': 'ok',
+                'es_correcta': None,
+                'puntos': 0,
+                'es_ultima_actividad': actividad.orden >= total_acts,
+            })
 
         es_correcta, _ = _evaluar_respuesta(actividad, respuesta_dada)
 
