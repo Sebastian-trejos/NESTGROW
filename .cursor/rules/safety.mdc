@@ -1,3 +1,77 @@
 ---
+description: Prevent unwanted modifications and protect application logic
 alwaysApply: true
 ---
+
+# SAFETY RULES
+
+DO NOT modify:
+- backend logic
+- authentication
+- database logic
+- APIs
+- business logic
+- routing
+- state management
+- server logic
+- payment systems
+- data structures
+
+unless explicitly requested.
+
+# EDIT SCOPE
+
+Only modify files directly related to:
+- styles
+- UI
+- UX
+- animations
+- visual assets
+- layouts
+- responsiveness
+- accessibility
+- design systems
+
+# FILE SAFETY
+
+Never rewrite unrelated files.
+
+Never refactor unrelated systems.
+
+Never rename files or folders unless explicitly requested.
+
+Never remove existing functionality.
+
+Preserve:
+- architecture
+- project structure
+- naming conventions
+- component hierarchy
+
+# BEFORE EDITING
+
+Always:
+1. analyze related files
+2. understand the component structure
+3. preserve functionality
+4. avoid side effects
+
+# IMPORTANT
+
+UI improvements must NEVER break functionality.
+
+If a UI change risks affecting logic:
+- ask first
+- or avoid the modification
+
+# MINIMAL IMPACT POLICY
+
+Prefer:
+- localized edits
+- modular changes
+- reusable components
+
+Avoid:
+- massive rewrites
+- unnecessary refactors
+- large-scale architecture changes
