@@ -113,15 +113,13 @@ class EstudianteUserForm(forms.ModelForm):
 class EstudianteProfileForm(forms.ModelForm):
     class Meta:
         model = EstudianteProfile
-        fields = ('grado', 'numero_identidad', 'correo_padre')
+        fields = ('grado', 'correo_padre')
         widgets = {
             'grado': forms.Select(attrs={'class': 'form-select'}),
-            'numero_identidad': forms.TextInput(attrs=fc('N° de tarjeta de identidad')),
             'correo_padre': forms.EmailInput(attrs=fc('correo@ejemplo.com')),
         }
         labels = {
             'grado': 'Grado',
-            'numero_identidad': 'N° Tarjeta de Identidad',
             'correo_padre': 'Correo del padre/madre de familia',
         }
 

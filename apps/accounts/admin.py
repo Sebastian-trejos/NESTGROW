@@ -47,4 +47,4 @@ class ProfesorProfileAdmin(admin.ModelAdmin):
 class EstudianteProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'grado', 'salon', 'puntos_totales', 'nivel', 'correo_padre')
     list_filter = ('grado', 'nivel')
-    search_fields = ('user__username', 'user__first_name', 'numero_identidad')
+    search_fields = ('user__username', 'user__first_name', 'numero_lista')

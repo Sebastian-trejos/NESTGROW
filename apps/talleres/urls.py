@@ -24,6 +24,7 @@ urlpatterns = [
     path('periodos/<int:pk>/resultados/', views.resultados_periodo, name='resultados_periodo'),
     path('periodos/<int:pk>/cerrar/', views.cerrar_periodo, name='cerrar_periodo'),
     path('periodos/<int:pk>/eliminar/', views.eliminar_periodo, name='eliminar_periodo'),
+    path('periodos/<int:pk>/enviar-informe/', views.enviar_informe_periodo, name='enviar_informe_periodo'),
 
     # ── Estudiante ────────────────────────────────────────────────────────────
     path('mis-talleres/', views.mis_talleres, name='mis_talleres'),

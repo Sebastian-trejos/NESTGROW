@@ -123,7 +123,7 @@ def generar_pdf_informe(estudiante, progreso, talleres_data):
     nombre        = estudiante.user.get_full_name() or estudiante.user.username
     salon_nombre  = estudiante.salon.nombre if estudiante.salon else '-'
     grado         = estudiante.get_grado_display() if estudiante.grado else '-'
-    identidad     = estudiante.numero_identidad or '-'
+    identidad     = (f'N° Lista: {estudiante.numero_lista}') if estudiante.numero_lista else '-'
     profesor_nom  = (
         estudiante.salon.profesor.user.get_full_name()
         if estudiante.salon else '-'
@@ -297,6 +297,126 @@ def generar_pdf_informe(estudiante, progreso, talleres_data):
     story.append(Paragraph(
         'Este informe fue generado automaticamente por NestGrow · '
         f'Plataforma de Aprendizaje de Ingles · {date.today().strftime("%d/%m/%Y")}',
+        footer_style,
+    ))
+
+    doc.build(story)
+    return buffer.getvalue()
+
+
+def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijuegos, estrellas_historia):
+    """PDF de resultados de un período para un estudiante."""
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                            leftMargin=2*cm, rightMargin=2*cm,
+                            topMargin=2*cm, bottomMargin=2*cm)
+
+    styles = getSampleStyleSheet()
+    primary = colors.HexColor('#6C63FF')
+    accent  = colors.HexColor('#4ECDC4')
+    light   = colors.HexColor('#F8F6FF')
+
+    title_style   = ParagraphStyle('T', parent=styles['Heading1'], textColor=primary, fontSize=18, spaceAfter=4, alignment=TA_CENTER)
+    sub_style     = ParagraphStyle('S', parent=styles['Normal'],   textColor=colors.grey, fontSize=10, spaceAfter=2, alignment=TA_CENTER)
+    section_style = ParagraphStyle('Sec', parent=styles['Heading2'], textColor=primary, fontSize=13, spaceBefore=14, spaceAfter=6)
+    body_style    = ParagraphStyle('B', parent=styles['Normal'], fontSize=10, spaceAfter=4)
+    footer_style  = ParagraphStyle('F', parent=styles['Normal'], textColor=colors.grey, fontSize=8, alignment=TA_CENTER)
+
+    nombre     = estudiante.user.get_full_name() or estudiante.user.username
+    num_lista  = (f'N° Lista: {estudiante.numero_lista}') if estudiante.numero_lista else ''
+    salon_name = str(estudiante.salon) if estudiante.salon else '—'
+
+    story = [
+        Paragraph('NestGrow — Plataforma de Aprendizaje de Inglés', sub_style),
+        Paragraph(f'Informe de Período: {periodo.titulo}', title_style),
+        Paragraph(f'{periodo.fecha_inicio.strftime("%d/%m/%Y")} → {periodo.fecha_fin.strftime("%d/%m/%Y")}', sub_style),
+        Spacer(1, 10),
+        HRFlowable(width='100%', thickness=2, color=primary),
+        Spacer(1, 10),
+    ]
+
+    # Datos del estudiante
+    info_data = [['Estudiante', nombre], ['Salón', salon_name]]
+    if num_lista:
+        info_data.append(['N° de Lista', estudiante.numero_lista])
+    if estudiante.correo_padre:
+        info_data.append(['Correo padre/madre', estudiante.correo_padre])
+
+    info_table = Table(info_data, colWidths=[4*cm, None])
+    info_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), light),
+        ('TEXTCOLOR',  (0, 0), (0, -1), primary),
+        ('FONTNAME',   (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE',   (0, 0), (-1, -1), 10),
+        ('ROWBACKGROUNDS', (0, 0), (-1, -1), [colors.white, light]),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#E8E4FF')),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING', (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+    ]))
+    story += [info_table, Spacer(1, 14)]
+
+    # Talleres
+    if fila_talleres:
+        story.append(Paragraph('Talleres', section_style))
+        t_data = [['Taller', 'Nota', '%']]
+        for t in fila_talleres:
+            nota_str = str(t['nota']) if t['nota'] else '—'
+            pct_str  = f"{t['pct']}%" if t['pct'] is not None else 'Sin completar'
+            t_data.append([t['asig'].taller.titulo, nota_str, pct_str])
+        t_table = Table(t_data, colWidths=[None, 3*cm, 3*cm])
+        t_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), primary),
+            ('TEXTCOLOR',  (0, 0), (-1, 0), colors.white),
+            ('FONTNAME',   (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE',   (0, 0), (-1, -1), 10),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, light]),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#E8E4FF')),
+            ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 0), (-1, -1), 5),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+        ]))
+        story += [t_table, Spacer(1, 10)]
+
+    # Minijuegos
+    if fila_minijuegos:
+        story.append(Paragraph('Minijuegos', section_style))
+        m_data = [['Juego', 'Nota', '%']]
+        for m in fila_minijuegos:
+            nota_str = str(m['nota']) if m['nota'] else '—'
+            pct_str  = f"{m['registro'].porcentaje}%" if m['registro'] and m['registro'].completado else 'Sin completar'
+            m_data.append([m['asig'].game.title, nota_str, pct_str])
+        m_table = Table(m_data, colWidths=[None, 3*cm, 3*cm])
+        m_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), accent),
+            ('TEXTCOLOR',  (0, 0), (-1, 0), colors.white),
+            ('FONTNAME',   (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE',   (0, 0), (-1, -1), 10),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, light]),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#E8E4FF')),
+            ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 0), (-1, -1), 5),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+        ]))
+        story += [m_table, Spacer(1, 10)]
+
+    # Modo Historia
+    if periodo.meta_historia > 0:
+        story.append(Paragraph('Modo Historia', section_style))
+        alcanzado = '✅ Meta alcanzada' if estrellas_historia >= periodo.meta_historia else '⏳ En progreso'
+        story.append(Paragraph(
+            f'Estrellas acumuladas: <b>{estrellas_historia}</b> / meta: <b>{periodo.meta_historia}</b> — {alcanzado}',
+            body_style,
+        ))
+        story.append(Spacer(1, 10))
+
+    story.append(Spacer(1, 16))
+    story.append(HRFlowable(width='100%', thickness=1, color=colors.HexColor('#E8E4FF')))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(
+        f'Informe generado automáticamente por NestGrow · {date.today().strftime("%d/%m/%Y")}',
         footer_style,
     ))
 

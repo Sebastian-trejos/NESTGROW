@@ -77,7 +77,7 @@ class EstudianteProfile(TimeStampedModel):
     salon = models.ForeignKey(Salon, on_delete=models.SET_NULL, null=True, blank=True, related_name='estudiantes')
     profesor = models.ForeignKey(ProfesorProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='estudiantes')
     grado = models.CharField(max_length=20, blank=True, choices=GRADO_CHOICES)
-    numero_identidad = models.CharField(max_length=20, blank=True, verbose_name='N° Tarjeta de Identidad')
+    numero_lista = models.CharField(max_length=10, blank=True, verbose_name='N° de Lista')
     correo_padre = models.EmailField(blank=True, verbose_name='Correo del padre/madre de familia')
     puntos_totales = models.IntegerField(default=0)
     nivel = models.IntegerField(default=1)

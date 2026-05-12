@@ -23,49 +23,37 @@
         <thead style="background:#f8f6ff">
           <tr>
             <th>Nombre completo</th>
-            <th>N° Identidad</th>
+            <th class="text-center">N° Lista</th>
+            <th class="text-center">Nivel</th>
+            <th class="text-center">⭐ Historia</th>
             <th>Correo Padre/Madre</th>
-            <th>Puntos</th>
-            <th>Nota (1-5)</th>
-            <th>Nivel</th>
-            <th>Informe PDF</th>
           </tr>
         </thead>
         <tbody>
           {% for est in estudiantes %}
           <tr>
             <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
-            <td>{{ est.numero_identidad|default:"—" }}</td>
+            <td class="text-center">
+              <form method="post" action="{% url 'accounts:set_numero_lista' est.pk %}" class="d-inline-flex align-items-center gap-1">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'accounts:detalle_salon' salon.pk %}">
+                <input type="number" name="numero_lista" value="{{ est.numero_lista|default:'' }}"
+                       min="1" max="99" style="width:52px;text-align:center;border:1px solid #ddd;border-radius:8px;padding:2px 4px;font-size:.85rem"
+                       placeholder="—">
+                <button type="submit" class="btn btn-sm p-0 px-1" style="color:var(--primary)" title="Guardar">
+                  <i class="bi bi-check-circle-fill"></i>
+                </button>
+              </form>
+            </td>
+            <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
+            <td class="text-center">
+              <span class="fw-bold" style="color:#f0a500">⭐ {{ est.total_estrellas_historia }}</span>
+            </td>
             <td>
               {% if est.correo_padre %}
                 <span class="text-success fw-bold small">{{ est.correo_padre }}</span>
               {% else %}
                 <span class="badge rounded-pill" style="background:#fff3cd;color:#856404">⚠️ Sin correo</span>
-              {% endif %}
-            </td>
-            <td><span class="fw-bold" style="color:var(--primary)">⭐ {{ est.puntos_totales }}</span></td>
-            <td>
-              {% with pct=est.puntos_totales %}
-              {% if pct >= 90 %}<span class="badge rounded-pill fw-bold" style="background:#d4edda;color:#155724">5.0</span>
-              {% elif pct >= 80 %}<span class="badge rounded-pill fw-bold" style="background:#d4edda;color:#155724">4.5</span>
-              {% elif pct >= 70 %}<span class="badge rounded-pill fw-bold" style="background:#cce5ff;color:#004085">4.0</span>
-              {% elif pct >= 60 %}<span class="badge rounded-pill fw-bold" style="background:#cce5ff;color:#004085">3.5</span>
-              {% elif pct >= 50 %}<span class="badge rounded-pill fw-bold" style="background:#fff3cd;color:#856404">3.0</span>
-              {% elif pct >= 40 %}<span class="badge rounded-pill fw-bold" style="background:#fff3cd;color:#856404">2.5</span>
-              {% else %}<span class="badge rounded-pill fw-bold" style="background:#f8d7da;color:#721c24">2.0</span>
-              {% endif %}
-              {% endwith %}
-            </td>
-            <td><span class="level-badge">Nivel {{ est.nivel }}</span></td>
-            <td>
-              {% if est.correo_padre %}
-              <a href="{% url 'accounts:enviar_informe' est.pk %}"
-                 class="btn btn-sm btn-nestgrow btn-primary-nestgrow"
-                 onclick="return confirm('¿Enviar informe PDF a {{ est.correo_padre }}?')">
-                📧 Enviar PDF
-              </a>
-              {% else %}
-              <span class="text-muted small">Registra correo primero</span>
               {% endif %}
             </td>
           </tr>

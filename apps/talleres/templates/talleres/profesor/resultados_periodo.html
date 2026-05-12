@@ -15,6 +15,11 @@
       </div>
     </div>
     <div class="d-flex gap-2 flex-wrap">
+      <a href="{% url 'talleres:enviar_informe_periodo' periodo.pk %}"
+         class="btn btn-outline-success rounded-pill btn-sm"
+         onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
+        📧 Enviar informe
+      </a>
       {% if not periodo.cerrado %}
         {% if periodo.fecha_fin < hoy %}
         <div class="alert alert-warning py-1 px-3 mb-0 rounded-pill small fw-bold">
@@ -83,9 +88,13 @@
             {% for m in fila.minijuegos %}
             <td class="text-center">
               {% if m.registro and m.registro.completado %}
-                <span class="text-success fw-bold">✅</span>
-                {% if m.registro.max_score > 0 %}
-                <div class="text-muted" style="font-size:.7rem">{{ m.registro.porcentaje }}%</div>
+                {% if m.nota %}
+                  <span class="fw-bold" style="color:{% if m.nota >= 4.0 %}#28a745{% elif m.nota >= 3.5 %}#e67e22{% else %}#e53935{% endif %}">
+                    {{ m.nota }}
+                  </span>
+                  <div class="text-muted" style="font-size:.7rem">{{ m.registro.porcentaje }}%</div>
+                {% else %}
+                  <span class="text-success">✅</span>
                 {% endif %}
               {% else %}
                 <span class="text-muted">—</span>

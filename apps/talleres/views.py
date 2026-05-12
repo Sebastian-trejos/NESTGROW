@@ -429,8 +429,9 @@ def guardar_respuesta(request, pk, bpk):
 
     if pregunta.tipo_respuesta == 'parrafo':
         respuesta.texto_respuesta = request.POST.get('texto_respuesta', '').strip()
-        respuesta.es_correcta = None
+        respuesta.es_correcta = True  # párrafo libre siempre suma puntos
         respuesta.save()
+        es_correcta = True
     else:
         respuesta.save()
         opciones_ids = [int(x) for x in request.POST.getlist('opciones') if x.isdigit()]
@@ -672,11 +673,16 @@ def resultados_periodo(request, pk):
             })
 
         fila_minijuegos = []
+        from apps.games.models import pct_to_nota_minijuego
         for asig in minijuegos_asig:
             registro = registros_all.get((asig.pk, est.pk))
+            nota_mini = None
+            if registro and registro.completado and registro.max_score > 0:
+                nota_mini = pct_to_nota_minijuego(registro.porcentaje)
             fila_minijuegos.append({
                 'asig': asig,
                 'registro': registro,
+                'nota': nota_mini,
             })
 
         estrellas = getattr(getattr(est, 'estudiante_profile', None), 'total_estrellas_historia', 0) or 0
@@ -708,6 +714,103 @@ def cerrar_periodo(request, pk):
         periodo.is_activo = False
         periodo.save(update_fields=['cerrado', 'is_activo'])
         messages.success(request, f'🔒 Período "{periodo.titulo}" cerrado. Los resultados quedaron congelados.')
+    return redirect('talleres:resultados_periodo', pk=pk)
+
+
+@login_required
+@profesor_required
+def enviar_informe_periodo(request, pk):
+    """Envía un informe PDF del período a todos los padres del salón."""
+    from django.core.mail import EmailMessage as DjangoEmailMessage
+    from django.conf import settings as dj_settings
+    from apps.accounts.models import CustomUser
+    from apps.accounts.utils import generar_pdf_informe_periodo
+    from apps.games.models import pct_to_nota, pct_to_nota_minijuego
+
+    salon_qs = _salon_qs(request.user)
+    periodo = get_object_or_404(Periodo, pk=pk, salon__in=salon_qs)
+
+    estudiantes = CustomUser.objects.filter(
+        estudiante_profile__salon=periodo.salon, role='estudiante'
+    ).select_related('estudiante_profile').order_by('first_name', 'last_name')
+
+    talleres_asig  = list(periodo.talleres_asignados.select_related('taller').order_by('orden'))
+    minijuegos_asig = list(periodo.minijuegos_asignados.select_related('game').order_by('orden'))
+
+    sesiones_all = {
+        (s.taller_id, s.estudiante_id): s
+        for s in SesionTaller.objects.filter(
+            taller__in=[a.taller for a in talleres_asig],
+            estudiante__in=estudiantes,
+        )
+    }
+    registros_all = {
+        (r.asignacion_id, r.estudiante_id): r
+        for r in RegistroMinijuegoPeriodo.objects.filter(
+            periodo=periodo, estudiante__in=estudiantes,
+        )
+    }
+
+    enviados = 0
+    sin_correo = 0
+    errores = 0
+
+    for est in estudiantes:
+        profile = getattr(est, 'estudiante_profile', None)
+        if not profile or not profile.correo_padre:
+            sin_correo += 1
+            continue
+
+        fila_talleres = []
+        for asig in talleres_asig:
+            sesion = sesiones_all.get((asig.taller_id, est.pk))
+            pts = sesion.puntos_obtenidos if sesion else 0
+            max_pts = asig.taller.total_puntos_posibles() or 1
+            pct = round((pts / max_pts) * 100) if sesion and sesion.completada else None
+            nota = pct_to_nota(pct) if pct is not None else None
+            fila_talleres.append({'asig': asig, 'sesion': sesion, 'pct': pct, 'nota': nota})
+
+        fila_minijuegos = []
+        for asig in minijuegos_asig:
+            registro = registros_all.get((asig.pk, est.pk))
+            nota_mini = None
+            if registro and registro.completado and registro.max_score > 0:
+                nota_mini = pct_to_nota_minijuego(registro.porcentaje)
+            fila_minijuegos.append({'asig': asig, 'registro': registro, 'nota': nota_mini})
+
+        estrellas = getattr(profile, 'total_estrellas_historia', 0) or 0
+
+        try:
+            pdf_bytes = generar_pdf_informe_periodo(profile, periodo, fila_talleres, fila_minijuegos, estrellas)
+            nombre_est = est.get_full_name() or est.username
+            subject = f'Informe de Período "{periodo.titulo}" — {nombre_est} — NestGrow'
+            body = (
+                f'<p>Estimado padre/madre de familia,</p>'
+                f'<p>Adjunto encontrará el informe de resultados de <strong>{nombre_est}</strong> '
+                f'correspondiente al período <strong>{periodo.titulo}</strong> '
+                f'({periodo.fecha_inicio.strftime("%d/%m/%Y")} – {periodo.fecha_fin.strftime("%d/%m/%Y")}).</p>'
+                f'<p>Este informe fue generado automáticamente por <strong>NestGrow</strong>.</p>'
+            )
+            email = DjangoEmailMessage(
+                subject=subject,
+                body=body,
+                from_email=dj_settings.DEFAULT_FROM_EMAIL,
+                to=[profile.correo_padre],
+            )
+            email.content_subtype = 'html'
+            email.attach(f'informe_{est.username}_{periodo.pk}.pdf', pdf_bytes, 'application/pdf')
+            email.send()
+            enviados += 1
+        except Exception as e:
+            errores += 1
+
+    if enviados:
+        messages.success(request, f'✅ Informe enviado a {enviados} padre(s) de familia.')
+    if sin_correo:
+        messages.warning(request, f'⚠️ {sin_correo} estudiante(s) no tienen correo del padre registrado.')
+    if errores:
+        messages.error(request, f'❌ {errores} correo(s) no se pudieron enviar. Revisa la configuración de email.')
+
     return redirect('talleres:resultados_periodo', pk=pk)
 
 

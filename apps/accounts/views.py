@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -159,6 +160,22 @@ def detalle_salon(request, pk):
         'salon': salon,
         'estudiantes': estudiantes,
     })
+
+
+# ── Profesor — Editar número de lista del estudiante ─────────────────────────
+
+@login_required
+@profesor_required
+@require_POST
+def set_numero_lista(request, pk):
+    """El profesor asigna el número de lista de un estudiante."""
+    estudiante = get_object_or_404(EstudianteProfile, pk=pk)
+    if not estudiante.salon or estudiante.salon.profesor != request.user.profesor_profile:
+        messages.error(request, '⛔ No tienes permiso para editar este estudiante.')
+        return redirect('accounts:dashboard_profesor')
+    numero = request.POST.get('numero_lista', '').strip()
+    EstudianteProfile.objects.filter(pk=pk).update(numero_lista=numero)
+    return redirect(request.POST.get('next', 'accounts:dashboard_profesor'))
 
 
 # ── Profesor — Enviar informe PDF por correo ──────────────────────────────────

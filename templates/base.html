@@ -41,6 +41,7 @@
             </a>
           </li>
           {% endif %}
+{% if user.role == 'estudiante' %}
 <li class="nav-item">
   <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:category_list' %}"
      style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
@@ -49,6 +50,7 @@
     <i class="bi bi-book"></i> Vocabulario
   </a>
 </li>
+{% endif %}
 {% if user.role == 'estudiante' %}
 <li class="nav-item">
   <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'historia:mapa_historia' %}"

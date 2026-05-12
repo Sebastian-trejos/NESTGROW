@@ -57,9 +57,14 @@
           </span>
           {% endif %}
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
           <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm flex-grow-1">
             📊 Ver resultados
+          </a>
+          <a href="{% url 'talleres:enviar_informe_periodo' p.pk %}"
+             class="btn btn-outline-success rounded-pill btn-sm flex-grow-1"
+             onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
+            📧 Enviar informe
           </a>
           <a href="{% url 'talleres:eliminar_periodo' p.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">
             🗑️

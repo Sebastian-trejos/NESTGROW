@@ -357,37 +357,34 @@
         <thead>
           <tr>
             <th><i class="bi bi-person-fill me-1"></i>Estudiante</th>
-            <th><i class="bi bi-card-text me-1"></i>N° Identidad</th>
-            <th><i class="bi bi-star-fill me-1"></i>Puntos</th>
-            <th><i class="bi bi-clipboard-check-fill me-1"></i>Nota</th>
-            <th><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
+            <th class="text-center"><i class="bi bi-list-ol me-1"></i>N° Lista</th>
+            <th class="text-center"><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
+            <th class="text-center">⭐ Historia</th>
             <th><i class="bi bi-envelope-fill me-1"></i>Correo Padre</th>
-            <th><i class="bi bi-send-fill me-1"></i>Informe</th>
           </tr>
         </thead>
         <tbody>
           {% for est in salon.estudiantes.all %}
           <tr>
             <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
-            <td><span class="text-muted small">{{ est.numero_identidad|default:"—" }}</span></td>
-            <td>
-              <span class="fw-bold" style="color:var(--primary)">
-                <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ est.puntos_totales }}
+            <td class="text-center">
+              <form method="post" action="{% url 'accounts:set_numero_lista' est.pk %}" class="d-inline-flex align-items-center gap-1" style="min-width:90px">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'accounts:dashboard_profesor' %}">
+                <input type="number" name="numero_lista" value="{{ est.numero_lista|default:'' }}"
+                       min="1" max="99" style="width:52px;text-align:center;border:1px solid #ddd;border-radius:8px;padding:2px 4px;font-size:.85rem"
+                       placeholder="—">
+                <button type="submit" class="btn btn-sm p-0 px-1" style="color:var(--primary)" title="Guardar N° lista">
+                  <i class="bi bi-check-circle-fill"></i>
+                </button>
+              </form>
+            </td>
+            <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
+            <td class="text-center">
+              <span class="fw-bold" style="color:#f0a500">
+                ⭐ {{ est.total_estrellas_historia }}
               </span>
             </td>
-            <td>
-              {% with pct=est.puntos_totales %}
-              {% if pct >= 90 %}<span class="badge rounded-pill" style="background:#d4edda;color:#155724">5.0</span>
-              {% elif pct >= 80 %}<span class="badge rounded-pill" style="background:#d4edda;color:#155724">4.5</span>
-              {% elif pct >= 70 %}<span class="badge rounded-pill" style="background:#cce5ff;color:#004085">4.0</span>
-              {% elif pct >= 60 %}<span class="badge rounded-pill" style="background:#cce5ff;color:#004085">3.5</span>
-              {% elif pct >= 50 %}<span class="badge rounded-pill" style="background:#fff3cd;color:#856404">3.0</span>
-              {% elif pct >= 40 %}<span class="badge rounded-pill" style="background:#fff3cd;color:#856404">2.5</span>
-              {% else %}<span class="badge rounded-pill" style="background:#f8d7da;color:#721c24">2.0</span>
-              {% endif %}
-              {% endwith %}
-            </td>
-            <td><span class="level-badge">Nv. {{ est.nivel }}</span></td>
             <td>
               {% if est.correo_padre %}
                 <span class="small fw-bold" style="color:#4ECDC4">
@@ -397,18 +394,6 @@
                 <span class="text-muted small">
                   <i class="bi bi-x-circle me-1"></i>Sin correo
                 </span>
-              {% endif %}
-            </td>
-            <td>
-              {% if est.correo_padre %}
-              <a href="{% url 'accounts:enviar_informe' est.pk %}"
-                 class="btn btn-sm rounded-pill fw-bold"
-                 style="background:#f0eeff;color:var(--primary);border:none"
-                 onclick="return confirm('¿Enviar informe PDF a {{ est.correo_padre }}?')">
-                <i class="bi bi-send-fill me-1"></i>Enviar PDF
-              </a>
-              {% else %}
-              <span class="text-muted small">Sin correo</span>
               {% endif %}
             </td>
           </tr>

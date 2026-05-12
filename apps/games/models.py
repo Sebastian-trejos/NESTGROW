@@ -35,6 +35,20 @@ def pct_to_nota(pct):
         return 2.0
 
 
+def pct_to_nota_minijuego(pct):
+    """Escala de notas para minijuegos: el rango efectivo va de 50% (3.5) a 80%+ (5.0)."""
+    if pct >= 80:
+        return 5.0
+    elif pct >= 70:
+        return 4.5
+    elif pct >= 60:
+        return 4.0
+    elif pct >= 50:
+        return 3.5
+    else:
+        return 3.0
+
+
 class Game(TimeStampedModel, ActiveModel):
     GAME_TYPES = [
         ('drag_and_drop', '🖱️ Arrastra y Suelta'),

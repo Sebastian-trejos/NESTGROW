@@ -18,6 +18,7 @@ urlpatterns = [
     path('salones/<int:pk>/eliminar/', views.eliminar_salon, name='eliminar_salon'),
     path('salones/<int:pk>/', views.detalle_salon, name='detalle_salon'),
     path('estudiante/<int:estudiante_pk>/informe/', views.enviar_informe, name='enviar_informe'),
+    path('estudiante/<int:pk>/numero-lista/', views.set_numero_lista, name='set_numero_lista'),
 
     # Estudiante
     path('dashboard/estudiante/', views.dashboard_estudiante, name='dashboard_estudiante'),
