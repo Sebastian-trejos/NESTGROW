@@ -1,0 +1,202 @@
+---
+description: Esquema de base de datos de NestGrow — modelos, relaciones, patrones de acceso y seguridad de datos
+globs: apps/**,config/**
+alwaysApply: true
+---
+
+# DATABASE PRIORITY
+
+Database integrity is CRITICAL.
+
+All database operations must prioritize:
+- consistency
+- safety
+- scalability
+- maintainability
+- performance
+
+# IMPORTANT
+
+Never:
+- delete tables
+- overwrite schemas
+- alter production-critical structures
+- remove relationships
+- modify migrations irresponsibly
+
+unless explicitly requested.
+
+# DATA SAFETY
+
+Always preserve:
+- student records
+- grades
+- progress
+- achievements
+- sessions
+- user accounts
+- analytics
+- educational history
+
+# DATABASE OPERATIONS
+
+Before modifying database-related code:
+1. analyze relationships
+2. understand dependencies
+3. verify constraints
+4. preserve compatibility
+
+# QUERY RULES
+
+Prefer:
+- optimized queries
+- pagination
+- indexed access
+- reusable database functions
+
+Avoid:
+- unnecessary queries
+- duplicated requests
+- unsafe writes
+- destructive operations
+
+# TRANSACTIONS
+
+Critical operations should:
+- use transactions
+- preserve atomicity
+- avoid partial writes
+
+# SCHEMA DESIGN
+
+Prefer:
+- normalized structures
+- clear relationships
+- scalable architecture
+- explicit naming
+
+# IMPORTANT
+
+Never modify:
+- auth tables
+- student grading systems
+- educational records
+
+without explicit approval.
+
+# PERFORMANCE
+
+Always consider:
+- scalability
+- large student counts
+- future growth
+- concurrent access
+
+# BACKUPS & MIGRATIONS
+
+Never generate destructive migrations.
+
+Prefer additive migrations.
+
+---
+
+# NESTGROW — Esquema específico
+
+## Motor y configuración
+
+- **Motor:** SQLite (`db.sqlite3`) en desarrollo · Django ORM 4.2.7
+- **Migraciones:** `apps/<app>/migrations/` — nombradas automáticamente `000N_descripcion.py`
+- **Fixtures críticos (PKs fijos — nunca alterar):**
+  ```
+  apps/content/fixtures/initial_vocabulary.json   ← 355 palabras ES/EN
+  apps/games/fixtures/tienda_inicial.json          ← TiendaItem PKs 1–13
+  apps/games/fixtures/logros_iniciales.json
+  apps/historia/fixtures/logros_historia.json      ← Logro PKs 101–118
+  apps/historia/fixtures/modo_historia.json
+  ```
+
+## Modelo base (heredar siempre)
+
+```python
+# apps/core/models.py
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta: abstract = True
+
+class ActiveModel(TimeStampedModel):
+    is_active = models.BooleanField(default=True)
+    objects = ActiveManager()  # filtra is_active=True por defecto
+    class Meta: abstract = True
+```
+
+## Mapa de modelos
+
+### `accounts`
+```
+CustomUser(AbstractUser)   role, huesos, avatar
+ProfesorProfile            OneToOne → CustomUser
+EstudianteProfile          OneToOne → CustomUser; salon (FK); puntos_totales, nivel, total_estrellas_historia
+Salon                      profesor (FK→ProfesorProfile); codigo_clase (8 chars, único)
+```
+
+### `games`
+```
+Game                       game_type (10 tipos); category (FK); points_reward; time_limit
+Score                      Un registro por partida jugada
+UserProgress               Unique (user, game) — mejor score acumulado
+RegistroMinijuegoPeriodo   Unique (asignacion, estudiante); score, max_score, completado, revisado
+TiendaItem                 PKs 1–13 fijos — no modificar
+InventarioEstudiante       Unique (user, item)
+HuesoTransaccion           Inmutable — solo INSERT, nunca UPDATE/DELETE
+Logro                      PKs 1–N juegos | 101–118 historia — no cambiar
+LogroUsuario               Unique (user, logro); visto=False → mostrar popup
+```
+
+### `talleres`
+```
+Taller                     profesor, salon (FK); categorias_vocabulario (M2M)
+BloqueTaller               orden + tipo ('pregunta'/'minijuego')
+BloquePregunta             OneToOne → BloqueTaller; puntaje_parcial
+BloqueMinijuego            OneToOne → BloqueTaller; game (FK)
+OpcionRespuesta            FK → BloquePregunta; es_correcta (bool)
+RespuestaEstudiante        Unique (estudiante, pregunta) → usar update_or_create
+SesionTaller               Unique (taller, estudiante) → usar get_or_create; completada + revisado
+Periodo                    salon + fecha_inicio/fin + meta_historia + cerrado
+AsignacionTaller           Unique (periodo, taller) — máx. 5
+AsignacionMinijuego        Unique (periodo, game) — máx. 5
+RegistroMinijuegoPeriodo   Unique (asignacion, estudiante) → usar update_or_create
+```
+
+### `historia`
+```
+SeccionHistoria            orden, color, emoji; is_desbloqueada_por_defecto
+SeccionDesbloqueada        Unique (seccion, salon)
+Leccion                    FK → SeccionHistoria; puntos_xp, huesos_recompensa
+ActividadLeccion           tipo + datos (JSONField — esquema libre por tipo)
+ProgresoLeccion            Unique (estudiante, leccion); estrellas 1–3
+RespuestaActividad         FK → ProgresoLeccion + ActividadLeccion
+```
+
+### `content`
+```
+Category                   Categorías de vocabulario
+VocabularyItem             word_es, word_en, imagen, audio — 355 palabras
+```
+
+## Restricciones críticas de NestGrow
+
+- **Perfiles:** nunca crear `ProfesorProfile` / `EstudianteProfile` manualmente → los crea `apps/accounts/signals.py`
+- **PKs de fixtures:** TiendaItem 1–13 y Logro 101–118 son referenciados en código; cambiarlos rompe la app
+- **`puntos_totales`:** solo `EstudianteProfile.actualizar_nivel()` puede resetearlo
+- **`HuesoTransaccion`:** registro inmutable — solo INSERT
+- **Modelos con unique_together:** siempre usar `update_or_create` o `get_or_create`, nunca `create` a secas
+
+## Comandos de migración (Windows)
+
+```cmd
+python manage.py makemigrations <app>
+python manage.py migrate
+python manage.py check
+python manage.py loaddata apps/<app>/fixtures/<nombre>.json
+```
