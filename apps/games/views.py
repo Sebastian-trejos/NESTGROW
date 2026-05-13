@@ -212,6 +212,7 @@ def game_embed(request, pk):
 
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
+    taller_mode = request.GET.get('taller') == '1'
     return render(request, template, {
         'game': game,
         'vocabulary': vocabulary,
@@ -221,6 +222,7 @@ def game_embed(request, pk):
         'words_json': json.dumps(painting_words),
         'vocabulary_json': vocabulary_json,
         'embedded': True,
+        'taller_mode': taller_mode,
     })
 
 

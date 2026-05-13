@@ -16,6 +16,7 @@
 <body class="nestgrow-body">
 
   <!-- Top Nav -->
+  {% if not embedded %}
   <nav class="navbar nestgrow-navbar navbar-expand-lg">
     <div class="container-fluid px-4">
       <a class="navbar-brand nestgrow-brand" href="{% url 'core:home' %}">
@@ -153,9 +154,10 @@
       </div>
     </div>
   </nav>
+  {% endif %}{# /embedded nav #}
 
   <!-- Milo Floating Mascot -->
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and not embedded %}
   <div class="milo-float" id="miloFloat" onclick="toggleMiloMessage()">
     <div class="milo-bubble" id="miloBubble">
       <div class="milo-speech">{{ milo_message.text }}</div>
@@ -186,7 +188,102 @@
     {% block content %}{% endblock %}
   </main>
 
+  <!-- Taller mode: intercept save_score and show friendly overlay -->
+  {% if taller_mode %}
+  <script>
+  (function() {
+    const SAVE_SCORE_PATH = '/juegos/save-score/';
+    const _fetch = window.fetch.bind(window);
+    window.fetch = function(url, opts) {
+      if (typeof url === 'string' && url.includes(SAVE_SCORE_PATH)) {
+        return Promise.resolve(new Response(
+          JSON.stringify({ ok: true, registro_pk: null, nivel_subio: false }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        ));
+      }
+      return _fetch(url, opts);
+    };
+
+    // Cuando aparezca el win overlay, reemplazar su contenido
+    function patchWinOverlay() {
+      const overlay = document.getElementById('winOverlay');
+      if (overlay && overlay.style.display === 'flex' && !overlay.dataset.tallerPatched) {
+        overlay.dataset.tallerPatched = '1';
+        overlay.style.background = 'rgba(108,99,255,0.55)';
+        overlay.innerHTML = `
+          <div style="text-align:center;padding:2.5rem 2rem;
+                      background:#fff;border-radius:24px;
+                      box-shadow:0 16px 48px rgba(108,99,255,.30);
+                      max-width:320px;margin:auto">
+            <div style="font-size:4.5rem;line-height:1;margin-bottom:.5rem">🎉</div>
+            <div style="font-size:2rem;color:#6C63FF;font-family:'Fredoka One',cursive;font-weight:900">¡Bien hecho!</div>
+            <p style="color:#888;font-size:.9rem;margin-top:.6rem;font-family:'Nunito',sans-serif">
+              Completaste el minijuego.<br>Pulsa el botón de abajo para continuar.
+            </p>
+          </div>`;
+      }
+    }
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.target && m.target.id === 'winOverlay') patchWinOverlay();
+      });
+    });
+    // Start observing once DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      const overlay = document.getElementById('winOverlay');
+      if (overlay) observer.observe(overlay, { attributes: true, attributeFilter: ['style'] });
+      else observer.observe(document.body, { subtree: true, childList: true });
+    });
+  })();
+  </script>
+  {% endif %}
+
+  <!-- Botón flotante Asistente Milo (solo profesores) -->
+  {% if user.is_authenticated and user.role == 'profesor' and not embedded %}
+  <a href="{% url 'asistente:index' %}" target="_blank"
+     class="asistente-fab"
+     title="Asistente Milo IA">
+    🤖
+    <span class="asistente-fab-label">Asistente Milo</span>
+  </a>
+  <style>
+    .asistente-fab {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      z-index: 1050;
+      background: linear-gradient(135deg, #6C63FF, #9b59b6);
+      color: white;
+      border-radius: 50px;
+      padding: 0.6rem 1rem;
+      font-size: 1.3rem;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(108,99,255,0.45);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+    .asistente-fab:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 10px 30px rgba(108,99,255,0.55);
+      color: white;
+    }
+    .asistente-fab-label {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 576px) {
+      .asistente-fab-label { display: none; }
+      .asistente-fab { padding: 0.65rem; border-radius: 50%; }
+    }
+  </style>
+  {% endif %}
+
   <!-- Footer -->
+  {% if not embedded %}
   <footer class="nestgrow-footer">
     <div class="container text-center">
       <p class="mb-1">
@@ -196,6 +293,7 @@
       <p class="footer-sub">Hecho con <i class="bi bi-heart-fill" style="color:var(--secondary)"></i> para niños de primaria en Colombia</p>
     </div>
   </footer>
+  {% endif %}{# /embedded footer #}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>

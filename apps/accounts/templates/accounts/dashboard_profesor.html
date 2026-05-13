@@ -350,6 +350,47 @@
           <div class="fw-bold small">Juegos</div>
         </a>
       </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'asistente:index' %}" target="_blank" class="quick-card-prof"
+           style="border-color:transparent"
+           onmouseover="this.style.borderColor='#9b59b6'"
+           onmouseout="this.style.borderColor='transparent'">
+          <div class="quick-icon-prof" style="background:#f5f0ff">
+            <span style="font-size:1.4rem;">🤖</span>
+          </div>
+          <div class="fw-bold small" style="color:#9b59b6">Asistente IA</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta Asistente Milo destacada -->
+  <div class="nestgrow-card p-0 mb-4 overflow-hidden"
+       style="background:linear-gradient(135deg,#6C63FF 0%,#9b59b6 50%,#3498db 100%);border-radius:20px;">
+    <div class="row g-0 align-items-center">
+      <div class="col-auto px-4 py-3" style="font-size:3.5rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))">
+        🤖
+      </div>
+      <div class="col py-3 pe-3">
+        <h5 class="mb-1 text-white fw-900" style="font-family:'Fredoka One',sans-serif;">
+          Asistente Milo IA
+        </h5>
+        <p class="mb-2 text-white opacity-75" style="font-size:0.82rem;">
+          Planea talleres, genera actividades y analiza el progreso de tu salón con inteligencia artificial.
+        </p>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="{% url 'asistente:index' %}" target="_blank"
+             class="btn btn-sm btn-light fw-800 rounded-pill"
+             style="font-family:'Nunito',sans-serif;color:#6C63FF;">
+            ✏️ Planear clase
+          </a>
+          <a href="{% url 'asistente:index' %}?tab=analizar" target="_blank"
+             class="btn btn-sm fw-800 rounded-pill"
+             style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;">
+            📊 Analizar mi salón
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
