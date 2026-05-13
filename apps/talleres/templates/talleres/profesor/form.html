@@ -199,15 +199,15 @@
         <select id="m-juego" class="form-select mb-3">
           <option value="">— Elige un juego —</option>
           {% for juego in juegos_disponibles %}
-          <option value="{{ juego.pk }}">{{ juego.category.name }} — {{ juego.title }}{% if not juego.is_active %} 🔒{% endif %}</option>
+          <option value="{{ juego.pk }}">{{ juego.category.name }} — {{ juego.title }}</option>
           {% endfor %}
         </select>
         {% if not juegos_disponibles %}
         <div class="alert alert-warning">
-          ⚠️ No hay juegos disponibles. Ve a <a href="{% url 'games:crear_juego' %}">Gestionar Juegos</a> y crea uno primero.
+          ⚠️ No hay juegos disponibles para talleres. Los juegos deben estar <strong>desactivados</strong> del catálogo de estudiantes para usarse en talleres. Ve a <a href="{% url 'games:gestionar_juegos' %}">Gestionar Juegos</a> y desactiva un juego para asignarlo aquí.
         </div>
         {% endif %}
-        <div class="text-muted small">El estudiante jugará este minijuego y luego avanzará al siguiente bloque.</div>
+        <div class="text-muted small">Solo aparecen juegos <strong>no activados</strong> para el catálogo. El estudiante jugará sin recibir puntos ni recompensas.</div>
       </div>
       <div class="modal-footer border-0 pt-0">
         <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>

@@ -8,64 +8,114 @@
   <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
       <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill btn-sm mb-2">← Períodos</a>
-      <h3 class="font-fredoka mb-0" style="color:var(--primary)">📊 {{ periodo.titulo }}</h3>
+      <h3 class="font-fredoka mb-1" style="color:var(--primary)">📊 {{ periodo.titulo }}</h3>
       <div class="text-muted small">
-        {{ periodo.salon }} &nbsp;·&nbsp;
-        {{ periodo.fecha_inicio|date:"d/m/Y" }} → {{ periodo.fecha_fin|date:"d/m/Y" }}
+        <i class="bi bi-building me-1"></i>{{ periodo.salon }} &nbsp;·&nbsp;
+        <i class="bi bi-calendar-range me-1"></i>{{ periodo.fecha_inicio|date:"d/m/Y" }} → {{ periodo.fecha_fin|date:"d/m/Y" }}
       </div>
     </div>
-    <div class="d-flex gap-2 flex-wrap">
+    <div class="d-flex gap-2 flex-wrap align-items-center">
       <a href="{% url 'talleres:enviar_informe_periodo' periodo.pk %}"
-         class="btn btn-outline-success rounded-pill btn-sm"
+         class="btn btn-sm fw-bold rounded-pill px-3"
+         style="background:linear-gradient(135deg,#4ECDC4,#44b89d);color:#fff;border:none;box-shadow:0 4px 14px rgba(78,205,196,.35)"
          onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
-        📧 Enviar informe
+        <i class="bi bi-send-fill me-1"></i> Enviar informe
       </a>
       {% if not periodo.cerrado %}
         {% if periodo.fecha_fin < hoy %}
         <div class="alert alert-warning py-1 px-3 mb-0 rounded-pill small fw-bold">
-          ⚠️ Este período venció. Ciérralo para congelar resultados.
+          ⚠️ Período vencido — ciérralo para congelar resultados.
         </div>
         {% endif %}
         <form method="post" action="{% url 'talleres:cerrar_periodo' periodo.pk %}"
-              onsubmit="return confirm('¿Cerrar este período? Los resultados quedarán congelados y los estudiantes no verán más estas actividades.')">
+              onsubmit="return confirm('¿Cerrar este período? Los resultados quedarán congelados.')">
           {% csrf_token %}
-          <button class="btn btn-outline-danger rounded-pill btn-sm">🔒 Cerrar período</button>
+          <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold">🔒 Cerrar período</button>
         </form>
       {% else %}
-        <span class="badge bg-secondary px-3 py-2">⚫ Período cerrado</span>
+        <span class="badge bg-secondary px-3 py-2 rounded-pill">⚫ Período cerrado</span>
       {% endif %}
     </div>
   </div>
 
   {% if filas %}
-  <div class="nestgrow-card p-0 overflow-hidden">
+
+  <!-- Tabla principal -->
+  <div class="nestgrow-card p-0 overflow-hidden mb-3" style="box-shadow:0 8px 32px rgba(108,99,255,.10)">
     <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0" style="min-width:700px">
-        <thead style="background:#f8f6ff">
-          <tr>
-            <th class="ps-3 py-3" style="min-width:160px">Estudiante</th>
+      <table class="table table-hover align-middle mb-0" style="min-width:750px">
+        <thead>
+          <tr style="background:linear-gradient(135deg,#6C63FF 0%,#8b7fff 100%)">
+            <th class="ps-3 py-3 text-white fw-bold" style="min-width:170px">
+              <i class="bi bi-person-fill me-1"></i>Estudiante
+            </th>
+            <th class="text-center py-3 text-white fw-bold" style="min-width:130px">
+              🏆 Nota Final
+            </th>
             {% for asig in talleres_asig %}
-            <th class="text-center py-3" style="min-width:120px">
-              🎓 <span title="{{ asig.taller.titulo }}">{{ asig.taller.titulo|truncatechars:18 }}</span>
+            <th class="text-center py-3 text-white fw-bold" style="min-width:110px;opacity:.9">
+              🎓 <span title="{{ asig.taller.titulo }}" style="font-size:.8rem">{{ asig.taller.titulo|truncatechars:16 }}</span>
             </th>
             {% endfor %}
             {% for asig in minijuegos_asig %}
-            <th class="text-center py-3" style="min-width:110px">
-              🎮 <span title="{{ asig.game.title }}">{{ asig.game.title|truncatechars:16 }}</span>
+            <th class="text-center py-3 text-white fw-bold" style="min-width:105px;opacity:.9">
+              🎮 <span title="{{ asig.game.title }}" style="font-size:.8rem">{{ asig.game.title|truncatechars:14 }}</span>
             </th>
             {% endfor %}
             {% if periodo.meta_historia > 0 %}
-            <th class="text-center py-3" style="min-width:100px">⭐ Historia</th>
+            <th class="text-center py-3 text-white fw-bold" style="min-width:95px;opacity:.9">⭐ Historia</th>
             {% endif %}
           </tr>
         </thead>
         <tbody>
           {% for fila in filas %}
-          <tr>
-            <td class="ps-3 fw-bold">
-              {{ fila.estudiante.get_full_name|default:fila.estudiante.username }}
+          <tr style="transition:background .15s" onmouseover="this.style.background='#f8f6ff'" onmouseout="this.style.background=''">
+
+            <!-- Estudiante -->
+            <td class="ps-3">
+              <div class="fw-bold" style="color:#333">{{ fila.estudiante.get_full_name|default:fila.estudiante.username }}</div>
+              {% with profile=fila.estudiante.estudiante_profile %}
+              {% if profile.numero_lista %}
+              <div class="text-muted" style="font-size:.72rem">N° {{ profile.numero_lista }}</div>
+              {% endif %}
+              {% endwith %}
             </td>
 
+            <!-- Nota Final — columna estrella -->
+            <td class="text-center">
+              {% if fila.nota_final %}
+                {% if fila.nota_final >= 4.5 %}
+                  <div style="background:linear-gradient(135deg,#d4edda,#b8f0c8);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
+                    <div class="fw-bold" style="font-size:1.25rem;color:#1a7a3b;line-height:1">{{ fila.nota_final }}</div>
+                    <div style="font-size:.65rem;color:#1a7a3b">🏆 Excelente</div>
+                  </div>
+                {% elif fila.nota_final >= 4.0 %}
+                  <div style="background:linear-gradient(135deg,#d4edda,#c3e6cb);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
+                    <div class="fw-bold" style="font-size:1.25rem;color:#155724;line-height:1">{{ fila.nota_final }}</div>
+                    <div style="font-size:.65rem;color:#155724">⭐ Alto</div>
+                  </div>
+                {% elif fila.nota_final >= 3.5 %}
+                  <div style="background:linear-gradient(135deg,#fff3cd,#ffeaa0);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
+                    <div class="fw-bold" style="font-size:1.25rem;color:#856404;line-height:1">{{ fila.nota_final }}</div>
+                    <div style="font-size:.65rem;color:#856404">👍 Básico</div>
+                  </div>
+                {% elif fila.nota_final >= 3.0 %}
+                  <div style="background:linear-gradient(135deg,#fff3cd,#ffe5b4);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
+                    <div class="fw-bold" style="font-size:1.25rem;color:#e67e22;line-height:1">{{ fila.nota_final }}</div>
+                    <div style="font-size:.65rem;color:#e67e22">📖 En proceso</div>
+                  </div>
+                {% else %}
+                  <div style="background:linear-gradient(135deg,#f8d7da,#f5c6cb);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
+                    <div class="fw-bold" style="font-size:1.25rem;color:#721c24;line-height:1">{{ fila.nota_final }}</div>
+                    <div style="font-size:.65rem;color:#721c24">💪 Reforzar</div>
+                  </div>
+                {% endif %}
+              {% else %}
+                <span class="text-muted small">Sin datos</span>
+              {% endif %}
+            </td>
+
+            <!-- Talleres -->
             {% for t in fila.talleres %}
             <td class="text-center">
               {% if t.sesion and t.sesion.completada %}
@@ -73,18 +123,19 @@
                   <span class="fw-bold" style="color:{% if t.nota >= 4.0 %}#28a745{% elif t.nota >= 3.0 %}#e67e22{% else %}#e53935{% endif %}">
                     {{ t.nota }}
                   </span>
-                  <div class="text-muted" style="font-size:.7rem">{{ t.pct }}%</div>
+                  <div class="text-muted" style="font-size:.68rem">{{ t.pct }}%</div>
                 {% else %}
                   <span class="text-success">✅</span>
                 {% endif %}
               {% elif t.sesion and t.sesion.bloque_actual > 0 %}
-                <span class="text-warning" title="En progreso">⏳</span>
+                <span title="En progreso">⏳</span>
               {% else %}
                 <span class="text-muted">—</span>
               {% endif %}
             </td>
             {% endfor %}
 
+            <!-- Minijuegos -->
             {% for m in fila.minijuegos %}
             <td class="text-center">
               {% if m.registro and m.registro.completado %}
@@ -92,7 +143,7 @@
                   <span class="fw-bold" style="color:{% if m.nota >= 4.0 %}#28a745{% elif m.nota >= 3.5 %}#e67e22{% else %}#e53935{% endif %}">
                     {{ m.nota }}
                   </span>
-                  <div class="text-muted" style="font-size:.7rem">{{ m.registro.porcentaje }}%</div>
+                  <div class="text-muted" style="font-size:.68rem">{{ m.registro.porcentaje }}%</div>
                 {% else %}
                   <span class="text-success">✅</span>
                 {% endif %}
@@ -102,13 +153,18 @@
             </td>
             {% endfor %}
 
+            <!-- Historia -->
             {% if periodo.meta_historia > 0 %}
             <td class="text-center">
               <span class="fw-bold {% if fila.estrellas_historia >= periodo.meta_historia %}text-success{% else %}text-muted{% endif %}">
-                {{ fila.estrellas_historia }} / {{ periodo.meta_historia }}
+                {{ fila.estrellas_historia }}<span class="text-muted fw-normal">/{{ periodo.meta_historia }}</span>
               </span>
+              {% if fila.estrellas_historia >= periodo.meta_historia %}
+              <div style="font-size:.65rem;color:#28a745">✅ Meta</div>
+              {% endif %}
             </td>
             {% endif %}
+
           </tr>
           {% endfor %}
         </tbody>
@@ -117,16 +173,17 @@
   </div>
 
   <!-- Leyenda -->
-  <div class="d-flex gap-3 flex-wrap mt-3 text-muted small">
-    <span>✅ Completado</span>
-    <span>⏳ En progreso</span>
-    <span>— Sin iniciar</span>
-    <span>Nota: escala colombiana 1.0–5.0</span>
+  <div class="d-flex gap-3 flex-wrap text-muted small px-1">
+    <span>🏆 Nota final = promedio de todas las actividades completadas</span>
+    <span>·</span>
+    <span>⏳ En progreso &nbsp; — Sin iniciar</span>
+    <span>·</span>
+    <span>Escala colombiana 1.0 – 5.0</span>
   </div>
 
   {% else %}
   <div class="nestgrow-card p-5 text-center">
-    <div style="font-size:3rem">👩‍🎓</div>
+    <div style="font-size:3.5rem">👩‍🎓</div>
     <h5 class="font-fredoka mt-3" style="color:var(--primary)">Este salón no tiene estudiantes aún</h5>
     <p class="text-muted">Agrega estudiantes al salón desde el panel de cuentas.</p>
   </div>

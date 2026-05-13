@@ -1,0 +1,847 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Asistente Milo IA — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --milo-purple: #6C63FF;
+    --milo-green: #4CAF50;
+    --milo-orange: #FF9800;
+    --milo-pink: #E91E63;
+    --milo-blue: #2196F3;
+  }
+
+  .asistente-hero {
+    background: linear-gradient(135deg, #6C63FF 0%, #9b59b6 50%, #3498db 100%);
+    border-radius: 28px;
+    padding: 1.8rem 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .asistente-hero::before {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+    top: -60px; right: -40px;
+  }
+  .asistente-hero::after {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+    bottom: -30px; left: 10%;
+  }
+
+  /* Pestañas */
+  .milo-tabs {
+    display: flex;
+    gap: 0.75rem;
+    background: #f0f0f9;
+    border-radius: 20px;
+    padding: 6px;
+    margin-bottom: 1.5rem;
+    width: fit-content;
+  }
+  .milo-tab-btn {
+    padding: 0.6rem 1.4rem;
+    border-radius: 14px;
+    border: none;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .milo-tab-btn.active {
+    background: white;
+    color: var(--milo-purple);
+    box-shadow: 0 4px 15px rgba(108,99,255,0.2);
+  }
+  .milo-tab-btn:hover:not(.active) { background: rgba(108,99,255,0.08); color: var(--milo-purple); }
+
+  /* ── Chat ── */
+  .chat-container {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(108,99,255,0.12);
+    display: flex;
+    flex-direction: column;
+    height: 520px;
+    overflow: hidden;
+  }
+  .chat-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, #6C63FF, #9b59b6);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .chat-header .milo-avatar-small {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .chat-header .milo-avatar-small .ia-badge {
+    position: absolute;
+    bottom: -2px; right: -4px;
+    background: #FFD700;
+    color: #333;
+    font-size: 0.5rem;
+    font-weight: 900;
+    padding: 1px 3px;
+    border-radius: 4px;
+    line-height: 1.2;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    scrollbar-width: thin;
+    scrollbar-color: #e0e0e0 transparent;
+  }
+  .msg-bubble {
+    max-width: 78%;
+    padding: 0.75rem 1rem;
+    border-radius: 18px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    word-break: break-word;
+    animation: bubbleIn 0.25s ease;
+  }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg-user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #6C63FF, #9b59b6);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  .msg-assistant-wrap {
+    align-self: flex-start;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 82%;
+  }
+  .milo-avatar-msg {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6C63FF, #9b59b6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .milo-avatar-msg .ia-badge {
+    position: absolute;
+    bottom: -2px; right: -3px;
+    background: #FFD700;
+    color: #333;
+    font-size: 0.45rem;
+    font-weight: 900;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1.2;
+  }
+  .msg-assistant {
+    background: #f4f4fb;
+    color: #333;
+    border-bottom-left-radius: 4px;
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+  .msg-motor-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    color: #aaa;
+    margin-top: 4px;
+    font-family: monospace;
+  }
+
+  /* Pensando */
+  .pensando-bubble {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .pensando-dots {
+    background: #f4f4fb;
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    padding: 0.75rem 1.1rem;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .pensando-dots span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--milo-purple);
+    animation: dotBounce 1.2s infinite;
+    opacity: 0.6;
+  }
+  .pensando-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .pensando-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Input área */
+  .chat-input-area {
+    padding: 0.9rem 1.2rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-end;
+    background: #fafafa;
+  }
+  .chat-input {
+    flex: 1;
+    border: 2px solid #e0e0f0;
+    border-radius: 16px;
+    padding: 0.65rem 1rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    max-height: 100px;
+    line-height: 1.4;
+  }
+  .chat-input:focus { border-color: var(--milo-purple); }
+  .btn-send {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #6C63FF, #9b59b6);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-send:hover { transform: scale(1.08); box-shadow: 0 4px 15px rgba(108,99,255,0.4); }
+  .btn-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Accesos rápidos */
+  .quick-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .quick-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    border: 2px solid #e0e0f0;
+    background: white;
+    font-size: 0.8rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    color: var(--milo-purple);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .quick-btn:hover {
+    background: var(--milo-purple);
+    color: white;
+    border-color: var(--milo-purple);
+    transform: translateY(-2px);
+  }
+
+  /* ── Análisis ── */
+  .analisis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.2rem;
+  }
+  .analisis-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.4rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+    border-top: 4px solid var(--milo-purple);
+    transition: transform 0.2s;
+  }
+  .analisis-card:hover { transform: translateY(-4px); }
+  .analisis-card.card-talleres { border-top-color: var(--milo-orange); }
+  .analisis-card.card-historia  { border-top-color: var(--milo-green); }
+  .analisis-card.card-estudiante{ border-top-color: var(--milo-pink); }
+  .analisis-card .card-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .analisis-card h5 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+  }
+  .analisis-card p.card-desc {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 1rem;
+  }
+  .btn-analizar {
+    padding: 0.5rem 1.2rem;
+    border-radius: 12px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-analizar:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+  .btn-analizar-semanal   { background: linear-gradient(135deg,#6C63FF,#9b59b6); color:white; }
+  .btn-analizar-talleres  { background: linear-gradient(135deg,#FF9800,#f44336); color:white; }
+  .btn-analizar-historia  { background: linear-gradient(135deg,#4CAF50,#009688); color:white; }
+  .btn-analizar-estudiante{ background: linear-gradient(135deg,#E91E63,#9C27B0); color:white; }
+
+  /* Resultado análisis */
+  .resultado-analisis {
+    background: #f9f9ff;
+    border-radius: 16px;
+    padding: 1.2rem;
+    margin-top: 1rem;
+    border-left: 4px solid var(--milo-purple);
+    white-space: pre-wrap;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #333;
+    display: none;
+  }
+  .resultado-analisis.show { display: block; animation: bubbleIn 0.3s ease; }
+  .resultado-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .motor-tag {
+    font-size: 0.7rem;
+    color: #aaa;
+    font-family: monospace;
+  }
+  .btn-copiar, .btn-regenerar {
+    padding: 0.3rem 0.8rem;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-copiar { background: #e8e8f8; color: var(--milo-purple); }
+  .btn-copiar:hover { background: var(--milo-purple); color: white; }
+  .btn-regenerar { background: #fff3e0; color: var(--milo-orange); }
+  .btn-regenerar:hover { background: var(--milo-orange); color: white; }
+  .timestamp-tag { font-size: 0.7rem; color: #bbb; }
+
+  /* Spinner análisis */
+  .spinner-analisis {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 0;
+    color: var(--milo-purple);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .spinner-analisis.show { display: flex; }
+  .spinner-analisis .spinner-border { width: 1.1rem; height: 1.1rem; border-width: 2px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 px-md-4 py-3">
+
+  <!-- Hero -->
+  <div class="asistente-hero">
+    <div class="d-flex align-items-center gap-3">
+      <div style="font-size:3rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))">🤖</div>
+      <div>
+        <h2 class="mb-0 fw-900" style="font-family:'Fredoka One',sans-serif;font-size:1.8rem;">
+          Asistente Milo IA
+        </h2>
+        <p class="mb-0 opacity-75" style="font-size:0.9rem;">
+          Planea clases, genera actividades y analiza el progreso de tu salón
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pestañas -->
+  <div class="milo-tabs">
+    <button class="milo-tab-btn {% if tab_activa == 'planear' %}active{% endif %}"
+            onclick="cambiarTab('planear')" id="tab-btn-planear">
+      ✏️ Planear
+    </button>
+    <button class="milo-tab-btn {% if tab_activa == 'analizar' %}active{% endif %}"
+            onclick="cambiarTab('analizar')" id="tab-btn-analizar">
+      📊 Analizar salón
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PESTAÑA PLANEAR
+  ══════════════════════════════════════════════ -->
+  <div id="tab-planear" class="{% if tab_activa != 'planear' %}d-none{% endif %}">
+
+    <!-- Accesos rápidos -->
+    <div class="quick-prompts mb-3">
+      <span style="font-size:0.8rem;color:#888;font-weight:700;align-self:center;">⚡ Rápido:</span>
+      <button class="quick-btn" data-prompt="Genera 5 preguntas sobre animales en inglés">
+        🐾 Animales en inglés
+      </button>
+      <button class="quick-btn" data-prompt="Dame ideas para un taller sobre los colores en inglés">
+        🎨 Taller de colores
+      </button>
+      <button class="quick-btn" data-prompt="¿Cómo enseñar los números del 1 al 20 de forma lúdica?">
+        🔢 Números lúdicos
+      </button>
+      <button class="quick-btn" data-prompt="Crea un diálogo corto en inglés para niños de primaria">
+        💬 Diálogo corto
+      </button>
+      <button class="quick-btn" data-prompt="Sugiere actividades de listening para esta semana">
+        🎧 Listening
+      </button>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="milo-avatar-small">
+          🐸
+          <span class="ia-badge">IA</span>
+        </div>
+        <div class="flex-grow-1">
+          <div style="font-weight:800;font-family:'Nunito',sans-serif;">Milo</div>
+          <div style="font-size:0.75rem;opacity:0.8;">Asistente educativo · Gemini / Groq</div>
+        </div>
+        <button class="btn btn-sm btn-outline-light rounded-pill"
+                onclick="limpiarHistorial()" title="Limpiar conversación"
+                style="font-size:0.75rem;padding:0.3rem 0.8rem;">
+          🗑️ Limpiar
+        </button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        {% if not historial %}
+        <div class="msg-assistant-wrap">
+          <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
+          <div>
+            <div class="msg-assistant">
+              ¡Hola, profe! 👋 Soy Milo, tu asistente educativo. Puedo ayudarte a:
+
+• Planear talleres y actividades de inglés
+• Generar preguntas listas para usar
+• Sugerir estrategias lúdicas
+• Crear diálogos y vocabulario
+
+¿En qué te ayudo hoy?
+            </div>
+          </div>
+        </div>
+        {% else %}
+          {% for msg in historial %}
+          {% if msg.rol == 'user' %}
+          <div class="msg-bubble msg-user">{{ msg.contenido }}</div>
+          {% else %}
+          <div class="msg-assistant-wrap">
+            <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
+            <div>
+              <div class="msg-assistant">{{ msg.contenido }}</div>
+              <span class="msg-motor-badge">vía {{ msg.motor_usado }}</span>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chatInput" rows="1"
+                  placeholder="Escribe tu pregunta aquí..."
+                  onkeydown="handleEnter(event)"></textarea>
+        <button class="btn-send" id="btnSend" onclick="enviarMensaje()" title="Enviar">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="text-muted mt-2" style="font-size:0.75rem;">
+      ⚡ Máximo 30 mensajes por hora · Las conversaciones se guardan para mantener contexto
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       PESTAÑA ANALIZAR
+  ══════════════════════════════════════════════ -->
+  <div id="tab-analizar" class="{% if tab_activa != 'analizar' %}d-none{% endif %}">
+
+    <div class="analisis-grid">
+
+      <!-- Resumen semanal -->
+      <div class="analisis-card" id="card-resumen">
+        <span class="card-icon">🗓️</span>
+        <h5>Resumen semanal</h5>
+        <p class="card-desc">¿Cómo va mi salón esta semana? Actividad, puntos y estudiantes inactivos.</p>
+        <button class="btn-analizar btn-analizar-semanal" onclick="generarAnalisis('resumen_semanal', this)">
+          Generar análisis
+        </button>
+        <div class="spinner-analisis" id="spin-resumen_semanal">
+          <div class="spinner-border text-primary"></div>
+          Milo está analizando los datos...
+        </div>
+        <div class="resultado-analisis" id="res-resumen_semanal"></div>
+      </div>
+
+      <!-- Mis talleres -->
+      <div class="analisis-card card-talleres" id="card-talleres">
+        <span class="card-icon">📋</span>
+        <h5>Mis talleres</h5>
+        <p class="card-desc">¿Cómo están rindiendo mis talleres? Preguntas que más fallan y tasas de completitud.</p>
+        <button class="btn-analizar btn-analizar-talleres" onclick="generarAnalisis('talleres', this)">
+          Generar análisis
+        </button>
+        <div class="spinner-analisis" id="spin-talleres">
+          <div class="spinner-border text-warning"></div>
+          Milo está analizando los datos...
+        </div>
+        <div class="resultado-analisis" id="res-talleres"
+             style="border-left-color: var(--milo-orange);"></div>
+      </div>
+
+      <!-- Modo historia -->
+      <div class="analisis-card card-historia" id="card-historia">
+        <span class="card-icon">🗺️</span>
+        <h5>Modo historia</h5>
+        <p class="card-desc">¿Cómo avanza el salón? Identifica estudiantes rezagados y secciones problemáticas.</p>
+        <button class="btn-analizar btn-analizar-historia" onclick="generarAnalisis('modo_historia', this)">
+          Generar análisis
+        </button>
+        <div class="spinner-analisis" id="spin-modo_historia">
+          <div class="spinner-border text-success"></div>
+          Milo está analizando los datos...
+        </div>
+        <div class="resultado-analisis" id="res-modo_historia"
+             style="border-left-color: var(--milo-green);"></div>
+      </div>
+
+      <!-- Estudiante individual -->
+      <div class="analisis-card card-estudiante" id="card-estudiante">
+        <span class="card-icon">👤</span>
+        <h5>Estudiante individual</h5>
+        <p class="card-desc">Perfil completo de un estudiante para compartir con padres de familia.</p>
+
+        <select class="form-select form-select-sm mb-3 rounded-pill" id="selectEstudiante"
+                style="border:2px solid #f0e0f0;font-weight:700;">
+          <option value="">— Selecciona un estudiante —</option>
+          {% for est in estudiantes %}
+          <option value="{{ est.user.pk }}">
+            {{ est.user.get_full_name|default:est.user.username }}
+          </option>
+          {% endfor %}
+        </select>
+        {% if not estudiantes %}
+        <p class="text-muted" style="font-size:0.8rem;">
+          No hay estudiantes en tu salón aún.
+        </p>
+        {% endif %}
+
+        <button class="btn-analizar btn-analizar-estudiante"
+                onclick="generarAnalisis('estudiante_detalle', this)">
+          Generar análisis
+        </button>
+        <div class="spinner-analisis" id="spin-estudiante_detalle">
+          <div class="spinner-border" style="color:var(--milo-pink);"></div>
+          Milo está analizando los datos...
+        </div>
+        <div class="resultado-analisis" id="res-estudiante_detalle"
+             style="border-left-color: var(--milo-pink);"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // ── WebSocket ───────────────────────────────────────────────────
+  const wsProto = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const chatWs = new WebSocket(`${wsProto}://${window.location.host}/ws/asistente/chat/`);
+  let esperandoRespuesta = false;
+
+  chatWs.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    quitarPensando();
+
+    if (data.tipo === 'pensando') {
+      mostrarPensando();
+    } else if (data.tipo === 'respuesta') {
+      appendMensaje('assistant', data.texto, data.motor);
+      esperandoRespuesta = false;
+      habilitarEnvio();
+    } else if (data.tipo === 'error') {
+      appendMensaje('assistant', '⚠️ ' + data.texto, '');
+      esperandoRespuesta = false;
+      habilitarEnvio();
+    }
+  };
+
+  chatWs.onerror = () => {
+    appendMensaje('assistant', '⚠️ Error de conexión. Recarga la página.', '');
+    habilitarEnvio();
+  };
+
+  // ── Enviar mensaje ──────────────────────────────────────────────
+  function enviarMensaje() {
+    if (esperandoRespuesta) return;
+    const input = document.getElementById('chatInput');
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    appendMensaje('user', texto, '');
+    chatWs.send(JSON.stringify({ mensaje: texto }));
+    input.value = '';
+    autoResizeTextarea(input);
+
+    esperandoRespuesta = true;
+    deshabilitarEnvio();
+    mostrarPensando();
+    scrollChat();
+  }
+
+  function handleEnter(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      enviarMensaje();
+    }
+  }
+
+  // ── DOM helpers ─────────────────────────────────────────────────
+  function appendMensaje(rol, texto, motor) {
+    const container = document.getElementById('chatMessages');
+    if (rol === 'user') {
+      const div = document.createElement('div');
+      div.className = 'msg-bubble msg-user';
+      div.textContent = texto;
+      container.appendChild(div);
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg-assistant-wrap';
+      wrap.innerHTML = `
+        <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
+        <div>
+          <div class="msg-assistant">${escapeHtml(texto)}</div>
+          ${motor ? `<span class="msg-motor-badge">vía ${motor}</span>` : ''}
+        </div>`;
+      container.appendChild(wrap);
+    }
+    scrollChat();
+  }
+
+  function mostrarPensando() {
+    quitarPensando();
+    const container = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'pensando-bubble';
+    div.id = 'pensandoBubble';
+    div.innerHTML = `
+      <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
+      <div class="pensando-dots">
+        <span></span><span></span><span></span>
+      </div>`;
+    container.appendChild(div);
+    scrollChat();
+  }
+
+  function quitarPensando() {
+    const el = document.getElementById('pensandoBubble');
+    if (el) el.remove();
+  }
+
+  function scrollChat() {
+    const c = document.getElementById('chatMessages');
+    c.scrollTop = c.scrollHeight;
+  }
+
+  function deshabilitarEnvio() {
+    document.getElementById('btnSend').disabled = true;
+    document.getElementById('chatInput').disabled = true;
+  }
+
+  function habilitarEnvio() {
+    document.getElementById('btnSend').disabled = false;
+    document.getElementById('chatInput').disabled = false;
+    document.getElementById('chatInput').focus();
+  }
+
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\n/g, '<br>');
+  }
+
+  // Auto-resize textarea
+  const chatInput = document.getElementById('chatInput');
+  if (chatInput) {
+    chatInput.addEventListener('input', () => autoResizeTextarea(chatInput));
+  }
+  function autoResizeTextarea(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  }
+
+  // Accesos rápidos
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById('chatInput');
+      input.value = btn.dataset.prompt;
+      autoResizeTextarea(input);
+      input.focus();
+    });
+  });
+
+  // Limpiar historial
+  function limpiarHistorial() {
+    if (!confirm('¿Borrar toda la conversación?')) return;
+    fetch('{% url "asistente:limpiar_historial" %}', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+    }).then(r => {
+      if (r.status === 429) {
+        alert('Has alcanzado el límite por hora. Intenta de nuevo más tarde.');
+      } else {
+        document.getElementById('chatMessages').innerHTML = '';
+        appendMensaje('assistant', 'Conversación limpiada. ¿En qué te puedo ayudar? 😊', '');
+      }
+    });
+  }
+
+  // ── Pestañas ────────────────────────────────────────────────────
+  function cambiarTab(tab) {
+    ['planear', 'analizar'].forEach(t => {
+      document.getElementById('tab-' + t).classList.toggle('d-none', t !== tab);
+      document.getElementById('tab-btn-' + t).classList.toggle('active', t === tab);
+    });
+    history.replaceState(null, '', '?tab=' + tab);
+  }
+
+  // ── Análisis AJAX ───────────────────────────────────────────────
+  function generarAnalisis(tipo, btnEl) {
+    const spinEl = document.getElementById('spin-' + tipo);
+    const resEl  = document.getElementById('res-'  + tipo);
+
+    let estudianteId = null;
+    if (tipo === 'estudiante_detalle') {
+      estudianteId = document.getElementById('selectEstudiante').value;
+      if (!estudianteId) {
+        alert('Selecciona un estudiante primero.');
+        return;
+      }
+    }
+
+    spinEl.classList.add('show');
+    resEl.classList.remove('show');
+    btnEl.disabled = true;
+
+    fetch('{% url "asistente:analizar" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ tipo_analisis: tipo, estudiante_id: estudianteId }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      spinEl.classList.remove('show');
+      btnEl.disabled = false;
+
+      const ahora = new Date().toLocaleString('es-CO', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+      const motorLabel = data.motor === 'gemini' ? '⚡ Gemini'
+                       : data.motor === 'groq'   ? '🦙 Groq'
+                       : data.motor === 'sin_datos' ? '' : '⚠️ Error';
+
+      resEl.innerHTML = `
+        <div style="margin-bottom:0.5rem;">${escapeHtml(data.texto)}</div>
+        <div class="resultado-footer">
+          <span class="timestamp-tag">📅 Generado el ${ahora}</span>
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            ${motorLabel ? `<span class="motor-tag">${motorLabel}</span>` : ''}
+            ${data.motor !== 'sin_datos' ? `
+              <button class="btn-copiar" onclick="copiarAnalisis('${tipo}')">📋 Copiar</button>
+              <button class="btn-regenerar" onclick="generarAnalisis('${tipo}', document.querySelector('[onclick=\\'generarAnalisis(\\'${tipo}\\', this)\\']'))">🔄 Regenerar</button>
+            ` : ''}
+          </div>
+        </div>`;
+      resEl.classList.add('show');
+    })
+    .catch(() => {
+      spinEl.classList.remove('show');
+      btnEl.disabled = false;
+      resEl.innerHTML = '⚠️ Ocurrió un error. Intenta de nuevo.';
+      resEl.classList.add('show');
+    });
+  }
+
+  function copiarAnalisis(tipo) {
+    const resEl = document.getElementById('res-' + tipo);
+    const texto = resEl.querySelector('div')?.innerText || '';
+    navigator.clipboard.writeText(texto).then(() => {
+      const btn = resEl.querySelector('.btn-copiar');
+      if (btn) { btn.textContent = '✅ Copiado'; setTimeout(() => btn.textContent = '📋 Copiar', 2000); }
+    });
+  }
+
+  // CSRF helper
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let c of cookies) {
+      const [k, v] = c.trim().split('=');
+      if (k === name) return decodeURIComponent(v);
+    }
+    return '';
+  }
+
+  // Scroll al fondo al cargar
+  window.addEventListener('load', scrollChat);
+</script>
+{% endblock %}

@@ -81,7 +81,11 @@ def editar_taller(request, pk):
         .select_related('bloque_minijuego__game', 'bloque_pregunta')
         .prefetch_related('bloque_pregunta__opciones')
     )
-    juegos_disponibles = Game.objects.select_related('category').order_by('category__name', 'title')
+    juegos_disponibles = (
+        Game.objects.filter(is_active=False)
+        .select_related('category')
+        .order_by('category__name', 'title')
+    )
 
     return render(request, 'talleres/profesor/form.html', {
         'form': form,
@@ -468,7 +472,6 @@ def score_bloque_minijuego(request, pk, bpk):
     if sesion.bloque_actual >= len(bloques_ids) or bloques_ids[sesion.bloque_actual] != bpk:
         return JsonResponse({'error': 'No es el bloque actual'}, status=400)
 
-    sesion.puntos_obtenidos += bloque.bloque_minijuego.game.points_reward
     sesion.bloque_actual += 1
     sesion.save()
 
@@ -662,7 +665,7 @@ def resultados_periodo(request, pk):
             sesion = sesiones_all.get((asig.taller_id, est.pk))
             pts = sesion.puntos_obtenidos if sesion else 0
             max_pts = asig.taller.total_puntos_posibles() or 1
-            pct = round((pts / max_pts) * 100) if sesion and sesion.completada else None
+            pct = min(round((pts / max_pts) * 100), 100) if sesion and sesion.completada else None
             from apps.games.models import pct_to_nota
             nota = pct_to_nota(pct) if pct is not None else None
             fila_talleres.append({
@@ -686,11 +689,27 @@ def resultados_periodo(request, pk):
             })
 
         estrellas = getattr(getattr(est, 'estudiante_profile', None), 'total_estrellas_historia', 0) or 0
+
+        # ── Nota final del período ─────────────────────────────────────────────
+        notas_individuales = []
+        for t in fila_talleres:
+            if t['nota'] is not None:
+                notas_individuales.append(t['nota'])
+        for m in fila_minijuegos:
+            if m['nota'] is not None:
+                notas_individuales.append(m['nota'])
+        if periodo.meta_historia > 0 and periodo.meta_historia:
+            pct_hist = min(round((estrellas / periodo.meta_historia) * 100), 100)
+            from apps.games.models import pct_to_nota as _ptn
+            notas_individuales.append(_ptn(pct_hist))
+        nota_final = round(sum(notas_individuales) / len(notas_individuales), 1) if notas_individuales else None
+
         filas.append({
             'estudiante': est,
             'talleres': fila_talleres,
             'minijuegos': fila_minijuegos,
             'estrellas_historia': estrellas,
+            'nota_final': nota_final,
         })
 
     return render(request, 'talleres/profesor/resultados_periodo.html', {
@@ -766,7 +785,7 @@ def enviar_informe_periodo(request, pk):
             sesion = sesiones_all.get((asig.taller_id, est.pk))
             pts = sesion.puntos_obtenidos if sesion else 0
             max_pts = asig.taller.total_puntos_posibles() or 1
-            pct = round((pts / max_pts) * 100) if sesion and sesion.completada else None
+            pct = min(round((pts / max_pts) * 100), 100) if sesion and sesion.completada else None
             nota = pct_to_nota(pct) if pct is not None else None
             fila_talleres.append({'asig': asig, 'sesion': sesion, 'pct': pct, 'nota': nota})
 
@@ -780,8 +799,19 @@ def enviar_informe_periodo(request, pk):
 
         estrellas = getattr(profile, 'total_estrellas_historia', 0) or 0
 
+        # Calcular nota final del período para este estudiante
+        notas_ind = [t['nota'] for t in fila_talleres if t['nota'] is not None]
+        notas_ind += [m['nota'] for m in fila_minijuegos if m['nota'] is not None]
+        if periodo.meta_historia > 0 and periodo.meta_historia:
+            pct_hist = min(round((estrellas / periodo.meta_historia) * 100), 100)
+            notas_ind.append(pct_to_nota(pct_hist))
+        nota_final = round(sum(notas_ind) / len(notas_ind), 1) if notas_ind else None
+
         try:
-            pdf_bytes = generar_pdf_informe_periodo(profile, periodo, fila_talleres, fila_minijuegos, estrellas)
+            pdf_bytes = generar_pdf_informe_periodo(
+                profile, periodo, fila_talleres, fila_minijuegos, estrellas,
+                nota_final=nota_final,
+            )
             nombre_est = est.get_full_name() or est.username
             subject = f'Informe de Período "{periodo.titulo}" — {nombre_est} — NestGrow'
             body = (
@@ -847,7 +877,7 @@ def resultado_sesion(request, pk):
 
     # Calcular nota
     max_pts = taller.total_puntos_posibles() or 1
-    pct = round((sesion.puntos_obtenidos / max_pts) * 100) if sesion.completada else 0
+    pct = min(round((sesion.puntos_obtenidos / max_pts) * 100), 100) if sesion.completada else 0
     from apps.games.models import pct_to_nota
     nota = pct_to_nota(pct) if sesion.completada else None
 

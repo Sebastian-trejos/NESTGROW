@@ -1,160 +1,99 @@
 ---
-description: Sistema académico de NestGrow — calificaciones, períodos y seguimiento de estudiantes
-globs: apps/talleres/**,apps/games/**,apps/historia/**,apps/accounts/**
-alwaysApply: false
+description: Academic grading and student management systems
+alwaysApply: true
 ---
 
-# Sistema Académico — NestGrow
+# ACADEMIC SYSTEM PRIORITY
 
-## Escala de calificaciones (colombiana)
+This application manages:
+- student progress
+- grades
+- scores
+- educational analytics
+- evaluations
 
-```python
-# apps/games/models.py — usar SIEMPRE estas funciones, no reimplementar
+These systems are HIGH PRIORITY and HIGH SENSITIVITY.
 
-def pct_to_nota(pct) -> float:
-    # Convierte porcentaje (0–100) a nota colombiana (1.0–5.0)
-    # pct >= 90 → 5.0 | >= 80 → 4.5 | >= 70 → 4.0 | >= 60 → 3.5
-    # >= 50 → 3.0   | >= 40 → 2.5 | < 40  → 2.0
+# IMPORTANT
 
-def clasificar_puntaje(pct) -> tuple:
-    # Retorna (clave, etiqueta, color_hex)
-    # >= 90 → ('perfecto', '🏆 Perfecto', '#4CAF50')
-    # >= 70 → ('alto',     '⭐ Alto',     '#6C63FF')
-    # >= 50 → ('basico',   '👍 Básico',   '#FFB347')
-    # <  50 → ('bajo',     '💪 Sigue practicando', '#FF6B6B')
-```
+Never modify grading logic irresponsibly.
 
-Importar desde: `from apps.games.models import pct_to_nota, clasificar_puntaje`
+Never break:
+- score calculations
+- averages
+- student history
+- progression tracking
+- achievement systems
+- report generation
 
----
+# STUDENT DATA
 
-## Sistema de Períodos (unidad central de seguimiento)
+Student-related data must be:
+- accurate
+- protected
+- consistent
+- traceable
 
-Un `Periodo` agrupa las actividades asignadas a un salón en un rango de fechas.
+# GRADE SYSTEMS
 
-```
-Periodo
-  ├── salon (FK → Salon)
-  ├── titulo, fecha_inicio, fecha_fin
-  ├── meta_historia (int, estrellas objetivo en modo historia)
-  ├── is_activo (bool)
-  ├── cerrado (bool) — el profesor lo cierra manualmente para congelar resultados
-  └── estado (property) → 'activo' | 'cerrado' | 'vencido' | 'futuro'
+All grading systems should:
+- be deterministic
+- avoid random inconsistencies
+- preserve history
+- support auditability
 
-AsignacionTaller    → hasta 5 talleres por período
-AsignacionMinijuego → hasta 5 minijuegos por período
-```
+# EDUCATIONAL ANALYTICS
 
-**Reglas de negocio:**
-- Solo puede haber **un período activo** por salón a la vez.
-- Un período "vencido" (`fecha_fin < hoy`) deja de mostrarse al estudiante, pero sus datos persisten.
-- Cerrar un período (`cerrado=True`) congela los resultados definitivamente.
-- Los estudiantes ven **solo** las actividades del período activo que no hayan completado+revisado.
+Prefer systems that:
+- track improvement
+- monitor progression
+- identify learning patterns
+- encourage motivation
 
----
+# UX FOR STUDENTS
 
-## Seguimiento de talleres
+Academic systems should feel:
+- motivating
+- rewarding
+- understandable
+- encouraging
 
-```
-SesionTaller
-  ├── taller (FK), estudiante (FK)
-  ├── completada (bool)
-  ├── revisado (bool) ← True cuando el estudiante hace clic en "Entendido" en resultado_sesion
-  ├── puntos_obtenidos (int)
-  ├── huesos_ganados (int)
-  └── bloque_actual (int)
-```
+Avoid:
+- harsh punishment systems
+- negative emotional feedback
+- demotivating language
 
-**Cálculo de nota de taller:**
-```python
-# total_puntos_posibles() suma puntaje_parcial de todos los BloquePregunta del taller
-pct = (sesion.puntos_obtenidos / taller.total_puntos_posibles()) * 100
-nota = pct_to_nota(pct)
-```
+# TEACHER/ADMIN PANELS
 
-**Desaparece del panel cuando:** `completada=True AND revisado=True`
+Admin interfaces should prioritize:
+- clarity
+- efficiency
+- organization
+- fast access to information
+- visual summaries
 
----
+# DATA VISUALIZATION
 
-## Seguimiento de minijuegos en período
+Prefer:
+- charts
+- progress bars
+- visual analytics
+- performance summaries
+- achievement indicators
 
-```
-RegistroMinijuegoPeriodo
-  ├── periodo (FK), asignacion (FK → AsignacionMinijuego), estudiante (FK)
-  ├── score, max_score (int)
-  ├── completado (bool)
-  ├── revisado (bool) ← True cuando el estudiante llega a mis_talleres?revisado=<pk>
-  └── porcentaje (property) → (score / max_score) * 100
-```
+# SAFETY
 
-**Nota del minijuego:** `pct_to_nota(registro.porcentaje)`
+Never:
+- delete student progress
+- overwrite grades
+- reset progress systems
 
-**Desaparece del panel y de /juegos/ cuando:** `completado=True AND revisado=True`
+without explicit approval.
 
----
+# ARCHITECTURE
 
-## Seguimiento del modo historia
-
-```
-ProgresoLeccion
-  ├── estudiante (FK), leccion (FK)
-  ├── completada (bool)
-  ├── puntos_obtenidos (int)
-  ├── estrellas (int) ← 1, 2 o 3
-  ├── intentos (int)
-  └── actividad_actual (int)
-
-Método calcular_estrellas(total_actividades, respuestas_correctas):
-  pct >= 90 → 3 ⭐ | pct >= 70 → 2 ⭐ | else → 1 ⭐
-```
-
-**Meta historia en período:** `Periodo.meta_historia` es el número de estrellas totales que el estudiante debe acumular en `EstudianteProfile.total_estrellas_historia`.
-
----
-
-## Flujo completo de calificación por período
-
-1. Profesor crea `Periodo` → asigna talleres + minijuegos + meta_historia.
-2. Estudiante completa actividades → puntajes se guardan automáticamente.
-3. Profesor consulta `/talleres/periodos/<pk>/resultados/` → tabla con:
-   - Por taller: nota 1–5 (de `SesionTaller.puntos_obtenidos`)
-   - Por minijuego: % (de `RegistroMinijuegoPeriodo.porcentaje`)
-   - Historia: total estrellas vs meta
-4. Profesor cierra período → resultados congelados.
-
-Vista de resultados: `apps/talleres/views.py → resultados_periodo`
-
----
-
-## Sistema de puntos y niveles (gamificación)
-
-```python
-# EstudianteProfile
-puntos_totales           # puntos del nivel actual (se resetean al subir de nivel)
-nivel                    # 1–50
-total_estrellas_historia # acumulado histórico de estrellas del modo historia
-
-# Subir de nivel: actualizar_nivel()
-# → Al subir: +5 huesos automáticos, crea HuesoTransaccion
-# → Nivel máx: 50
-
-# Puntos requeridos por nivel (no lineal):
-# Nivel 1→2: 20 pts | 2→3: 30 | 3→4: 50 | 4→5: 80
-# 5→6: 120 | 6→7: 160 | 7→8: 200 | 8+→: 250 pts
-```
-
----
-
-## Respuestas de preguntas en talleres
-
-```
-RespuestaEstudiante
-  ├── estudiante, pregunta (FK → BloquePregunta)
-  ├── texto_respuesta (para tipo 'parrafo')
-  ├── opciones_elegidas (M2M → OpcionRespuesta)
-  └── es_correcta (bool | null — null = pendiente revisión manual del profesor)
-```
-
-Tipos de pregunta: `opcion_multiple`, `casillas`, `parrafo`
-- `opcion_multiple` / `casillas` → `es_correcta` se auto-calcula al guardar
-- `parrafo` → `es_correcta = null`, el profesor revisa manualmente
+Academic logic should remain:
+- modular
+- testable
+- isolated
+- scalable

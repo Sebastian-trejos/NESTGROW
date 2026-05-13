@@ -11,6 +11,7 @@ urlpatterns = [
     path('juegos/', include('apps.games.urls')),
     path('talleres/', include('apps.talleres.urls')),
     path('historia/', include('apps.historia.urls', namespace='historia')),
+    path('asistente/', include('apps.asistente.urls', namespace='asistente')),
 ]
 
 if settings.DEBUG:

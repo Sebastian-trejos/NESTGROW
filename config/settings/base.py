@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'apps.games',
     'apps.talleres',
     'apps.historia',
+    'apps.asistente',
 ]
 
 MIDDLEWARE = [
