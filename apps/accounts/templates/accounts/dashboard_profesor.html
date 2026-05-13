@@ -13,6 +13,55 @@
     50%      { box-shadow: 0 20px 60px rgba(255,107,107,0.2); }
   }
 
+  @keyframes starFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.15; }
+    25% { transform: translateY(-18px) rotate(90deg) scale(1.1); opacity: 0.3; }
+    50% { transform: translateY(-6px) rotate(180deg) scale(0.9); opacity: 0.12; }
+    75% { transform: translateY(-25px) rotate(270deg) scale(1.05); opacity: 0.25; }
+  }
+  @keyframes starFloat2 {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.12; }
+    50% { transform: translateY(-30px) scale(1.3); opacity: 0.3; }
+  }
+  @keyframes starFloat3 {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+    33% { transform: translateY(-12px) rotate(120deg); opacity: 0.25; }
+    66% { transform: translateY(-22px) rotate(240deg); opacity: 0.18; }
+  }
+
+  .dashboard-bg {
+    position: relative;
+    background: linear-gradient(160deg,
+      rgba(108,99,255,0.04) 0%,
+      rgba(255,107,107,0.03) 20%,
+      rgba(78,205,196,0.03) 40%,
+      rgba(255,179,71,0.03) 60%,
+      rgba(168,230,207,0.03) 80%,
+      rgba(108,99,255,0.04) 100%
+    );
+    min-height: 100vh;
+  }
+  .stars-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    font-family: 'Fredoka One', sans-serif;
+    pointer-events: none;
+    line-height: 1;
+    user-select: none;
+  }
+  .dashboard-bg > .container {
+    position: relative;
+    z-index: 1;
+  }
+
   .prof-hero {
     background: linear-gradient(135deg, #FF6B6B 0%, #ff9494 50%, #FFB347 100%);
     border-radius: 28px;
@@ -62,31 +111,37 @@
   }
 
   .quick-card-prof {
-    background: white;
+    background: var(--card-color, #6C63FF);
     border-radius: 20px;
     padding: 1.2rem;
     text-align: center;
-    box-shadow: 0 6px 20px rgba(108,99,255,0.08);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     transition: all 0.3s;
     text-decoration: none;
     display: block;
     border: 2px solid transparent;
     height: 100%;
+    color: white;
   }
   .quick-card-prof:hover {
     transform: translateY(-6px);
-    box-shadow: 0 14px 35px rgba(108,99,255,0.2);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.18);
+    filter: brightness(1.08);
+    color: white;
   }
   .quick-icon-prof {
     width: 60px;height: 60px;
     border-radius: 18px;
+    background: rgba(255,255,255,0.2);
     display: flex;align-items: center;justify-content: center;
     margin: 0 auto 0.8rem;
     font-size: 1.6rem;
+    color: white;
     transition: all 0.3s;
   }
   .quick-card-prof:hover .quick-icon-prof {
     transform: scale(1.1) rotate(-5deg);
+    background: rgba(255,255,255,0.3);
   }
 
   .salon-card-prof {
@@ -133,7 +188,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+
+<!-- Fondo animado con estrellas -->
+<div style="position:fixed;inset:0;z-index:-1;
+            background:linear-gradient(135deg,#f0eeff 0%,#ffe9e9 50%,#e9f9ff 100%);
+            pointer-events:none;overflow:hidden">
+  <i class="bi bi-star-fill" style="position:absolute;top:5%;left:2%;font-size:1.8rem;color:#6C63FF;opacity:0.2;animation:starFloat 3s ease-in-out infinite"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:12%;left:8%;font-size:1rem;color:#FF6B6B;opacity:0.25;animation:starFloat 4s ease-in-out infinite 0.5s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:25%;left:1%;font-size:2.2rem;color:#4ECDC4;opacity:0.15;animation:starFloat 5s ease-in-out infinite 1s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:45%;left:3%;font-size:1.4rem;color:#FFB347;opacity:0.2;animation:starFloat 3.5s ease-in-out infinite 0.8s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:65%;left:1%;font-size:1.6rem;color:#6C63FF;opacity:0.2;animation:starFloat 4.5s ease-in-out infinite 1.5s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:80%;left:5%;font-size:1.2rem;color:#FF6B6B;opacity:0.25;animation:starFloat 3s ease-in-out infinite 0.3s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:5%;right:3%;font-size:1.5rem;color:#FFB347;opacity:0.2;animation:starFloat 4s ease-in-out infinite 0.2s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:18%;right:1%;font-size:2rem;color:#4ECDC4;opacity:0.15;animation:starFloat 5s ease-in-out infinite 1.2s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:35%;right:2%;font-size:1.1rem;color:#6C63FF;opacity:0.2;animation:starFloat 3.5s ease-in-out infinite 0.7s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:55%;right:1%;font-size:1.8rem;color:#FF6B6B;opacity:0.2;animation:starFloat 4s ease-in-out infinite 1.8s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:72%;right:3%;font-size:1.3rem;color:#FFB347;opacity:0.25;animation:starFloat 3s ease-in-out infinite 0.4s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:88%;right:2%;font-size:1.6rem;color:#4ECDC4;opacity:0.2;animation:starFloat 5s ease-in-out infinite 0.9s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:40%;left:50%;font-size:0.9rem;color:#FF6B6B;opacity:0.15;animation:starFloat 4s ease-in-out infinite 2s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:70%;left:45%;font-size:1.2rem;color:#6C63FF;opacity:0.12;animation:starFloat 3.5s ease-in-out infinite 1.3s"></i>
+</div>
+  <div class="container py-4">
 
   <!-- HERO -->
   <div class="prof-hero">
@@ -228,69 +303,51 @@
     </h5>
     <div class="row g-3">
       <div class="col-6 col-md-3">
-        <a href="{% url 'games:gestionar_categorias' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#4ECDC4'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f0fffe">
-            <i class="bi bi-book-fill" style="color:#4ECDC4"></i>
+        <a href="{% url 'games:gestionar_categorias' %}" class="quick-card-prof" style="--card-color:#4ECDC4">
+          <div class="quick-icon-prof">
+            <i class="bi bi-book-fill"></i>
           </div>
-          <div class="fw-bold small" style="color:#4ECDC4">Categorías</div>
+          <div class="fw-bold small">Categorías</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'accounts:editar_perfil_profesor' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#FFB347'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#fff9ee">
-            <i class="bi bi-pencil-fill" style="color:#FFB347"></i>
+        <a href="{% url 'accounts:editar_perfil_profesor' %}" class="quick-card-prof" style="--card-color:#FFB347">
+          <div class="quick-icon-prof">
+            <i class="bi bi-pencil-fill"></i>
           </div>
-          <div class="fw-bold small" style="color:#FFB347">Mi Perfil</div>
+          <div class="fw-bold small">Mi Perfil</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'games:museo_virtual' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#9c94ff'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f0eeff">
-            <i class="bi bi-image-fill" style="color:#9c94ff"></i>
+        <a href="{% url 'games:museo_virtual' %}" class="quick-card-prof" style="--card-color:#9c94ff">
+          <div class="quick-icon-prof">
+            <i class="bi bi-image-fill"></i>
           </div>
-          <div class="fw-bold small" style="color:#9c94ff">Museo Virtual</div>
+          <div class="fw-bold small">Museo Virtual</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'talleres:lista' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#2e7d52'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f0fff4">
-            <i class="bi bi-clipboard2-check-fill" style="color:#2e7d52"></i>
+        <a href="{% url 'talleres:lista' %}" class="quick-card-prof" style="--card-color:#81f5d4">
+          <div class="quick-icon-prof">
+            <i class="bi bi-clipboard2-check-fill"></i>
           </div>
-          <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
+          <div class="fw-bold small">Talleres</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'historia:panel_historia_profesor' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#6C63FF'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f0eeff">
-            <i class="bi bi-map-fill" style="color:#6C63FF"></i>
+        <a href="{% url 'historia:panel_historia_profesor' %}" class="quick-card-prof" style="--card-color:#6C63FF">
+          <div class="quick-icon-prof">
+            <i class="bi bi-map-fill"></i>
           </div>
-          <div class="fw-bold small" style="color:#6C63FF">Modo Historia</div>
+          <div class="fw-bold small">Modo Historia</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'games:gestionar_juegos' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#FF6B6B'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#fff0f0">
-            <i class="bi bi-controller" style="color:#FF6B6B"></i>
+        <a href="{% url 'games:gestionar_juegos' %}" class="quick-card-prof" style="--card-color:#FF6B6B">
+          <div class="quick-icon-prof">
+            <i class="bi bi-controller"></i>
           </div>
-          <div class="fw-bold small" style="color:#FF6B6B">Juegos</div>
+          <div class="fw-bold small">Juegos</div>
         </a>
       </div>
     </div>
@@ -430,5 +487,6 @@
   </div>
   {% endif %}
 
+</div>
 </div>
 {% endblock %}

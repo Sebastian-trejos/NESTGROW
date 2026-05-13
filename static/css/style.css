@@ -477,11 +477,11 @@ body.nestgrow-body {
   transition: width 1s ease;
 }
 
-/* --- Confetti / Win Animations --- */
+/* --- Result Overlay (Win/Lose) --- */
 .win-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.55);
   z-index: 10000;
   display: flex;
   align-items: center;
@@ -491,20 +491,110 @@ body.nestgrow-body {
 
 .win-card {
   background: white;
-  border-radius: 30px;
-  padding: 50px 60px;
+  border-radius: 28px;
+  padding: 2rem 2.5rem;
   text-align: center;
   animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-width: 380px;
+  width: 90%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
 }
+
+.win-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: 28px 28px 0 0;
+}
+
+.win-card--excelente::before { background: linear-gradient(90deg, #4CAF50, #81C784); }
+.win-card--bien::before      { background: linear-gradient(90deg, #6C63FF, #9c94ff); }
+.win-card--regular::before   { background: linear-gradient(90deg, #FFB347, #FFCC80); }
+.win-card--mal::before       { background: linear-gradient(90deg, #FF6B6B, #FF8E8E); }
 
 @keyframes popIn {
   from { transform: scale(0.3); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
-.win-owl { font-size: 5rem; animation: bobble 1s infinite; }
-.win-title { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: var(--primary); }
-.win-stars { font-size: 2rem; letter-spacing: 6px; }
+@keyframes miloBounce {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-8px) scale(1.05); }
+}
+
+.win-milo-wrap {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: miloBounce 2s ease-in-out infinite;
+}
+
+.win-card--excelente .win-milo-wrap { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+.win-card--bien      .win-milo-wrap { background: linear-gradient(135deg, #EDE7F6, #D1C4E9); }
+.win-card--regular   .win-milo-wrap { background: linear-gradient(135deg, #FFF8E1, #FFECB3); }
+.win-card--mal       .win-milo-wrap { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+
+.win-milo-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.win-message {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: #555;
+  margin-bottom: 0.25rem;
+  min-height: 2rem;
+}
+
+.win-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.win-stars {
+  font-size: 2rem;
+  letter-spacing: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.win-clasif {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.win-score {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.win-score span { color: var(--primary); }
+
+.win-huesos {
+  font-weight: 700;
+  color: #8B4513;
+  margin-bottom: 0.5rem;
+  padding: 6px 14px;
+  background: #FFF8E1;
+  border-radius: 50px;
+  display: inline-block;
+}
 
 /* --- Footer --- */
 .nestgrow-footer {

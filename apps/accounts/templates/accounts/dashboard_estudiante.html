@@ -20,8 +20,12 @@
     from { opacity:0; transform:translateY(20px); }
     to   { opacity:1; transform:translateY(0); }
   }
+  @keyframes bounceIn {
+    0%   { opacity:0; transform:translateY(30px) scale(0.9); }
+    60%  { transform:translateY(-6px) scale(1.02); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
+  }
 
-  /* Hero banner */
   .dash-hero {
     background: linear-gradient(135deg, #6C63FF, #9c94ff);
     border-radius: 28px;
@@ -48,7 +52,6 @@
     bottom:-40px;left:20%;
   }
 
-  /* Stat cards */
   .stat-card-new {
     background: white;
     border-radius: 20px;
@@ -67,24 +70,21 @@
     color: var(--primary);
   }
   .stat-label-new { font-size: 0.8rem; font-weight: 700; color: #888; margin-top: 4px; }
-  .stat-icon-new { font-size: 1.8rem; margin-bottom: 6px; }
 
-  /* Quick action cards */
   .quick-card {
-    background: white;
     border-radius: 20px;
     padding: 1.2rem;
     text-align: center;
-    box-shadow: 0 6px 20px rgba(108,99,255,0.08);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
     transition: all 0.3s;
     text-decoration: none;
     display: block;
-    border: 2px solid transparent;
+    animation: bounceIn 0.5s ease both;
   }
   .quick-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--primary);
-    box-shadow: 0 15px 35px rgba(108,99,255,0.15);
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    filter: brightness(1.05);
   }
   .quick-icon {
     width: 60px; height: 60px;
@@ -94,7 +94,6 @@
     font-size: 1.6rem;
   }
 
-  /* Progress bar */
   .progress-nestgrow {
     height: 14px;
     border-radius: 20px;
@@ -110,7 +109,6 @@
     animation: progressPulse 2s infinite;
   }
 
-  /* Game cards */
   .game-progress-card {
     background: white;
     border-radius: 18px;
@@ -124,7 +122,6 @@
     transform: translateY(-3px);
   }
 
-  /* Section titles */
   .section-title {
     font-family: 'Fredoka One', cursive;
     color: var(--primary);
@@ -135,7 +132,6 @@
     gap: 8px;
   }
 
-  /* Level badge */
   .level-pill {
     background: linear-gradient(135deg, #FFE66D, #FFB347);
     color: #333;
@@ -146,7 +142,6 @@
     box-shadow: 0 4px 12px rgba(255,179,71,0.3);
   }
 
-  /* Logro badge */
   .logro-badge {
     background: white;
     border-radius: 18px;
@@ -158,7 +153,6 @@
   }
   .logro-badge:hover { transform: translateY(-4px); }
 
-  /* Star decorations */
   .star-deco {
     position: absolute;
     animation: starFloat 3s ease-in-out infinite;
@@ -169,10 +163,32 @@
 
 {% block content %}
 
+<!-- Fondo animado con estrellas -->
+<div style="position:fixed;inset:0;z-index:-1;
+            background:linear-gradient(135deg,#f0eeff 0%,#ffe9e9 50%,#e9f9ff 100%);
+            pointer-events:none;overflow:hidden">
+  <i class="bi bi-star-fill" style="position:absolute;top:5%;left:2%;font-size:1.8rem;color:#6C63FF;opacity:0.2;animation:starFloat 3s ease-in-out infinite"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:12%;left:8%;font-size:1rem;color:#FF6B6B;opacity:0.25;animation:starFloat 4s ease-in-out infinite 0.5s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:25%;left:1%;font-size:2.2rem;color:#4ECDC4;opacity:0.15;animation:starFloat 5s ease-in-out infinite 1s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:45%;left:3%;font-size:1.4rem;color:#FFB347;opacity:0.2;animation:starFloat 3.5s ease-in-out infinite 0.8s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:65%;left:1%;font-size:1.6rem;color:#6C63FF;opacity:0.2;animation:starFloat 4.5s ease-in-out infinite 1.5s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:80%;left:5%;font-size:1.2rem;color:#FF6B6B;opacity:0.25;animation:starFloat 3s ease-in-out infinite 0.3s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:5%;right:3%;font-size:1.5rem;color:#FFB347;opacity:0.2;animation:starFloat 4s ease-in-out infinite 0.2s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:18%;right:1%;font-size:2rem;color:#4ECDC4;opacity:0.15;animation:starFloat 5s ease-in-out infinite 1.2s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:35%;right:2%;font-size:1.1rem;color:#6C63FF;opacity:0.2;animation:starFloat 3.5s ease-in-out infinite 0.7s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:55%;right:1%;font-size:1.8rem;color:#FF6B6B;opacity:0.2;animation:starFloat 4s ease-in-out infinite 1.8s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:72%;right:3%;font-size:1.3rem;color:#FFB347;opacity:0.25;animation:starFloat 3s ease-in-out infinite 0.4s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:88%;right:2%;font-size:1.6rem;color:#4ECDC4;opacity:0.2;animation:starFloat 5s ease-in-out infinite 0.9s"></i>
+  <i class="bi bi-star-fill" style="position:absolute;top:40%;left:50%;font-size:0.9rem;color:#FF6B6B;opacity:0.15;animation:starFloat 4s ease-in-out infinite 2s"></i>
+  <i class="bi bi-sparkle-fill" style="position:absolute;top:70%;left:45%;font-size:1.2rem;color:#6C63FF;opacity:0.12;animation:starFloat 3.5s ease-in-out infinite 1.3s"></i>
+</div>
+
 <!-- ===== MODAL EMOJI KITCHEN ===== -->
 <div id="avatarModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
   <div style="background:white; border-radius:24px; padding:24px; max-width:440px; width:92%; margin:auto; max-height:90vh; overflow-y:auto;">
-    <h4 class="font-fredoka text-center mb-1" style="color:var(--primary); font-size:1.5rem"><i class="bi bi-egg-fried"></i> ¡Fusiona tus emojis!</h4>
+    <h4 class="font-fredoka text-center mb-1" style="color:var(--primary); font-size:1.5rem">
+      <i class="bi bi-egg-fried"></i> ¡Fusiona tus emojis!
+    </h4>
     <p class="text-center text-muted fw-bold small mb-3">Elige dos emojis y Milo los mezcla para crear tu personaje único</p>
     <div class="text-center mb-3">
       <div style="position:relative; display:inline-block;">
@@ -184,16 +200,23 @@
         <span style="font-weight:700; color:var(--primary)">+</span>
         <span id="sel2Display" style="font-size:1.8rem">🐱</span>
         <span style="font-weight:700; color:var(--primary)">=</span>
-        <span id="mixStatus" style="font-size:0.8rem; font-weight:700; color:var(--accent)"><i class="bi bi-stars"></i> Mezclando...</span>
+        <span id="mixStatus" style="font-size:0.8rem; font-weight:700; color:var(--accent)">
+          <i class="bi bi-stars"></i> Mezclando...
+        </span>
       </div>
       <div id="miloMsg" style="display:none; margin-top:8px; background:#f0eeff; border-radius:12px; padding:10px 14px; font-size:0.85rem; font-weight:700; color:var(--primary)">
-        <img src="{% static 'img/milo_fest.png' %}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle"> <span id="miloMsgText"></span>
+        <img src="{% static 'img/milo_fest.png' %}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle">
+        <span id="miloMsgText"></span>
       </div>
     </div>
-    <p class="fw-bold small mb-1" style="color:var(--primary)"><i class="bi bi-1-square-fill"></i> Primer emoji:</p>
+    <p class="fw-bold small mb-1" style="color:var(--primary)">
+      <i class="bi bi-1-square-fill"></i> Primer emoji:
+    </p>
     <div id="tabs1" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;"></div>
     <div id="grid1" style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:14px;"></div>
-    <p class="fw-bold small mb-1" style="color:var(--primary)"><i class="bi bi-2-square-fill"></i> Segundo emoji:</p>
+    <p class="fw-bold small mb-1" style="color:var(--primary)">
+      <i class="bi bi-2-square-fill"></i> Segundo emoji:
+    </p>
     <div id="tabs2" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;"></div>
     <div id="grid2" style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:20px;"></div>
     <button onclick="guardarAvatar()" class="btn btn-nestgrow btn-primary-nestgrow w-100" style="font-size:1.05rem">
@@ -205,11 +228,8 @@
 
 <div class="container py-4">
 
-  <!-- ══════════════════════════════════
-       HERO BANNER
-  ══════════════════════════════════ -->
+  <!-- HERO BANNER -->
   <div class="dash-hero">
-    <!-- Estrellas decorativas -->
     <span class="star-deco" style="top:10%;left:2%;font-size:1.2rem;animation-delay:0s">
       <i class="bi bi-star-fill" style="color:rgba(255,255,255,0.4)"></i>
     </span>
@@ -222,7 +242,6 @@
 
     <div class="row align-items-center">
       <div class="col-md-7 position-relative" style="z-index:1">
-        <!-- Avatar clickeable -->
         <div class="d-flex align-items-center gap-3 mb-3">
           <div onclick="abrirAvatar()" style="cursor:pointer;position:relative;flex-shrink:0">
             {% if profile.avatar_kitchen_url %}
@@ -261,8 +280,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Chips de estado -->
         <div class="d-flex gap-2 flex-wrap">
           <div class="px-3 py-1 rounded-pill fw-bold"
                style="background:rgba(255,255,255,0.2);font-size:0.85rem">
@@ -281,8 +298,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Milo en el hero -->
       <div class="col-md-5 text-center d-none d-md-block" style="position:relative;z-index:1">
         <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo"
              style="width:160px;filter:drop-shadow(0 10px 25px rgba(0,0,0,0.2));
@@ -291,9 +306,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════
-       PROGRESO DE NIVEL
-  ══════════════════════════════════ -->
+  <!-- PROGRESO DE NIVEL -->
   <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <div class="section-title mb-0">
@@ -320,99 +333,112 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════
-       ACCESOS RÁPIDOS
-  ══════════════════════════════════ -->
+  <!-- ACCESOS RÁPIDOS -->
   <div class="section-title">
     <i class="bi bi-lightning-charge-fill" style="color:#FFB347"></i>
     Accesos Rápidos
   </div>
   <div class="row g-3 mb-4">
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'games:game_list' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#f0eeff,#e0d9ff)">
-          <i class="bi bi-controller" style="color:#6C63FF"></i>
+      <a href="{% url 'games:game_list' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#6C63FF,#9c94ff)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-controller" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:var(--primary)">Minijuegos</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">¡A aprender!</div>
+        <div class="fw-bold small" style="color:white">Minijuegos</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">¡A aprender!</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'games:mis_logros' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#fff9e6,#fff0cc)">
-          <i class="bi bi-award-fill" style="color:#FFB347"></i>
+      <a href="{% url 'games:mis_logros' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#FFB347,#ffd080)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-award-fill" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:var(--orange)">
+        <div class="fw-bold small" style="color:white">
           Mis Logros
           {% if logros_pendientes > 0 %}
           <span class="badge rounded-pill ms-1"
-                style="background:var(--secondary);color:white;font-size:0.65rem">
+                style="background:white;color:#FFB347;font-size:0.65rem">
             {{ logros_pendientes }}
           </span>
           {% endif %}
         </div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tus medallas</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">Tus medallas</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'games:ranking_salon' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#fff5f5,#ffe0e0)">
-          <i class="bi bi-bar-chart-fill" style="color:#FF6B6B"></i>
+      <a href="{% url 'games:ranking_salon' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#FF6B6B,#ff9494)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-bar-chart-fill" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:var(--secondary)">Ranking</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">¿En qué lugar estás?</div>
+        <div class="fw-bold small" style="color:white">Ranking</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">¿En qué lugar estás?</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'content:mi_vocabulario' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#f0fffe,#d9f9f7)">
-          <i class="bi bi-book-fill" style="color:#4ECDC4"></i>
+      <a href="{% url 'content:mi_vocabulario' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-book-fill" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:var(--accent)">Vocabulario</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Mis palabras 📚</div>
+        <div class="fw-bold small" style="color:white">Vocabulario</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">Mis palabras</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'games:habitacion_milo' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#f0f8ff,#d9ecff)">
-          <i class="bi bi-house-heart-fill" style="color:#4a90d9"></i>
+      <a href="{% url 'games:habitacion_milo' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#74B9FF,#a8d4ff)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-house-heart-fill" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:#4a90d9">Habitación</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Tu espacio Milo</div>
+        <div class="fw-bold small" style="color:white">Habitación</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">Tu espacio Milo</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'games:tienda' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#fff5eb,#ffe6cc)">
-          <i class="bi bi-shop" style="color:#8B4513"></i>
+      <a href="{% url 'games:tienda' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#FD79A8,#ffaac8)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-shop" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:#8B4513">Tienda</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Gasta tus huesos</div>
+        <div class="fw-bold small" style="color:white">Tienda</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">Gasta tus huesos</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'talleres:mis_talleres' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#f0fff4,#d9f7e2)">
-          <i class="bi bi-clipboard2-check-fill" style="color:#2e7d52"></i>
+      <a href="{% url 'talleres:mis_talleres' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#55EFC4,#81f5d4)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-clipboard2-check-fill" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:#2e7d52">Mis Actividades</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Talleres y minijuegos</div>
+        <div class="fw-bold small" style="color:white">Mis Actividades</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">Talleres y minijuegos</div>
       </a>
     </div>
+
     <div class="col-6 col-md-3">
-      <a href="{% url 'historia:mapa_historia' %}" class="quick-card">
-        <div class="quick-icon" style="background:linear-gradient(135deg,#f0eeff,#ddd8ff)">
-          🗺️
+      <a href="{% url 'historia:mapa_historia' %}" class="quick-card"
+         style="background:linear-gradient(135deg,#a29bfe,#c4b0ff)">
+        <div class="quick-icon" style="background:rgba(255,255,255,0.2)">
+          <i class="bi bi-map-fill" style="color:white"></i>
         </div>
-        <div class="fw-bold small" style="color:#6C63FF">Modo Historia</div>
-        <div style="font-size:0.75rem;color:#aaa;font-weight:700">Viaja con Milo</div>
+        <div class="fw-bold small" style="color:white">Modo Historia</div>
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);font-weight:700">Viaja con Milo</div>
       </a>
     </div>
+
   </div>
 
-  <!-- ══════════════════════════════════
-       SALÓN
-  ══════════════════════════════════ -->
+  <!-- SALÓN -->
   {% if not profile.salon %}
   <div class="nestgrow-card p-4 mb-4"
        style="border:3px dashed var(--accent);background:linear-gradient(135deg,#f0fffe,#fff)">
@@ -433,8 +459,7 @@
   </div>
   {% else %}
   <div class="nestgrow-card p-4 mb-4"
-       style="border-left:5px solid var(--accent);
-              background:linear-gradient(135deg,#f0fffe,#fff)">
+       style="border-left:5px solid var(--accent);background:linear-gradient(135deg,#f0fffe,#fff)">
     <div class="d-flex align-items-center gap-3">
       <div style="width:50px;height:50px;border-radius:16px;background:#f0fffe;
                   display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -457,9 +482,7 @@
   </div>
   {% endif %}
 
-  <!-- ══════════════════════════════════
-       LOGROS RECIENTES
-  ══════════════════════════════════ -->
+  <!-- LOGROS RECIENTES -->
   {% if logros_recientes %}
   <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -483,28 +506,26 @@
   </div>
   {% endif %}
 
-  <!-- ══════════════════════════════════
-       MODO HISTORIA (si tiene estrellas o secciones)
-  ══════════════════════════════════ -->
+  <!-- MODO HISTORIA -->
   {% if profile.total_estrellas_historia > 0 or historia_primera_incompleta %}
   <div class="nestgrow-card p-4 mb-4"
-       style="border-left:5px solid #6C63FF;
-              background:linear-gradient(135deg,#f6f4ff,#fff)">
+       style="border-left:5px solid #6C63FF;background:linear-gradient(135deg,#f6f4ff,#fff)">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <div class="section-title mb-0">
-        🗺️ Modo Historia
+        <i class="bi bi-map-fill" style="color:#6C63FF"></i>
+        Modo Historia
       </div>
       {% if historia_primera_incompleta %}
       <a href="{% url 'historia:ver_leccion' pk=historia_primera_incompleta.leccion_pk %}"
          class="btn btn-sm rounded-pill"
          style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;font-weight:700">
-        ▶ Continuar
+        <i class="bi bi-play-fill me-1"></i>Continuar
       </a>
       {% else %}
       <a href="{% url 'historia:mapa_historia' %}"
          class="btn btn-sm rounded-pill"
          style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;font-weight:700">
-        Ver mapa
+        <i class="bi bi-map-fill me-1"></i>Ver mapa
       </a>
       {% endif %}
     </div>
@@ -512,7 +533,7 @@
       <div class="text-center px-3 py-2 rounded-3"
            style="background:rgba(108,99,255,0.08);min-width:90px">
         <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;color:#6C63FF;line-height:1">
-          ⭐ {{ profile.total_estrellas_historia }}
+          <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ profile.total_estrellas_historia }}
         </div>
         <div style="font-size:.72rem;color:#888;font-weight:700">estrellas</div>
       </div>
@@ -531,14 +552,12 @@
   </div>
   {% endif %}
 
-
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
-/* ── Emoji Kitchen Avatar ─────────────────────────────────── */
 const CATS = [
   { label: '😀 Caras',      emojis: ['😀','😂','🤣','😊','😍','🤩','😎','🥳','😜','🤔','😴','🥺','😭','😤','😡'] },
   { label: '🐶 Animales',   emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵'] },
@@ -553,13 +572,10 @@ let sel2 = '{{ profile.avatar_emoji2|default:"🐶" }}';
 let tab1 = 0, tab2 = 1;
 let kitchenUrl = '{{ profile.avatar_kitchen_url }}';
 
-/* Convierte un emoji a su hex (filtra variantes fe0f/200d) */
 function toHex(e) {
   return [...e].map(c => c.codePointAt(0).toString(16))
                .filter(h => h !== 'fe0f' && h !== '200d').join('-');
 }
-
-/* Prueba si una URL de imagen existe */
 function checkImg(url) {
   return new Promise(resolve => {
     const i = new Image();
@@ -568,8 +584,6 @@ function checkImg(url) {
     i.src = url;
   });
 }
-
-/* Busca la URL de Emoji Kitchen probando múltiples fechas */
 async function buscarKitchen(e1, e2) {
   const h1 = toHex(e1), h2 = toHex(e2);
   for (const d of DATES) {
@@ -581,8 +595,6 @@ async function buscarKitchen(e1, e2) {
   }
   return null;
 }
-
-/* Abre/cierra el modal */
 function abrirAvatar() {
   document.getElementById('avatarModal').style.display = 'flex';
   renderTabs(1); renderGrid(1);
@@ -592,8 +604,6 @@ function abrirAvatar() {
 function cerrarAvatar() {
   document.getElementById('avatarModal').style.display = 'none';
 }
-
-/* Renderiza pestañas y cuadrícula para slot 1 o 2 */
 function renderTabs(slot) {
   const activeIdx = slot === 1 ? tab1 : tab2;
   document.getElementById(`tabs${slot}`).innerHTML = CATS.map((c, i) =>
@@ -601,7 +611,6 @@ function renderTabs(slot) {
        style="font-size:0.7rem" onclick="setTab(${slot},${i})">${c.label}</button>`
   ).join('');
 }
-
 function renderGrid(slot) {
   const activeIdx = slot === 1 ? tab1 : tab2;
   const sel = slot === 1 ? sel1 : sel2;
@@ -610,45 +619,32 @@ function renderGrid(slot) {
        onclick="pick(${slot},'${e}')">${e}</button>`
   ).join('');
 }
-
 function setTab(slot, idx) {
   if (slot === 1) { tab1 = idx; } else { tab2 = idx; }
   renderTabs(slot); renderGrid(slot);
 }
-
 function pick(slot, e) {
   if (slot === 1) { sel1 = e; document.getElementById('sel1Display').textContent = e; }
   else            { sel2 = e; document.getElementById('sel2Display').textContent = e; }
   renderGrid(slot);
   mezclar();
 }
-
-/* Mezcla los dos emojis y actualiza el preview */
 async function mezclar() {
   const imgEl    = document.getElementById('kitchenResult');
   const fallback = document.getElementById('kitchenFallback');
   const status   = document.getElementById('mixStatus');
   const miloMsg  = document.getElementById('miloMsg');
   const miloText = document.getElementById('miloMsgText');
-
   document.getElementById('sel1Display').textContent = sel1 || '?';
   document.getElementById('sel2Display').textContent = sel2 || '?';
-
-  if (!sel1 || !sel2) {
-    status.innerHTML = '<i class="bi bi-stars"></i> Elige dos emojis';
-    return;
-  }
-
-  /* Estado: mezclando */
+  if (!sel1 || !sel2) { status.innerHTML = '<i class="bi bi-stars"></i> Elige dos emojis'; return; }
   status.innerHTML = '<span class="spinner-border spinner-border-sm align-middle me-1"></span>Mezclando...';
   imgEl.style.display = 'none';
   fallback.style.display = 'inline-flex';
   fallback.textContent = sel1 + sel2;
   miloMsg.style.display = 'none';
-
   const url = await buscarKitchen(sel1, sel2);
   kitchenUrl = url || '';
-
   if (url) {
     imgEl.src = url;
     imgEl.style.display = 'block';
@@ -657,7 +653,6 @@ async function mezclar() {
     miloMsg.style.display = 'block';
     miloText.textContent = '¡Me encanta! Esta mezcla es única 🎨';
   } else {
-    /* Sin resultado en Kitchen: muestra los dos emojis juntos */
     imgEl.style.display = 'none';
     fallback.style.display = 'inline-flex';
     fallback.innerHTML = `<span style="font-size:2rem">${sel1}${sel2}</span>`;
@@ -666,8 +661,6 @@ async function mezclar() {
     miloText.textContent = '¡Esta combinación es solo tuya! 😄';
   }
 }
-
-/* Guarda el avatar en el servidor */
 async function guardarAvatar() {
   if (!sel1 || !sel2) { alert('¡Elige 2 emojis primero!'); return; }
   const btn = document.querySelector('#avatarModal button[onclick="guardarAvatar()"]');
@@ -680,7 +673,6 @@ async function guardarAvatar() {
     });
     const data = await r.json();
     if (data.ok) {
-      /* Actualiza el avatar del hero en tiempo real */
       const imgHero = document.getElementById('miAvatarImg');
       const divHero = document.getElementById('miAvatarFallback');
       if (kitchenUrl && imgHero) {

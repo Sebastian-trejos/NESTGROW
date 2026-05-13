@@ -50,13 +50,16 @@
 
 <div class="win-overlay" id="winOverlay">
   <div class="win-card">
-    <div class="win-owl">🐺</div>
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
+    </div>
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
     <div class="win-title">¡Muy bien! / Great job!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
-      <span id="winScore">0</span> pts (<span id="winPercent">0%</span>)
-    </div>
-    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">🔄 Play Again</button>
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts · <span id="winPercent">0%</span></div>
+    <div class="win-huesos" id="winHuesos"></div>
+    <button class="btn btn-nestgrow btn-primary-nestgrow mt-3" onclick="location.reload()">🔄 Play Again</button>
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
   </div>
 </div>

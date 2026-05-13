@@ -52,11 +52,16 @@
 </div>
 
 <div class="win-overlay" id="winOverlay" style="display:none">
-  <div class="win-card text-center">
-    <div class="win-owl">🐺</div>
+  <div class="win-card">
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
+    </div>
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
     <div class="win-title">¡Palabras ordenadas!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts</div>
+    <div class="win-huesos" id="winHuesos"></div>
     <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
   </div>
 </div>
@@ -152,8 +157,18 @@ async function endGame() {
   const maxScore = words.length * POINTS_REWARD;
   const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
   document.getElementById('winScore').textContent = score;
-  document.getElementById('winStars').textContent = pct >= 80 ? '⭐⭐⭐' : pct >= 50 ? '⭐⭐' : '⭐';
-  document.getElementById('winOverlay').style.display = 'flex';
+  const $ = id => document.getElementById(id);
+  let tier, stars, miloFile, msg;
+  if (pct >= 80)      { tier='excelente'; stars='⭐⭐⭐'; miloFile='milo_fest.png'; msg='¡Excelente trabajo!'; }
+  else if (pct >= 50) { tier='regular';   stars='⭐⭐';   miloFile='milo_lupa1.png'; msg='¡Bien! Puedes mejorar.'; }
+  else                { tier='mal';        stars='⭐';    miloFile='milo_llorando.png'; msg='¡Sigue intentando!'; }
+  if ($('winMilo')) $('winMilo').src = STATIC_URL + 'img/' + miloFile;
+  if ($('winMessage')) $('winMessage').textContent = msg;
+  if ($('winStars')) $('winStars').textContent = stars;
+  const card = document.querySelector('#winOverlay .win-card');
+  if (card) { card.className = 'win-card'; card.classList.add('win-card--' + tier); }
+  if (tier === 'excelente' && typeof launchConfetti === 'function') launchConfetti();
+  $('winOverlay').style.display = 'flex';
   try {
     const res = await fetch(SAVE_URL, {
       method: 'POST',
@@ -161,9 +176,8 @@ async function endGame() {
       body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed: true })
     });
     const data = await res.json();
-    if (data.registro_pk) {
-      document.getElementById('btnVolverPanel').href =
-        '/talleres/mis-talleres/?revisado=' + data.registro_pk;
+    if (data.registro_pk && $('btnVolverPanel')) {
+      $('btnVolverPanel').href = '/talleres/mis-talleres/?revisado=' + data.registro_pk;
     }
   } catch(e) {}
 }
