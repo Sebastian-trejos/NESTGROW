@@ -12,14 +12,16 @@ class AsistenteConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         user = self.scope.get('user')
-        if not user or not user.is_authenticated or user.role != 'profesor':
-            await self.close()
+        if not user or not user.is_authenticated or getattr(user, 'role', '') != 'profesor':
+            # Rechazar sin aceptar — cierre limpio desde el servidor
+            await self.close(code=4003)
             return
         self.profesor = user
         await self.accept()
+        logger.info('AsistenteConsumer: %s conectado', user.username)
 
     async def disconnect(self, code):
-        pass
+        logger.debug('AsistenteConsumer: desconectado (code=%s)', code)
 
     async def receive(self, text_data=None, bytes_data=None):
         try:
@@ -45,7 +47,7 @@ class AsistenteConsumer(AsyncWebsocketConsumer):
             }))
         except Exception as exc:
             logger.exception('Error en AsistenteConsumer.receive: %s', exc)
-            await self._error('Ocurrió un error. Intenta de nuevo.')
+            await self._error('Ocurrió un error procesando tu mensaje. Intenta de nuevo.')
 
     async def _error(self, msg: str):
         await self.send(json.dumps({'tipo': 'error', 'texto': msg}))

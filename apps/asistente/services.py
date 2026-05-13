@@ -303,10 +303,10 @@ class AsistenteMilo:
 
         total_estudiantes = len(estudiantes_ids)
 
-        secciones = SeccionHistoria.objects.filter(is_active=True).prefetch_related('lecciones')
+        secciones = SeccionHistoria.objects.all().prefetch_related('lecciones')
         datos_secciones = []
         for seccion in secciones:
-            lecciones = seccion.lecciones.filter(is_active=True)
+            lecciones = seccion.lecciones.all()
             total_lecciones = lecciones.count()
             if total_lecciones == 0:
                 continue

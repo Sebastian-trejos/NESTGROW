@@ -620,8 +620,24 @@
     }
   };
 
-  chatWs.onerror = () => {
-    appendMensaje('assistant', '⚠️ Error de conexión. Recarga la página.', '');
+  chatWs.onopen = () => {
+    console.log('AsistenteWS conectado');
+  };
+
+  chatWs.onclose = (e) => {
+    console.warn('AsistenteWS cerrado, code=', e.code);
+    if (e.code === 4003) {
+      appendMensaje('assistant', '⚠️ No tienes permiso para usar el asistente.', '');
+    } else if (e.code !== 1000) {
+      appendMensaje('assistant', '⚠️ Conexión perdida. Recarga la página para continuar.', '');
+    }
+    quitarPensando();
+    habilitarEnvio();
+  };
+
+  chatWs.onerror = (err) => {
+    console.error('AsistenteWS error:', err);
+    quitarPensando();
     habilitarEnvio();
   };
 
@@ -631,6 +647,11 @@
     const input = document.getElementById('chatInput');
     const texto = input.value.trim();
     if (!texto) return;
+
+    if (chatWs.readyState !== WebSocket.OPEN) {
+      appendMensaje('assistant', '⚠️ Sin conexión con el asistente. Recarga la página.', '');
+      return;
+    }
 
     appendMensaje('user', texto, '');
     chatWs.send(JSON.stringify({ mensaje: texto }));
