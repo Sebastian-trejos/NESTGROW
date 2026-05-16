@@ -113,6 +113,9 @@ async function showWinScreen(score, maxScore, gameId) {
     if (result.huesos_ganados && $('winHuesos')) {
       $('winHuesos').textContent = `+${result.huesos_ganados} 🦴 Huesos de Milo`;
     }
+    if (result.registro_pk && $('btnVolverPanel')) {
+      $('btnVolverPanel').href = '/talleres/mis-talleres/?revisado=' + result.registro_pk;
+    }
     if (result.subio_nivel) setTimeout(() => showLevelUpPopup(result.nuevo_nivel), 1000);
     if (result.nuevos_logros && result.nuevos_logros.length > 0) {
       setTimeout(() => showBadgePopup(result.nuevos_logros[0]), result.subio_nivel ? 4000 : 1500);

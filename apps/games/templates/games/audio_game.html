@@ -83,22 +83,18 @@
 </div>
 
 <!-- Win Overlay -->
-<div class="win-overlay" id="winOverlay">
+<div class="win-overlay" id="winOverlay" style="display:none">
   <div class="win-card">
-    <div class="win-owl">🐺</div>
-    <div class="win-title">¡Bingo! ¡Lo lograste! 🎉</div>
-    <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div id="winClasif" class="fw-bold mb-1" style="font-size:1.1rem"></div>
-    <div class="fs-3 fw-bold mt-1" style="color:var(--primary)">
-      <span id="winScore">0</span> pts (<span id="winPercent">0%</span>)
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
-    <div id="winHuesos" class="mt-1 fw-bold" style="color:#8B4513;font-size:1rem"></div>
-    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">🔄 Jugar de nuevo</button>
-    {% if user.role == 'profesor' %}
-    <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Volver</a>
-    {% else %}
-    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
-    {% endif %}
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
+    <div class="win-title">¡Bingo completado!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts · <span id="winPercent">0</span>%</div>
+    <div class="win-huesos" id="winHuesos"></div>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
   </div>
 </div>
 
