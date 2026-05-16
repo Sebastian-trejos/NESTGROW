@@ -1,122 +1,388 @@
 // ============================================================
-// NESTGROW - Audio Matching Game
+// NESTGROW - Audio Bingo (Bombo)
+// Dificultad 1 (Fácil):   4 palabras, velocidad normal
+// Dificultad 2 (Medio):   6 palabras, velocidades aleatorias + shuffle cada 3 aciertos
+// Dificultad 3 (Difícil): 9 palabras, lo mismo + 1-3 palabras en cadena por giro
 // ============================================================
 
-function initAudioGame(vocabulary, gameId, pointsReward) {
-  if (vocabulary.length === 0) return;
+function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficulty) {
+  if (!vocabulary || vocabulary.length === 0) return;
+  difficulty = parseInt(difficulty) || 1;
 
-  const items = [...vocabulary].sort(() => Math.random() - 0.5).slice(0, 6);
-  let currentIndex = 0;
-  let score = 0;
-  let answered = false;
+  // ── Config by difficulty ──────────────────────────────────
+  const CARD_SIZES   = { 1: 8, 2: 10, 3: 14 };
+  const AUDIO_SPEEDS = [0.62, 0.85, 1.15]; // for medio/difícil
+  const SHUFFLE_EVERY = 3;                 // correct answers before card shuffle
 
-  const scoreDisplay = document.getElementById('scoreDisplay');
-  const roundDisplay = document.getElementById('roundDisplay');
-  const totalRoundsEl = document.getElementById('totalRounds');
-  const optionsGrid = document.getElementById('optionsGrid');
-  const playBtn = document.getElementById('playAudioBtn');
-  const audioHint = document.getElementById('audioHint');
+  const cardSize    = Math.min(CARD_SIZES[difficulty] || 4, vocabulary.length);
+  const ptsPerAction = Math.max(1, Math.round(pointsReward / cardSize));
 
-  totalRoundsEl.textContent = items.length;
+  // Pick random vocabulary for this card
+  const cardItems = [...vocabulary]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, cardSize);
 
-  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+  // ── State ─────────────────────────────────────────────────
+  let score                  = 0;
+  let foundCount             = 0;
+  let bomboReady             = true;
+  let waitingForSelection    = false;
+  let currentBatch           = []; // array of cardState indices to find
+  let correctSinceLastShuffle = 0;
 
-  function speakWord(word) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(word);
-      u.lang = 'en-US';
-      u.rate = 0.75;
-      u.pitch = 1.1;
-      window.speechSynthesis.speak(u);
-    }
-  }
+  // cardState: array of { item, found, cellEl }
+  const cardState = cardItems.map(item => ({ item, found: false, cellEl: null }));
 
-  function playCurrentAudio() {
-    const item = items[currentIndex];
-    if (item.audio) {
-      const audio = new Audio(item.audio);
-      audio.play();
-    } else {
-      speakWord(item.word_en);
-    }
-    playBtn.style.transform = 'scale(1.2)';
-    setTimeout(() => playBtn.style.transform = '', 300);
-  }
+  // ── DOM ───────────────────────────────────────────────────
+  const scoreDisplay  = document.getElementById('scoreDisplay');
+  const foundCountEl  = document.getElementById('foundCount');
+  const totalCountEl  = document.getElementById('totalCount');
+  const bingoGrid     = document.getElementById('abBingoGrid');
+  const hintMsg       = document.getElementById('hintMsg');
+  const abDrum        = document.getElementById('abDrum');
+  const abSpinBtn     = document.getElementById('abSpinBtn');
+  const bubbleZone    = document.getElementById('abBubbleZone');
+  const batchBox      = document.getElementById('abBatchBox');
+  const batchWords    = document.getElementById('abBatchWords');
 
-  function loadRound() {
-    if (currentIndex >= items.length) {
-      endGame();
-      return;
-    }
-    answered = false;
-    roundDisplay.textContent = currentIndex + 1;
-    optionsGrid.innerHTML = '';
-    audioHint.textContent = 'Press to hear the word! / ¡Presiona para escuchar!';
+  totalCountEl.textContent = cardSize;
 
-    const correct = items[currentIndex];
-    // Pick 3 wrong options from remaining items
-    const wrongPool = items.filter((_, i) => i !== currentIndex);
-    const wrongs = shuffle(wrongPool).slice(0, 3);
-    const options = shuffle([correct, ...wrongs]);
+  // ── Grid columns & cell sizing ────────────────────────────
+  // Fácil→4 cols (4×2), Medio→5 cols (5×2), Difícil→7 cols (7×2)
+  const cols = difficulty === 1 ? 4 : difficulty === 2 ? 5 : 7;
+  bingoGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  bingoGrid.style.gap = difficulty >= 3 ? '6px' : '10px';
+  // Inject per-difficulty cell size overrides
+  const cellStyle = document.createElement('style');
+  cellStyle.textContent = difficulty >= 3
+    ? `.ab-cell { min-height:72px; padding:5px 4px 4px; }
+       .ab-cell img { height:44px; margin-bottom:3px; }
+       .ab-cell-word { font-size:0.72rem; }
+       .ab-cell-word-big { font-size:0.88rem; }`
+    : difficulty === 2
+    ? `.ab-cell { min-height:80px; padding:6px 5px 5px; }
+       .ab-cell img { height:54px; }
+       .ab-cell-word { font-size:0.78rem; }
+       .ab-cell-word-big { font-size:0.95rem; }`
+    : '';
+  if (cellStyle.textContent) document.head.appendChild(cellStyle);
 
-    options.forEach(item => {
-      const col = document.createElement('div');
-      col.className = 'col-6 col-md-3';
-      col.innerHTML = `
-        <div class="option-card nestgrow-card p-3 text-center" data-id="${item.id}" style="cursor:pointer">
-          ${item.image
-            ? `<img src="${item.image}" alt="${item.word_en}" class="rounded-3 mb-2" style="width:100%;height:90px;object-fit:cover">`
-            : `<div class="mb-2" style="font-size:2.5rem;height:80px;display:flex;align-items:center;justify-content:center;background:#f0eeff;border-radius:12px">${item.word_en[0]}</div>`
-          }
-          <div class="fw-bold" style="font-size:0.9rem;color:var(--primary)">${item.word_en}</div>
-        </div>`;
+  // ── Render bingo card ─────────────────────────────────────
+  function renderCard() {
+    bingoGrid.innerHTML = '';
+    cardState.forEach((state, idx) => {
+      const cell = document.createElement('div');
+      cell.className = 'ab-cell';
+      cell.dataset.idx = idx;
 
-      col.querySelector('.option-card').addEventListener('click', () => checkAnswer(item, correct));
-      optionsGrid.appendChild(col);
+      if (state.item.image) {
+        cell.innerHTML =
+          `<img src="${state.item.image}" alt="${state.item.word_en}">` +
+          `<div class="ab-cell-word">${state.item.word_en}</div>`;
+      } else {
+        cell.innerHTML = `<div class="ab-cell-word-big">${state.item.word_en}</div>`;
+      }
+
+      if (state.found) {
+        cell.classList.add('ab-cell-found');
+        const check = document.createElement('div');
+        check.className = 'ab-cell-check';
+        check.style.animation = 'none'; // no pop on re-render
+        check.textContent = '✔';
+        cell.appendChild(check);
+      }
+
+      cell.addEventListener('click', () => onCellClick(idx));
+      state.cellEl = cell;
+      bingoGrid.appendChild(cell);
     });
-
-    // Auto-play
-    setTimeout(playCurrentAudio, 500);
   }
 
-  function checkAnswer(selected, correct) {
-    if (answered) return;
-    answered = true;
+  renderCard();
 
-    const cards = optionsGrid.querySelectorAll('.option-card');
-    cards.forEach(card => {
-      card.style.pointerEvents = 'none';
-      const id = parseInt(card.dataset.id);
-      if (id === correct.id) {
-        card.style.border = '3px solid #4caf50';
-        card.style.background = '#e8f5e9';
-      } else if (id === selected.id && id !== correct.id) {
-        card.style.border = '3px solid var(--secondary)';
-        card.style.background = '#ffe8e8';
+  // ── Audio helpers ─────────────────────────────────────────
+  function pickSpeed() {
+    if (difficulty <= 1) return 0.85;
+    return AUDIO_SPEEDS[Math.floor(Math.random() * AUDIO_SPEEDS.length)];
+  }
+
+  function speakWord(word, rate) {
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => { if (!done) { done = true; resolve(); } };
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(word);
+        u.lang  = 'en-US';
+        u.rate  = rate || 0.85;
+        u.pitch = 1.05;
+        u.onend   = finish;
+        u.onerror = finish;
+        window.speechSynthesis.speak(u);
+        // Fallback in case onend never fires
+        setTimeout(finish, Math.max(2200, (word.length * 130) / (rate || 0.85)));
+      } else {
+        setTimeout(finish, 700);
       }
     });
+  }
 
-    if (selected.id === correct.id) {
-      score += pointsReward;
-      scoreDisplay.textContent = score;
-      audioHint.textContent = `✅ Correct! "${correct.word_en}" = ${correct.word_es}`;
-      speakWord('Correct!');
-    } else {
-      audioHint.textContent = `❌ The answer was "${correct.word_en}" / La respuesta era "${correct.word_en}"`;
+  function playWordAudio(item, rate) {
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => { if (!done) { done = true; resolve(); } };
+      if (item.audio) {
+        const audio = new Audio(item.audio);
+        audio.playbackRate = rate || 1.0;
+        audio.onended = finish;
+        audio.onerror  = () => speakWord(item.word_en, rate).then(finish);
+        audio.play().catch(() => speakWord(item.word_en, rate).then(finish));
+        setTimeout(finish, 5000);
+      } else {
+        speakWord(item.word_en, rate).then(finish);
+      }
+    });
+  }
+
+  // ── Bombo spin animation ──────────────────────────────────
+  function spinDrum() {
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => { if (!done) { done = true; resolve(); } };
+      abDrum.classList.remove('spinning');
+      void abDrum.offsetWidth; // force reflow to restart animation
+      abDrum.classList.add('spinning');
+      abDrum.addEventListener('animationend', () => {
+        abDrum.classList.remove('spinning');
+        finish();
+      }, { once: true });
+      setTimeout(finish, 1200); // fallback
+    });
+  }
+
+  // ── Bubble animation ──────────────────────────────────────
+  function spawnBubble() {
+    const b = document.createElement('div');
+    b.className = 'ab-bubble';
+    b.textContent = '🔊';
+    bubbleZone.appendChild(b);
+    setTimeout(() => b.remove(), 1500);
+  }
+
+  // ── Pick batch for this spin ──────────────────────────────
+  function pickBatch() {
+    const available = cardState
+      .map((s, i) => i)
+      .filter(i => !cardState[i].found);
+    if (available.length === 0) return [];
+
+    let size = 1;
+    if (difficulty >= 3) {
+      const maxSize = Math.min(3, available.length);
+      size = Math.floor(Math.random() * maxSize) + 1;
+    }
+    return [...available].sort(() => Math.random() - 0.5).slice(0, size);
+  }
+
+  // Batch UI and cell highlights intentionally disabled —
+  // showing hints would reveal the answers to students.
+  function updateBatchUI() { batchBox.style.display = 'none'; }
+  function refreshCellHighlights() {}
+
+  // ── Delay helper ──────────────────────────────────────────
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Main: trigger bombo ───────────────────────────────────
+  async function triggerBombo() {
+    if (!bomboReady || waitingForSelection) return;
+
+    bomboReady          = false;
+    waitingForSelection = false;
+    abSpinBtn.disabled  = true;
+
+    // 1. Spin
+    await spinDrum();
+
+    // 2. Pick batch
+    currentBatch = pickBatch();
+    if (currentBatch.length === 0) { endGame(); return; }
+
+    // 3. Play audio chain
+    const speed = pickSpeed();
+    for (let i = 0; i < currentBatch.length; i++) {
+      spawnBubble();
+      await wait(220);
+      await playWordAudio(cardState[currentBatch[i]].item, speed);
+      if (i < currentBatch.length - 1) {
+        await wait(550);
+      }
     }
 
-    setTimeout(() => {
-      currentIndex++;
-      loadRound();
-    }, 1800);
+    // 4. Activate selection mode
+    waitingForSelection = true;
+
+    if (currentBatch.length > 1) {
+      hintMsg.textContent = `¡Escucha las ${currentBatch.length} palabras y encuéntralas todas!`;
+    } else {
+      hintMsg.textContent = '🎯 ¡Encuentra esa palabra en la tarjeta!';
+    }
+
+    updateBatchUI();
+    refreshCellHighlights();
   }
 
+  // ── Cell click handler ────────────────────────────────────
+  function onCellClick(idx) {
+    if (!waitingForSelection) return;
+    const state = cardState[idx];
+    if (state.found) return;
+
+    const isInBatch = currentBatch.includes(idx);
+
+    if (isInBatch) {
+      // ✅ Correct
+      state.found = true;
+      foundCount++;
+      correctSinceLastShuffle++;
+      score += ptsPerAction;
+      scoreDisplay.textContent = score;
+      foundCountEl.textContent = foundCount;
+      showScoreToast(ptsPerAction, true);
+
+      state.cellEl.classList.remove('ab-cell-active', 'ab-cell-wrong');
+      state.cellEl.classList.add('ab-cell-found');
+      const check = document.createElement('div');
+      check.className = 'ab-cell-check';
+      check.textContent = '✔';
+      state.cellEl.appendChild(check);
+
+      hintMsg.textContent = `✅ ¡Correcto! "${state.item.word_en}" = ${state.item.word_es}`;
+      updateBatchUI();
+
+      // Win?
+      if (foundCount >= cardSize) {
+        waitingForSelection = false;
+        refreshCellHighlights();
+        batchBox.style.display = 'none';
+        setTimeout(endGame, 700);
+        return;
+      }
+
+      // Batch complete?
+      const remaining = currentBatch.filter(i => !cardState[i].found);
+      if (remaining.length === 0) {
+        waitingForSelection = false;
+        currentBatch = [];
+        batchBox.style.display = 'none';
+        refreshCellHighlights();
+
+        if (difficulty >= 2 && correctSinceLastShuffle >= SHUFFLE_EVERY) {
+          correctSinceLastShuffle = 0;
+          setTimeout(async () => {
+            hintMsg.textContent = '🔀 ¡Las palabras se están mezclando!';
+            await triggerShuffle();
+            bomboReady = true;
+            abSpinBtn.disabled = false;
+            hintMsg.textContent = '¡Palabras mezcladas! Gira el bombo de nuevo.';
+          }, 500);
+        } else {
+          bomboReady = true;
+          abSpinBtn.disabled = false;
+          hintMsg.textContent = '¡Bien! Gira el bombo para continuar.';
+        }
+      } else {
+        // More in batch to find
+        refreshCellHighlights();
+        updateBatchUI();
+      }
+
+    } else {
+      // ❌ Wrong
+      score = Math.max(0, score - penaltyAmount);
+      scoreDisplay.textContent = score;
+      showScoreToast(penaltyAmount, false);
+      showOopsToast();
+
+      state.cellEl.classList.add('ab-cell-wrong');
+      const xEl = document.createElement('div');
+      xEl.className = 'ab-cell-x';
+      xEl.textContent = '✗';
+      state.cellEl.appendChild(xEl);
+      setTimeout(() => {
+        state.cellEl.classList.remove('ab-cell-wrong');
+        xEl.remove();
+      }, 650);
+
+      hintMsg.textContent = '❌ ¡Oops! Esa no es, ¡inténtalo de nuevo!';
+    }
+  }
+
+  // ── Card shuffle (medio/difícil) ──────────────────────────
+  async function triggerShuffle() {
+    // Fade out non-found cells
+    const nonFoundStates = cardState.filter(s => !s.found);
+    nonFoundStates.forEach(s => {
+      if (!s.cellEl) return;
+      s.cellEl.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+      s.cellEl.style.opacity    = '0';
+      s.cellEl.style.transform  = 'scale(0.78)';
+    });
+    await wait(400);
+
+    // Rearrange non-found items
+    const nfIndices = cardState.map((s, i) => i).filter(i => !cardState[i].found);
+    const nfItems   = nfIndices.map(i => cardState[i].item);
+    const shuffled  = [...nfItems].sort(() => Math.random() - 0.5);
+    nfIndices.forEach((origIdx, i) => { cardState[origIdx].item = shuffled[i]; });
+
+    // Re-render
+    renderCard();
+
+    // Fade in
+    cardState.forEach(s => {
+      if (!s.found && s.cellEl) {
+        s.cellEl.style.transition = 'none';
+        s.cellEl.style.opacity    = '0';
+        s.cellEl.style.transform  = 'scale(0.78)';
+      }
+    });
+    await wait(40);
+    cardState.forEach(s => {
+      if (!s.found && s.cellEl) {
+        s.cellEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        s.cellEl.style.opacity    = '1';
+        s.cellEl.style.transform  = 'scale(1)';
+      }
+    });
+    await wait(450);
+    cardState.forEach(s => {
+      if (s.cellEl) {
+        s.cellEl.style.transition = '';
+        s.cellEl.style.opacity    = '';
+        s.cellEl.style.transform  = '';
+      }
+    });
+  }
+
+  // ── Oops toast ────────────────────────────────────────────
+  function showOopsToast() {
+    const el = document.createElement('div');
+    el.className = 'ab-oops-toast';
+    el.textContent = '😬 ¡Oops! Palabra incorrecta';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1350);
+  }
+
+  // ── End game ──────────────────────────────────────────────
   function endGame() {
     window.timeSpent = 0;
-    showWinScreen(score, items.length * pointsReward, gameId);
+    showWinScreen(score, cardSize * ptsPerAction, gameId);
   }
 
-  playBtn.addEventListener('click', playCurrentAudio);
-  loadRound();
+  // ── Wire up events ────────────────────────────────────────
+  abSpinBtn.addEventListener('click', triggerBombo);
+  abDrum.addEventListener('click', triggerBombo);
+
+  // Ready
+  hintMsg.textContent = '¡Gira el bombo para escuchar una palabra!';
 }

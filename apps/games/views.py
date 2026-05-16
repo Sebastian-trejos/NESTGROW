@@ -6,7 +6,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, TiendaItem, InventarioEstudiante, ItemContenidoJuego
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, PuzzleImage, TiendaItem, InventarioEstudiante
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required
@@ -15,25 +15,7 @@ from apps.accounts.decorators import profesor_required
 # ── Vocabulario (JSON cliente) ───────────────────────────────────────────────
 
 def vocabulary_payload_for_game(game, vocabulary):
-    """
-    Lista de objetos coherentes para minijuegos. Campos opcionales (orden,
-    item_difficulty) los usa Memorama para modo medio; el resto de juegos pueden ignorarlos.
-    """
-    items_custom = game.contenido_custom.order_by('orden')
-    if items_custom.exists():
-        return [
-            {
-                'id': item.pk,
-                'word_en': item.texto_principal,
-                'word_es': item.texto_secundario,
-                'image': item.imagen.url if item.imagen else None,
-                'audio': item.audio.url if item.audio else None,
-                'es_correcto': item.es_correcto,
-                'orden': item.orden,
-                'item_difficulty': None,
-            }
-            for item in items_custom
-        ]
+    """Lista de objetos coherentes para minijuegos, tomados del vocabulario de la categoría."""
     return [
         {
             'id': v.id,
@@ -156,6 +138,7 @@ def game_detail(request, pk):
         'quiz': 'games/quiz.html',
         'ordenar_letras': 'games/ordenar_letras.html',
         'globos': 'games/globos.html',
+        'comparacion': 'games/comparacion.html',
     }
     template = template_map.get(game.game_type, 'games/game_detail.html')
 
@@ -163,6 +146,14 @@ def game_detail(request, pk):
     painting_words = []
     if game.game_type == 'painting':
         painting_words = list(game.painting_words.values_list('word', flat=True))
+
+    # Get puzzle images if puzzle game
+    puzzle_images_json = '[]'
+    if game.game_type == 'puzzle':
+        puzzle_images_json = json.dumps([
+            {'image': pi.image.url, 'word_en': pi.title}
+            for pi in game.puzzle_images.all()
+        ])
 
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
@@ -179,6 +170,7 @@ def game_detail(request, pk):
         'painting_words_json': json.dumps(painting_words),
         'words_json': json.dumps(painting_words),
         'vocabulary_json': vocabulary_json,
+        'puzzle_images_json': puzzle_images_json,
     }
     return render(request, template, context)
 
@@ -203,12 +195,20 @@ def game_embed(request, pk):
         'quiz': 'games/quiz.html',
         'ordenar_letras': 'games/ordenar_letras.html',
         'globos': 'games/globos.html',
+        'comparacion': 'games/comparacion.html',
     }
     template = template_map.get(game.game_type, 'games/game_detail.html')
 
     painting_words = []
     if game.game_type == 'painting':
         painting_words = list(game.painting_words.values_list('word', flat=True))
+
+    puzzle_images_json = '[]'
+    if game.game_type == 'puzzle':
+        puzzle_images_json = json.dumps([
+            {'image': pi.image.url, 'word_en': pi.title}
+            for pi in game.puzzle_images.all()
+        ])
 
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
@@ -221,6 +221,7 @@ def game_embed(request, pk):
         'painting_words_json': json.dumps(painting_words),
         'words_json': json.dumps(painting_words),
         'vocabulary_json': vocabulary_json,
+        'puzzle_images_json': puzzle_images_json,
         'embedded': True,
         'taller_mode': taller_mode,
     })
@@ -319,13 +320,17 @@ def save_score(request):
             progress.completed = True
         progress.save()
 
-        # Los juegos en solitario no otorgan XP ni Huesos (solo los Talleres lo hacen)
         nuevos_logros = []
         huesos_ganados = 0
         subio_nivel = False
         nuevo_nivel = 0
         registro_pk = None
         if request.user.role == 'estudiante':
+            # Otorgar XP igual al puntaje obtenido en el juego
+            perfil = request.user.estudiante_profile
+            perfil.puntos_totales += score_val
+            subio_nivel = perfil.actualizar_nivel()
+            nuevo_nivel = perfil.nivel
             nuevos_logros = verificar_logros(request.user)
 
             # Registrar completado en período activo (si existe asignación)
@@ -517,7 +522,19 @@ def crear_juego(request):
                 for i, w in enumerate(words):
                     if w.strip():
                         PaintingWord.objects.create(game=juego, word=w.strip(), order=i)
-            messages.success(request, f'🎮 Juego "{juego.title}" creado! Ahora puedes añadir contenido personalizado.')
+            if juego.game_type == 'puzzle':
+                total = int(request.POST.get('img_total_rows', 0))
+                for i in range(total):
+                    title = request.POST.get(f'puzzle_title_{i}', '').strip()
+                    img_file = request.FILES.get(f'puzzle_file_{i}')
+                    if title and img_file:
+                        PuzzleImage.objects.create(
+                            game=juego,
+                            title=title,
+                            image=img_file,
+                            order=i,
+                        )
+            messages.success(request, f'🎮 Juego "{juego.title}" creado correctamente.')
             return redirect('games:editar_juego', pk=juego.pk)
     else:
         form = GameForm()
@@ -549,11 +566,15 @@ def editar_juego(request, pk):
             return redirect('games:gestionar_juegos')
     else:
         form = GameForm(instance=juego)
-    items_custom = juego.contenido_custom.order_by('orden')
+    puzzle_imagenes = (
+        PuzzleImage.objects.filter(game=juego)
+        if juego.game_type == 'puzzle' else []
+    )
     return render(request, 'games/profesor/juego_form.html', {
         'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar',
         'juego': juego, 'painting_words': painting_words,
-        'items_custom': items_custom})
+        'puzzle_imagenes': puzzle_imagenes,
+        'juego_usa_imagenes': juego.game_type == 'puzzle'})
 
 
 @login_required
@@ -579,93 +600,43 @@ def toggle_juego(request, pk):
     return redirect('games:gestionar_juegos')
 
 
+# ── Imágenes del Rompecabezas (PuzzleImage) ───────────────────────────────────
+
 @login_required
 @profesor_required
 @require_POST
-def agregar_item_contenido(request, game_pk):
+def api_imagen_agregar(request, game_pk):
+    """Añade una PuzzleImage al rompecabezas (máximo 5)."""
     game = get_object_or_404(Game, pk=game_pk)
-    texto_principal = request.POST.get('texto_principal', '').strip()
-    if not texto_principal:
-        return JsonResponse({'ok': False, 'error': 'El texto principal es requerido.'})
-
-    ultimo_orden = (
-        game.contenido_custom.order_by('-orden').values_list('orden', flat=True).first() or 0
-    )
-    item = ItemContenidoJuego(
+    if PuzzleImage.objects.filter(game=game).count() >= 5:
+        return JsonResponse({'ok': False, 'error': 'Máximo 5 imágenes por rompecabezas.'})
+    title = request.POST.get('title', '').strip()
+    if not title:
+        return JsonResponse({'ok': False, 'error': 'El nombre del rompecabezas es requerido.'})
+    if 'image' not in request.FILES:
+        return JsonResponse({'ok': False, 'error': 'La imagen es requerida.'})
+    order = PuzzleImage.objects.filter(game=game).count()
+    item = PuzzleImage.objects.create(
         game=game,
-        texto_principal=texto_principal,
-        texto_secundario=request.POST.get('texto_secundario', '').strip(),
-        es_correcto=request.POST.get('es_correcto') == '1',
-        orden=ultimo_orden + 1,
+        title=title,
+        image=request.FILES['image'],
+        order=order,
     )
-    if 'imagen' in request.FILES:
-        item.imagen = request.FILES['imagen']
-    if 'audio' in request.FILES:
-        item.audio = request.FILES['audio']
-    item.save()
-
-    return JsonResponse({
-        'ok': True,
-        'item': {
-            'pk': item.pk,
-            'orden': item.orden,
-            'texto_principal': item.texto_principal,
-            'texto_secundario': item.texto_secundario,
-            'imagen': item.imagen.url if item.imagen else None,
-            'audio': item.audio.url if item.audio else None,
-            'es_correcto': item.es_correcto,
-        }
-    })
+    return JsonResponse({'ok': True, 'item': {
+        'pk': item.pk,
+        'title': item.title,
+        'image_url': item.image.url,
+    }})
 
 
 @login_required
 @profesor_required
 @require_POST
-def eliminar_item_contenido(request, item_pk):
-    item = get_object_or_404(ItemContenidoJuego, pk=item_pk)
+def api_imagen_eliminar(request, item_pk):
+    """Elimina una PuzzleImage."""
+    item = get_object_or_404(PuzzleImage, pk=item_pk)
     item.delete()
     return JsonResponse({'ok': True})
-
-
-@login_required
-@profesor_required
-@require_POST
-def cargar_plantilla(request, pk):
-    """Carga ítems de contenido de ejemplo según el tipo de juego, solo si el juego aún no tiene ítems."""
-    game = get_object_or_404(Game, pk=pk)
-    if game.contenido_custom.exists():
-        return JsonResponse({'ok': False, 'error': 'El juego ya tiene contenido personalizado.'})
-    from .default_templates import TEMPLATES
-    items_data = TEMPLATES.get(game.game_type, [])
-    if not items_data:
-        return JsonResponse({'ok': False, 'error': 'No hay plantilla de ejemplo para este tipo de juego.'})
-    created = []
-    for i, d in enumerate(items_data):
-        item = ItemContenidoJuego.objects.create(
-            game=game, orden=i,
-            texto_principal=d['texto_principal'],
-            texto_secundario=d.get('texto_secundario', ''),
-        )
-        created.append({
-            'pk': item.pk, 'orden': item.orden,
-            'texto_principal': item.texto_principal,
-            'texto_secundario': item.texto_secundario,
-            'imagen': None, 'audio': None, 'es_correcto': False,
-        })
-    return JsonResponse({'ok': True, 'items': created})
-
-
-@login_required
-@profesor_required
-@require_POST
-def reordenar_contenido(request, game_pk):
-    try:
-        data = json.loads(request.body)
-        for i, pk in enumerate(data.get('orden', [])):
-            ItemContenidoJuego.objects.filter(pk=pk, game_id=game_pk).update(orden=i)
-        return JsonResponse({'ok': True})
-    except Exception as e:
-        return JsonResponse({'ok': False, 'error': str(e)})
 
 
 # ── Museo Virtual ─────────────────────────────────────────────────────────────

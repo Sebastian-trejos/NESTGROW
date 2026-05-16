@@ -64,15 +64,17 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
 <script>
 const VOCABULARY = {{ vocabulary_json|safe }};
 const GAME_ID = {{ game.id }};
 const POINTS_REWARD = {{ game.points_reward }};
+const PENALTY_AMOUNT = {{ game.penalty_amount }};
 const TIME_PER_Q = {{ game.time_limit }} > 0 ? Math.min(15, Math.max(5, Math.floor({{ game.time_limit }} / 10))) : 0;
 const SAVE_URL = "{% url 'games:save_score' %}";
 const CSRF = "{{ csrf_token }}";
 
-let questions = [], currentQ = 0, score = 0, correctCount = 0, qTimer = null;
+let questions = [], currentQ = 0, score = 0, correctCount = 0, qTimer = null, PTS_PER_Q = POINTS_REWARD;
 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
@@ -129,15 +131,20 @@ function highlightAnswer(chosen, correct) {
   });
   if (chosen === correct) {
     correctCount++;
-    score += POINTS_REWARD;
+    score += PTS_PER_Q;
     document.getElementById('scoreDisplay').textContent = score;
+    showScoreToast(PTS_PER_Q, true);
+  } else if (chosen !== null) {
+    score = Math.max(0, score - PENALTY_AMOUNT);
+    document.getElementById('scoreDisplay').textContent = score;
+    showScoreToast(PENALTY_AMOUNT, false);
   }
   currentQ++;
   setTimeout(showQuestion, 900);
 }
 
 async function endGame() {
-  const maxScore = questions.length * POINTS_REWARD;
+  const maxScore = questions.length * PTS_PER_Q;
   const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
   document.getElementById('winScore').textContent = score;
   document.getElementById('correctCount').textContent = correctCount;
@@ -165,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   questions = buildQuestions();
+  PTS_PER_Q = Math.max(1, Math.round(POINTS_REWARD / questions.length));
   document.getElementById('qTotal').textContent = questions.length;
   document.getElementById('gameSection').style.display = 'block';
   showQuestion();

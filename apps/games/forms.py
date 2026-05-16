@@ -34,7 +34,7 @@ class GameForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ('title', 'title_en', 'description', 'game_type', 'category',
-                  'difficulty', 'points_reward', 'time_limit', 'order', 'is_active')
+                  'difficulty', 'order', 'is_active')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Animales - Arrastra y Suelta'}),
             'title_en': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Animals Drag & Drop'}),
@@ -43,9 +43,6 @@ class GameForm(forms.ModelForm):
             'game_type': forms.Select(attrs={'class': 'form-select'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'difficulty': forms.Select(attrs={'class': 'form-select'}),
-            'points_reward': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 100}),
-            'time_limit': forms.NumberInput(attrs={'class': 'form-control', 'min': 0,
-                                                    'placeholder': '0 = sin límite de tiempo'}),
             'order': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
@@ -56,8 +53,6 @@ class GameForm(forms.ModelForm):
             'game_type': 'Tipo de juego',
             'category': 'Categoría de vocabulario',
             'difficulty': 'Dificultad',
-            'points_reward': 'Puntos que otorga',
-            'time_limit': 'Límite de tiempo (segundos)',
             'order': 'Orden',
             'is_active': '¿Activo? (visible para estudiantes)',
         }

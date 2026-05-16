@@ -109,7 +109,7 @@
               <a href="{% url 'games:toggle_juego' juego.pk %}"
                  class="badge rounded-pill text-decoration-none"
                  style="{% if juego.is_active %}background:#d4edda;color:#155724{% else %}background:#f8d7da;color:#721c24{% endif %}">
-                {% if juego.is_active %}✅ Activo{% else %}⏸ Inactivo{% endif %}
+                {% if juego.is_active %}✅ Activo{% else %}🔒 Taller{% endif %}
               </a>
             </td>
             <td>

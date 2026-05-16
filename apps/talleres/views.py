@@ -21,6 +21,44 @@ from apps.content.utils import desbloquear_vocabulario_taller, verificar_hitos_v
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+def _completar_taller(sesion, taller, user):
+    """Mark sesion as completed and award all rewards. Safe to call multiple times (idempotent)."""
+    if sesion.completada:
+        return
+    sesion.completada = True
+    sesion.completada_en = timezone.now()
+    sesion.huesos_ganados = taller.huesos_recompensa
+    sesion.save(update_fields=['completada', 'completada_en', 'huesos_ganados', 'bloque_actual'])
+
+    profile = user.estudiante_profile
+    profile.puntos_totales += taller.puntos_xp
+    subio_nivel = profile.actualizar_nivel()
+
+    if taller.huesos_recompensa > 0:
+        user.huesos += taller.huesos_recompensa
+        user.save(update_fields=['huesos'])
+        HuesoTransaccion.objects.create(
+            user=user, tipo='ganado', cantidad=taller.huesos_recompensa,
+            descripcion=f'🎓 Completaste el taller: {taller.titulo}',
+        )
+
+    if subio_nivel:
+        try:
+            from asgiref.sync import async_to_sync
+            from channels.layers import get_channel_layer
+            channel_layer = get_channel_layer()
+            if channel_layer:
+                async_to_sync(channel_layer.group_send)(
+                    f'usuario_{user.pk}',
+                    {'type': 'nivel_subido', 'nivel': profile.nivel},
+                )
+        except Exception:
+            pass
+
+    desbloquear_vocabulario_taller(sesion)
+    verificar_hitos_vocabulario(user)
+
+
 def _salon_qs(user):
     try:
         return Salon.objects.filter(profesor=user.profesor_profile)
@@ -452,6 +490,7 @@ def guardar_respuesta(request, pk, bpk):
     sesion.save()
 
     if sesion.bloque_actual >= len(bloques_ids):
+        _completar_taller(sesion, taller, request.user)
         return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk, 'es_correcta': es_correcta, 'puntos': puntos})
 
     return JsonResponse({'ok': True, 'next': 'siguiente', 'es_correcta': es_correcta, 'puntos': puntos})
@@ -476,6 +515,7 @@ def score_bloque_minijuego(request, pk, bpk):
     sesion.save()
 
     if sesion.bloque_actual >= len(bloques_ids):
+        _completar_taller(sesion, taller, request.user)
         return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk})
 
     return JsonResponse({'ok': True, 'next': 'siguiente'})
@@ -489,83 +529,9 @@ def resultado_taller(request, pk):
         sesion = SesionTaller.objects.get(taller=taller, estudiante=request.user)
     except SesionTaller.DoesNotExist:
         return redirect('talleres:mis_talleres')
-
-    subio_nivel = False
-    palabras_nuevas = []
-    hitos_nuevos = []
-
-    if not sesion.completada:
-        sesion.completada = True
-        sesion.completada_en = timezone.now()
-        sesion.huesos_ganados = taller.huesos_recompensa
-        # Guardar con update_fields para que el signal de huesos se dispare correctamente
-        sesion.save(update_fields=['completada', 'completada_en', 'huesos_ganados', 'bloque_actual'])
-
-        profile = request.user.estudiante_profile
-        profile.puntos_totales += taller.puntos_xp
-        subio_nivel = profile.actualizar_nivel()
-
-        if taller.huesos_recompensa > 0:
-            request.user.huesos += taller.huesos_recompensa
-            request.user.save(update_fields=['huesos'])
-            HuesoTransaccion.objects.create(
-                user=request.user,
-                tipo='ganado',
-                cantidad=taller.huesos_recompensa,
-                descripcion=f'🎓 Completaste el taller: {taller.titulo}',
-            )
-
-        # Notificación WebSocket de nivel subido (se hace aquí porque la señal
-        # de SesionTaller se dispara antes de actualizar_nivel())
-        if subio_nivel:
-            try:
-                from asgiref.sync import async_to_sync
-                from channels.layers import get_channel_layer
-                channel_layer = get_channel_layer()
-                if channel_layer:
-                    async_to_sync(channel_layer.group_send)(
-                        f'usuario_{request.user.pk}',
-                        {'type': 'nivel_subido', 'nivel': profile.nivel},
-                    )
-            except Exception:
-                pass
-
-        # Desbloquear vocabulario y verificar hitos
-        palabras_nuevas = desbloquear_vocabulario_taller(sesion)
-        hitos_nuevos = verificar_hitos_vocabulario(request.user)
-
-    # Resumen de respuestas ordenado por posición del bloque
-    bloques_pregunta = list(
-        taller.bloques
-        .filter(tipo='pregunta')
-        .select_related('bloque_pregunta')
-        .prefetch_related('bloque_pregunta__opciones')
-        .order_by('orden')
-    )
-    respuestas_map = {
-        r.pregunta_id: r
-        for r in RespuestaEstudiante.objects
-        .filter(estudiante=request.user, pregunta__bloque__taller=taller)
-        .prefetch_related('opciones_elegidas')
-    }
-    resumen_respuestas = []
-    for b in bloques_pregunta:
-        pregunta = getattr(b, 'bloque_pregunta', None)
-        if pregunta:
-            resumen_respuestas.append({
-                'bloque': b,
-                'pregunta': pregunta,
-                'respuesta': respuestas_map.get(pregunta.pk),
-            })
-
-    return render(request, 'talleres/estudiante/resultado.html', {
-        'taller': taller,
-        'sesion': sesion,
-        'subio_nivel': subio_nivel,
-        'palabras_nuevas': palabras_nuevas,
-        'hitos_nuevos': hitos_nuevos,
-        'resumen_respuestas': resumen_respuestas,
-    })
+    # Ensure completion is recorded (edge case: direct URL visit)
+    _completar_taller(sesion, taller, request.user)
+    return redirect('talleres:resultado_sesion', pk=sesion.pk)
 
 
 # ── Periodos — Profesor ────────────────────────────────────────────────────────

@@ -7,97 +7,61 @@
 <style>
   .puzzle-board {
     display: grid;
-    gap: 6px;
-    background: #f0eeff;
-    padding: 20px;
-    border-radius: 20px;
-    border: 3px solid #e0d8ff;
-    width: fit-content;
+    gap: 4px;
+    background: #e8e4ff;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 8px 30px rgba(108,99,255,0.15);
     margin: 0 auto;
+    width: fit-content;
   }
-  .puzzle-piece {
-    width: 100px;
-    height: 100px;
-    border-radius: 12px;
-    border: 3px solid #e0d8ff;
+  .puzzle-cell {
+    border-radius: 8px;
+    border: 3px dashed #c5beff;
+    background: #f0eeff;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: white;
-    font-family: 'Fredoka One', cursive;
-    user-select: none;
-    position: relative;
+    transition: all 0.2s;
     overflow: hidden;
   }
-  .puzzle-piece:hover {
-    border-color: var(--primary);
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(108,99,255,0.2);
-  }
-  .puzzle-piece.selected {
-    border-color: var(--primary);
-    background: #f0eeff;
-    box-shadow: 0 0 0 4px rgba(108,99,255,0.3);
-    transform: scale(1.08);
-  }
-  .puzzle-piece.matched {
-    border-color: #4caf50;
-    background: #e8f5e9;
-    cursor: default;
-    transform: none;
-    animation: matchPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  .puzzle-piece.wrong {
-    border-color: var(--secondary);
-    background: #ffe8e8;
-    animation: shake 0.4s ease;
-  }
-  .puzzle-img {
-    width: 70px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 4px;
-  }
-  .puzzle-word {
-    font-size: 0.85rem;
-    color: var(--primary);
-    text-align: center;
-    line-height: 1.2;
-    padding: 0 4px;
-  }
-  .puzzle-emoji {
-    font-size: 2.5rem;
-    margin-bottom: 4px;
-  }
-  .columns-container {
+  .puzzle-cell.drag-over { border-color: var(--accent); background: #d0faf4; transform: scale(1.03); }
+  .puzzle-cell.correct  { border: 3px solid #2ecc71; background: transparent; }
+  .puzzle-pieces {
     display: flex;
-    gap: 40px;
-    justify-content: center;
-    align-items: flex-start;
     flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.1);
+    min-height: 80px;
   }
-  .column-label {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
+  .puzzle-piece {
+    cursor: grab;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+    border: 3px solid transparent;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+  }
+  .puzzle-piece:hover { transform: scale(1.08); box-shadow: 0 8px 20px rgba(108,99,255,0.3); border-color: var(--primary); }
+  .puzzle-piece.dragging { opacity: 0.5; transform: scale(1.1); }
+  .puzzle-name-bar {
+    background: linear-gradient(135deg, var(--accent), #2ecc71);
+    color: white;
+    border-radius: 16px;
+    padding: 12px 24px;
     text-align: center;
-    margin-bottom: 12px;
-    padding: 8px 20px;
-    border-radius: 50px;
+    margin-bottom: 16px;
   }
-  .connector-line {
-    position: absolute;
-    pointer-events: none;
-    z-index: 0;
-  }
-  @keyframes matchPop {
-    0% { transform: scale(0.8); }
-    60% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-  }
+  .puzzle-name-bar .pname { font-family: 'Fredoka One', cursive; font-size: 1.6rem; line-height: 1; }
+  .puzzle-name-bar .pcounter { font-size: 0.9rem; opacity: 0.88; margin-top: 4px; font-weight: 700; }
 </style>
 {% endblock %}
 
@@ -105,83 +69,78 @@
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🧩 {{ game.title }}</h3>
+    <h3 class="font-fredoka mb-0" style="color:var(--accent)">🧩 {{ game.title }}</h3>
   </div>
 
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
   </div>
   {% endif %}
 
-  <!-- Vocabulary Tab -->
-  {% include 'games/includes/vocabulary_tab.html' %}
+  <div id="gameSection">
 
-  <!-- Game Section -->
-  <div id="gameSection" style="display:none">
+    <div style="max-width:640px;margin:0 auto">
 
-    <!-- Score Bar -->
-    <div class="game-score-bar mb-4">
-      <span>🧩 {{ game.title }}</span>
-      <span>Matched: <strong id="matchedCount">0</strong> / <strong id="totalPairs">0</strong></span>
-      {% if game.time_limit > 0 %}
-      <span>⏱ <span id="timerDisplay">--:--</span></span>
-      {% endif %}
-    </div>
-
-    <!-- Milo hint -->
-    <div class="milo-banner mb-4">
-      <div class="milo-banner-owl">🐺</div>
-      <div class="milo-banner-text">
-        Match each image with its English word! Click one from each column. / ¡Une cada imagen con su palabra en inglés! Haz clic en una de cada columna.
-      </div>
-    </div>
-
-    <!-- Game Board -->
-    <div class="game-area">
-      <div class="columns-container" id="gameBoard">
-
-        <!-- Images column -->
-        <div>
-          <div class="column-label" style="background:#f0eeff;color:var(--primary)">
-            🖼️ Images
-          </div>
-          <div id="imagesColumn" class="d-flex flex-column gap-3"></div>
-        </div>
-
-        <!-- VS divider -->
-        <div class="d-flex align-items-center" style="font-size:2rem;color:#ccc;padding-top:50px">
-          ↔️
-        </div>
-
-        <!-- Words column -->
-        <div>
-          <div class="column-label" style="background:#fff5f5;color:var(--secondary)">
-            🔤 Words
-          </div>
-          <div id="wordsColumn" class="d-flex flex-column gap-3"></div>
-        </div>
-
+      <!-- Nombre del puzzle actual -->
+      <div class="puzzle-name-bar">
+        <div class="pname" id="puzzleName">Cargando…</div>
+        <div class="pcounter" id="puzzleCounter">Imagen 1 de 0</div>
       </div>
 
-      <!-- Score display -->
-      <div class="text-center mt-4">
-        <div class="d-inline-flex align-items-center gap-3 px-4 py-2 rounded-pill" style="background:#f8f6ff">
-          <span class="fw-bold text-muted">Points:</span>
-          <span class="font-fredoka fs-3" style="color:var(--primary)" id="scoreDisplay">0</span>
-        </div>
+      <!-- Tablero de celdas -->
+      <div class="puzzle-board" id="puzzleBoard"></div>
+
+      <!-- Área de piezas sueltas -->
+      <div class="puzzle-pieces" id="puzzlePieces"></div>
+
+      <!-- Acciones -->
+      <div class="d-flex gap-2 justify-content-center mt-4 flex-wrap">
+        <button class="btn" style="background:#fff3cd;color:#856404;border-radius:50px;font-family:'Fredoka One',cursive"
+                onclick="shufflePieces()">🔀 Mezclar</button>
+        <button class="btn" style="background:linear-gradient(135deg,var(--accent),#2ecc71);color:white;border-radius:50px;font-family:'Fredoka One',cursive"
+                onclick="checkPuzzleComplete()">✅ Verificar</button>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- Win Overlay -->
+<!-- Modal: piezas incorrectas -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:24px;border:none">
+      <div class="modal-body text-center p-5">
+        <div style="font-size:4rem">🧩😅</div>
+        <h3 class="font-fredoka mt-2" style="color:var(--secondary)">¡Casi lo logras!</h3>
+        <p class="fw-bold text-muted fs-5" id="errorMsg"></p>
+        <button class="btn btn-nestgrow btn-primary-nestgrow mt-2" data-bs-dismiss="modal">¡Seguir intentando! 💪</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: imagen completada (intermedio) -->
+<div class="modal fade" id="nextModal" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:24px;border:none">
+      <div class="modal-body text-center p-5">
+        <div style="font-size:4rem">🧩🎉</div>
+        <h3 class="font-fredoka mt-2" style="color:var(--accent)" id="nextTitle">¡Imagen armada!</h3>
+        <p class="fw-bold text-muted" id="nextMsg"></p>
+        <div class="d-flex gap-3 justify-content-center mt-3" id="nextButtons"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Win Overlay (estándar — último puzzle) -->
 <div class="win-overlay" id="winOverlay">
   <div class="win-card">
     <div class="win-owl">🐺</div>
-    <div class="win-title">¡Lo lograste!</div>
+    <div class="win-title">¡Rompecabezas completado!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="font-fredoka fs-2 mt-1" id="winClasif" style="color:var(--primary)"></div>
     <div class="fs-4 fw-bold mt-1" style="color:var(--primary)">
@@ -191,21 +150,32 @@
     <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
       🔄 Jugar de nuevo
     </button>
-    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">
-      Ver más juegos →
-    </a>
+    {% if user.role == 'profesor' %}
+    <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Volver</a>
+    {% else %}
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    {% endif %}
   </div>
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
 <script src="{% static 'games/js/puzzle.js' %}"></script>
 <script>
-  const VOCABULARY = {{ vocabulary_json|safe }};
-  const GAME_ID = {{ game.id }};
-  const TIME_LIMIT = {{ game.time_limit }};
-  const POINTS_REWARD = {{ game.points_reward }};
-  initPuzzle(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD);
+try {
+  window.PUZZLE_GAME_LIST_URL = "{% url 'games:game_list' %}";
+  const VOCABULARY     = {{ puzzle_images_json|default:'[]'|safe }};
+  const GAME_ID        = {{ game.id }};
+  const TIME_LIMIT     = {{ game.time_limit }};
+  const POINTS_REWARD  = {{ game.points_reward }};
+  const DIFFICULTY     = {{ game.difficulty }};
+  const PENALTY_AMOUNT = {{ game.penalty_amount }};
+  initPuzzle(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, DIFFICULTY, PENALTY_AMOUNT);
+} catch(err) {
+  document.getElementById('puzzleName').textContent = '❌ Error JS';
+  document.getElementById('puzzleCounter').textContent = err.message;
+}
 </script>
 {% endblock %}

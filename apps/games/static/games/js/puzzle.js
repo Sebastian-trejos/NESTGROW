@@ -1,159 +1,231 @@
 // ============================================================
-// NESTGROW - Puzzle / Matching Game
-// Match images (left) with English words (right)
+// NESTGROW - Rompecabezas Jigsaw
+// Cada vocabulario item con imagen = un puzzle independiente.
+// Grid: dificultad 1=3x3, 2=4x4, 3=5x5
 // ============================================================
 
-function initPuzzle(vocabulary, gameId, timeLimit, pointsReward) {
-  if (!vocabulary || vocabulary.length === 0) return;
+function initPuzzle(vocabulary, gameId, timeLimit, pointsReward, difficulty, penaltyAmount) {
+  const PUZZLE_PENALTY = 1; // Penalidad fija por pieza mal colocada (bajo por ser exploración)
+  const GRID_SIZE  = difficulty === 3 ? 5 : difficulty === 2 ? 4 : 3;
+  const PIECE_SIZE = Math.min(Math.floor(480 / GRID_SIZE), 110);
+  const TOTAL_PIECES = GRID_SIZE * GRID_SIZE;
 
-  const items = [...vocabulary].sort(() => Math.random() - 0.5).slice(0, 6);
-  const totalPairs = items.length;
+  // Solo items con imagen
+  const images = vocabulary
+    .filter(v => v.image)
+    .map(v => ({ id: v.id, name: v.word_en, url: v.image }));
 
-  const imagesCol = document.getElementById('imagesColumn');
-  const wordsCol = document.getElementById('wordsColumn');
-  const matchedCountEl = document.getElementById('matchedCount');
-  const totalPairsEl = document.getElementById('totalPairs');
-  const scoreDisplay = document.getElementById('scoreDisplay');
+  const ptsPerAction = Math.max(1, Math.round(pointsReward / Math.max(1, images.length)));
 
-  totalPairsEl.textContent = totalPairs;
+  let currentIndex   = 0;
+  let correctCount   = 0;
+  let totalScore     = 0;
+  let draggedPiece   = null;
+  let timer          = null;
 
-  let selectedImage = null;
-  let selectedWord = null;
-  let matchedPairs = 0;
-  let score = 0;
-  let timer = null;
+  const boardEl  = document.getElementById('puzzleBoard');
+  const piecesEl = document.getElementById('puzzlePieces');
+  const nameEl   = document.getElementById('puzzleName');
+  const counterEl = document.getElementById('puzzleCounter');
 
-  // Shuffle helpers
-  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-
-  // Build image cards (left column) — shuffled order
-  shuffle(items).forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'puzzle-piece';
-    card.dataset.id = item.id;
-    card.dataset.col = 'image';
-
-    if (item.image) {
-      card.innerHTML = `
-        <img src="${item.image}" alt="${item.word_en}" class="puzzle-img">
-        <div class="puzzle-word" style="color:var(--text-light);font-size:0.75rem">${item.word_es}</div>`;
-    } else {
-      // No image: show colored box with first letter
-      const colors = ['#FF6B6B','#6C63FF','#4ECDC4','#FFE66D','#A8E6CF','#FFB347'];
-      const color = colors[item.id % colors.length];
-      card.innerHTML = `
-        <div style="width:70px;height:60px;background:${color}20;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:4px">
-          <span style="font-family:'Fredoka One',cursive;font-size:2rem;color:${color}">${item.word_en[0]}</span>
-        </div>
-        <div class="puzzle-word" style="color:var(--text-light);font-size:0.75rem">${item.word_es}</div>`;
-    }
-
-    card.addEventListener('click', () => handleImageClick(card, item));
-    imagesCol.appendChild(card);
-  });
-
-  // Build word cards (right column) — separately shuffled
-  shuffle(items).forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'puzzle-piece';
-    card.dataset.id = item.id;
-    card.dataset.col = 'word';
-    card.innerHTML = `
-      <div class="puzzle-word" style="font-size:1.1rem;color:var(--primary);font-family:'Fredoka One',cursive">
-        ${item.word_en}
-      </div>`;
-
-    card.addEventListener('click', () => handleWordClick(card, item));
-    wordsCol.appendChild(card);
-  });
-
-  // --- Click handlers ---
-  function handleImageClick(card, item) {
-    if (card.classList.contains('matched')) return;
-
-    // Deselect previous image selection
-    imagesCol.querySelectorAll('.puzzle-piece.selected').forEach(c => c.classList.remove('selected'));
-
-    selectedImage = { card, item };
-    card.classList.add('selected');
-
-    if (selectedWord) checkMatch();
+  // ── Sin imágenes ────────────────────────────────────────────
+  if (!images.length) {
+    nameEl.textContent    = 'Sin imágenes disponibles';
+    counterEl.textContent = 'El profesor debe añadir imágenes con vocabulario';
+    return;
   }
 
-  function handleWordClick(card, item) {
-    if (card.classList.contains('matched')) return;
-
-    // Deselect previous word selection
-    wordsCol.querySelectorAll('.puzzle-piece.selected').forEach(c => c.classList.remove('selected'));
-
-    selectedWord = { card, item };
-    card.classList.add('selected');
-
-    if (selectedImage) checkMatch();
-  }
-
-  function checkMatch() {
-    const imgSel = selectedImage;
-    const wrdSel = selectedWord;
-
-    // Reset selections immediately
-    selectedImage = null;
-    selectedWord = null;
-
-    setTimeout(() => {
-      if (imgSel.item.id === wrdSel.item.id) {
-        // ✅ CORRECT MATCH
-        imgSel.card.classList.remove('selected');
-        wrdSel.card.classList.remove('selected');
-        imgSel.card.classList.add('matched');
-        wrdSel.card.classList.add('matched');
-
-        // Add checkmark overlay
-        const check = document.createElement('div');
-        check.style.cssText = 'position:absolute;top:4px;right:6px;font-size:1.2rem';
-        check.textContent = '✅';
-        imgSel.card.appendChild(check);
-
-        // Speak the word
-        if ('speechSynthesis' in window) {
-          const u = new SpeechSynthesisUtterance(wrdSel.item.word_en);
-          u.lang = 'en-US'; u.rate = 0.8;
-          speechSynthesis.speak(u);
-        }
-
-        score += pointsReward;
-        matchedPairs++;
-        matchedCountEl.textContent = matchedPairs;
-        scoreDisplay.textContent = score;
-
-        if (matchedPairs === totalPairs) {
-          // All matched!
-          if (timer) timer.stop();
-          window.timeSpent = timer ? timer.getElapsed() : 0;
-          setTimeout(() => showWinScreen(score, totalPairs * pointsReward, gameId), 600);
-        }
-
-      } else {
-        // ❌ WRONG MATCH
-        imgSel.card.classList.remove('selected');
-        wrdSel.card.classList.remove('selected');
-        imgSel.card.classList.add('wrong');
-        wrdSel.card.classList.add('wrong');
-        setTimeout(() => {
-          imgSel.card.classList.remove('wrong');
-          wrdSel.card.classList.remove('wrong');
-        }, 600);
-      }
-    }, 150);
-  }
-
-  // --- Timer ---
+  // ── Timer ────────────────────────────────────────────────────
   if (timeLimit > 0) {
     const timerEl = document.getElementById('timerDisplay');
-    timer = new GameTimer(timeLimit, timerEl, () => {
-      window.timeSpent = timeLimit;
-      showWinScreen(score, totalPairs * pointsReward, gameId);
-    });
-    timer.start();
+    if (timerEl) {
+      timer = new GameTimer(timeLimit, timerEl, () => {
+        window.timeSpent = timeLimit;
+        showWinScreen(totalScore, images.length * ptsPerAction, gameId);
+      });
+      timer.start();
+    }
   }
+
+  // ── Carga una imagen y construye el puzzle ───────────────────
+  function loadPuzzle(index) {
+    const img = images[index];
+    nameEl.textContent    = img.name;
+    counterEl.textContent = `Imagen ${index + 1} de ${images.length}`;
+    correctCount = 0;
+    buildPuzzle(img.url);
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function buildPuzzle(imageUrl) {
+    boardEl.innerHTML  = '';
+    piecesEl.innerHTML = '';
+    boardEl.style.gridTemplateColumns = `repeat(${GRID_SIZE}, ${PIECE_SIZE}px)`;
+
+    // Crear celdas vacías
+    for (let i = 0; i < TOTAL_PIECES; i++) {
+      const cell = document.createElement('div');
+      cell.className   = 'puzzle-cell';
+      cell.style.width  = PIECE_SIZE + 'px';
+      cell.style.height = PIECE_SIZE + 'px';
+      cell.dataset.index = i;
+
+      cell.addEventListener('dragover',  e => { e.preventDefault(); cell.classList.add('drag-over'); });
+      cell.addEventListener('dragleave', ()  => cell.classList.remove('drag-over'));
+      cell.addEventListener('drop',      e  => { e.preventDefault(); cell.classList.remove('drag-over'); dropPiece(cell); });
+      cell.addEventListener('touchend',  e  => { e.preventDefault(); cell.classList.remove('drag-over'); dropPiece(cell); });
+      boardEl.appendChild(cell);
+    }
+
+    // Crear piezas mezcladas
+    const indices = shuffle([...Array(TOTAL_PIECES).keys()]);
+    indices.forEach(i => {
+      const row = Math.floor(i / GRID_SIZE);
+      const col = i % GRID_SIZE;
+      const piece = document.createElement('div');
+      piece.className   = 'puzzle-piece';
+      piece.dataset.correct = i;
+      piece.style.width  = PIECE_SIZE + 'px';
+      piece.style.height = PIECE_SIZE + 'px';
+      piece.style.backgroundImage    = `url(${imageUrl})`;
+      piece.style.backgroundSize     = `${GRID_SIZE * PIECE_SIZE}px ${GRID_SIZE * PIECE_SIZE}px`;
+      piece.style.backgroundPosition = `-${col * PIECE_SIZE}px -${row * PIECE_SIZE}px`;
+      piece.draggable = true;
+
+      // Drag (desktop)
+      piece.addEventListener('dragstart', e => {
+        draggedPiece = piece;
+        setTimeout(() => piece.classList.add('dragging'), 0);
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      piece.addEventListener('dragend', () => piece.classList.remove('dragging'));
+
+      // Touch drag
+      piece.addEventListener('touchstart', () => {
+        draggedPiece = piece;
+        piece.classList.add('dragging');
+      }, { passive: true });
+
+      piece.addEventListener('touchmove', e => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        boardEl.querySelectorAll('.puzzle-cell').forEach(c => c.classList.remove('drag-over'));
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (el?.classList.contains('puzzle-cell')) el.classList.add('drag-over');
+      }, { passive: false });
+
+      piece.addEventListener('touchend', e => {
+        piece.classList.remove('dragging');
+        const touch = e.changedTouches[0];
+        boardEl.querySelectorAll('.puzzle-cell').forEach(c => c.classList.remove('drag-over'));
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        const target = el?.classList.contains('puzzle-cell') ? el : el?.closest('.puzzle-cell');
+        if (target) dropPiece(target);
+      });
+
+      piecesEl.appendChild(piece);
+    });
+  }
+
+  // ── Soltar pieza en celda ────────────────────────────────────
+  function dropPiece(cell) {
+    if (!draggedPiece) return;
+    if (cell.contains(draggedPiece)) { draggedPiece = null; return; }
+
+    const cellIndex   = parseInt(cell.dataset.index);
+    const pieceCorrect = parseInt(draggedPiece.dataset.correct);
+
+    // Si la celda ya tiene una pieza diferente, devolverla al área
+    const existing = cell.querySelector('.puzzle-piece');
+    if (existing && existing !== draggedPiece) {
+      existing.style.width  = PIECE_SIZE + 'px';
+      existing.style.height = PIECE_SIZE + 'px';
+      existing.classList.remove('dragging');
+      piecesEl.appendChild(existing);
+      if (cell.classList.contains('correct')) correctCount--;
+      cell.classList.remove('correct');
+    }
+
+    // Limpiar celda de origen si venía de otra celda
+    const oldParent = draggedPiece.parentElement;
+    if (oldParent?.classList.contains('puzzle-cell') && oldParent !== cell) {
+      if (oldParent.classList.contains('correct')) correctCount--;
+      oldParent.classList.remove('correct');
+    }
+
+    // Colocar pieza
+    draggedPiece.style.width  = '100%';
+    draggedPiece.style.height = '100%';
+    draggedPiece.classList.remove('dragging');
+    cell.appendChild(draggedPiece);
+
+    if (pieceCorrect === cellIndex) {
+      cell.classList.add('correct');
+      correctCount++;
+    } else {
+      cell.classList.remove('correct');
+      totalScore = Math.max(0, totalScore - PUZZLE_PENALTY);
+      showScoreToast(PUZZLE_PENALTY, false);
+      const sd = document.getElementById('scoreDisplay');
+      if (sd) sd.textContent = totalScore;
+    }
+    draggedPiece = null;
+  }
+
+  // ── Verificar manualmente ────────────────────────────────────
+  window.checkPuzzleComplete = function() {
+    if (correctCount === TOTAL_PIECES) {
+      celebrateImage();
+    } else {
+      document.getElementById('errorMsg').textContent =
+        `Llevas ${correctCount} de ${TOTAL_PIECES} piezas en su lugar. ¡Tú puedes!`;
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('errorModal')).show();
+    }
+  };
+
+  // ── Mezclar de nuevo ─────────────────────────────────────────
+  window.shufflePieces = function() { loadPuzzle(currentIndex); };
+
+  // ── Completó una imagen ──────────────────────────────────────
+  function celebrateImage() {
+    totalScore += ptsPerAction;
+    showScoreToast(ptsPerAction, true);
+    const sd = document.getElementById('scoreDisplay');
+    if (sd) sd.textContent = totalScore;
+    const img    = images[currentIndex];
+    const isLast = currentIndex >= images.length - 1;
+
+    if (isLast) {
+      // Último puzzle → win screen estándar
+      if (timer) timer.stop();
+      window.timeSpent = timer ? timer.getElapsed() : 0;
+      showWinScreen(totalScore, images.length * ptsPerAction, gameId);
+      return;
+    }
+
+    // Puzzle intermedio → modal "siguiente"
+    document.getElementById('nextTitle').textContent = `¡"${img.name}" armado! 🎉`;
+    document.getElementById('nextMsg').textContent =
+      `Siguiente: "${images[currentIndex + 1].name}"`;
+    document.getElementById('nextButtons').innerHTML = `
+      <button class="btn btn-nestgrow btn-primary-nestgrow" onclick="goNextPuzzle()">Siguiente 🧩</button>
+      <a href="${window.PUZZLE_GAME_LIST_URL || '/juegos/'}" class="btn btn-outline-secondary rounded-pill">Salir</a>`;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('nextModal')).show();
+  }
+
+  window.goNextPuzzle = function() {
+    bootstrap.Modal.getInstance(document.getElementById('nextModal')).hide();
+    currentIndex++;
+    loadPuzzle(currentIndex);
+  };
+
+  // ── Inicio ───────────────────────────────────────────────────
+  loadPuzzle(0);
 }

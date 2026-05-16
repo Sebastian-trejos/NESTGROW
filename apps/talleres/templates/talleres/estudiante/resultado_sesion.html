@@ -2,6 +2,10 @@
 {% load static %}
 {% block title %}¡Taller completado! — {{ taller.titulo }}{% endblock %}
 
+{% block extra_js %}
+<script>document.addEventListener('DOMContentLoaded', function(){ if(typeof launchConfetti==='function') launchConfetti(); });</script>
+{% endblock %}
+
 {% block extra_css %}
 <style>
   @keyframes boneFloat {

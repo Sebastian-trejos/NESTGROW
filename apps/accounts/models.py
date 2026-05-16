@@ -89,23 +89,25 @@ class EstudianteProfile(TimeStampedModel):
     avatar_color = models.CharField(max_length=10, blank=True, default='#6C63FF')
     avatar_kitchen_url = models.URLField(max_length=500, blank=True)
 
-    # Points required to level up from each level
+    # Puntos necesarios para subir de cada nivel al siguiente.
+    # Calibrado para juegos con máximo 25/40/60 pts según dificultad.
+    # Ritmo estimado: ~180 pts/semana (3 sesiones × 3 juegos × ~20 pts prom.)
     PUNTOS_POR_NIVEL = {
-        # Principiante (Niveles 1–10)
-        1: 20,   2: 30,   3: 50,   4: 80,   5: 120,
-        6: 160,  7: 200,  8: 250,  9: 310,  10: 380,
-        # Intermedio (Niveles 11–20)
-        11: 460,  12: 550,  13: 650,  14: 760,  15: 880,
-        16: 1010, 17: 1150, 18: 1300, 19: 1460, 20: 1640,
-        # Avanzado (Niveles 21–30)
-        21: 1840, 22: 2060, 23: 2300, 24: 2560, 25: 2840,
-        26: 3140, 27: 3460, 28: 3800, 29: 4160, 30: 4540,
-        # Experto (Niveles 31–40)
-        31: 5000,  32: 5500,  33: 6050,  34: 6650,  35: 7300,
-        36: 8000,  37: 8750,  38: 9550,  39: 10400, 40: 11300,
-        # Maestro (Niveles 41–49)
-        41: 12300, 42: 13400, 43: 14600, 44: 15900, 45: 17300,
-        46: 18800, 47: 20400, 48: 22100, 49: 24000,
+        # Principiante (1–10) — ~7 semanas de juego regular para completar
+        1:  30,  2:  45,  3:  60,  4:  80,  5: 105,
+        6: 130,  7: 160,  8: 195,  9: 235, 10: 280,
+        # Intermedio (11–20) — ~35 semanas adicionales
+        11: 330, 12: 385, 13: 445, 14: 510, 15: 580,
+        16: 655, 17: 735, 18: 820, 19: 910, 20: 1005,
+        # Avanzado (21–30)
+        21: 1105, 22: 1210, 23: 1320, 24: 1435, 25: 1555,
+        26: 1680, 27: 1810, 28: 1945, 29: 2085, 30: 2230,
+        # Experto (31–40)
+        31: 2380, 32: 2535, 33: 2695, 34: 2860, 35: 3030,
+        36: 3205, 37: 3385, 38: 3570, 39: 3760, 40: 3955,
+        # Maestro (41–49)
+        41: 4155, 42: 4360, 43: 4570, 44: 4785, 45: 5005,
+        46: 5230, 47: 5460, 48: 5695, 49: 5935,
     }
     MAX_NIVEL = 50
 

@@ -63,14 +63,16 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
 <script>
 const VOCABULARY = {{ vocabulary_json|safe }}.filter(v => v.word_en && v.word_en.length >= 3);
 const GAME_ID = {{ game.id }};
 const POINTS_REWARD = {{ game.points_reward }};
+const PENALTY_AMOUNT = {{ game.penalty_amount }};
 const SAVE_URL = "{% url 'games:save_score' %}";
 const CSRF = "{{ csrf_token }}";
 
-let words = [], currentIdx = 0, score = 0;
+let words = [], currentIdx = 0, score = 0, PTS_PER_WORD = POINTS_REWARD;
 let currentWord = '', shuffledLetters = [], chosen = [];
 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
@@ -135,13 +137,17 @@ document.getElementById('btnVerificar').addEventListener('click', () => {
   }
   const attempt = chosen.join('');
   if (attempt === currentWord) {
-    score += POINTS_REWARD;
+    score += PTS_PER_WORD;
     document.getElementById('scoreDisplay').textContent = score;
     document.getElementById('feedback').innerHTML = '<span class="text-success">✅ ¡Correcto!</span>';
+    showScoreToast(PTS_PER_WORD, true);
     currentIdx++;
     setTimeout(loadWord, 800);
   } else {
+    score = Math.max(0, score - PENALTY_AMOUNT);
+    document.getElementById('scoreDisplay').textContent = score;
     document.getElementById('feedback').innerHTML = '<span class="text-danger">❌ Inténtalo de nuevo</span>';
+    showScoreToast(PENALTY_AMOUNT, false);
     chosen = [];
     renderSlots();
     renderPool();
@@ -149,7 +155,7 @@ document.getElementById('btnVerificar').addEventListener('click', () => {
 });
 
 async function endGame() {
-  const maxScore = words.length * POINTS_REWARD;
+  const maxScore = words.length * PTS_PER_WORD;
   const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
   document.getElementById('winScore').textContent = score;
   document.getElementById('winStars').textContent = pct >= 80 ? '⭐⭐⭐' : pct >= 50 ? '⭐⭐' : '⭐';
@@ -175,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   words = shuffle(VOCABULARY).slice(0, 8);
+  PTS_PER_WORD = Math.max(1, Math.round(POINTS_REWARD / words.length));
   document.getElementById('totalWords').textContent = words.length;
   document.getElementById('gameSection').style.display = 'block';
   loadWord();

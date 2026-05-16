@@ -29,10 +29,8 @@ urlpatterns = [
     path('gestionar/<int:pk>/editar/', views.editar_juego, name='editar_juego'),
     path('gestionar/<int:pk>/eliminar/', views.eliminar_juego, name='eliminar_juego'),
     path('gestionar/<int:pk>/toggle/', views.toggle_juego, name='toggle_juego'),
-    path('gestionar/<int:pk>/contenido/plantilla/', views.cargar_plantilla, name='cargar_plantilla'),
-    path('gestionar/<int:game_pk>/contenido/agregar/', views.agregar_item_contenido, name='agregar_item_contenido'),
-    path('gestionar/<int:game_pk>/contenido/reordenar/', views.reordenar_contenido, name='reordenar_contenido'),
-    path('gestionar/contenido/<int:item_pk>/eliminar/', views.eliminar_item_contenido, name='eliminar_item_contenido'),
+    path('gestionar/<int:game_pk>/imagen/agregar/', views.api_imagen_agregar, name='api_imagen_agregar'),
+    path('gestionar/imagen/<int:item_pk>/eliminar/', views.api_imagen_eliminar, name='api_imagen_eliminar'),
 
     # Profesor — Categorías
     path('categorias/', views.gestionar_categorias, name='gestionar_categorias'),

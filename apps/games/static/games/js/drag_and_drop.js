@@ -2,7 +2,7 @@
 // NESTGROW - Drag and Drop Game
 // ============================================================
 
-function initDragAndDrop(vocabulary, gameId, timeLimit, pointsReward) {
+function initDragAndDrop(vocabulary, gameId, timeLimit, pointsReward, penaltyAmount) {
   const items = vocabulary.slice(0, 6); // Max 6 items
   if (items.length === 0) return;
 
@@ -13,8 +13,10 @@ function initDragAndDrop(vocabulary, gameId, timeLimit, pointsReward) {
   const checkBtn = document.getElementById('checkBtn');
 
   maxScoreEl.textContent = items.length;
+  const ptsPerAction = Math.max(1, Math.round(pointsReward / items.length));
   let correctAnswers = {};
   let score = 0;
+  let checked = false;
   let timer = null;
 
   // Shuffle helper
@@ -102,22 +104,29 @@ function initDragAndDrop(vocabulary, gameId, timeLimit, pointsReward) {
 
   // Check answers
   checkBtn.addEventListener('click', () => {
-    score = 0;
+    if (checked) return;
+    checked = true;
+    let rawScore = 0;
     const zones = document.querySelectorAll('.drop-zone');
-    zones.forEach(zone => {
+    zones.forEach((zone, i) => {
       if (zone.dataset.dropped === zone.dataset.answer) {
         zone.classList.add('correct');
-        score++;
+        rawScore += ptsPerAction;
+        setTimeout(() => showScoreToast(ptsPerAction, true), i * 130);
       } else {
         zone.classList.add('incorrect');
         setTimeout(() => zone.classList.remove('incorrect'), 600);
+        rawScore -= penaltyAmount;
+        setTimeout(() => showScoreToast(penaltyAmount, false), i * 130);
       }
     });
+    score = Math.max(0, rawScore);
     scoreDisplay.textContent = score;
     if (timer) timer.stop();
     const elapsed = timer ? timer.getElapsed() : 0;
     window.timeSpent = elapsed;
-    setTimeout(() => showWinScreen(score * pointsReward, items.length * pointsReward, gameId), 800);
+    const maxScore = items.length * ptsPerAction;
+    setTimeout(() => showWinScreen(score, maxScore, gameId), 900);
   });
 
   // Timer

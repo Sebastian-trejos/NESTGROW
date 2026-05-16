@@ -56,10 +56,14 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
 <script>
 const VOCABULARY = {{ vocabulary_json|safe }}.filter(v => v.word_en);
 const GAME_ID = {{ game.id }};
 const POINTS_REWARD = {{ game.points_reward }};
+const PENALTY_AMOUNT = {{ game.penalty_amount }};
+const HANGMAN_PENALTY = Math.max(1, Math.floor(PENALTY_AMOUNT / 2));
+let PTS_PER_WORD = POINTS_REWARD; // se recalcula al conocer num palabras
 const SAVE_URL = "{% url 'games:save_score' %}";
 const CSRF = "{{ csrf_token }}";
 const MAX_LIVES = 6;
@@ -113,19 +117,22 @@ function guess(letter) {
     guessed.add(letter);
     const solved = currentWord.split('').every(l => guessed.has(l));
     if (solved) {
-      score += POINTS_REWARD * lives; // bonus for lives remaining
+      score += PTS_PER_WORD;
       document.getElementById('scoreDisplay').textContent = score;
+      showScoreToast(PTS_PER_WORD, true);
       currentIdx++;
       setTimeout(startWord, 800);
     }
   } else {
     wrong.push(letter);
     lives--;
+    score = Math.max(0, score - HANGMAN_PENALTY);
+    document.getElementById('scoreDisplay').textContent = score;
+    showScoreToast(HANGMAN_PENALTY, false);
     document.getElementById('livesDisplay').textContent = '🦴'.repeat(Math.max(0, lives)) + '💀'.repeat(MAX_LIVES - lives);
     document.getElementById('miloFace').textContent = MILO_FACES[MAX_LIVES - lives];
     document.getElementById('wrongLetters').textContent = wrong.join(' ');
     if (lives <= 0) {
-      // show the word briefly then move on
       guessed = new Set(currentWord.split(''));
       renderWord();
       setTimeout(() => { currentIdx++; startWord(); }, 1200);
@@ -136,7 +143,7 @@ function guess(letter) {
 }
 
 async function endGame(completed) {
-  const maxScore = totalWords * POINTS_REWARD * MAX_LIVES;
+  const maxScore = totalWords * PTS_PER_WORD;
   const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
   document.getElementById('winScore').textContent = score;
   document.getElementById('winStars').textContent = pct >= 70 ? '⭐⭐⭐' : pct >= 40 ? '⭐⭐' : '⭐';
@@ -163,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   words = shuffle(VOCABULARY).slice(0, 8);
   totalWords = words.length;
+  PTS_PER_WORD = Math.max(1, Math.round(POINTS_REWARD / totalWords));
   document.getElementById('totalWords').textContent = totalWords;
   document.getElementById('gameSection').style.display = 'block';
   startWord();

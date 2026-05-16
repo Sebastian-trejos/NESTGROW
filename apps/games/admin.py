@@ -4,7 +4,7 @@ from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransac
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('title', 'game_type', 'category', 'difficulty', 'points_reward', 'is_active', 'order')
+    list_display = ('title', 'game_type', 'category', 'difficulty', 'points_reward', 'time_limit', 'is_active', 'order')
     list_editable = ('is_active', 'order')
     list_filter = ('game_type', 'difficulty', 'category')
     search_fields = ('title',)

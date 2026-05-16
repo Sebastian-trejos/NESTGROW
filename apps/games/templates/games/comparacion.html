@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ game.title }} - NestGrow{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'games/css/games.css' %}" rel="stylesheet">
+<style>
+/* ── Layout ─────────────────────────────────────────────────────────── */
+.comp-page {}
+
+/* ── Tarjetas de Milo ────────────────────────────────────────────────── */
+.comp-cards-wrap {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 8px 0 4px;
+}
+
+.comp-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,.10);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  border: 3px solid transparent;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.comp-card:hover:not(.comp-card--disabled):not(.comp-card--correct):not(.comp-card--wrong) {
+  transform: scale(1.06) translateY(-4px);
+  box-shadow: 0 12px 28px rgba(108,99,255,.22);
+  border-color: var(--primary);
+}
+
+/* Correct */
+.comp-card--correct {
+  border-color: #4CAF50 !important;
+  box-shadow: 0 0 0 5px rgba(76,175,80,.25) !important;
+  animation: compCorrectPop .45s ease;
+}
+.comp-card--correct::after {
+  content: '✓';
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #4CAF50;
+  text-shadow: 0 1px 4px rgba(0,0,0,.2);
+  animation: compFadeIn .3s ease;
+}
+
+/* Wrong */
+.comp-card--wrong {
+  border-color: #e53935 !important;
+  animation: compShake .4s ease;
+}
+.comp-card--wrong::after {
+  content: '✗';
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #e53935;
+  text-shadow: 0 1px 4px rgba(0,0,0,.2);
+  animation: compFadeIn .2s ease;
+}
+
+/* Auto-corrected (only one card left) */
+.comp-card--auto {
+  border-color: #FF9800 !important;
+  box-shadow: 0 0 0 5px rgba(255,152,0,.25) !important;
+  animation: compPulse .6s ease;
+}
+.comp-card--auto::after {
+  content: '💡';
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: 1.2rem;
+  animation: compFadeIn .3s ease;
+}
+
+/* Disabled (wrong cards) */
+.comp-card--disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  filter: grayscale(70%);
+  pointer-events: none;
+}
+
+/* Card image area */
+.comp-card-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, #f0eeff 0%, #e8f5e9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.comp-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder when image is missing */
+.comp-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+}
+.comp-placeholder-emoji { font-size: 2.8rem; }
+.comp-placeholder-label {
+  font-size: .7rem;
+  color: #7c6fa0;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Card footer label */
+.comp-card-label {
+  padding: 7px 8px;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  color: #555;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  line-height: 1.2;
+}
+
+/* Card sizes by difficulty */
+.comp-cards-2 .comp-card { width: 210px; max-width: calc(50% - 8px); }
+.comp-cards-3 .comp-card { width: 175px; max-width: calc(33.33% - 11px); }
+.comp-cards-4 .comp-card { width: 155px; max-width: calc(50% - 8px); }
+
+@media (max-width: 480px) {
+  .comp-cards-2 .comp-card { width: 145px; }
+  .comp-cards-3 .comp-card { width: 108px; }
+  .comp-cards-4 .comp-card { width: 130px; }
+  .comp-placeholder-emoji { font-size: 2rem; }
+}
+
+/* ── Sentence display ────────────────────────────────────────────────── */
+.comp-sentence-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.07);
+  text-align: center;
+}
+.comp-sentence-label {
+  font-size: .8rem;
+  color: #888;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.comp-sentence-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.75rem;
+  color: #333;
+  line-height: 1.4;
+  margin: 0;
+}
+.comp-word-highlight {
+  color: #e53935;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-style: italic;
+}
+
+/* ── Progress bar ───────────────────────────────────────────────────── */
+.comp-progress-bar {
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.comp-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #a78bfa);
+  border-radius: 4px;
+  transition: width .5s ease;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────── */
+@keyframes compCorrectPop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.1); }
+  65%  { transform: scale(.97); }
+  100% { transform: scale(1); }
+}
+@keyframes compShake {
+  0%,100% { transform: translateX(0) rotate(0deg); }
+  20%      { transform: translateX(-7px) rotate(-3deg); }
+  40%      { transform: translateX(7px) rotate(3deg); }
+  60%      { transform: translateX(-4px) rotate(-2deg); }
+  80%      { transform: translateX(4px) rotate(2deg); }
+}
+@keyframes compPulse {
+  0%,100% { transform: scale(1); }
+  50%     { transform: scale(1.07); }
+}
+@keyframes compFadeIn {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Win overlay (reuse existing style + extras) ────────────────────── */
+.win-overlay {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.win-card {
+  background: #fff;
+  border-radius: 28px;
+  padding: 2.2rem 2rem;
+  max-width: 380px;
+  width: 92%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 comp-page">
+
+  <!-- Cabecera -->
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🖼️ {{ game.title }}</h3>
+  </div>
+
+  <!-- Alerta talleres -->
+  {% if not embedded and user.role == 'estudiante' %}
+  <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
+    <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+  </div>
+  {% endif %}
+
+  <!-- Vista previa del vocabulario -->
+  {% include 'games/includes/vocabulary_tab.html' %}
+
+  <!-- ── Zona de juego ──────────────────────────────────────────────── -->
+  <div id="gameSection" style="display:none">
+
+    <!-- Barra de estado -->
+    <div class="game-score-bar flex-wrap gap-2 mb-3">
+      <span>🖼️ Comparación</span>
+      <span class="badge rounded-pill"
+            style="background:{% if game.difficulty == 1 %}#4CAF50{% elif game.difficulty == 2 %}#FF9800{% else %}#e53935{% endif %};color:#fff">
+        {% if game.difficulty == 1 %}⭐ Fácil — 2 tarjetas
+        {% elif game.difficulty == 2 %}⭐⭐ Medio — 3 tarjetas
+        {% else %}⭐⭐⭐ Difícil — 4 tarjetas{% endif %}
+      </span>
+      <span>Pregunta <strong id="qNum">1</strong> / <strong id="qTotal">0</strong></span>
+      {% if game.time_limit > 0 %}
+      <span>⏱ <span id="timerDisplay">01:30</span></span>
+      {% endif %}
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="comp-progress-bar">
+      <div class="comp-progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <!-- Banner de Milo -->
+    <div class="milo-banner mb-4">
+      <div class="milo-banner-owl">
+        <img src="{% static 'img/milo_hablando.png' %}" alt="Milo" width="56" height="56" draggable="false">
+      </div>
+      <div class="milo-banner-text" id="compBannerText">
+        ¡Lee la frase y elige la imagen correcta! 🐺
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+        <!-- Tarjetas de Milo (se renderizan por JS) -->
+        <div id="cardsContainer" class="comp-cards-wrap mb-4"></div>
+
+        <!-- Frase con vocabulario resaltado -->
+        <div class="comp-sentence-box mb-4">
+          <p class="comp-sentence-label">📖 Lee la frase y elige la imagen que corresponde:</p>
+          <p class="comp-sentence-text" id="sentenceDisplay">…</p>
+        </div>
+
+        <!-- Puntaje -->
+        <div class="text-center mb-4">
+          <div class="stat-card d-inline-block px-5 shadow-sm">
+            <div class="stat-number" id="scoreDisplay">0</div>
+            <div class="stat-label">Puntos</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /gameSection -->
+</div>
+
+<!-- ── Win overlay ─────────────────────────────────────────────────── -->
+<div class="win-overlay" id="winOverlay" style="display:none">
+  <div class="win-card text-center">
+    <div class="win-owl">
+      <img src="{% static 'img/milo_fest.png' %}" alt="Milo celebrando"
+           style="width:72px;height:72px;object-fit:contain" draggable="false">
+    </div>
+    <div class="win-title">¡Comparación completada!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
+      <span id="winScore">0</span> pts
+    </div>
+    <p class="text-muted mt-1 mb-0">
+      <span id="winCorrect">0</span> / <span id="winTotal">0</span> respuestas correctas
+    </p>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}"
+       class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">
+      ✔️ Volver al panel
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
+<script src="{% static 'games/js/comparacion.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  initComparacion({
+    VOCABULARY:     {{ vocabulary_json|safe }},
+    DIFFICULTY:     {{ game.difficulty }},
+    GAME_ID:        {{ game.id }},
+    POINTS_REWARD:  {{ game.points_reward }},
+    PENALTY_AMOUNT: {{ game.penalty_amount }},
+    SAVE_URL:       "{% url 'games:save_score' %}",
+    CSRF:           "{{ csrf_token }}",
+    TIME_LIMIT:     {{ game.time_limit }},
+    autoStartPlay:  {% if embedded %}true{% else %}false{% endif %},
+  });
+});
+</script>
+{% endblock %}

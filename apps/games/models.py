@@ -61,10 +61,33 @@ class Game(TimeStampedModel, ActiveModel):
         ('quiz', '❓ Quiz Rápido'),
         ('ordenar_letras', '🔤 Ordenar Letras'),
         ('globos', '🎈 Globos'),
+        ('comparacion', '🖼️ Comparación'),
     ]
     DIFFICULTY = [
         (1, '⭐ Fácil'), (2, '⭐⭐ Medio'), (3, '⭐⭐⭐ Difícil')
     ]
+
+    # Puntaje máximo fijo por dificultad (el juego nunca puede superar este total)
+    PUNTOS_POR_DIFICULTAD = {1: 25, 2: 40, 3: 60}
+
+    # Penalización plana por error según dificultad
+    PENALIZACION_POR_DIFICULTAD = {1: 2, 2: 3, 3: 5}
+
+    # Tiempo límite en segundos según tipo de juego (0 = sin límite)
+    # Juegos creativos o basados en vocabulario no tienen presión de tiempo
+    TIEMPO_POR_TIPO = {
+        'drag_and_drop':   90,
+        'word_search':    120,
+        'puzzle':           0,
+        'audio_matching':  60,
+        'painting':         0,
+        'memoria':         90,
+        'ahorcado':         0,
+        'quiz':            60,
+        'ordenar_letras':  60,
+        'globos':          60,
+        'comparacion':     90,
+    }
 
     title = models.CharField(max_length=200)
     title_en = models.CharField(max_length=200, blank=True)
@@ -73,9 +96,19 @@ class Game(TimeStampedModel, ActiveModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='games')
     difficulty = models.IntegerField(choices=DIFFICULTY, default=1)
     thumbnail = models.ImageField(upload_to='games/thumbnails/', blank=True, null=True)
-    points_reward = models.IntegerField(default=5)
-    time_limit = models.IntegerField(default=120, help_text='Tiempo en segundos (0 = sin límite)')
     order = models.PositiveIntegerField(default=0)
+
+    @property
+    def points_reward(self):
+        return self.PUNTOS_POR_DIFICULTAD.get(self.difficulty, 10)
+
+    @property
+    def time_limit(self):
+        return self.TIEMPO_POR_TIPO.get(self.game_type, 0)
+
+    @property
+    def penalty_amount(self):
+        return self.PENALIZACION_POR_DIFICULTAD.get(self.difficulty, 2)
 
     class Meta:
         verbose_name = 'Juego'
@@ -237,6 +270,22 @@ class PaintingWord(TimeStampedModel):
         return f"{self.game.title}: {self.word}"
 
 
+class PuzzleImage(TimeStampedModel):
+    """Imagen que el profesor define para un juego de rompecabezas jigsaw."""
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='puzzle_images')
+    title = models.CharField(max_length=100, help_text='Nombre que aparece sobre el rompecabezas')
+    image = models.ImageField(upload_to='games/puzzle/')
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Imagen de Rompecabezas'
+        verbose_name_plural = 'Imágenes de Rompecabezas'
+
+    def __str__(self):
+        return f"{self.game.title}: {self.title}"
+
+
 # ── Tienda y Habitación de Milo ───────────────────────────────────────────────
 
 class TiendaItem(TimeStampedModel):
@@ -280,34 +329,6 @@ class TiendaItem(TimeStampedModel):
     def __str__(self):
         return f"{self.icono} {self.nombre} ({self.costo_huesos} 🦴)"
 
-
-# ── Contenido personalizado por el profesor ───────────────────────────────────
-
-class ItemContenidoJuego(TimeStampedModel):
-    """
-    Contenido personalizado que el profesor define para un juego.
-    Reemplaza el vocabulario de categoría cuando existen items.
-    Cada tipo de juego usa los campos que necesita:
-      - texto_principal → word_en  (siempre requerido)
-      - texto_secundario → word_es (traducción, pista, pregunta)
-      - imagen           → image   (para drag_and_drop, puzzle, memoria)
-      - audio            → audio   (para audio_matching)
-    """
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='contenido_custom')
-    orden = models.PositiveIntegerField(default=0)
-    texto_principal = models.CharField(max_length=200, verbose_name='Texto principal')
-    texto_secundario = models.CharField(max_length=200, blank=True, verbose_name='Texto secundario')
-    imagen = models.ImageField(upload_to='games/contenido/', blank=True, null=True)
-    audio = models.FileField(upload_to='games/contenido/audio/', blank=True, null=True)
-    es_correcto = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name = 'Item de Contenido'
-        verbose_name_plural = 'Items de Contenido'
-        ordering = ['orden', 'pk']
-
-    def __str__(self):
-        return f"{self.game.title} → {self.texto_principal}"
 
 
 class InventarioEstudiante(TimeStampedModel):

@@ -6,8 +6,6 @@
 (function () {
   'use strict';
 
-  const PENALTY_EVERY_FAILED = 3;
-  const PENALTY_AMOUNT = 2;
   const PAIRS_BY_DIFF = { 1: 4, 2: 6, 3: 8 };
 
   /** Palabra → emoji aproximado (heurísticas); último recurso: icono de categoría */
@@ -218,6 +216,7 @@
       DIFFICULTY,
       GAME_ID,
       POINTS_REWARD,
+      PENALTY_AMOUNT = 2,
       SAVE_URL,
       CSRF,
       MILO_CARD_BACK_URL,
@@ -227,10 +226,10 @@
       autoStartPlay = false,
     } = opts;
 
+    let ptsPerAction = POINTS_REWARD; // se recalcula en init() al conocer num pares
     let flipped = [],
       matched = 0,
       score = 0,
-      mismatchesCycle = 0,
       matchedPairIndices = new Set(),
       phase = 1,
       startTime,
@@ -370,6 +369,7 @@
       }
       activeWords = pool.slice(0, Math.min(pairGoal, pool.length));
       const totalPairs = activeWords.length;
+      ptsPerAction = Math.max(1, Math.round(POINTS_REWARD / totalPairs));
       document.getElementById('totalPairs').textContent = totalPairs;
 
       subPlan = buildSubcategoryPlan(activeWords, CATEGORY_NAME_ES);
@@ -412,14 +412,11 @@
     }
 
     function applyPenalty() {
-      mismatchesCycle += 1;
-      if (mismatchesCycle >= PENALTY_EVERY_FAILED) {
-        mismatchesCycle = 0;
-        score = Math.max(0, score - PENALTY_AMOUNT);
-        const sd = document.getElementById('scoreDisplay');
-        if (sd) sd.textContent = score;
-        showToast(`¡Ups! -${PENALTY_AMOUNT} pts (3 intentos fallidos)`);
-      }
+      score = Math.max(0, score - PENALTY_AMOUNT);
+      const sd = document.getElementById('scoreDisplay');
+      if (sd) sd.textContent = score;
+      showToast(`¡Ups! -${PENALTY_AMOUNT} pts`);
+      showScoreToast(PENALTY_AMOUNT, false);
     }
 
     function pairAllowedForPhase(pairId) {
@@ -458,11 +455,11 @@
           a.closest('.memory-slot')?.classList.add('slot-matched');
           b.closest('.memory-slot')?.classList.add('slot-matched');
           matched++;
-          score += POINTS_REWARD;
-          mismatchesCycle = 0;
+          score += ptsPerAction;
           matchedPairIndices.add(Number(a.dataset.pairId));
           document.getElementById('matchCount').textContent = matched;
           document.getElementById('scoreDisplay').textContent = score;
+          showScoreToast(ptsPerAction, true);
           flipped = [];
           canFlip = true;
           tryAdvancePhase(Number(a.dataset.pairId));
@@ -494,7 +491,7 @@
         bob.setAttribute('aria-hidden', 'true');
       }
       const totalPairs = parseInt(document.getElementById('totalPairs').textContent, 10);
-      const maxScore = totalPairs * POINTS_REWARD;
+      const maxScore = totalPairs * ptsPerAction;
       const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
       document.getElementById('winScore').textContent = score;
       document.getElementById('winTime').textContent = timeSpent;

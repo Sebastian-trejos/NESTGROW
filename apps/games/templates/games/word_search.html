@@ -2,6 +2,59 @@
 {% load static %}
 {% block title %}{{ game.title }} - NestGrow{% endblock %}
 
+{% block extra_css %}
+<link href="{% static 'games/css/games.css' %}" rel="stylesheet">
+<style>
+  .ws-header-bar {
+    background: linear-gradient(135deg, var(--secondary), #ff9999);
+    color: white;
+    border-radius: 16px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .ws-header-bar .ws-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; }
+  .ws-header-bar .ws-found { font-weight: 700; font-size: 1rem; opacity: 0.95; }
+  .ws-mode-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .ws-mode-btn {
+    border: 2px solid #e8e4ff;
+    background: #f8f6ff;
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .ws-mode-btn:hover, .ws-mode-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .ws-word-chip {
+    background: #f0eeff;
+    border: 2px solid var(--primary);
+    border-radius: 50px;
+    padding: 5px 15px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    color: var(--primary);
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .ws-word-chip.found {
+    text-decoration: line-through;
+    opacity: 0.45;
+    border-style: dashed;
+  }
+  #wordList { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
@@ -12,22 +65,28 @@
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
   </div>
   {% endif %}
 
   {% include 'games/includes/vocabulary_tab.html' %}
 
   <div id="gameSection" style="display:none">
-    <div class="game-score-bar">
-      <span>🔍 Word Search</span>
-      <span>Found: <strong id="foundCount">0</strong> / <strong id="totalWords">0</strong></span>
-      {% if game.time_limit > 0 %}<span>⏱ <span id="timerDisplay">--:--</span></span>{% endif %}
+
+    <!-- Header con progreso -->
+    <div class="ws-header-bar">
+      <div class="ws-title">🔍 ¡Encuentra las palabras!</div>
+      <div class="ws-found">
+        <span id="foundCount">0</span> de <span id="totalWords">0</span> encontradas
+        {% if game.time_limit > 0 %}&nbsp;|&nbsp; ⏱ <span id="timerDisplay">--:--</span>{% endif %}
+      </div>
     </div>
 
-    <div class="milo-banner mb-4">
-      <div class="milo-banner-owl">🐺</div>
-      <div class="milo-banner-text">Find all the hidden English words! / ¡Encuentra todas las palabras escondidas en inglés!</div>
+    <!-- Barra de modos -->
+    <div class="ws-mode-bar">
+      <button class="ws-mode-btn active" data-mode="drag" onclick="setSearchMode('drag')">👆 Arrastra</button>
+      <button class="ws-mode-btn" data-mode="click" onclick="setSearchMode('click')">🖱️ Clic a Clic</button>
     </div>
 
     <div class="row g-4">
@@ -38,42 +97,54 @@
       </div>
       <div class="col-md-4">
         <div class="nestgrow-card p-4">
-          <h6 class="font-fredoka mb-3" style="color:var(--primary)">📋 Words to Find:</h6>
-          <div id="wordList" class="d-flex flex-column gap-2"></div>
+          <h6 class="font-fredoka mb-3" style="color:var(--primary)">📋 Palabras a encontrar:</h6>
+          <div id="wordList"></div>
         </div>
         <div class="text-center mt-4">
           <div class="stat-card">
             <div class="stat-number" id="scoreDisplay">0</div>
-            <div class="stat-label">Points / Puntos</div>
+            <div class="stat-label">Puntos</div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
+<!-- Win Overlay (estándar) -->
 <div class="win-overlay" id="winOverlay">
   <div class="win-card">
     <div class="win-owl">🐺</div>
     <div class="win-title">¡Lo encontraste todo!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
+    <div class="font-fredoka fs-2 mt-1" id="winClasif" style="color:var(--primary)"></div>
+    <div class="fs-4 fw-bold mt-1" style="color:var(--primary)">
       <span id="winScore">0</span> pts (<span id="winPercent">0%</span>)
     </div>
-    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">🔄 Play Again</button>
+    <div class="fw-bold mt-2" style="color:#8B4513" id="winHuesos"></div>
+    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
+      🔄 Jugar de nuevo
+    </button>
+    {% if user.role == 'profesor' %}
+    <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Volver</a>
+    {% else %}
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    {% endif %}
   </div>
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
 <script src="{% static 'games/js/word_search.js' %}"></script>
 <script>
 const VOCABULARY = {{ vocabulary_json|safe }};
 const GAME_ID = {{ game.id }};
 const TIME_LIMIT = {{ game.time_limit }};
 const POINTS_REWARD = {{ game.points_reward }};
-initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, {{ game.difficulty }});
+const PENALTY_AMOUNT = {{ game.penalty_amount }};
+initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, {{ game.difficulty }}, PENALTY_AMOUNT);
 </script>
 {% endblock %}

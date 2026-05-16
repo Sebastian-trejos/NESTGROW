@@ -82,21 +82,25 @@
     <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
       🔄 Jugar de nuevo
     </button>
-    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">
-      Ver más juegos →
-    </a>
+    {% if user.role == 'profesor' %}
+    <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Volver</a>
+    {% else %}
+    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    {% endif %}
   </div>
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'games/js/score_utils.js' %}"></script>
 <script src="{% static 'games/js/drag_and_drop.js' %}"></script>
 <script>
 const VOCABULARY = {{ vocabulary_json|safe }};
 const GAME_ID = {{ game.id }};
 const TIME_LIMIT = {{ game.time_limit }};
 const POINTS_REWARD = {{ game.points_reward }};
-initDragAndDrop(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD);
+const PENALTY_AMOUNT = {{ game.penalty_amount }};
+initDragAndDrop(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, PENALTY_AMOUNT);
 </script>
 {% endblock %}

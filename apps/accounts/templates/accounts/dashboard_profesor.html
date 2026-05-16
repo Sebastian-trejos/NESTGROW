@@ -345,14 +345,21 @@
   </div>
 
   {% if salones %}
+  <div class="accordion" id="accordionSalones">
   {% for salon in salones %}
-  <div class="salon-card-prof">
+  <div class="salon-card-prof mb-3" style="padding:0;overflow:hidden">
 
-    <!-- Header del salón -->
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <!-- Header colapsable del salón -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3"
+         style="cursor:pointer"
+         data-bs-toggle="collapse"
+         data-bs-target="#salonEstudiantes{{ salon.pk }}"
+         aria-expanded="false"
+         aria-controls="salonEstudiantes{{ salon.pk }}">
       <div>
         <h5 class="font-fredoka mb-1" style="color:var(--primary)">
-          <i class="bi bi-building-fill me-2"></i>{{ salon.nombre }}
+          <i class="bi bi-chevron-down me-2 collapse-icon" style="font-size:.8rem;transition:transform .3s"></i>
+          <i class="bi bi-building-fill me-1"></i>{{ salon.nombre }}
           <span class="badge rounded-pill ms-2"
                 style="background:var(--primary);color:white;font-size:0.75rem">
             {{ salon.get_grado_display }}
@@ -372,7 +379,7 @@
           {% endif %}
         </div>
       </div>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-2" onclick="event.stopPropagation()">
         <a href="{% url 'accounts:detalle_salon' salon.pk %}"
            class="btn btn-sm rounded-pill fw-bold"
            style="background:#f0eeff;color:var(--primary);border:none">
@@ -391,69 +398,73 @@
       </div>
     </div>
 
-    <!-- Tabla estudiantes -->
-    {% if salon.estudiantes.all %}
-    <div class="table-responsive">
-      <table class="table table-nestgrow mb-0">
-        <thead>
-          <tr>
-            <th><i class="bi bi-person-fill me-1"></i>Estudiante</th>
-            <th class="text-center"><i class="bi bi-list-ol me-1"></i>N° Lista</th>
-            <th class="text-center"><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
-            <th class="text-center">⭐ Historia</th>
-            <th><i class="bi bi-envelope-fill me-1"></i>Correo Padre</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for est in salon.estudiantes.all %}
-          <tr>
-            <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
-            <td class="text-center">
-              <form method="post" action="{% url 'accounts:set_numero_lista' est.pk %}" class="d-inline-flex align-items-center gap-1" style="min-width:90px">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{% url 'accounts:dashboard_profesor' %}">
-                <input type="number" name="numero_lista" value="{{ est.numero_lista|default:'' }}"
-                       min="1" max="99" style="width:52px;text-align:center;border:1px solid #ddd;border-radius:8px;padding:2px 4px;font-size:.85rem"
-                       placeholder="—">
-                <button type="submit" class="btn btn-sm p-0 px-1" style="color:var(--primary)" title="Guardar N° lista">
-                  <i class="bi bi-check-circle-fill"></i>
-                </button>
-              </form>
-            </td>
-            <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
-            <td class="text-center">
-              <span class="fw-bold" style="color:#f0a500">
-                ⭐ {{ est.total_estrellas_historia }}
-              </span>
-            </td>
-            <td>
-              {% if est.correo_padre %}
-                <span class="small fw-bold" style="color:#4ECDC4">
-                  <i class="bi bi-check-circle-fill me-1"></i>{{ est.correo_padre }}
-                </span>
-              {% else %}
-                <span class="text-muted small">
-                  <i class="bi bi-x-circle me-1"></i>Sin correo
-                </span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <!-- Tabla estudiantes (colapsable) -->
+    <div class="collapse" id="salonEstudiantes{{ salon.pk }}">
+      <div class="px-3 pb-3">
+      {% if salon.estudiantes.all %}
+      <div class="table-responsive">
+        <table class="table table-nestgrow mb-0">
+          <thead>
+            <tr>
+              <th><i class="bi bi-person-fill me-1"></i>Estudiante</th>
+              <th class="text-center"><i class="bi bi-list-ol me-1"></i>N° Lista</th>
+              <th class="text-center"><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
+              <th class="text-center">⭐ Historia</th>
+              <th><i class="bi bi-envelope-fill me-1"></i>Correo Padre</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for est in salon.estudiantes.all %}
+            <tr>
+              <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
+              <td class="text-center">
+                <form method="post" action="{% url 'accounts:set_numero_lista' est.pk %}" class="d-inline-flex align-items-center gap-1" style="min-width:90px">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{% url 'accounts:dashboard_profesor' %}">
+                  <input type="number" name="numero_lista" value="{{ est.numero_lista|default:'' }}"
+                         min="1" max="99" style="width:52px;text-align:center;border:1px solid #ddd;border-radius:8px;padding:2px 4px;font-size:.85rem"
+                         placeholder="—">
+                  <button type="submit" class="btn btn-sm p-0 px-1" style="color:var(--primary)" title="Guardar N° lista">
+                    <i class="bi bi-check-circle-fill"></i>
+                  </button>
+                </form>
+              </td>
+              <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
+              <td class="text-center">
+                <span class="fw-bold" style="color:#f0a500">⭐ {{ est.total_estrellas_historia }}</span>
+              </td>
+              <td>
+                {% if est.correo_padre %}
+                  <span class="small fw-bold" style="color:#4ECDC4">
+                    <i class="bi bi-check-circle-fill me-1"></i>{{ est.correo_padre }}
+                  </span>
+                {% else %}
+                  <span class="text-muted small">
+                    <i class="bi bi-x-circle me-1"></i>Sin correo
+                  </span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-3" style="background:#f8f6ff;border-radius:14px">
+        <i class="bi bi-person-plus-fill" style="font-size:2rem;color:#ccc"></i>
+        <p class="text-muted fw-bold small mt-2 mb-0">
+          Comparte el código
+          <span class="codigo-badge" style="font-size:1rem">{{ salon.codigo_clase }}</span>
+          con tus estudiantes para que se unan.
+        </p>
+      </div>
+      {% endif %}
+      </div>
     </div>
-    {% else %}
-    <div class="text-center py-3" style="background:#f8f6ff;border-radius:14px">
-      <i class="bi bi-person-plus-fill" style="font-size:2rem;color:#ccc"></i>
-      <p class="text-muted fw-bold small mt-2 mb-0">
-        Comparte el código
-        <span class="codigo-badge" style="font-size:1rem">{{ salon.codigo_clase }}</span>
-        con tus estudiantes para que se unan.
-      </p>
-    </div>
-    {% endif %}
+
   </div>
   {% endfor %}
+  </div>
 
   {% else %}
   <div class="nestgrow-card p-5 text-center">
@@ -472,4 +483,21 @@
   {% endif %}
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Rotar chevron al abrir/cerrar cada salón
+document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function(trigger) {
+  var target = document.querySelector(trigger.getAttribute('data-bs-target'));
+  if (!target) return;
+  var icon = trigger.querySelector('.collapse-icon');
+  target.addEventListener('show.bs.collapse', function() {
+    if (icon) icon.style.transform = 'rotate(-180deg)';
+  });
+  target.addEventListener('hide.bs.collapse', function() {
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  });
+});
+</script>
 {% endblock %}
