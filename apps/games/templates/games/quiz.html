@@ -52,12 +52,16 @@
 </div>
 
 <div class="win-overlay" id="winOverlay" style="display:none">
-  <div class="win-card text-center">
-    <div class="win-owl">🐺</div>
+  <div class="win-card">
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
+    </div>
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
     <div class="win-title">¡Quiz completado!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
-    <p class="text-muted"><span id="correctCount">0</span> / <span id="totalQs">0</span> correctas</p>
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts · <span id="correctCount">0</span>/<span id="totalQs">0</span> correctas</div>
+    <div class="win-huesos" id="winHuesos"></div>
     <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
   </div>
 </div>
@@ -149,8 +153,21 @@ async function endGame() {
   document.getElementById('winScore').textContent = score;
   document.getElementById('correctCount').textContent = correctCount;
   document.getElementById('totalQs').textContent = questions.length;
-  document.getElementById('winStars').textContent = pct >= 80 ? '⭐⭐⭐' : pct >= 50 ? '⭐⭐' : '⭐';
-  document.getElementById('winOverlay').style.display = 'flex';
+  const $ = id => document.getElementById(id);
+  let tier, stars, miloFile, msg;
+  if (pct >= 80)      { tier='excelente'; stars='⭐⭐⭐'; }
+  else if (pct >= 50) { tier='regular';   stars='⭐⭐'; }
+  else                { tier='mal';        stars='⭐'; }
+  if (tier === 'excelente') { miloFile='milo_fest.png'; msg='¡Excelente trabajo!'; }
+  else if (tier === 'regular') { miloFile='milo_lupa1.png'; msg='¡Bien! Puedes mejorar.'; }
+  else { miloFile='milo_llorando.png'; msg='¡Sigue intentando! Tú puedes.'; }
+  if ($('winMilo')) $('winMilo').src = STATIC_URL + 'img/' + miloFile;
+  if ($('winMessage')) $('winMessage').textContent = msg;
+  if ($('winStars')) $('winStars').textContent = stars;
+  const card = document.querySelector('#winOverlay .win-card');
+  if (card) { card.className = 'win-card'; card.classList.add('win-card--' + tier); }
+  if (tier === 'excelente' && typeof launchConfetti === 'function') launchConfetti();
+  $('winOverlay').style.display = 'flex';
   try {
     const res = await fetch(SAVE_URL, {
       method: 'POST',
@@ -158,9 +175,8 @@ async function endGame() {
       body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed: true })
     });
     const data = await res.json();
-    if (data.registro_pk) {
-      document.getElementById('btnVolverPanel').href =
-        '/talleres/mis-talleres/?revisado=' + data.registro_pk;
+    if (data.registro_pk && $('btnVolverPanel')) {
+      $('btnVolverPanel').href = '/talleres/mis-talleres/?revisado=' + data.registro_pk;
     }
   } catch(e) {}
 }
@@ -181,7 +197,5 @@ document.addEventListener('DOMContentLoaded', () => {
 <style>
 .option-btn { border-radius:12px !important; transition:transform .1s; }
 .option-btn:hover:not(:disabled) { transform:scale(1.03); }
-.win-overlay { display:flex; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; align-items:center; justify-content:center; }
-.win-card { background:white; border-radius:24px; padding:2rem; max-width:380px; width:90%; }
 </style>
 {% endblock %}

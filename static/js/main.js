@@ -55,47 +55,67 @@ async function saveScore(gameId, score, maxScore, timeSpent, completed = false) 
   }
 }
 
-// --- Win Screen with Classification ---
+// --- Result Screen with Milo images and varied messages ---
+const MILO_IMG = {
+  excelente: ['img/milo_fest.png','img/milo_fest2.png','img/milo_orgulloso.png','img/milo_asombrado.png','img/milo_bai.png','img/milo_star.png','img/milo_saludando.png'],
+  bien:      ['img/milo_saludando.png','img/milo_hablando.png','img/milo_orgulloso.png','img/milo_asombrado2.png','img/milo_fest.png'],
+  regular:   ['img/milo_lupa1.png','img/milo_lupa2.png','img/milo_duda1.png','img/milo_duda2.png','img/milo_interroga.png','img/milo_preocupado.png','img/milo_hablando.png'],
+  mal:       ['img/milo_llorando.png','img/milo_lagri.png','img/milo_enojado2.png','img/milo_enojado1.png','img/milo_preocupado.png']
+};
+const MSG_TIER = {
+  excelente: ['¡Perfecto!','¡Excelente trabajo!','¡Eres un genio!','¡Impresionante!','¡Fuera de serie!'],
+  bien:      ['¡Muy bien hecho!','¡Buen trabajo!','¡Lo estás haciendo genial!','¡Sigue brillando!','¡Buenísimo!'],
+  regular:   ['¡Bien! Puedes mejorar.','¡Sigue practicando!','¡Vas por buen camino!','¡Casi lo logras!','¡Un poco más!'],
+  mal:       ['¡Sigue intentando! Tú puedes.','¡No te rindas!','¡La práctica hace al maestro!','¡Cada intento cuenta!','¡Ánimo! La próxima será mejor.','¡Tú puedes!']
+};
+
+function pickRand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 async function showWinScreen(score, maxScore, gameId) {
   const overlay = document.getElementById('winOverlay');
   if (!overlay) return;
 
   const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
 
-  // Classification
-  let clasif, clasifColor, stars;
-  if (pct >= 90)      { clasif = '🏆 ¡Perfecto!';           clasifColor = '#4CAF50'; stars = '⭐⭐⭐'; }
-  else if (pct >= 70) { clasif = '⭐ ¡Alto!';               clasifColor = '#6C63FF'; stars = '⭐⭐⭐'; }
-  else if (pct >= 50) { clasif = '👍 Básico';               clasifColor = '#FFB347'; stars = '⭐⭐'; }
-  else                { clasif = '💪 ¡Sigue practicando!';  clasifColor = '#FF6B6B'; stars = '⭐'; }
+  let tier, clasif, stars, miloFile, msg, clasifColor;
+  if (pct >= 90)      { tier='excelente'; clasif='¡Perfecto!';   clasifColor='#4CAF50'; stars='⭐⭐⭐'; }
+  else if (pct >= 70) { tier='bien';      clasif='¡Muy bien!';   clasifColor='#6C63FF'; stars='⭐⭐⭐'; }
+  else if (pct >= 50) { tier='regular';   clasif='Buen intento'; clasifColor='#FFB347'; stars='⭐⭐'; }
+  else                { tier='mal';        clasif='Sigue practicando'; clasifColor='#FF6B6B'; stars='⭐'; }
 
-  // Update overlay elements
-  if (document.getElementById('winScore'))   document.getElementById('winScore').textContent = score;
-  if (document.getElementById('winPercent')) document.getElementById('winPercent').textContent = pct + '%';
-  if (document.getElementById('winStars'))   document.getElementById('winStars').textContent = stars;
-  if (document.getElementById('winClasif')) {
-    document.getElementById('winClasif').textContent = clasif;
-    document.getElementById('winClasif').style.color = clasifColor;
+  miloFile = pickRand(MILO_IMG[tier]);
+  msg = pickRand(MSG_TIER[tier]);
+
+  const $ = id => document.getElementById(id);
+
+  if ($('winMilo')) $('winMilo').src = STATIC_URL + miloFile;
+  if ($('winMessage')) $('winMessage').textContent = msg;
+  if ($('winStars')) $('winStars').textContent = stars;
+  if ($('winScore')) $('winScore').textContent = score;
+  if ($('winPercent')) $('winPercent').textContent = pct + '%';
+  if ($('winClasif')) {
+    $('winClasif').textContent = clasif;
+    $('winClasif').style.color = clasifColor;
+  }
+
+  const card = overlay.querySelector('.win-card');
+  if (card) {
+    card.className = 'win-card';
+    card.classList.add('win-card--' + tier);
   }
 
   overlay.style.display = 'flex';
-  launchConfetti();
 
-  // Save and handle rewards
+  if (tier === 'excelente' || tier === 'bien') launchConfetti();
+
   const result = await saveScore(gameId, score, maxScore, window.timeSpent || 0, true);
   if (result) {
-    // Show huesos earned
-    if (result.huesos_ganados && document.getElementById('winHuesos')) {
-      document.getElementById('winHuesos').textContent = `+${result.huesos_ganados} 🦴 Huesos de Milo`;
+    if (result.huesos_ganados && $('winHuesos')) {
+      $('winHuesos').textContent = `+${result.huesos_ganados} 🦴 Huesos de Milo`;
     }
-    // Show level up popup
-    if (result.subio_nivel) {
-      setTimeout(() => showLevelUpPopup(result.nuevo_nivel), 1000);
-    }
-    // Show new badges
+    if (result.subio_nivel) setTimeout(() => showLevelUpPopup(result.nuevo_nivel), 1000);
     if (result.nuevos_logros && result.nuevos_logros.length > 0) {
-      const delay = result.subio_nivel ? 4000 : 1500;
-      setTimeout(() => showBadgePopup(result.nuevos_logros[0]), delay);
+      setTimeout(() => showBadgePopup(result.nuevos_logros[0]), result.subio_nivel ? 4000 : 1500);
     }
   }
 }

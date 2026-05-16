@@ -83,12 +83,16 @@
 <div id="memToast" class="mem-toast nestgrow-card" role="status" aria-live="polite"></div>
 
 <div class="win-overlay" id="winOverlay" style="display:none">
-  <div class="win-card text-center">
-    <div class="win-owl"><img src="{% static 'img/milo_fest.png' %}" alt="" style="width:72px;height:72px;object-fit:contain" draggable="false"></div>
+  <div class="win-card">
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
+    </div>
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
     <div class="win-title">¡Memorama increíble!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)"><span id="winScore">0</span> pts</div>
-    <p class="text-muted mt-2">Tiempo: <span id="winTime">0</span>s</p>
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts · <span id="winTime">0</span>s</div>
+    <div class="win-huesos" id="winHuesos"></div>
     <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
   </div>
 </div>

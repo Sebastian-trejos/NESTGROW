@@ -495,8 +495,18 @@
       const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
       document.getElementById('winScore').textContent = score;
       document.getElementById('winTime').textContent = timeSpent;
-      document.getElementById('winStars').textContent = pct >= 90 ? '⭐⭐⭐' : pct >= 60 ? '⭐⭐' : '⭐';
-      document.getElementById('winOverlay').style.display = 'flex';
+      const $ = id => document.getElementById(id);
+      let tier, stars, miloFile, msg;
+      if (pct >= 90)      { tier='excelente'; stars='⭐⭐⭐'; miloFile='milo_fest.png'; msg='¡Memoria de elefante!'; }
+      else if (pct >= 60) { tier='bien';      stars='⭐⭐';   miloFile='milo_saludando.png'; msg='¡Bien hecho!'; }
+      else                { tier='regular';   stars='⭐';    miloFile='milo_lupa1.png'; msg='¡Sigue practicando!'; }
+      if ($('winMilo')) $('winMilo').src = (window.STATIC_URL || '/static/') + 'img/' + miloFile;
+      if ($('winMessage')) $('winMessage').textContent = msg;
+      if ($('winStars')) $('winStars').textContent = stars;
+      const card = document.querySelector('#winOverlay .win-card');
+      if (card) { card.className = 'win-card'; card.classList.add('win-card--' + tier); }
+      if ((tier==='excelente'||tier==='bien') && typeof launchConfetti==='function') launchConfetti();
+      $('winOverlay').style.display = 'flex';
       try {
         const res = await fetch(SAVE_URL, {
           method: 'POST',
@@ -510,8 +520,8 @@
           }),
         });
         const data = await res.json();
-        if (data.registro_pk) {
-          document.getElementById('btnVolverPanel').href =
+        if (data.registro_pk && $('btnVolverPanel')) {
+          $('btnVolverPanel').href =
             '/talleres/mis-talleres/?revisado=' + data.registro_pk;
         }
       } catch (e) { /* silencio */ }
