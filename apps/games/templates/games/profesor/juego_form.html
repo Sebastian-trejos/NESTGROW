@@ -25,7 +25,7 @@
 <div class="container py-4" style="max-width:760px">
 
   <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎮 {{ titulo }}</h3>
   </div>
 
@@ -154,7 +154,7 @@
 
       <div class="d-flex gap-3 mt-4">
         <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow">🎮 {{ accion }}</button>
-        <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill fw-bold">Cancelar</a>
+        <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill fw-bold">Cancelar</a>
       </div>
     </form>
   </div>

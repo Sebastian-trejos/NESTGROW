@@ -159,14 +159,6 @@
              onmouseout="this.style.transform='translateY(0)'">
             <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Salón
           </a>
-          <a href="{% url 'talleres:lista_periodos' %}"
-             style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.5);
-                    border-radius:50px;padding:10px 24px;font-family:'Fredoka One',cursive;
-                    font-size:1rem;text-decoration:none;transition:all 0.3s;display:inline-block"
-             onmouseover="this.style.background='rgba(255,255,255,0.3)'"
-             onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-            <i class="bi bi-calendar2-week-fill me-1"></i>Períodos
-          </a>
         </div>
       </div>
       <div class="col-md-4 text-center d-none d-md-block">
@@ -261,14 +253,14 @@
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="{% url 'talleres:lista' %}" class="quick-card-prof"
+        <a href="{% url 'talleres:lista_periodos' %}" class="quick-card-prof"
            style="border-color:transparent"
-           onmouseover="this.style.borderColor='#2e7d52'"
+           onmouseover="this.style.borderColor='#1e88e5'"
            onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#f0fff4">
-            <i class="bi bi-clipboard2-check-fill" style="color:#2e7d52"></i>
+          <div class="quick-icon-prof" style="background:#e8f4fd">
+            <i class="bi bi-calendar2-week-fill" style="color:#1e88e5"></i>
           </div>
-          <div class="fw-bold small" style="color:#2e7d52">Talleres</div>
+          <div class="fw-bold small" style="color:#1e88e5">Períodos</div>
         </a>
       </div>
       <div class="col-6 col-md-3">
@@ -280,17 +272,6 @@
             <i class="bi bi-map-fill" style="color:#6C63FF"></i>
           </div>
           <div class="fw-bold small" style="color:#6C63FF">Modo Historia</div>
-        </a>
-      </div>
-      <div class="col-6 col-md-3">
-        <a href="{% url 'games:gestionar_juegos' %}" class="quick-card-prof"
-           style="border-color:transparent"
-           onmouseover="this.style.borderColor='#FF6B6B'"
-           onmouseout="this.style.borderColor='transparent'">
-          <div class="quick-icon-prof" style="background:#fff0f0">
-            <i class="bi bi-controller" style="color:#FF6B6B"></i>
-          </div>
-          <div class="fw-bold small" style="color:#FF6B6B">Juegos</div>
         </a>
       </div>
       <div class="col-6 col-md-3">

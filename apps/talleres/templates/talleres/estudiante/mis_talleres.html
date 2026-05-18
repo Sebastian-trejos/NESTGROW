@@ -1,5 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Mis Actividades{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes floatBounce {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-12px) scale(1.04); }
+  }
+  .game-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(108,99,255,0.10);
+    transition: all 0.3s;
+    border: 3px solid var(--primary);
+    text-decoration: none;
+    display: block;
+  }
+  .game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 18px 45px rgba(108,99,255,0.22);
+  }
+  .game-card.drag  { border-color: #6C63FF; }
+  .game-card.search{ border-color: #FF6B6B; }
+  .game-card.puzzle{ border-color: #4ECDC4; }
+  .game-card.paint { border-color: #FFB347; }
+  .game-card.audio { border-color: #9c94ff; }
+  .game-card.mem   { border-color: #e056fd; }
+  .game-card.hang  { border-color: #ff9f43; }
+  .game-card.quiz  { border-color: #54a0ff; }
+  .game-card.order { border-color: #5f27cd; }
+  .game-card.glob  { border-color: #00d2d3; }
+
+  .game-icon-wrap {
+    height: 140px;
+    overflow: hidden;
+  }
+  .diff-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.82rem;
+    padding: 5px 12px;
+    border-radius: 50px;
+  }
+  .diff-easy   { background: #e6faf8; color: #4ECDC4; }
+  .diff-medium { background: #fff8eb; color: #FFB347; }
+  .diff-hard   { background: #ffeaea; color: #FF6B6B; }
+
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -7,7 +56,7 @@
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl">🐺</div>
     <div>
-      <div class="milo-banner-text">¡Hola, {{ user.first_name }}! Aquí están tus actividades pendientes. 🎓</div>
+      <div class="milo-banner-text">¡Hola, {{ user.first_name }}! Aquí están tus actividades y minijuegos. 🎓</div>
       <div class="text-muted fw-bold small">Completa talleres y minijuegos asignados por tu profesor para ganar XP y Huesos de Milo.</div>
     </div>
   </div>
@@ -85,7 +134,6 @@
 
           <div class="mt-auto">
             {% if item.completado %}
-            {# Completado pero no revisado → ir a resultado_sesion para marcar revisado #}
             <a href="{% url 'talleres:resultado_sesion' pk=s.pk %}" class="btn btn-outline-warning rounded-pill w-100 fw-bold">
               📊 Ver resultado →
             </a>
@@ -107,40 +155,81 @@
     </div>
     {% endif %}
 
-    <!-- Minijuegos -->
+    <!-- Minijuegos del período — tarjetas visuales con imagen -->
     {% if minijuegos_pendientes %}
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎮 Minijuegos</h5>
-    <div class="row g-3 mb-4">
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎮 Minijuegos asignados</h5>
+    <div class="row g-4 mb-4">
       {% for item in minijuegos_pendientes %}
       {% with g=item.game r=item.registro %}
       <div class="col-sm-6 col-lg-4">
-        <div class="nestgrow-card p-3 h-100 d-flex flex-column"
-             style="border-left:5px solid {% if item.completado %}var(--accent){% else %}#6c63ff{% endif %}">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="font-fredoka mb-0" style="color:var(--primary)">{{ g.title }}</h6>
-            {% if item.completado %}
-            <span class="badge rounded-pill" style="background:#d4edda;color:#155724;white-space:nowrap">✅ Hecho</span>
-            {% else %}
-            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);white-space:nowrap">🆕 Nuevo</span>
-            {% endif %}
+        <div class="game-card {% if g.game_type == 'drag_and_drop' %}drag{% elif g.game_type == 'word_search' %}search{% elif g.game_type == 'puzzle' %}puzzle{% elif g.game_type == 'painting' %}paint{% elif g.game_type == 'audio_matching' %}audio{% elif g.game_type == 'memoria' %}mem{% elif g.game_type == 'ahorcado' %}hang{% elif g.game_type == 'quiz' %}quiz{% elif g.game_type == 'ordenar_letras' %}order{% elif g.game_type == 'globos' %}glob{% else %}drag{% endif %}"
+             style="position:relative">
+
+          {% if item.completado %}
+          <div style="position:absolute;top:10px;right:10px;z-index:2">
+            <span class="badge rounded-pill px-3 py-2 fw-bold"
+                  style="background:#d4edda;color:#155724;font-size:0.82rem;box-shadow:0 2px 8px rgba(0,0,0,0.15)">
+              ✅ Completado
+            </span>
           </div>
-          <div class="text-muted small mb-3">{{ g.get_game_type_display }}</div>
-          {% if r and r.completado and r.max_score > 0 %}
-          <div class="text-muted small mb-2">Puntaje: {{ r.score }} / {{ r.max_score }} ({{ r.porcentaje }}%)</div>
           {% endif %}
-          <div class="mt-auto">
-            {% if item.completado %}
-            {# Completado, mostrar score y botón para marcar revisado #}
-            <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}"
-               class="btn btn-outline-success rounded-pill w-100 btn-sm fw-bold">
-              ✔️ Entendido
-            </a>
+
+          <!-- Imagen según tipo -->
+          {% if g.game_type == 'painting' %}
+          <div class="game-icon-wrap">
+            <img src="{% static 'img/games (2).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          {% elif g.game_type == 'drag_and_drop' %}
+          <div class="game-icon-wrap">
+            <img src="{% static 'img/games (1).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          {% elif g.game_type == 'word_search' %}
+          <div class="game-icon-wrap">
+            <img src="{% static 'img/games (3).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          {% else %}
+          <div class="game-icon-wrap">
+            <img src="{% static 'img/games(4).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          {% endif %}
+
+          <!-- Info -->
+          <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge rounded-pill fw-bold px-3 py-2"
+                    style="background:{{ g.category.color }}25;color:{{ g.category.color }};font-size:0.82rem">
+                {{ g.category.icon|safe }} {{ g.category.name }}
+              </span>
+              <span class="diff-badge {% if g.difficulty == 1 %}diff-easy{% elif g.difficulty == 2 %}diff-medium{% else %}diff-hard{% endif %}">
+                {% if g.difficulty == 1 %}<i class="bi bi-star-fill"></i> Fácil
+                {% elif g.difficulty == 2 %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Medio
+                {% else %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Difícil{% endif %}
+              </span>
+            </div>
+            <h5 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.15rem">{{ g.title }}</h5>
+            {% if r and r.completado and r.max_score > 0 %}
+            <p class="text-muted small fw-bold mb-2">Puntaje: {{ r.score }}/{{ r.max_score }} ({{ r.porcentaje }}%)</p>
             {% else %}
-            <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1"
-               class="btn btn-nestgrow btn-primary-nestgrow rounded-pill w-100 btn-sm fw-bold">
-              🎮 Jugar →
-            </a>
+            <p class="text-muted small fw-bold mb-2" style="line-height:1.4">{{ g.description|truncatewords:7 }}</p>
             {% endif %}
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold" style="color:#FFB347;font-size:1rem">
+                <i class="bi bi-star-fill me-1"></i>+{{ g.points_reward }} pts
+              </span>
+              {% if item.completado %}
+              <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}"
+                 class="btn fw-bold px-3 py-2"
+                 style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;border-radius:50px;font-family:'Fredoka One',cursive;font-size:0.9rem;border:none">
+                ✔️ Entendido
+              </a>
+              {% else %}
+              <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1"
+                 class="btn fw-bold px-4 py-2"
+                 style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;border-radius:50px;font-family:'Fredoka One',cursive;font-size:0.95rem;border:none">
+                <i class="bi bi-play-fill me-1"></i>¡Jugar!
+              </a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
@@ -151,7 +240,7 @@
 
   {% else %}
   <!-- Período activo pero todo completado/revisado -->
-  <div class="nestgrow-card p-5 text-center">
+  <div class="nestgrow-card p-5 text-center mb-4">
     <div style="font-size:4rem">🎉</div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Todo listo!</h4>
     <p class="text-muted fw-bold">Completaste todas las actividades de este período. ¡Excelente trabajo!</p>
@@ -160,7 +249,7 @@
 
   {% else %}
   <!-- Sin período activo -->
-  <div class="nestgrow-card p-5 text-center">
+  <div class="nestgrow-card p-5 text-center mb-4">
     <div style="font-size:5rem">📋</div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">
       {% if request.user.estudiante_profile.salon %}
@@ -183,6 +272,7 @@
     {% endif %}
   </div>
   {% endif %}
+
 
 </div>
 {% endblock %}

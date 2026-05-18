@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container py-4 memoria-page">
   <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🃏 {{ game.title }}</h3>
   </div>
 

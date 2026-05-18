@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}🌍 Museo Global — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes floatStar {
+    0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
+    50%      { transform: translateY(-8px) rotate(10deg); opacity:1; }
+  }
+
+  .museo-global-hero {
+    background: linear-gradient(135deg, #4ECDC4 0%, #7ee8e2 50%, #6C63FF 100%);
+    border-radius: 28px;
+    padding: 2.5rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .museo-global-hero::before {
+    content:'';
+    position:absolute;
+    width:250px;height:250px;
+    background:rgba(255,255,255,0.07);
+    border-radius:50%;
+    top:-80px;right:-60px;
+  }
+  .museo-global-hero::after {
+    content:'';
+    position:absolute;
+    width:160px;height:160px;
+    background:rgba(255,255,255,0.05);
+    border-radius:50%;
+    bottom:-50px;left:10%;
+  }
+
+  .autor-section {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(108,99,255,0.10);
+    margin-bottom: 2rem;
+    border-top: 5px solid var(--primary);
+    transition: box-shadow 0.3s;
+  }
+  .autor-section:hover {
+    box-shadow: 0 14px 40px rgba(108,99,255,0.18);
+  }
+  .autor-section:nth-child(2n)   { border-top-color: #4ECDC4; }
+  .autor-section:nth-child(3n)   { border-top-color: #FF6B6B; }
+  .autor-section:nth-child(4n)   { border-top-color: #FFB347; }
+  .autor-section:nth-child(5n)   { border-top-color: #e056fd; }
+
+  .autor-header {
+    padding: 1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 2px solid #f0eeff;
+    background: #fafaff;
+  }
+  .autor-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.2);
+  }
+
+  .artwork-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.10);
+    transition: all 0.3s;
+    border: 2px solid #f0eeff;
+  }
+  .artwork-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 14px 35px rgba(108,99,255,0.20);
+    border-color: var(--primary);
+  }
+  .artwork-frame {
+    background: linear-gradient(135deg, #f8f6ff, #fff5f0);
+    padding: 10px;
+    border-bottom: 2px solid #f0eeff;
+  }
+  .artwork-frame img {
+    width: 100%;
+    height: 160px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: white;
+  }
+  .artwork-info {
+    padding: 10px 12px;
+  }
+
+  .empty-global {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: white;
+    border-radius: 28px;
+    box-shadow: 0 8px 28px rgba(108,99,255,0.08);
+    border: 3px dashed #e8e4ff;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- HERO -->
+  <div class="museo-global-hero">
+    <span style="position:absolute;top:12%;left:3%;font-size:1.4rem;animation:floatStar 3s ease-in-out infinite;pointer-events:none">
+      <i class="bi bi-star-fill" style="color:rgba(255,255,255,0.35)"></i>
+    </span>
+    <span style="position:absolute;bottom:18%;right:8%;font-size:1rem;animation:floatStar 4s ease-in-out infinite 0.8s;pointer-events:none">
+      <i class="bi bi-star-fill" style="color:rgba(255,255,255,0.25)"></i>
+    </span>
+    <div class="row align-items-center position-relative" style="z-index:1">
+      <div class="col-md-8">
+        <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-1 rounded-pill fw-bold"
+             style="background:rgba(255,255,255,0.2);font-size:0.85rem">
+          <i class="bi bi-palette-fill"></i> Salón: {{ salon.nombre }}
+        </div>
+        <h2 class="font-fredoka mb-2" style="font-size:2.2rem;line-height:1.1">
+          🌍 Museo Global
+        </h2>
+        <p style="opacity:0.9;font-weight:700;font-size:1rem;margin-bottom:1rem">
+          Obras de arte de todos tus compañeros de clase. ¡Cada cuadro es único!
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-palette2" style="font-size:1.1rem"></i> {{ total_obras }} obra{{ total_obras|pluralize:"s" }}
+          </div>
+          <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-people-fill" style="font-size:1.1rem"></i> {{ autores|length }} artista{{ autores|length|pluralize:"s" }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 text-center d-none d-md-block">
+        <img src="{% static 'img/milo_fest.png' %}" alt="Milo"
+             style="width:150px;filter:drop-shadow(0 10px 25px rgba(0,0,0,0.2));
+                    animation:floatStar 4s ease-in-out infinite">
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN VOLVER -->
+  <div class="mb-4">
+    <a href="{% url 'games:museo_virtual' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
+      ← Mi Museo
+    </a>
+  </div>
+
+  {% if autores %}
+    {% for autor_data in autores %}
+    <div class="autor-section">
+
+      <!-- Cabecera del autor -->
+      <div class="autor-header">
+        {% if autor_data.user.estudiante_profile.avatar_kitchen_url %}
+        <img src="{{ autor_data.user.estudiante_profile.avatar_kitchen_url }}"
+             class="autor-avatar" style="object-fit:cover;font-size:inherit"
+             alt="{{ autor_data.user.get_full_name }}">
+        {% else %}
+        <div class="autor-avatar" style="background:linear-gradient(135deg,#6C63FF,#9c94ff)">
+          {{ autor_data.user.estudiante_profile.avatar_emoji1|default:'🎨' }}
+        </div>
+        {% endif %}
+        <div>
+          <div class="fw-bold font-fredoka" style="color:var(--primary);font-size:1.1rem">
+            {{ autor_data.user.get_full_name|default:autor_data.user.username }}
+          </div>
+          <div class="text-muted small fw-bold">
+            🎨 {{ autor_data.obras|length }} obra{{ autor_data.obras|length|pluralize:"s" }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de obras del autor -->
+      <div class="p-3">
+        <div class="row g-3">
+          {% for obra in autor_data.obras %}
+          <div class="col-6 col-sm-4 col-lg-3">
+            <div class="artwork-card">
+              <div class="artwork-frame">
+                <img src="{{ obra.canvas_data }}" alt="{{ obra.title }}">
+              </div>
+              <div class="artwork-info">
+                <div class="fw-bold" style="font-family:'Fredoka One',cursive;color:var(--primary);font-size:0.95rem">
+                  {% if obra.vocabulary_item %}
+                    🎨 {{ obra.vocabulary_item.word_en }}
+                    <span class="text-muted" style="font-size:0.8rem">/ {{ obra.vocabulary_item.word_es }}</span>
+                  {% else %}
+                    🎨 {{ obra.title|default:"Sin título" }}
+                  {% endif %}
+                </div>
+                <div class="text-muted" style="font-size:0.75rem;font-weight:600;margin-top:2px">
+                  📅 {{ obra.created_at|date:"d M Y" }}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+
+  {% else %}
+  <div class="empty-global">
+    <div style="font-size:5rem">🖼️</div>
+    <h3 class="font-fredoka mt-3 mb-2" style="color:var(--primary)">¡El museo está vacío!</h3>
+    <p class="text-muted fw-bold fs-5">Ningún compañero ha publicado obras todavía.<br>¡Sé el primero en pintar algo!</p>
+    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3">
+      🎮 Ir a mis actividades
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

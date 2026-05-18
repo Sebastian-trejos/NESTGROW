@@ -83,10 +83,17 @@
         Tus obras de arte
       {% endif %}
     </p>
-    <div class="mt-3">
+    <div class="mt-3 d-flex justify-content-center gap-3 flex-wrap">
       <span class="badge rounded-pill px-4 py-2 fs-6" style="background:var(--primary);color:white">
         🎨 {{ artworks.count }} obra{{ artworks.count|pluralize:"s" }}
       </span>
+      {% if user.role == 'estudiante' %}
+      <a href="{% url 'games:museo_global' %}"
+         class="btn fw-bold rounded-pill px-4 py-2"
+         style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;font-family:'Fredoka One',cursive;font-size:1rem;border:none;box-shadow:0 4px 15px rgba(78,205,196,0.35)">
+        🌍 Ver museo global
+      </a>
+      {% endif %}
     </div>
   </div>
 
@@ -140,7 +147,14 @@
     <h3 class="font-fredoka mt-3" style="color:var(--primary)">¡El museo está vacío!</h3>
     {% if user.role == 'estudiante' %}
     <p class="fw-bold text-muted fs-5">Aún no has pintado nada. ¡Ve a jugar y crea tu primera obra!</p>
-    <a href="{% url 'games:game_list' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3">🎮 Ir a jugar</a>
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+      <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow">🎮 Ir a mis actividades</a>
+      <a href="{% url 'games:museo_global' %}"
+         class="btn fw-bold rounded-pill px-4"
+         style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;font-family:'Fredoka One',cursive;font-size:1rem;border:none">
+        🌍 Ver museo global
+      </a>
+    </div>
     {% else %}
     <p class="fw-bold text-muted fs-5">Tus estudiantes aún no han pintado nada.</p>
     {% endif %}

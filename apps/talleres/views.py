@@ -396,10 +396,20 @@ def mis_talleres(request):
                         'completado': registro.completado if registro else False,
                     })
 
+    from apps.content.models import Category
+    all_games = Game.active.select_related('category').all()
+    categories = Category.active.all()
+    category_filter = request.GET.get('categoria')
+    if category_filter:
+        all_games = all_games.filter(category__id=category_filter)
+
     return render(request, 'talleres/estudiante/mis_talleres.html', {
         'periodo_activo': periodo_activo,
         'talleres_pendientes': talleres_pendientes,
         'minijuegos_pendientes': minijuegos_pendientes,
+        'all_games': all_games,
+        'categories': categories,
+        'selected_category': category_filter,
     })
 
 
@@ -544,18 +554,30 @@ def resultado_taller(request, pk):
 @login_required
 @profesor_required
 def lista_periodos(request):
-    """Lista todos los períodos del profesor, agrupados por salón."""
+    """Panel unificado del profesor: períodos agrupados por salón, talleres y juegos."""
     from django.utils import timezone as tz
-    salones = _salon_qs(request.user).prefetch_related('periodos')
-    periodos = Periodo.objects.filter(
-        salon__in=salones
-    ).select_related('salon').prefetch_related(
-        'talleres_asignados__taller', 'minijuegos_asignados__game'
-    ).order_by('-fecha_inicio')
+    from apps.content.models import Category
+    salones = _salon_qs(request.user).prefetch_related(
+        'periodos',
+        'periodos__talleres_asignados',
+        'periodos__minijuegos_asignados',
+    ).order_by('nombre')
+
+    talleres = (
+        Taller.objects.filter(profesor=request.user)
+        .prefetch_related('bloques', 'sesiones')
+        .order_by('-created_at')
+    )
+
+    juegos = Game.objects.select_related('category').order_by('order', 'title')
+    categorias = Category.objects.all()
 
     return render(request, 'talleres/profesor/lista_periodos.html', {
-        'periodos': periodos,
+        'salones': salones,
         'hoy': tz.now().date(),
+        'talleres': talleres,
+        'juegos': juegos,
+        'categorias': categorias,
     })
 
 

@@ -1,17 +1,70 @@
 {% extends 'base.html' %}
-{% block title %}Períodos — NestGrow{% endblock %}
+{% block title %}Panel de Gestión — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .periodo-salon-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(108,99,255,0.1);
+    border-left: 5px solid var(--primary);
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+    margin-bottom: 0.75rem;
+  }
+  .periodo-salon-card:hover {
+    box-shadow: 0 12px 35px rgba(108,99,255,0.18);
+  }
+  .periodo-salon-header {
+    cursor: pointer;
+    user-select: none;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    transition: background 0.2s;
+  }
+  .periodo-salon-header:hover {
+    background: #faf8ff;
+  }
+  .periodo-collapse-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s;
+    color: var(--primary);
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
 
+  <!-- ══ HEADER ══ -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">📅 Períodos</h3>
-    <div class="d-flex gap-2">
-      <a href="{% url 'talleres:lista' %}" class="btn btn-outline-secondary rounded-pill">← Talleres</a>
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎛️ Panel de Gestión</h3>
+      <div class="text-muted fw-bold small">Períodos · Talleres · Juegos</div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
       <a href="{% url 'talleres:crear_periodo' %}" class="btn btn-nestgrow btn-primary-nestgrow">
         ➕ Nuevo Período
       </a>
+      <a href="{% url 'talleres:crear' %}" class="btn btn-outline-primary rounded-pill fw-bold">
+        📋 Nuevo Taller
+      </a>
+      <a href="{% url 'games:crear_juego' %}" class="btn btn-outline-success rounded-pill fw-bold">
+        🎮 Nuevo Juego
+      </a>
     </div>
+  </div>
+
+  <!-- ══ SECCIÓN 1: PERÍODOS agrupados por salón ══ -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="font-fredoka mb-0" style="color:var(--primary)">📅 Períodos</h4>
+    <a href="{% url 'talleres:crear_periodo' %}" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">
+      ➕ Nuevo
+    </a>
   </div>
 
   <div class="milo-banner mb-4">
@@ -22,69 +75,274 @@
     </div>
   </div>
 
-  {% if periodos %}
-  <div class="row g-3">
-    {% for p in periodos %}
-    {% with estado=p.estado %}
-    <div class="col-md-6 col-lg-4">
-      <div class="nestgrow-card h-100 p-3">
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <h5 class="font-fredoka mb-0" style="color:var(--primary)">{{ p.titulo }}</h5>
-          {% if estado == 'activo' %}
-            <span class="badge rounded-pill" style="background:#d4f5e0;color:#1a7a3b">🟢 Activo</span>
-          {% elif estado == 'vencido' %}
-            <span class="badge rounded-pill" style="background:#ffe5e5;color:#c0392b">🔴 Vencido</span>
-          {% elif estado == 'cerrado' %}
-            <span class="badge rounded-pill bg-secondary">⚫ Cerrado</span>
-          {% else %}
-            <span class="badge rounded-pill" style="background:#e8f4ff;color:#1565c0">🔵 Futuro</span>
-          {% endif %}
-        </div>
-        <div class="text-muted small mb-2">
-          <i class="bi bi-building me-1"></i>{{ p.salon }}<br>
-          <i class="bi bi-calendar-range me-1"></i>{{ p.fecha_inicio|date:"d/m/Y" }} → {{ p.fecha_fin|date:"d/m/Y" }}
-        </div>
-        <div class="d-flex gap-2 mb-3 flex-wrap">
-          <span class="badge" style="background:#f0ebff;color:#6c4ecb">
-            🎓 {{ p.talleres_asignados.count }} taller{{ p.talleres_asignados.count|pluralize:"es" }}
+  {% if salones %}
+  <div id="accordionPeriodos" class="mb-2">
+    {% for salon in salones %}
+    {% with salon_periodos=salon.periodos.all %}
+    <div class="periodo-salon-card">
+
+      <!-- Cabecera del salón (colapsable) -->
+      <div class="periodo-salon-header"
+           data-bs-toggle="collapse"
+           data-bs-target="#periodosSalon{{ salon.pk }}"
+           aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <i class="bi bi-chevron-down periodo-collapse-icon {% if forloop.first %}rotated{% endif %}"></i>
+          <span class="font-fredoka" style="color:var(--primary);font-size:1.1rem">
+            <i class="bi bi-building-fill me-1"></i>{{ salon.nombre }}
           </span>
-          <span class="badge" style="background:#fff3e0;color:#e65100">
-            🎮 {{ p.minijuegos_asignados.count }} juego{{ p.minijuegos_asignados.count|pluralize:"s" }}
+          <span class="badge rounded-pill" style="background:var(--primary);color:white;font-size:0.73rem">
+            {{ salon.get_grado_display }}
           </span>
-          {% if p.meta_historia > 0 %}
-          <span class="badge" style="background:#fff9c4;color:#f57f17">
-            ⭐ Meta: {{ p.meta_historia }}
+          <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);font-size:0.73rem">
+            📅 {{ salon_periodos|length }} período{{ salon_periodos|length|pluralize:"s" }}
           </span>
-          {% endif %}
         </div>
-        <div class="d-flex gap-2 flex-wrap">
-          <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm flex-grow-1">
-            📊 Ver resultados
-          </a>
-          <a href="{% url 'talleres:enviar_informe_periodo' p.pk %}"
-             class="btn btn-outline-success rounded-pill btn-sm flex-grow-1"
-             onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
-            📧 Enviar informe
-          </a>
-          <a href="{% url 'talleres:eliminar_periodo' p.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">
-            🗑️
+        <div class="d-flex gap-2" onclick="event.stopPropagation()">
+          <a href="{% url 'talleres:crear_periodo' %}" class="btn btn-sm rounded-pill fw-bold"
+             style="background:#f0eeff;color:var(--primary);border:none;font-size:0.78rem">
+            ➕ Nuevo período
           </a>
         </div>
       </div>
+
+      <!-- Períodos del salón (colapsable) -->
+      <div class="collapse {% if forloop.first %}show{% endif %}" id="periodosSalon{{ salon.pk }}">
+        <div class="px-3 pb-3">
+          {% if salon_periodos %}
+          <div class="row g-3">
+            {% for p in salon_periodos %}
+            {% with estado=p.estado %}
+            <div class="col-md-6 col-lg-4">
+              <div class="nestgrow-card h-100 p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="font-fredoka mb-0" style="color:var(--primary)">{{ p.titulo }}</h5>
+                  {% if estado == 'activo' %}
+                    <span class="badge rounded-pill" style="background:#d4f5e0;color:#1a7a3b">🟢 Activo</span>
+                  {% elif estado == 'vencido' %}
+                    <span class="badge rounded-pill" style="background:#ffe5e5;color:#c0392b">🔴 Vencido</span>
+                  {% elif estado == 'cerrado' %}
+                    <span class="badge rounded-pill bg-secondary">⚫ Cerrado</span>
+                  {% else %}
+                    <span class="badge rounded-pill" style="background:#e8f4ff;color:#1565c0">🔵 Futuro</span>
+                  {% endif %}
+                </div>
+                <div class="text-muted small mb-2">
+                  <i class="bi bi-calendar-range me-1"></i>{{ p.fecha_inicio|date:"d/m/Y" }} → {{ p.fecha_fin|date:"d/m/Y" }}
+                </div>
+                <div class="d-flex gap-2 mb-3 flex-wrap">
+                  <span class="badge" style="background:#f0ebff;color:#6c4ecb">
+                    🎓 {{ p.talleres_asignados.count }} taller{{ p.talleres_asignados.count|pluralize:"es" }}
+                  </span>
+                  <span class="badge" style="background:#fff3e0;color:#e65100">
+                    🎮 {{ p.minijuegos_asignados.count }} juego{{ p.minijuegos_asignados.count|pluralize:"s" }}
+                  </span>
+                  {% if p.meta_historia > 0 %}
+                  <span class="badge" style="background:#fff9c4;color:#f57f17">
+                    ⭐ Meta: {{ p.meta_historia }}
+                  </span>
+                  {% endif %}
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                  <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm flex-grow-1">
+                    📊 Resultados
+                  </a>
+                  <a href="{% url 'talleres:enviar_informe_periodo' p.pk %}"
+                     class="btn btn-outline-success rounded-pill btn-sm flex-grow-1"
+                     onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
+                    📧 Informe
+                  </a>
+                  <a href="{% url 'talleres:eliminar_periodo' p.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">
+                    🗑️
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center py-4" style="background:#f8f6ff;border-radius:14px">
+            <div style="font-size:2rem">📅</div>
+            <p class="text-muted fw-bold small mt-2 mb-2">Este salón aún no tiene períodos.</p>
+            <a href="{% url 'talleres:crear_periodo' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
+              ➕ Crear período
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
     </div>
     {% endwith %}
     {% endfor %}
   </div>
   {% else %}
-  <div class="nestgrow-card p-5 text-center">
-    <div style="font-size:3rem">📅</div>
-    <h5 class="font-fredoka mt-3" style="color:var(--primary)">Aún no tienes períodos</h5>
-    <p class="text-muted">Crea tu primer período para organizar las actividades de tus estudiantes.</p>
-    <a href="{% url 'talleres:crear_periodo' %}" class="btn btn-nestgrow btn-primary-nestgrow">
-      ➕ Crear primer período
+  <div class="nestgrow-card p-5 text-center mb-4">
+    <div style="font-size:3rem">🏫</div>
+    <h5 class="font-fredoka mt-3" style="color:var(--primary)">Sin salones todavía</h5>
+    <p class="text-muted">Crea un salón primero para poder organizar períodos con tus estudiantes.</p>
+    <a href="{% url 'accounts:crear_salon' %}" class="btn btn-nestgrow btn-primary-nestgrow">
+      ➕ Crear salón
     </a>
   </div>
   {% endif %}
 
+  <!-- ══ SEPARADOR ══ -->
+  <hr class="my-4" style="border-color:#e8e4ff;border-width:2px">
+
+  <!-- ══ SECCIONES 2 Y 3: TALLERES + JUEGOS (lado a lado) ══ -->
+  <div class="row g-4 mb-4">
+
+    <!-- TALLERES -->
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="font-fredoka mb-0" style="color:var(--primary)">📋 Talleres</h5>
+        <a href="{% url 'talleres:crear' %}" class="btn btn-sm btn-outline-primary rounded-pill fw-bold">➕ Nuevo</a>
+      </div>
+      {% if talleres %}
+      <div class="nestgrow-card p-0 overflow-hidden">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" style="font-size:0.85rem">
+            <thead style="background:#f8f6ff">
+              <tr>
+                <th class="ps-3">Taller</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for taller in talleres %}
+              <tr>
+                <td class="ps-3">
+                  <div class="fw-bold">{{ taller.titulo|truncatechars:30 }}</div>
+                  {% if taller.salon %}
+                  <div class="text-muted" style="font-size:0.78rem">🏫 {{ taller.salon.nombre }}</div>
+                  {% endif %}
+                </td>
+                <td class="text-center">
+                  <form method="post" action="{% url 'talleres:toggle' pk=taller.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="badge rounded-pill border-0"
+                            style="background:{% if taller.is_active %}#d4edda;color:#155724{% else %}#f8d7da;color:#721c24{% endif %};cursor:pointer;font-size:0.75rem">
+                      {% if taller.is_active %}✅{% else %}🔒{% endif %}
+                    </button>
+                  </form>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex gap-1 justify-content-center">
+                    <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-sm btn-outline-primary rounded-pill p-1 px-2" title="Editar" style="font-size:0.75rem">✏️</a>
+                    <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill p-1 px-2" title="Vista previa" target="_blank" style="font-size:0.75rem">👁️</a>
+                    <a href="{% url 'talleres:resultados' pk=taller.pk %}" class="btn btn-sm btn-outline-success rounded-pill p-1 px-2" title="Resultados" style="font-size:0.75rem">📊</a>
+                    <a href="{% url 'talleres:eliminar' pk=taller.pk %}" class="btn btn-sm btn-outline-danger rounded-pill p-1 px-2" title="Eliminar" style="font-size:0.75rem">🗑️</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% else %}
+      <div class="nestgrow-card p-4 text-center">
+        <div style="font-size:2rem">📋</div>
+        <p class="text-muted small fw-bold mt-2 mb-2">Aún no tienes talleres.</p>
+        <a href="{% url 'talleres:crear' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">➕ Crear taller</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- JUEGOS -->
+    <div class="col-md-6">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="font-fredoka mb-0" style="color:var(--primary)">🎮 Juegos</h5>
+        <div class="d-flex gap-1">
+          <a href="{% url 'games:gestionar_categorias' %}" class="btn btn-sm btn-outline-secondary rounded-pill fw-bold" style="font-size:0.78rem">📚 Categ.</a>
+          <a href="{% url 'games:crear_juego' %}" class="btn btn-sm btn-outline-success rounded-pill fw-bold" style="font-size:0.78rem">➕ Nuevo</a>
+        </div>
+      </div>
+      {% if juegos %}
+      <div class="nestgrow-card p-0 overflow-hidden">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" style="font-size:0.85rem">
+            <thead style="background:#f8f6ff">
+              <tr>
+                <th class="ps-3" style="width:2rem"></th>
+                <th>Juego</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for juego in juegos %}
+              <tr>
+                <td class="ps-3" style="font-size:1.2rem">
+                  {% if juego.game_type == 'drag_and_drop' %}🖱️
+                  {% elif juego.game_type == 'word_search' %}🔍
+                  {% elif juego.game_type == 'puzzle' %}🧩
+                  {% elif juego.game_type == 'painting' %}🎨
+                  {% elif juego.game_type == 'audio_matching' %}🎵
+                  {% elif juego.game_type == 'memoria' %}🃏
+                  {% elif juego.game_type == 'ahorcado' %}🅰️
+                  {% elif juego.game_type == 'quiz' %}❓
+                  {% elif juego.game_type == 'ordenar_letras' %}🔤
+                  {% elif juego.game_type == 'globos' %}🎈
+                  {% else %}🎮{% endif %}
+                </td>
+                <td>
+                  <div class="fw-bold">{{ juego.title|truncatechars:28 }}</div>
+                  <div style="font-size:0.75rem;color:{{ juego.category.color }}">{{ juego.category.icon }} {{ juego.category.name }}</div>
+                </td>
+                <td class="text-center">
+                  <a href="{% url 'games:toggle_juego' juego.pk %}"
+                     class="badge rounded-pill text-decoration-none"
+                     style="font-size:0.75rem;{% if juego.is_active %}background:#d4edda;color:#155724{% else %}background:#f8d7da;color:#721c24{% endif %}">
+                    {% if juego.is_active %}✅{% else %}🔒{% endif %}
+                  </a>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex gap-1 justify-content-center">
+                    <a href="{{ juego.get_absolute_url }}" class="btn btn-sm btn-outline-primary rounded-pill p-1 px-2" title="Ver juego" style="font-size:0.75rem">▶</a>
+                    <a href="{% url 'games:editar_juego' juego.pk %}" class="btn btn-sm btn-outline-warning rounded-pill p-1 px-2" title="Editar" style="font-size:0.75rem">✏️</a>
+                    <a href="{% url 'games:eliminar_juego' juego.pk %}" class="btn btn-sm btn-outline-danger rounded-pill p-1 px-2" title="Eliminar" style="font-size:0.75rem">🗑️</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% else %}
+      <div class="nestgrow-card p-4 text-center">
+        <div style="font-size:2rem">🎮</div>
+        <p class="text-muted small fw-bold mt-2 mb-2">Aún no hay juegos.</p>
+        <a href="{% url 'games:crear_juego' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">➕ Crear juego</a>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Rotar chevron al abrir/cerrar cada sección de salón
+document.querySelectorAll('#accordionPeriodos [data-bs-toggle="collapse"]').forEach(function(trigger) {
+  var target = document.querySelector(trigger.getAttribute('data-bs-target'));
+  if (!target) return;
+  var icon = trigger.querySelector('.periodo-collapse-icon');
+  target.addEventListener('show.bs.collapse', function() {
+    if (icon) icon.style.transform = 'rotate(-180deg)';
+  });
+  target.addEventListener('hide.bs.collapse', function() {
+    if (icon) icon.style.transform = 'rotate(0deg)';
+  });
+});
+// Estado inicial del ícono para el primer salón (ya abierto)
+var firstIcon = document.querySelector('#accordionPeriodos .periodo-collapse-icon.rotated');
+if (firstIcon) firstIcon.style.transform = 'rotate(-180deg)';
+</script>
 {% endblock %}

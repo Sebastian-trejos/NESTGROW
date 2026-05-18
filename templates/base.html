@@ -32,16 +32,6 @@
   {% if user.role == "estudiante" %}
   <div id="pendingBadges" data-badges="{% if logros_nuevos %}[{% for l in logros_nuevos %}{"icono":"{{ l.logro.icono }}","nombre":"{{ l.logro.nombre }}","descripcion":"{{ l.logro.descripcion }}"}{% if not forloop.last %},{% endif %}{% endfor %}]{% else %}[]{% endif %}"></div>
   {% endif %}
-          {% if user.role == 'estudiante' %}
-          <li class="nav-item">
-            <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:game_list' %}"
-               style="background:#f0eeff;color:#6C63FF;transition:all 0.3s"
-               onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(108,99,255,0.25)';this.style.background='#e0d9ff'"
-               onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0eeff'">
-              <i class="bi bi-controller"></i> Minijuegos
-            </a>
-          </li>
-          {% endif %}
 {% if user.role == 'estudiante' %}
 <li class="nav-item">
   <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:category_list' %}"
@@ -102,11 +92,9 @@
     <i class="bi bi-gear-fill me-1"></i> Gestión
   </a>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'talleres:lista' %}"><i class="bi bi-clipboard2-check-fill me-2"></i>Talleres</a></li>
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'talleres:lista_periodos' %}"><i class="bi bi-calendar2-week-fill me-2"></i>Períodos</a></li>
+    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'talleres:lista_periodos' %}"><i class="bi bi-calendar2-week-fill me-2"></i>Gestión</a></li>
     <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'historia:panel_historia_profesor' %}"><i class="bi bi-map-fill me-2"></i>Modo Historia</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:gestionar_juegos' %}"><i class="bi bi-controller me-2"></i>Juegos</a></li>
     <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:gestionar_categorias' %}"><i class="bi bi-book-fill me-2"></i>Categorías</a></li>
     <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:museo_virtual' %}"><i class="bi bi-palette-fill me-2"></i>Museo Virtual</a></li>
   </ul>

@@ -9,7 +9,7 @@ import json
 from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, PuzzleImage, TiendaItem, InventarioEstudiante
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
-from apps.accounts.decorators import profesor_required
+from apps.accounts.decorators import profesor_required, estudiante_required
 
 
 # ── Vocabulario (JSON cliente) ───────────────────────────────────────────────
@@ -695,6 +695,37 @@ def museo_virtual(request):
             user=request.user
         ).select_related('vocabulary_item').order_by('-created_at')
         return render(request, 'games/museo_virtual.html', {'artworks': artworks})
+
+
+@login_required
+@estudiante_required
+def museo_global(request):
+    """Foro visual: obras de todos los estudiantes del mismo salón, agrupadas por autor."""
+    profile = request.user.estudiante_profile
+    if not profile.salon:
+        messages.warning(request, 'Únete a un salón para ver el museo global.')
+        return redirect('games:museo_virtual')
+
+    artworks_qs = (
+        Artwork.objects
+        .filter(user__estudiante_profile__salon=profile.salon)
+        .select_related('user', 'vocabulary_item')
+        .order_by('user__first_name', 'user__last_name', '-created_at')
+    )
+
+    # Agrupar por autor
+    autores = {}
+    for obra in artworks_qs:
+        uid = obra.user_id
+        if uid not in autores:
+            autores[uid] = {'user': obra.user, 'obras': []}
+        autores[uid]['obras'].append(obra)
+
+    return render(request, 'games/museo_global.html', {
+        'autores': list(autores.values()),
+        'salon': profile.salon,
+        'total_obras': artworks_qs.count(),
+    })
 
 
 @login_required
