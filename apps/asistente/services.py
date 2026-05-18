@@ -433,21 +433,25 @@ class AsistenteMilo:
             .values_list('logro__nombre', flat=True)
         )
 
+        # Leer perfil — cada campo por separado para evitar que un error
+        # en uno reemplace datos válidos de los demás con defaults.
         try:
             perfil_est = EstudianteProfile.objects.get(user=estudiante)
-            vocab_desbloqueado = perfil_est.vocabulario_desbloqueado.count()
             nivel = perfil_est.nivel
             puntos = perfil_est.puntos_totales
-        except Exception:
-            vocab_desbloqueado = 0
-            nivel = 1
-            puntos = 0
+            estrellas_totales = perfil_est.total_estrellas_historia
+        except EstudianteProfile.DoesNotExist:
+            nivel, puntos, estrellas_totales = 1, 0, 0
+
+        # vocabulario_desbloqueado es related_name sobre CustomUser, no EstudianteProfile
+        vocab_desbloqueado = estudiante.vocabulario_desbloqueado.count()
 
         return {
             'tipo': 'estudiante_detalle',
             'estudiante': estudiante.get_full_name() or estudiante.username,
             'nivel': nivel,
-            'puntos': puntos,
+            'puntos_totales': puntos,
+            'estrellas_historia': estrellas_totales,
             'sesiones_taller': sesiones_data,
             'progreso_historia': historia_data,
             'vocabulario_desbloqueado': vocab_desbloqueado,

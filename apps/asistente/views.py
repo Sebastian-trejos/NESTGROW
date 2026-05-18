@@ -4,7 +4,6 @@ import asyncio
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.decorators import profesor_required
@@ -15,7 +14,6 @@ from .services import AsistenteMilo
 
 @profesor_required
 def index(request):
-    """Vista principal con las dos pestañas: Planear y Analizar."""
     try:
         perfil_prof = request.user.profesor_profile
         estudiantes = EstudianteProfile.objects.filter(
@@ -40,6 +38,36 @@ def index(request):
 @require_POST
 @profesor_required
 @ratelimit(key='user', rate='30/h', method='POST', block=False)
+def chat(request):
+    """Endpoint AJAX para el chat de planeación."""
+    was_limited = getattr(request, 'limited', False)
+    if was_limited:
+        return JsonResponse(
+            {'error': 'Has alcanzado el límite de 30 mensajes por hora. Intenta más tarde.'},
+            status=429,
+        )
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido.'}, status=400)
+
+    mensaje = (body.get('mensaje') or '').strip()
+    if not mensaje:
+        return JsonResponse({'error': 'El mensaje no puede estar vacío.'}, status=400)
+
+    milo = AsistenteMilo()
+    resultado = asyncio.run(milo.chat_planeacion(request.user, mensaje))
+
+    return JsonResponse({
+        'texto': resultado['texto'],
+        'motor': resultado['motor'],
+    })
+
+
+@require_POST
+@profesor_required
+@ratelimit(key='user', rate='30/h', method='POST', block=False)
 def limpiar_historial(request):
     was_limited = getattr(request, 'limited', False)
     if was_limited:
@@ -54,7 +82,6 @@ def limpiar_historial(request):
 @require_POST
 @profesor_required
 def analizar(request):
-    """Endpoint AJAX para los análisis de resultados (no WebSocket)."""
     try:
         body = json.loads(request.body)
     except json.JSONDecodeError:

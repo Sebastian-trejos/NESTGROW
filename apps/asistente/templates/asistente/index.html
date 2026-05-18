@@ -598,48 +598,9 @@
 
 {% block extra_js %}
 <script>
-  // ── WebSocket ───────────────────────────────────────────────────
-  const wsProto = window.location.protocol === 'https:' ? 'wss' : 'ws';
-  const chatWs = new WebSocket(`${wsProto}://${window.location.host}/ws/asistente/chat/`);
+  // ── Chat AJAX ───────────────────────────────────────────────────
+  const CHAT_URL = '{% url "asistente:chat" %}';
   let esperandoRespuesta = false;
-
-  chatWs.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    quitarPensando();
-
-    if (data.tipo === 'pensando') {
-      mostrarPensando();
-    } else if (data.tipo === 'respuesta') {
-      appendMensaje('assistant', data.texto, data.motor);
-      esperandoRespuesta = false;
-      habilitarEnvio();
-    } else if (data.tipo === 'error') {
-      appendMensaje('assistant', '⚠️ ' + data.texto, '');
-      esperandoRespuesta = false;
-      habilitarEnvio();
-    }
-  };
-
-  chatWs.onopen = () => {
-    console.log('AsistenteWS conectado');
-  };
-
-  chatWs.onclose = (e) => {
-    console.warn('AsistenteWS cerrado, code=', e.code);
-    if (e.code === 4003) {
-      appendMensaje('assistant', '⚠️ No tienes permiso para usar el asistente.', '');
-    } else if (e.code !== 1000) {
-      appendMensaje('assistant', '⚠️ Conexión perdida. Recarga la página para continuar.', '');
-    }
-    quitarPensando();
-    habilitarEnvio();
-  };
-
-  chatWs.onerror = (err) => {
-    console.error('AsistenteWS error:', err);
-    quitarPensando();
-    habilitarEnvio();
-  };
 
   // ── Enviar mensaje ──────────────────────────────────────────────
   function enviarMensaje() {
@@ -648,13 +609,7 @@
     const texto = input.value.trim();
     if (!texto) return;
 
-    if (chatWs.readyState !== WebSocket.OPEN) {
-      appendMensaje('assistant', '⚠️ Sin conexión con el asistente. Recarga la página.', '');
-      return;
-    }
-
     appendMensaje('user', texto, '');
-    chatWs.send(JSON.stringify({ mensaje: texto }));
     input.value = '';
     autoResizeTextarea(input);
 
@@ -662,6 +617,35 @@
     deshabilitarEnvio();
     mostrarPensando();
     scrollChat();
+
+    fetch(CHAT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ mensaje: texto }),
+    })
+    .then(r => {
+      if (r.status === 429) return { error: 'Has alcanzado el límite de 30 mensajes por hora. Intenta más tarde.' };
+      return r.json();
+    })
+    .then(data => {
+      quitarPensando();
+      if (data.error) {
+        appendMensaje('assistant', '⚠️ ' + data.error, '');
+      } else {
+        appendMensaje('assistant', data.texto, data.motor);
+      }
+      esperandoRespuesta = false;
+      habilitarEnvio();
+    })
+    .catch(() => {
+      quitarPensando();
+      appendMensaje('assistant', '⚠️ Error de red. Verifica tu conexión e intenta de nuevo.', '');
+      esperandoRespuesta = false;
+      habilitarEnvio();
+    });
   }
 
   function handleEnter(e) {

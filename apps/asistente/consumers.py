@@ -11,17 +11,33 @@ logger = logging.getLogger(__name__)
 class AsistenteConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        user = self.scope.get('user')
-        if not user or not user.is_authenticated or getattr(user, 'role', '') != 'profesor':
-            # Rechazar sin aceptar — cierre limpio desde el servidor
-            await self.close(code=4003)
-            return
-        self.profesor = user
-        await self.accept()
-        logger.info('AsistenteConsumer: %s conectado', user.username)
+        try:
+            user = self.scope.get('user')
+            logger.warning(
+                'AsistenteWS connect: user=%s auth=%s role=%s',
+                getattr(user, 'username', None),
+                getattr(user, 'is_authenticated', False),
+                getattr(user, 'role', '?'),
+            )
+
+            if not user or not user.is_authenticated or getattr(user, 'role', '') != 'profesor':
+                logger.warning('AsistenteWS: acceso denegado')
+                await self.close(code=4003)
+                return
+
+            self.profesor = user
+            await self.accept()
+            logger.warning('AsistenteWS: %s aceptado', user.username)
+
+        except Exception as exc:
+            logger.exception('AsistenteWS connect EXCEPCION: %s', exc)
+            try:
+                await self.close(code=4000)
+            except Exception:
+                pass
 
     async def disconnect(self, code):
-        logger.debug('AsistenteConsumer: desconectado (code=%s)', code)
+        logger.warning('AsistenteWS: desconectado code=%s', code)
 
     async def receive(self, text_data=None, bytes_data=None):
         try:
@@ -46,7 +62,7 @@ class AsistenteConsumer(AsyncWebsocketConsumer):
                 'motor': resultado['motor'],
             }))
         except Exception as exc:
-            logger.exception('Error en AsistenteConsumer.receive: %s', exc)
+            logger.exception('AsistenteWS receive error: %s', exc)
             await self._error('Ocurrió un error procesando tu mensaje. Intenta de nuevo.')
 
     async def _error(self, msg: str):
