@@ -170,7 +170,25 @@
     padding: 0.75rem 1rem;
     font-size: 0.92rem;
     line-height: 1.55;
-    white-space: pre-wrap;
+  }
+  /* Estilos Markdown dentro de las burbujas del asistente */
+  .msg-assistant h1,.msg-assistant h2,.msg-assistant h3 {
+    font-size: 0.98rem; font-weight: 800; margin: 0.5rem 0 0.2rem; color: #5a52cc;
+  }
+  .msg-assistant h4,.msg-assistant h5 {
+    font-size: 0.92rem; font-weight: 800; margin: 0.4rem 0 0.15rem;
+  }
+  .msg-assistant ul,.msg-assistant ol { padding-left: 1.3rem; margin: 0.25rem 0; }
+  .msg-assistant li { margin-bottom: 0.15rem; }
+  .msg-assistant strong { font-weight: 800; }
+  .msg-assistant em { font-style: italic; }
+  .msg-assistant p { margin: 0.25rem 0; }
+  .msg-assistant hr { border: none; border-top: 1px solid #ddd; margin: 0.6rem 0; }
+  .msg-assistant code {
+    background: #e8e8f5; padding: 1px 5px; border-radius: 4px; font-size: 0.82em; font-family: monospace;
+  }
+  .msg-assistant blockquote {
+    border-left: 3px solid #6C63FF; margin: 0.4rem 0; padding-left: 0.7rem; color: #666;
   }
   .msg-motor-badge {
     display: inline-block;
@@ -330,13 +348,21 @@
     padding: 1.2rem;
     margin-top: 1rem;
     border-left: 4px solid var(--milo-purple);
-    white-space: pre-wrap;
     font-size: 0.88rem;
     line-height: 1.7;
     color: #333;
     display: none;
   }
   .resultado-analisis.show { display: block; animation: bubbleIn 0.3s ease; }
+  .resultado-analisis h1,.resultado-analisis h2,.resultado-analisis h3 {
+    font-size: 0.95rem; font-weight: 800; margin: 0.5rem 0 0.2rem; color: #5a52cc;
+  }
+  .resultado-analisis h4,.resultado-analisis h5 { font-size: 0.88rem; font-weight: 800; margin: 0.3rem 0 0.1rem; }
+  .resultado-analisis ul,.resultado-analisis ol { padding-left: 1.3rem; margin: 0.2rem 0; }
+  .resultado-analisis li { margin-bottom: 0.1rem; }
+  .resultado-analisis strong { font-weight: 800; }
+  .resultado-analisis p { margin: 0.25rem 0; }
+  .resultado-analisis code { background:#eee; padding:1px 4px; border-radius:4px; font-size:0.82em; }
   .resultado-footer {
     display: flex;
     align-items: center;
@@ -459,16 +485,14 @@
         <div class="msg-assistant-wrap">
           <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
           <div>
-            <div class="msg-assistant">
-              ¡Hola, profe! 👋 Soy Milo, tu asistente educativo. Puedo ayudarte a:
+            <div class="msg-assistant" data-markdown>¡Hola, profe! 👋 Soy **Milo**, tu asistente educativo para NestGrow. Puedo ayudarte a:
 
-• Planear talleres y actividades de inglés
-• Generar preguntas listas para usar
-• Sugerir estrategias lúdicas
-• Crear diálogos y vocabulario
+- 🎯 **Planear talleres** con bloques listos para implementar en la plataforma
+- ❓ **Generar preguntas** de opción múltiple, casillas o párrafo libre
+- 🎮 **Sugerir minijuegos** según el tema que estés trabajando
+- 📝 **Crear vocabulario** y diálogos en inglés para primaria
 
-¿En qué te ayudo hoy?
-            </div>
+¿En qué te ayudo hoy?</div>
           </div>
         </div>
         {% else %}
@@ -479,7 +503,7 @@
           <div class="msg-assistant-wrap">
             <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
             <div>
-              <div class="msg-assistant">{{ msg.contenido }}</div>
+              <div class="msg-assistant" data-markdown>{{ msg.contenido }}</div>
               <span class="msg-motor-badge">vía {{ msg.motor_usado }}</span>
             </div>
           </div>
@@ -597,7 +621,16 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
 <script>
+  // Configurar marked
+  marked.setOptions({ breaks: true, gfm: true });
+
+  // Procesar historial cargado desde Django (data-markdown)
+  document.querySelectorAll('[data-markdown]').forEach(el => {
+    el.innerHTML = marked.parse(el.textContent || el.innerText);
+  });
+
   // ── Chat AJAX ───────────────────────────────────────────────────
   const CHAT_URL = '{% url "asistente:chat" %}';
   let esperandoRespuesta = false;
@@ -669,7 +702,7 @@
       wrap.innerHTML = `
         <div class="milo-avatar-msg">🐸<span class="ia-badge">IA</span></div>
         <div>
-          <div class="msg-assistant">${escapeHtml(texto)}</div>
+          <div class="msg-assistant">${marked.parse(texto)}</div>
           ${motor ? `<span class="msg-motor-badge">vía ${motor}</span>` : ''}
         </div>`;
       container.appendChild(wrap);
@@ -806,7 +839,7 @@
                        : data.motor === 'sin_datos' ? '' : '⚠️ Error';
 
       resEl.innerHTML = `
-        <div style="margin-bottom:0.5rem;">${escapeHtml(data.texto)}</div>
+        <div style="margin-bottom:0.5rem;">${marked.parse(data.texto)}</div>
         <div class="resultado-footer">
           <span class="timestamp-tag">📅 Generado el ${ahora}</span>
           <div class="d-flex gap-2 align-items-center flex-wrap">
