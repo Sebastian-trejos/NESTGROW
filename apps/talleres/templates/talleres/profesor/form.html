@@ -151,6 +151,7 @@
               <option value="opcion_multiple">⭕ Opción múltiple (una correcta)</option>
               <option value="casillas">☑️ Casillas (varias correctas)</option>
               <option value="parrafo">✍️ Párrafo libre</option>
+              <option value="dibujo">🎨 Dibujo en canvas</option>
             </select>
           </div>
           <div class="col-md-3">
@@ -173,6 +174,14 @@
             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
                     onclick="agregarOpcion()">+ Agregar opción</button>
             <div class="form-text">Marca como "Correcta" la(s) respuesta(s) correcta(s).</div>
+          </div>
+
+          <!-- Info dibujo (solo visible cuando tipo = dibujo) -->
+          <div class="col-12 d-none" id="seccion-dibujo-info">
+            <div class="p-3 rounded-3" style="background:#f0fdf4;border:2px solid #bbf7d0">
+              <div class="fw-bold small">🎨 El estudiante dibujará su respuesta</div>
+              <div class="text-muted small mt-1">Se considera correcta automáticamente y suma los puntos indicados. Podrás ver todos los dibujos en el panel de resultados del taller.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -252,7 +261,14 @@ let opciones = [];
 
 function actualizarSeccionOpciones() {
   const tipo = document.getElementById('p-tipo').value;
-  document.getElementById('seccion-opciones').style.display = tipo === 'parrafo' ? 'none' : '';
+  const sinOpciones = ['parrafo', 'dibujo'].includes(tipo);
+  document.getElementById('seccion-opciones').style.display = sinOpciones ? 'none' : '';
+  const infoDiv = document.getElementById('seccion-dibujo-info');
+  if (tipo === 'dibujo') {
+    infoDiv.classList.remove('d-none');
+  } else {
+    infoDiv.classList.add('d-none');
+  }
 }
 
 function agregarOpcion() {
@@ -290,7 +306,7 @@ async function guardarPregunta() {
   const enunciado = document.getElementById('p-enunciado').value.trim();
   if (!enunciado) { alert('⚠️ El enunciado es obligatorio.'); return; }
   const tipo = document.getElementById('p-tipo').value;
-  if (tipo !== 'parrafo') {
+  if (!['parrafo', 'dibujo'].includes(tipo)) {
     if (opciones.length === 0) { alert('⚠️ Agrega al menos una opción.'); return; }
     if (!opciones.some(o => o.es_correcta)) { alert('⚠️ Marca al menos una opción como correcta.'); return; }
   }

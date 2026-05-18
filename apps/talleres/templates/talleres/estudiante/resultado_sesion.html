@@ -24,6 +24,7 @@
   .resp-correcta   { background: #d4f5e0; border-left-color: #28a745; }
   .resp-incorrecta { background: #ffe5e5; border-left-color: #e53935; }
   .resp-parrafo    { background: #e8f4ff; border-left-color: #1565c0; }
+  .resp-dibujo     { background: #f0fdf4; border-left-color: #22c55e; }
 </style>
 {% endblock %}
 
@@ -71,11 +72,21 @@
     <h5 class="font-fredoka mb-3" style="color:var(--primary)">📝 Resumen de respuestas</h5>
     {% for item in resumen %}
     {% with resp=item.respuesta preg=item.pregunta %}
-    <div class="resp-item {% if preg.tipo_respuesta == 'parrafo' %}resp-parrafo{% elif resp and resp.es_correcta %}resp-correcta{% else %}resp-incorrecta{% endif %}">
+    <div class="resp-item {% if preg.tipo_respuesta == 'dibujo' %}resp-dibujo{% elif preg.tipo_respuesta == 'parrafo' %}resp-parrafo{% elif resp and resp.es_correcta %}resp-correcta{% else %}resp-incorrecta{% endif %}">
       <div class="fw-bold mb-1" style="font-size:.95rem">{{ preg.enunciado }}</div>
       {% if resp %}
         {% if preg.tipo_respuesta == 'parrafo' %}
           <div class="text-muted small">✍️ {{ resp.texto_respuesta|default:"Sin respuesta" }}</div>
+        {% elif preg.tipo_respuesta == 'dibujo' %}
+          {% if resp.dibujo_data %}
+          <div class="mt-2">
+            <img src="{{ resp.dibujo_data }}" alt="Tu dibujo"
+                 style="max-width:220px;border-radius:8px;border:1.5px solid #bbf7d0">
+            <div class="text-muted small mt-1">🎨 +{{ preg.puntaje_parcial }} pts</div>
+          </div>
+          {% else %}
+          <div class="text-muted small">Sin dibujo enviado</div>
+          {% endif %}
         {% else %}
           {% for op in resp.opciones_elegidas.all %}
           <div class="small">{% if op.es_correcta %}✅{% else %}❌{% endif %} {{ op.texto }}</div>

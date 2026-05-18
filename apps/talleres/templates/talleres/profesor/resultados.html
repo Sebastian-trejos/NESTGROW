@@ -16,6 +16,7 @@
   .resp-incorrecta{ background:#f8d7da; border-left:4px solid #dc3545; }
   .resp-parrafo   { background:#fff9ee; border-left:4px solid #FFB347; }
   .resp-pendiente { background:#f0eeff; border-left:4px solid #9e9e9e; }
+  .resp-dibujo    { background:#f0fdf4; border-left:4px solid #22c55e; }
 
   .accordion-button:not(.collapsed) {
     background: #f0eeff;
@@ -174,7 +175,8 @@
             {% for b_item in item.bloques %}
             <div class="p-3 rounded-3
               {% if b_item.respuesta %}
-                {% if b_item.pregunta.tipo_respuesta == 'parrafo' %}resp-parrafo
+                {% if b_item.pregunta.tipo_respuesta == 'dibujo' %}resp-dibujo
+                {% elif b_item.pregunta.tipo_respuesta == 'parrafo' %}resp-parrafo
                 {% elif b_item.respuesta.es_correcta %}resp-correcta
                 {% else %}resp-incorrecta{% endif %}
               {% else %}resp-pendiente{% endif %}">
@@ -187,6 +189,8 @@
                 <div class="flex-shrink-0">
                   {% if not b_item.respuesta %}
                     <span class="badge rounded-pill" style="background:#e0e0e0;color:#555">Sin respuesta</span>
+                  {% elif b_item.pregunta.tipo_respuesta == 'dibujo' %}
+                    <span class="badge rounded-pill" style="background:#22c55e;color:white">🎨 Dibujo · +{{ b_item.pregunta.puntaje_parcial }} pts</span>
                   {% elif b_item.pregunta.tipo_respuesta == 'parrafo' %}
                     <span class="badge rounded-pill" style="background:#FFB347;color:white">✍️ Párrafo</span>
                   {% elif b_item.respuesta.es_correcta %}
@@ -199,7 +203,17 @@
 
               {% if b_item.respuesta %}
               <div class="mt-2 small">
-                {% if b_item.pregunta.tipo_respuesta == 'parrafo' %}
+                {% if b_item.pregunta.tipo_respuesta == 'dibujo' %}
+                  {% if b_item.respuesta.dibujo_data %}
+                  <img src="{{ b_item.respuesta.dibujo_data }}"
+                       alt="Dibujo de {{ sesion.estudiante.first_name|default:sesion.estudiante.username }}"
+                       style="max-width:200px;border-radius:8px;border:1.5px solid #bbf7d0;cursor:pointer"
+                       onclick="abrirDibujo(this.src)"
+                       title="Click para ampliar">
+                  {% else %}
+                  <span class="text-muted">Sin dibujo enviado.</span>
+                  {% endif %}
+                {% elif b_item.pregunta.tipo_respuesta == 'parrafo' %}
                   {% if b_item.respuesta.texto_respuesta %}
                   <div class="p-2 rounded-2" style="background:rgba(255,255,255,0.6)">
                     {{ b_item.respuesta.texto_respuesta }}
@@ -246,4 +260,33 @@
   {% endif %}
 
 </div>
+
+<!-- Modal para ampliar dibujos -->
+<div id="modal-dibujo"
+     class="d-none position-fixed top-0 start-0 w-100 h-100"
+     style="background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center"
+     onclick="cerrarDibujo()">
+  <div class="nestgrow-card p-3 text-center" style="max-width:540px;width:92%" onclick="event.stopPropagation()">
+    <img id="modal-dibujo-img" src="" alt="Dibujo ampliado"
+         style="width:100%;border-radius:10px">
+    <div class="small text-muted mt-2">Click fuera para cerrar</div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function abrirDibujo(src) {
+  const m = document.getElementById('modal-dibujo');
+  document.getElementById('modal-dibujo-img').src = src;
+  m.classList.remove('d-none');
+  m.style.display = 'flex';
+}
+function cerrarDibujo() {
+  const m = document.getElementById('modal-dibujo');
+  m.classList.add('d-none');
+  m.style.display = 'none';
+}
+</script>
 {% endblock %}

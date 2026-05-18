@@ -474,6 +474,11 @@ def guardar_respuesta(request, pk, bpk):
         respuesta.es_correcta = True  # párrafo libre siempre suma puntos
         respuesta.save()
         es_correcta = True
+    elif pregunta.tipo_respuesta == 'dibujo':
+        respuesta.dibujo_data = request.POST.get('dibujo_data', '').strip()
+        respuesta.es_correcta = True  # dibujo siempre suma puntos (igual que párrafo)
+        respuesta.save()
+        es_correcta = True
     else:
         respuesta.save()
         opciones_ids = [int(x) for x in request.POST.getlist('opciones') if x.isdigit()]

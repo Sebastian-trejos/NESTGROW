@@ -71,6 +71,27 @@
       </label>
       {% endfor %}
     </div>
+
+    {% elif q.tipo_respuesta == 'dibujo' %}
+    <div class="mb-3">
+      <p class="small fw-bold text-muted mb-2">🎨 Dibuja tu respuesta en el recuadro de abajo:</p>
+      <div class="d-flex gap-2 mb-2 align-items-center flex-wrap">
+        <label class="small fw-bold text-muted">Color:</label>
+        <input type="color" id="canvas-color" value="#222222"
+               style="width:36px;height:36px;border:none;border-radius:8px;cursor:pointer;padding:2px">
+        <label class="small fw-bold text-muted ms-2">Grosor:</label>
+        <input type="range" id="canvas-size" min="2" max="24" value="5" style="width:80px">
+        <button type="button" onclick="borrarCanvas()"
+                class="btn btn-sm rounded-pill ms-auto fw-bold"
+                style="background:#fff0f0;color:#e53e3e;border:1.5px solid #feb2b2">
+          🗑️ Borrar
+        </button>
+      </div>
+      <canvas id="drawing-canvas" width="640" height="300"
+              style="width:100%;height:auto;border:2px solid #d8d0ff;border-radius:12px;
+                     background:#ffffff;cursor:crosshair;touch-action:none">
+      </canvas>
+    </div>
     {% endif %}
 
     <button id="btn-responder" class="btn btn-nestgrow btn-primary-nestgrow w-100 fw-bold"
@@ -155,6 +176,15 @@ async function enviarRespuesta(bloquePk, tipoRespuesta) {
 
   if (tipoRespuesta === 'parrafo') {
     fd.append('texto_respuesta', document.getElementById('respuesta-parrafo').value);
+  } else if (tipoRespuesta === 'dibujo') {
+    const canvas = document.getElementById('drawing-canvas');
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width; blank.height = canvas.height;
+    if (canvas.toDataURL() === blank.toDataURL()) {
+      alert('⚠️ ¡Dibuja algo antes de confirmar!');
+      btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return;
+    }
+    fd.append('dibujo_data', canvas.toDataURL('image/png'));
   } else if (tipoRespuesta === 'opcion_multiple') {
     const sel = document.querySelector('input[name="opcion"]:checked');
     if (!sel) { alert('⚠️ Selecciona una opción.'); btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return; }
@@ -206,8 +236,9 @@ function mostrarFeedback(esCorrecta, puntos, next) {
     document.getElementById('feedback-texto').textContent = '¡Respuesta enviada!';
     document.getElementById('feedback-puntos').textContent = 'Respuesta libre registrada.';
   } else if (esCorrecta) {
-    document.getElementById('feedback-icono').textContent = '🎉';
-    document.getElementById('feedback-texto').textContent = '¡Correcto!';
+    const esDibujo = !!document.getElementById('drawing-canvas');
+    document.getElementById('feedback-icono').textContent = esDibujo ? '🎨' : '🎉';
+    document.getElementById('feedback-texto').textContent = esDibujo ? '¡Dibujo enviado!' : '¡Correcto!';
     document.getElementById('feedback-puntos').textContent = `+${puntos} puntos`;
   } else {
     document.getElementById('feedback-icono').textContent = '💪';
@@ -222,6 +253,52 @@ function mostrarFeedback(esCorrecta, puntos, next) {
       window.location.href = RESOLVER_URL;
     }
   }, 1800);
+}
+
+// ── Canvas de dibujo ──────────────────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('drawing-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let drawing = false, lastX = 0, lastY = 0;
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const sx = canvas.width / r.width, sy = canvas.height / r.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left) * sx, y: (src.clientY - r.top) * sy };
+  }
+  function startDraw(e) {
+    e.preventDefault(); drawing = true;
+    const p = getPos(e); lastX = p.x; lastY = p.y;
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, parseInt(document.getElementById('canvas-size').value) / 2, 0, Math.PI * 2);
+    ctx.fillStyle = document.getElementById('canvas-color').value;
+    ctx.fill();
+  }
+  function draw(e) {
+    if (!drawing) return; e.preventDefault();
+    const p = getPos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = document.getElementById('canvas-color').value;
+    ctx.lineWidth = parseInt(document.getElementById('canvas-size').value);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+  function endDraw() { drawing = false; }
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('mouseleave', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', draw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
+})();
+
+function borrarCanvas() {
+  const c = document.getElementById('drawing-canvas');
+  if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
 }
 </script>
 {% endblock %}

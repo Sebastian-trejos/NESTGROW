@@ -95,6 +95,7 @@ class BloquePregunta(TimeStampedModel):
         ('opcion_multiple', '⭕ Opción múltiple (una correcta)'),
         ('casillas', '☑️ Casillas (varias correctas)'),
         ('parrafo', '✍️ Párrafo libre'),
+        ('dibujo', '🎨 Dibujo en canvas'),
     ]
     bloque = models.OneToOneField(
         BloqueTaller, on_delete=models.CASCADE, related_name='bloque_pregunta'
@@ -158,6 +159,12 @@ class RespuestaEstudiante(TimeStampedModel):
     texto_respuesta = models.TextField(blank=True)
     opciones_elegidas = models.ManyToManyField(OpcionRespuesta, blank=True)
     es_correcta = models.BooleanField(null=True, blank=True)
+    dibujo_data = models.TextField(
+        blank=True,
+        default='',
+        verbose_name='Dibujo (base64 PNG)',
+        help_text='Data URL base64 del canvas cuando tipo_respuesta es dibujo.',
+    )
 
     class Meta:
         verbose_name = 'Respuesta de Estudiante'
