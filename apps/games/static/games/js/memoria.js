@@ -148,6 +148,7 @@
     return 1;
   }
 
+  /** Animación completa de revuelta (fácil): fly-in FLIP */
   function animateShuffle(grid) {
     return new Promise((resolve) => {
       const movable = [...grid.querySelectorAll('.memory-slot:not(.slot-matched)')];
@@ -156,7 +157,6 @@
         return;
       }
 
-      /** Nueva orden aleatoria dentro del DOM; si cae igual, intercambiámos dos fichas para que sí se perciba movimiento */
       let order = shuffle([...movable]);
       if (
         order.every((el, i) => el === movable[i]) &&
@@ -210,6 +210,114 @@
     });
   }
 
+  /**
+   * Animación parcial de revuelta (medio/difícil): fade-out → cambio de orden CSS → fade-in.
+   * Usa la propiedad CSS `order` para reordenar visualmente sin mover el DOM,
+   * evitando que las cartas ya emparejadas/desaparecidas reinicien sus animaciones.
+   * Revuelve la mitad de los pares; ninguna carta puede ir a la posición de su par.
+   */
+  function animatePartialShuffle(grid, pairGoal) {
+    return new Promise((resolve) => {
+      const allSlots = [...grid.children];
+
+      // Obtener el valor CSS order actual de un slot
+      const getOrder = (slot) => parseInt(slot.style.order ?? '0') || 0;
+
+      // Agrupar slots no emparejados por pairId
+      const pairMap = new Map();
+      allSlots.forEach((slot) => {
+        if (slot.classList.contains('slot-matched')) return;
+        const card = slot.querySelector('.memory-card');
+        if (!card) return;
+        const pid = card.dataset.pairId;
+        if (!pairMap.has(pid)) pairMap.set(pid, []);
+        pairMap.get(pid).push(slot);
+      });
+
+      // Solo pares completos (ambas cartas disponibles)
+      const completePairs = [...pairMap.values()].filter((p) => p.length === 2);
+      if (completePairs.length < 2) { resolve(); return; }
+
+      const numToShuffle = Math.max(1, Math.ceil(pairGoal / 2));
+      const chosenPairs = shuffle(completePairs).slice(0, Math.min(numToShuffle, completePairs.length));
+
+      const selectedSlots = chosenPairs.flatMap((p) => p);
+
+      // Valores CSS order actuales de cada slot seleccionado
+      const selectedOrders = selectedSlots.map(getOrder);
+
+      // Mapa de posición prohibida: un slot no puede tomar el order de su par
+      const forbiddenMap = new Map();
+      chosenPairs.forEach(([a, b]) => {
+        forbiddenMap.set(a, getOrder(b));
+        forbiddenMap.set(b, getOrder(a));
+      });
+
+      const n = selectedSlots.length;
+      let perm = shuffle([...Array(n).keys()]);
+
+      function fixViolations() {
+        for (let attempt = 0; attempt < 40; attempt++) {
+          const vIdx = perm.findIndex(
+            (pi, i) => selectedOrders[pi] === forbiddenMap.get(selectedSlots[i])
+          );
+          if (vIdx === -1) break;
+          let fixed = false;
+          for (let j = 0; j < n; j++) {
+            if (j === vIdx) continue;
+            if (
+              selectedOrders[perm[j]] !== forbiddenMap.get(selectedSlots[vIdx]) &&
+              selectedOrders[perm[vIdx]] !== forbiddenMap.get(selectedSlots[j])
+            ) {
+              [perm[vIdx], perm[j]] = [perm[j], perm[vIdx]];
+              fixed = true;
+              break;
+            }
+          }
+          if (!fixed) break;
+        }
+      }
+
+      fixViolations();
+
+      // Garantizar que al menos algo se mueva
+      if (perm.every((v, i) => v === i) && n >= 2) {
+        [perm[0], perm[1]] = [perm[1], perm[0]];
+        fixViolations();
+      }
+
+      // Fade out de las cartas seleccionadas
+      selectedSlots.forEach((slot) => {
+        slot.style.transition = 'opacity 0.32s ease';
+        slot.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        // Reordenar visualmente cambiando CSS order — sin mover el DOM
+        selectedSlots.forEach((slot, i) => {
+          slot.style.order = selectedOrders[perm[i]];
+        });
+
+        // Fade in
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            selectedSlots.forEach((slot) => {
+              slot.style.transition = 'opacity 0.38s ease';
+              slot.style.opacity = '1';
+            });
+            setTimeout(() => {
+              selectedSlots.forEach((slot) => {
+                slot.style.transition = '';
+                slot.style.opacity = '';
+              });
+              resolve();
+            }, 420);
+          });
+        });
+      }, 370);
+    });
+  }
+
   function initMemoria(opts) {
     const {
       VOCABULARY,
@@ -226,7 +334,7 @@
       autoStartPlay = false,
     } = opts;
 
-    let ptsPerAction = POINTS_REWARD; // se recalcula en init() al conocer num pares
+    let ptsPerAction = POINTS_REWARD;
     let flipped = [],
       matched = 0,
       score = 0,
@@ -236,15 +344,18 @@
       timerInterval,
       timeSpent = 0;
     let canFlip = true;
-    let shuffleTimer = null;
-    let blackoutTimer = null;
+    let shuffleTimer = null;       // setInterval para modo fácil
+    let shuffleTickTimer = null;   // setTimeout para modo medio/difícil
+    let shuffleCount = 0;          // contador de revueltas (para corte de luz en difícil)
+    let wrongStreak = 0;           // errores consecutivos (penalidad cada 3)
     let lightsOutActive = false;
+    let blackoutTimer = null;
     let subPlan = null;
     let activeWords = [];
 
     const pairGoal = PAIRS_BY_DIFF[DIFFICULTY] || 6;
-    const shuffleEveryMs = 15000;
-    const usePhaseOrder = DIFFICULTY === 2;
+    const shuffleEveryMs = 15000; // modo fácil
+    const usePhaseOrder = false; // mecánica de subcategorías eliminada
     const useBlackout = DIFFICULTY === 3;
 
     const bannerEl = document.getElementById('memBannerText');
@@ -308,12 +419,12 @@
         `<div class="memory-face memory-cover" aria-hidden="true">` +
         `<span class="mem-cover-pattern"></span>` +
         `<img class="memory-milo-thumb" src="${MILO_CARD_BACK_URL}" alt="" width="64" height="64" draggable="false">` +
-        '<span class="memory-deco">✨</span></div>' +
+        '</div>' +
         `<div class="memory-face memory-reveal">` +
         `<span class="memory-emoji">${emoji}</span>` +
         `<span class="memory-lang">${text}</span>` +
         '</div></div></div>';
-      wrap.querySelector('.memory-card').addEventListener('click', (e) => {
+      wrap.querySelector('.memory-card').addEventListener('click', () => {
         flipCard(wrap.querySelector('.memory-card'));
       });
       return wrap;
@@ -326,6 +437,7 @@
       setTimeout(() => { grid.dataset.freezeShuffle = '0'; }, ms);
     }
 
+    /** Revuelta completa en intervalos fijos — solo modo fácil */
     function scheduleShuffle() {
       clearInterval(shuffleTimer);
       shuffleTimer = setInterval(async () => {
@@ -336,30 +448,66 @@
       }, shuffleEveryMs);
     }
 
-    function triggerBlackout() {
-      clearTimeout(blackoutTimer);
-      const run = () => {
-        const ov = document.getElementById('memBlackout');
-        if (!ov) return;
-        lightsOutActive = true;
-        document.querySelectorAll('.memory-card.flipped:not(.matched)').forEach((card) => {
-          const inn = card.querySelector('.memory-inner');
-          if (inn) inn.classList.remove('flipped');
-          card.classList.remove('flipped');
-        });
-        flipped = [];
-        canFlip = false;
-        ov.classList.add('mem-blackout--on');
-        ov.setAttribute('aria-hidden', 'false');
-        setTimeout(() => {
-          ov.classList.remove('mem-blackout--on');
-          ov.setAttribute('aria-hidden', 'true');
-          lightsOutActive = false;
-          canFlip = true;
-        }, 1900);
-        blackoutTimer = setTimeout(run, 30000);
-      };
-      blackoutTimer = setTimeout(run, 30000);
+    /** Revuelta parcial probabilística — modo medio y difícil.
+     *  Espera 20 s, luego cada segundo tiene 1/4 de probabilidad de revolver. */
+    function scheduleRandomShuffle() {
+      clearTimeout(shuffleTickTimer);
+      shuffleTickTimer = setTimeout(() => {
+        function tick() {
+          clearTimeout(shuffleTickTimer);
+          shuffleTickTimer = setTimeout(async () => {
+            const grid = document.getElementById('memoryGrid');
+            if (
+              !grid ||
+              grid.dataset.freezeShuffle === '1' ||
+              lightsOutActive ||
+              flipped.length ||
+              !canFlip
+            ) {
+              tick();
+              return;
+            }
+            if (Math.random() < 0.25) {
+              // Corte de luz en difícil: se activa ANTES de la revuelta (misma llamada de evento)
+              if (useBlackout && (shuffleCount + 1) % 3 === 0) {
+                triggerBlackoutOnce();
+              }
+              grid.dataset.freezeShuffle = '1';
+              await animatePartialShuffle(grid, pairGoal);
+              grid.dataset.freezeShuffle = '0';
+              shuffleCount++;
+              // Cooldown: esperar 20 s antes de que pueda volver a ocurrir una revuelta
+              clearTimeout(shuffleTickTimer);
+              shuffleTickTimer = setTimeout(() => tick(), 20000);
+            } else {
+              tick();
+            }
+          }, 1000);
+        }
+        tick();
+      }, 20000);
+    }
+
+    /** Corte de luz puntual (hard mode), desencadenado por conteo de revueltas */
+    function triggerBlackoutOnce() {
+      const ov = document.getElementById('memBlackout');
+      if (!ov || lightsOutActive) return;
+      lightsOutActive = true;
+      document.querySelectorAll('.memory-card.flipped:not(.matched)').forEach((card) => {
+        const inn = card.querySelector('.memory-inner');
+        if (inn) inn.classList.remove('flipped');
+        card.classList.remove('flipped');
+      });
+      flipped = [];
+      canFlip = false;
+      ov.classList.add('mem-blackout--on');
+      ov.setAttribute('aria-hidden', 'false');
+      setTimeout(() => {
+        ov.classList.remove('mem-blackout--on');
+        ov.setAttribute('aria-hidden', 'true');
+        lightsOutActive = false;
+        canFlip = true;
+      }, 2500);
     }
 
     function init() {
@@ -396,10 +544,18 @@
       );
       const pc = cards.length === 16 ? 'pairs8' : cards.length === 12 ? 'pairs6' : 'pairs4';
       grid.classList.add(`memory-grid--${pc}`);
-      cards.forEach((c) => grid.appendChild(buildCard(c.w, c.i, c.type)));
+      cards.forEach((c, idx) => {
+        const slot = buildCard(c.w, c.i, c.type);
+        slot.style.order = idx; // necesario para animatePartialShuffle con CSS order
+        grid.appendChild(slot);
+      });
 
-      scheduleShuffle();
-      if (useBlackout) triggerBlackout();
+      // Programar revueltas según dificultad
+      if (DIFFICULTY === 1) {
+        scheduleShuffle();
+      } else {
+        scheduleRandomShuffle();
+      }
 
       startTime = Date.now();
       timerInterval = setInterval(() => {
@@ -411,12 +567,22 @@
       }, 1000);
     }
 
-    function applyPenalty() {
-      score = Math.max(0, score - PENALTY_AMOUNT);
-      const sd = document.getElementById('scoreDisplay');
-      if (sd) sd.textContent = score;
-      showToast(`¡Ups! -${PENALTY_AMOUNT} pts`);
-      showScoreToast(PENALTY_AMOUNT, false);
+    /**
+     * Penalización cada 3 errores consecutivos.
+     * Los errores se resetean al encontrar un par correcto.
+     */
+    function handleWrongPair() {
+      wrongStreak++;
+      if (wrongStreak >= 3) {
+        wrongStreak = 0;
+        score = Math.max(0, score - PENALTY_AMOUNT);
+        const sd = document.getElementById('scoreDisplay');
+        if (sd) sd.textContent = score;
+        showToast(`¡3 errores seguidos! -${PENALTY_AMOUNT} pts`);
+        showScoreToast(PENALTY_AMOUNT, false);
+      } else {
+        showToast(`¡Casi! ${wrongStreak}/3 errores — ¡sigue intentando!`);
+      }
     }
 
     function pairAllowedForPhase(pairId) {
@@ -452,10 +618,18 @@
         if (samePair && tierOk) {
           a.classList.add('matched');
           b.classList.add('matched');
+          // Overlay verde + chulito, luego desaparece
+          a.classList.add('matched-success');
+          b.classList.add('matched-success');
+          setTimeout(() => {
+            a.closest('.memory-slot')?.classList.add('slot-vanish');
+            b.closest('.memory-slot')?.classList.add('slot-vanish');
+          }, 750);
           a.closest('.memory-slot')?.classList.add('slot-matched');
           b.closest('.memory-slot')?.classList.add('slot-matched');
           matched++;
           score += ptsPerAction;
+          wrongStreak = 0; // resetear errores consecutivos al acertar
           matchedPairIndices.add(Number(a.dataset.pairId));
           document.getElementById('matchCount').textContent = matched;
           document.getElementById('scoreDisplay').textContent = score;
@@ -466,7 +640,7 @@
           const totalPairs = parseInt(document.getElementById('totalPairs').textContent, 10);
           if (matched === totalPairs) endGame();
         } else {
-          applyPenalty();
+          handleWrongPair();
           setTimeout(() => {
             [a, b].forEach((x) => {
               const inn = x.querySelector('.memory-inner');
@@ -483,6 +657,7 @@
     async function endGame() {
       clearInterval(timerInterval);
       clearInterval(shuffleTimer);
+      clearTimeout(shuffleTickTimer);
       clearTimeout(blackoutTimer);
       lightsOutActive = false;
       const bob = document.getElementById('memBlackout');
@@ -535,9 +710,7 @@
     } else if (startBtn) {
       startBtn.addEventListener(
         'click',
-        () => {
-          init();
-        },
+        () => { init(); },
         { once: true },
       );
     } else {
@@ -549,5 +722,3 @@
 
   window.initMemoria = initMemoria;
 })();
-
-

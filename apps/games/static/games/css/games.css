@@ -270,19 +270,18 @@
 }
 
 .memory-cover {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.92), transparent 40%),
-    linear-gradient(140deg, #8b83ff 0%, var(--mem-accent, #6c63ff) 52%, #4f46e5 100%);
-  border: 4px solid rgba(255, 255, 255, 0.55);
+  background: #fffef8;
+  border: 3px solid #6c63ff;
 }
 
+/* Marco interior estilo carta de póker — naranja Milo */
 .mem-cover-pattern {
   position: absolute;
-  inset: 0;
-  opacity: 0.18;
-  background-image:
-    radial-gradient(circle at 20% 30%, white 10%, transparent 11%),
-    radial-gradient(circle at 72% 64%, white 11%, transparent 12%);
+  inset: 6px;
+  border: 2px solid #ffb347;
+  border-radius: 20px;
+  background: transparent;
+  pointer-events: none;
 }
 
 .memory-milo-thumb {
@@ -292,21 +291,13 @@
   height: auto !important;
   max-height: 78%;
   object-fit: contain;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 4px 10px rgba(108, 99, 255, 0.22));
   animation: miloTinyWiggle 5s ease-in-out infinite;
 }
 
 @keyframes miloTinyWiggle {
   0%, 100% { transform: rotate(-6deg); }
   50% { transform: rotate(8deg); }
-}
-
-.memory-deco {
-  position: absolute;
-  bottom: 12%;
-  right: 10%;
-  font-size: 1.15rem;
-  opacity: 0.92;
 }
 
 .memory-reveal {
@@ -331,15 +322,40 @@
   word-break: break-word;
 }
 
-.memory-card.matched .memory-reveal {
-  background: linear-gradient(155deg, #ecfdf5, #ecfdf9);
-  border-color: #22c55e;
-  animation: memMatchBurst 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Overlay verde con chulito — aparece sobre la carta al acertar el par */
+.memory-card.matched-success::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  background: #22c55e;
+  color: #fff;
+  font-size: 3.4rem;
+  font-weight: 900;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: matchSuccessIn 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes memMatchBurst {
-  from { transform: rotateY(180deg) scale(0.9); opacity: 0.75; }
-  to { transform: rotateY(180deg) scale(1); opacity: 1; }
+@keyframes matchSuccessIn {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.14); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+/* Slot desaparece suavemente tras la celebración */
+.memory-slot.slot-vanish {
+  animation: slotVanish 0.4s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes slotVanish {
+  0%   { opacity: 1; transform: scale(1); }
+  30%  { transform: scale(1.06); }
+  100% { opacity: 0; transform: scale(0.5); }
 }
 
 .mem-score-pop.stats-up {

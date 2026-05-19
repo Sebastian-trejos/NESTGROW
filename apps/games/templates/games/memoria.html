@@ -39,17 +39,10 @@
       <div class="milo-banner-text" id="memBannerText">¡Encuentra todas las parejas! Voltea las tarjetas y memoriza.</div>
     </div>
 
-    {% if game.difficulty == 2 %}
-    <div class="nestgrow-card mem-phase-card px-4 py-3 mb-3 text-center" role="status" aria-live="polite">
-      <div id="memPhaseHint" class="font-fredoka mb-0" style="color:var(--dark);font-size:1rem"></div>
-      <small class="text-muted">Si intentas parear la segunda zona antes de tiempo, ¡te guiaré con un mensajito!</small>
-    </div>
-    {% endif %}
-
     {% if game.difficulty == 3 %}
-    <p class="text-center small text-muted mb-2">💡 Cada ~15 s las cartas del tablero se reordenan. En modo difícil, cada ~30 s ¡se fue la luz dentro de la arena!</p>
+    <p class="text-center small text-muted mb-2">💡 Pasados 20 s, algunas cartas pueden cambiar de lugar. ¡En modo difícil también puede irse la luz!</p>
     {% elif game.difficulty == 2 %}
-    <p class="text-center small text-muted mb-2">💡 Cada ~15 s el tablero mezcla las cartas pendientes dentro del recuadro.</p>
+    <p class="text-center small text-muted mb-2">💡 Pasados 20 s, algunas cartas podrían cambiar de lugar. ¡Memoriza bien dónde están!</p>
     {% elif game.difficulty == 1 %}
     <p class="text-center small text-muted mb-2">💡 Cada ~15 s las cartas se reordenan solas ¡dentro del recuadro de Milo!</p>
     {% endif %}
