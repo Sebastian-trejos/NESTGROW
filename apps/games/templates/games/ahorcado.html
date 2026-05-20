@@ -1,37 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}{{ game.title }} - NestGrow{% endblock %}
-
+ 
 {% block content %}
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
     {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🦴 {{ game.title }}</h3>
   </div>
-
+ 
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
     Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
   </div>
   {% endif %}
-
+ 
   {% include 'games/includes/vocabulary_tab.html' %}
-
+ 
   <div id="gameSection" style="display:none">
     <div class="game-score-bar">
       <span>🦴 Ahorcado de Milo</span>
       <span>Palabra <strong id="wordNum">1</strong> / <strong id="totalWords">0</strong></span>
       <span>Vidas: <span id="livesDisplay">🦴🦴🦴🦴🦴🦴</span></span>
     </div>
-
+ 
     <div class="milo-banner mb-3">
       <div class="milo-banner-owl" id="miloFace">🐺</div>
       <div class="milo-banner-text">
         Adivina la palabra en inglés. La pista en español es: <strong id="hintEs">-</strong>
       </div>
     </div>
-
+ 
     <div class="text-center mb-4">
       <div id="wordDisplay" class="word-display mb-3"></div>
       <div id="wrongLetters" class="text-danger fw-bold mb-3" style="font-size:1.2rem;letter-spacing:4px;"></div>
@@ -43,12 +43,13 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="win-overlay" id="winOverlay" style="display:none">
   <div class="win-card">
     <div class="win-milo-wrap">
       <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
+    <div class="win-card-body">
     <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
     <div class="win-title" id="winTitle">¡Lo lograste!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
@@ -56,10 +57,11 @@
     <div class="win-score"><span id="winScore">0</span> pts</div>
     <div class="win-huesos" id="winHuesos"></div>
     <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
+    </div>
   </div>
 </div>
 {% endblock %}
-
+ 
 {% block extra_js %}
 <script src="{% static 'games/js/score_utils.js' %}"></script>
 <script>
@@ -73,13 +75,13 @@ const SAVE_URL = "{% url 'games:save_score' %}";
 const CSRF = "{{ csrf_token }}";
 const MAX_LIVES = 6;
 const MILO_FACES = ['🐺','😟','😰','😨','😱','💀','☠️'];
-
+ 
 let words = [], currentIdx = 0, score = 0, lives = MAX_LIVES;
 let currentWord = '', guessed = new Set(), wrong = [];
 let totalWords = 0;
-
+ 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-
+ 
 function startWord() {
   if (currentIdx >= words.length) { endGame(true); return; }
   const item = words[currentIdx];
@@ -95,12 +97,12 @@ function startWord() {
   renderWord();
   renderKeyboard();
 }
-
+ 
 function renderWord() {
   const display = currentWord.split('').map(l => guessed.has(l) ? `<span class="letter-box">${l}</span>` : `<span class="letter-box">_</span>`).join('');
   document.getElementById('wordDisplay').innerHTML = display;
 }
-
+ 
 function renderKeyboard() {
   const kb = document.getElementById('keyboard');
   kb.innerHTML = '';
@@ -116,7 +118,7 @@ function renderKeyboard() {
     kb.appendChild(btn);
   });
 }
-
+ 
 function guess(letter) {
   if (currentWord.includes(letter)) {
     guessed.add(letter);
@@ -146,7 +148,7 @@ function guess(letter) {
   renderWord();
   renderKeyboard();
 }
-
+ 
 async function endGame(completed) {
   const maxScore = totalWords * PTS_PER_WORD;
   const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
@@ -183,7 +185,7 @@ async function endGame(completed) {
     }
   } catch(e) {}
 }
-
+ 
 document.addEventListener('DOMContentLoaded', () => {
   if (VOCABULARY.length === 0) {
     document.getElementById('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ No hay palabras en esta categoría todavía. Pídele al profesor que las añada.</div>';

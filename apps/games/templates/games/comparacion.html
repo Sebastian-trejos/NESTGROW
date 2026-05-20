@@ -220,24 +220,7 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ── Win overlay (reuse existing style + extras) ────────────────────── */
-.win-overlay {
-  display: flex;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  z-index: 9999;
-  align-items: center;
-  justify-content: center;
-}
-.win-card {
-  background: #fff;
-  border-radius: 28px;
-  padding: 2.2rem 2rem;
-  max-width: 380px;
-  width: 92%;
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
-}
+/* ── Win overlay styles handled globally in style.css ── */
 </style>
 {% endblock %}
 
@@ -322,23 +305,25 @@
 
 <!-- ── Win overlay ─────────────────────────────────────────────────── -->
 <div class="win-overlay" id="winOverlay" style="display:none">
-  <div class="win-card text-center">
-    <div class="win-owl">
-      <img src="{% static 'img/milo_fest.png' %}" alt="Milo celebrando"
-           style="width:72px;height:72px;object-fit:contain" draggable="false">
+  <div class="win-card">
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo" draggable="false">
     </div>
-    <div class="win-title">¡Comparación completada!</div>
+    <div class="win-card-body">
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
+    <div class="win-title" id="winTitle">¡Comparación completada!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="fs-3 fw-bold mt-2" style="color:var(--primary)">
-      <span id="winScore">0</span> pts
-    </div>
-    <p class="text-muted mt-1 mb-0">
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts</div>
+    <p class="text-muted mt-1 mb-0" style="font-size:.95rem">
       <span id="winCorrect">0</span> / <span id="winTotal">0</span> respuestas correctas
     </p>
+    <div class="win-huesos" id="winHuesos"></div>
     <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}"
        class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">
       ✔️ Volver al panel
     </a>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -113,24 +113,27 @@
 </div>
 
 <!-- Win Overlay (estándar) -->
-<div class="win-overlay" id="winOverlay">
+<div class="win-overlay" id="winOverlay" style="display:none">
   <div class="win-card">
-    <div class="win-owl">🐺</div>
-    <div class="win-title">¡Lo encontraste todo!</div>
-    <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="font-fredoka fs-2 mt-1" id="winClasif" style="color:var(--primary)"></div>
-    <div class="fs-4 fw-bold mt-1" style="color:var(--primary)">
-      <span id="winScore">0</span> pts (<span id="winPercent">0%</span>)
+    <div class="win-milo-wrap">
+      <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
-    <div class="fw-bold mt-2" style="color:#8B4513" id="winHuesos"></div>
-    <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
+    <div class="win-card-body">
+    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
+    <div class="win-title" id="winTitle">¡Lo encontraste todo!</div>
+    <div class="win-stars" id="winStars">⭐⭐⭐</div>
+    <div class="win-clasif font-fredoka" id="winClasif"></div>
+    <div class="win-score"><span id="winScore">0</span> pts</div>
+    <div class="win-huesos" id="winHuesos"></div>
+    <button class="btn btn-nestgrow btn-pure-nestgrow mt-3 d-block" onclick="location.reload()">
       🔄 Jugar de nuevo
     </button>
     {% if user.role == 'profesor' %}
     <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Volver</a>
     {% else %}
-    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2 d-block">✔️ Volver al panel</a>
     {% endif %}
+    </div>
   </div>
 </div>
 
