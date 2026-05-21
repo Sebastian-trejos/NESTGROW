@@ -36,6 +36,9 @@ class VocabularyItem(TimeStampedModel, ActiveModel):
     image = models.ImageField(upload_to='vocabulary/images/', blank=True, null=True)
     audio = models.FileField(upload_to='vocabulary/audio/', blank=True, null=True,
                              help_text='Archivo .mp3 con la pronunciación en inglés')
+    emoji = models.CharField(max_length=10, blank=True, default='',
+                             verbose_name='Emoji representativo',
+                             help_text='Emoji individual de la palabra (ej: 🐕 para Dog)')
     hint = models.CharField(max_length=200, blank=True,
                             verbose_name='Pista o contexto')
     difficulty = models.IntegerField(

@@ -211,7 +211,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐕"
     }
   },
   {
@@ -231,7 +232,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐈"
     }
   },
   {
@@ -251,7 +253,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦁"
     }
   },
   {
@@ -271,7 +274,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐘"
     }
   },
   {
@@ -291,7 +295,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦋"
     }
   },
   {
@@ -311,7 +316,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐦"
     }
   },
   {
@@ -331,7 +337,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐟"
     }
   },
   {
@@ -351,7 +358,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐴"
     }
   },
   {
@@ -371,7 +379,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐄"
     }
   },
   {
@@ -391,7 +400,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐷"
     }
   },
   {
@@ -411,7 +421,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐑"
     }
   },
   {
@@ -431,7 +442,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦆"
     }
   },
   {
@@ -451,7 +463,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐇"
     }
   },
   {
@@ -471,7 +484,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐍"
     }
   },
   {
@@ -491,7 +505,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐯"
     }
   },
   {
@@ -511,7 +526,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐻"
     }
   },
   {
@@ -531,7 +547,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐺"
     }
   },
   {
@@ -551,7 +568,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦊"
     }
   },
   {
@@ -571,7 +589,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦌"
     }
   },
   {
@@ -591,7 +610,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐒"
     }
   },
   {
@@ -611,7 +631,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐸"
     }
   },
   {
@@ -631,7 +652,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐢"
     }
   },
   {
@@ -651,7 +673,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐊"
     }
   },
   {
@@ -671,7 +694,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦈"
     }
   },
   {
@@ -691,7 +715,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐋"
     }
   },
   {
@@ -711,7 +736,8 @@
       "orden": 26,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐬"
     }
   },
   {
@@ -731,7 +757,8 @@
       "orden": 27,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐧"
     }
   },
   {
@@ -751,7 +778,8 @@
       "orden": 28,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦅"
     }
   },
   {
@@ -771,7 +799,8 @@
       "orden": 29,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦉"
     }
   },
   {
@@ -791,7 +820,8 @@
       "orden": 30,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐝"
     }
   },
   {
@@ -811,7 +841,8 @@
       "orden": 31,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🕷️"
     }
   },
   {
@@ -831,7 +862,8 @@
       "orden": 32,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐜"
     }
   },
   {
@@ -851,7 +883,8 @@
       "orden": 33,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦩"
     }
   },
   {
@@ -871,7 +904,8 @@
       "orden": 34,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦒"
     }
   },
   {
@@ -891,7 +925,8 @@
       "orden": 35,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦓"
     }
   },
   {
@@ -911,7 +946,8 @@
       "orden": 36,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦘"
     }
   },
   {
@@ -931,7 +967,8 @@
       "orden": 37,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐼"
     }
   },
   {
@@ -951,7 +988,8 @@
       "orden": 38,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦜"
     }
   },
   {
@@ -971,7 +1009,8 @@
       "orden": 39,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦀"
     }
   },
   {
@@ -991,7 +1030,8 @@
       "orden": 40,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐙"
     }
   },
   {
@@ -1011,7 +1051,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔴"
     }
   },
   {
@@ -1031,7 +1072,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔵"
     }
   },
   {
@@ -1051,7 +1093,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟢"
     }
   },
   {
@@ -1071,7 +1114,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟡"
     }
   },
   {
@@ -1091,7 +1135,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⚪"
     }
   },
   {
@@ -1111,7 +1156,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⚫"
     }
   },
   {
@@ -1131,7 +1177,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟠"
     }
   },
   {
@@ -1151,7 +1198,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟣"
     }
   },
   {
@@ -1171,7 +1219,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🩷"
     }
   },
   {
@@ -1191,7 +1240,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟤"
     }
   },
   {
@@ -1211,7 +1261,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🩶"
     }
   },
   {
@@ -1231,7 +1282,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌟"
     }
   },
   {
@@ -1251,7 +1303,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪙"
     }
   },
   {
@@ -1271,7 +1324,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🩵"
     }
   },
   {
@@ -1291,7 +1345,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟣"
     }
   },
   {
@@ -1311,7 +1366,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -1331,7 +1387,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🩵"
     }
   },
   {
@@ -1351,7 +1408,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔮"
     }
   },
   {
@@ -1371,7 +1429,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌹"
     }
   },
   {
@@ -1391,7 +1450,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫐"
     }
   },
   {
@@ -1411,7 +1471,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "1️⃣"
     }
   },
   {
@@ -1431,7 +1492,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "2️⃣"
     }
   },
   {
@@ -1451,7 +1513,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "3️⃣"
     }
   },
   {
@@ -1471,7 +1534,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "4️⃣"
     }
   },
   {
@@ -1491,7 +1555,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "5️⃣"
     }
   },
   {
@@ -1511,7 +1576,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "6️⃣"
     }
   },
   {
@@ -1531,7 +1597,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "7️⃣"
     }
   },
   {
@@ -1551,7 +1618,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "8️⃣"
     }
   },
   {
@@ -1571,7 +1639,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "9️⃣"
     }
   },
   {
@@ -1591,7 +1660,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔟"
     }
   },
   {
@@ -1611,7 +1681,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1631,7 +1702,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1651,7 +1723,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1671,7 +1744,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1691,7 +1765,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1711,7 +1786,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1731,7 +1807,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1751,7 +1828,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1771,7 +1849,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1791,7 +1870,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1811,7 +1891,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1831,7 +1912,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1851,7 +1933,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -1871,7 +1954,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💯"
     }
   },
   {
@@ -1891,7 +1975,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "0️⃣"
     }
   },
   {
@@ -1911,7 +1996,8 @@
       "orden": 26,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥇"
     }
   },
   {
@@ -1931,7 +2017,8 @@
       "orden": 27,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥈"
     }
   },
   {
@@ -1951,7 +2038,8 @@
       "orden": 28,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥉"
     }
   },
   {
@@ -1971,7 +2059,8 @@
       "orden": 29,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -1991,7 +2080,8 @@
       "orden": 30,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -2011,7 +2101,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍎"
     }
   },
   {
@@ -2031,7 +2122,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍌"
     }
   },
   {
@@ -2051,7 +2143,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💧"
     }
   },
   {
@@ -2071,7 +2164,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥛"
     }
   },
   {
@@ -2091,7 +2185,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍞"
     }
   },
   {
@@ -2111,7 +2206,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍚"
     }
   },
   {
@@ -2131,7 +2227,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥚"
     }
   },
   {
@@ -2151,7 +2248,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍗"
     }
   },
   {
@@ -2171,7 +2269,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐟"
     }
   },
   {
@@ -2191,7 +2290,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍲"
     }
   },
   {
@@ -2211,7 +2311,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥗"
     }
   },
   {
@@ -2231,7 +2332,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎂"
     }
   },
   {
@@ -2251,7 +2353,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍪"
     }
   },
   {
@@ -2271,7 +2374,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧃"
     }
   },
   {
@@ -2291,7 +2395,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍊"
     }
   },
   {
@@ -2311,7 +2416,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍓"
     }
   },
   {
@@ -2331,7 +2437,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍇"
     }
   },
   {
@@ -2351,7 +2458,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍉"
     }
   },
   {
@@ -2371,7 +2479,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍅"
     }
   },
   {
@@ -2391,7 +2500,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥕"
     }
   },
   {
@@ -2411,7 +2521,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥔"
     }
   },
   {
@@ -2431,7 +2542,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍕"
     }
   },
   {
@@ -2451,7 +2563,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍔"
     }
   },
   {
@@ -2471,7 +2584,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍦"
     }
   },
   {
@@ -2491,7 +2605,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍫"
     }
   },
   {
@@ -2511,7 +2626,8 @@
       "orden": 26,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "☕"
     }
   },
   {
@@ -2531,7 +2647,8 @@
       "orden": 27,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫖"
     }
   },
   {
@@ -2551,7 +2668,8 @@
       "orden": 28,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌽"
     }
   },
   {
@@ -2571,7 +2689,8 @@
       "orden": 29,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫘"
     }
   },
   {
@@ -2591,7 +2710,8 @@
       "orden": 30,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧀"
     }
   },
   {
@@ -2611,7 +2731,8 @@
       "orden": 31,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧈"
     }
   },
   {
@@ -2631,7 +2752,8 @@
       "orden": 32,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍬"
     }
   },
   {
@@ -2651,7 +2773,8 @@
       "orden": 33,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧂"
     }
   },
   {
@@ -2671,7 +2794,8 @@
       "orden": 34,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍋"
     }
   },
   {
@@ -2691,7 +2815,8 @@
       "orden": 35,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥭"
     }
   },
   {
@@ -2711,7 +2836,8 @@
       "orden": 36,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍍"
     }
   },
   {
@@ -2731,7 +2857,8 @@
       "orden": 37,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥑"
     }
   },
   {
@@ -2751,7 +2878,8 @@
       "orden": 38,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍯"
     }
   },
   {
@@ -2771,7 +2899,8 @@
       "orden": 39,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍝"
     }
   },
   {
@@ -2791,7 +2920,8 @@
       "orden": 40,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥪"
     }
   },
   {
@@ -2811,7 +2941,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👩"
     }
   },
   {
@@ -2831,7 +2962,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👨"
     }
   },
   {
@@ -2851,7 +2983,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👦"
     }
   },
   {
@@ -2871,7 +3004,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👧"
     }
   },
   {
@@ -2891,7 +3025,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👶"
     }
   },
   {
@@ -2911,7 +3046,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👵"
     }
   },
   {
@@ -2931,7 +3067,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👴"
     }
   },
   {
@@ -2951,7 +3088,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👩"
     }
   },
   {
@@ -2971,7 +3109,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👨"
     }
   },
   {
@@ -2991,7 +3130,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑"
     }
   },
   {
@@ -3011,7 +3151,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👦"
     }
   },
   {
@@ -3031,7 +3172,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👧"
     }
   },
   {
@@ -3051,7 +3193,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💑"
     }
   },
   {
@@ -3071,7 +3214,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💑"
     }
   },
   {
@@ -3091,7 +3235,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👨‍👩‍👦"
     }
   },
   {
@@ -3111,7 +3256,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👪"
     }
   },
   {
@@ -3131,7 +3277,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👯"
     }
   },
   {
@@ -3151,7 +3298,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👦"
     }
   },
   {
@@ -3171,7 +3319,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👧"
     }
   },
   {
@@ -3191,7 +3340,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👴"
     }
   },
   {
@@ -3211,7 +3361,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🗣️"
     }
   },
   {
@@ -3231,7 +3382,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👁️"
     }
   },
   {
@@ -3251,7 +3403,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👃"
     }
   },
   {
@@ -3271,7 +3424,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👄"
     }
   },
   {
@@ -3291,7 +3445,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👂"
     }
   },
   {
@@ -3311,7 +3466,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✋"
     }
   },
   {
@@ -3331,7 +3487,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦶"
     }
   },
   {
@@ -3351,7 +3508,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦵"
     }
   },
   {
@@ -3371,7 +3529,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💪"
     }
   },
   {
@@ -3391,7 +3550,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫵"
     }
   },
   {
@@ -3411,7 +3571,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💇"
     }
   },
   {
@@ -3431,7 +3592,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦷"
     }
   },
   {
@@ -3451,7 +3613,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👅"
     }
   },
   {
@@ -3471,7 +3634,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -3491,7 +3655,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -3511,7 +3676,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -3531,7 +3697,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫁"
     }
   },
   {
@@ -3551,7 +3718,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -3571,7 +3739,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦵"
     }
   },
   {
@@ -3591,7 +3760,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -3611,7 +3781,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👍"
     }
   },
   {
@@ -3631,7 +3802,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💋"
     }
   },
   {
@@ -3651,7 +3823,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😊"
     }
   },
   {
@@ -3671,7 +3844,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -3691,7 +3865,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❤️"
     }
   },
   {
@@ -3711,7 +3886,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👔"
     }
   },
   {
@@ -3731,7 +3907,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👖"
     }
   },
   {
@@ -3751,7 +3928,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👟"
     }
   },
   {
@@ -3771,7 +3949,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎩"
     }
   },
   {
@@ -3791,7 +3970,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👗"
     }
   },
   {
@@ -3811,7 +3991,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧥"
     }
   },
   {
@@ -3831,7 +4012,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧦"
     }
   },
   {
@@ -3851,7 +4033,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧤"
     }
   },
   {
@@ -3871,7 +4054,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧣"
     }
   },
   {
@@ -3891,7 +4075,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧥"
     }
   },
   {
@@ -3911,7 +4096,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👢"
     }
   },
   {
@@ -3931,7 +4117,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧶"
     }
   },
   {
@@ -3951,7 +4138,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👗"
     }
   },
   {
@@ -3971,7 +4159,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👕"
     }
   },
   {
@@ -3991,7 +4180,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🩲"
     }
   },
   {
@@ -4011,7 +4201,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎽"
     }
   },
   {
@@ -4031,7 +4222,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -4051,7 +4243,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👔"
     }
   },
   {
@@ -4071,7 +4264,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👡"
     }
   },
   {
@@ -4091,7 +4285,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😴"
     }
   },
   {
@@ -4111,7 +4306,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📚"
     }
   },
   {
@@ -4131,7 +4327,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✏️"
     }
   },
   {
@@ -4151,7 +4348,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏫"
     }
   },
   {
@@ -4171,7 +4369,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🏫"
     }
   },
   {
@@ -4191,7 +4390,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🎓"
     }
   },
   {
@@ -4211,7 +4411,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📓"
     }
   },
   {
@@ -4231,7 +4432,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🖊️"
     }
   },
   {
@@ -4251,7 +4453,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✏️"
     }
   },
   {
@@ -4271,7 +4474,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📏"
     }
   },
   {
@@ -4291,7 +4495,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✂️"
     }
   },
   {
@@ -4311,7 +4516,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎒"
     }
   },
   {
@@ -4331,7 +4537,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪑"
     }
   },
   {
@@ -4351,7 +4558,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪑"
     }
   },
   {
@@ -4371,7 +4579,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📋"
     }
   },
   {
@@ -4391,7 +4600,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🖊️"
     }
   },
   {
@@ -4411,7 +4621,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -4431,7 +4642,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎨"
     }
   },
   {
@@ -4451,7 +4663,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔢"
     }
   },
   {
@@ -4471,7 +4684,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💻"
     }
   },
   {
@@ -4491,7 +4705,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📝"
     }
   },
   {
@@ -4511,7 +4726,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📝"
     }
   },
   {
@@ -4531,7 +4747,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📚"
     }
   },
   {
@@ -4551,7 +4768,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🗺️"
     }
   },
   {
@@ -4571,7 +4789,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌍"
     }
   },
   {
@@ -4591,7 +4810,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍱"
     }
   },
   {
@@ -4611,7 +4831,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏠"
     }
   },
   {
@@ -4631,7 +4852,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍳"
     }
   },
   {
@@ -4651,7 +4873,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛏️"
     }
   },
   {
@@ -4671,7 +4894,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚿"
     }
   },
   {
@@ -4691,7 +4915,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚪"
     }
   },
   {
@@ -4711,7 +4936,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪟"
     }
   },
   {
@@ -4731,7 +4957,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛋️"
     }
   },
   {
@@ -4751,7 +4978,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛏️"
     }
   },
   {
@@ -4771,7 +4999,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪑"
     }
   },
   {
@@ -4791,7 +5020,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪑"
     }
   },
   {
@@ -4811,7 +5041,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛋️"
     }
   },
   {
@@ -4831,7 +5062,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💡"
     }
   },
   {
@@ -4851,7 +5083,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧊"
     }
   },
   {
@@ -4871,7 +5104,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍳"
     }
   },
   {
@@ -4891,7 +5125,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -4911,7 +5146,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚽"
     }
   },
   {
@@ -4931,7 +5167,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚿"
     }
   },
   {
@@ -4951,7 +5188,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪞"
     }
   },
   {
@@ -4971,7 +5209,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪜"
     }
   },
   {
@@ -4991,7 +5230,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏠"
     }
   },
   {
@@ -5011,7 +5251,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌱"
     }
   },
   {
@@ -5031,7 +5272,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚗"
     }
   },
   {
@@ -5051,7 +5293,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -5071,7 +5314,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧱"
     }
   },
   {
@@ -5091,7 +5335,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -5111,7 +5356,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "☀️"
     }
   },
   {
@@ -5131,7 +5377,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌧️"
     }
   },
   {
@@ -5151,7 +5398,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "☁️"
     }
   },
   {
@@ -5171,7 +5419,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌳"
     }
   },
   {
@@ -5191,7 +5440,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌸"
     }
   },
   {
@@ -5211,7 +5461,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛰️"
     }
   },
   {
@@ -5231,7 +5482,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏞️"
     }
   },
   {
@@ -5251,7 +5503,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌊"
     }
   },
   {
@@ -5271,7 +5524,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💨"
     }
   },
   {
@@ -5291,7 +5545,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❄️"
     }
   },
   {
@@ -5311,7 +5566,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⚡"
     }
   },
   {
@@ -5331,7 +5587,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌈"
     }
   },
   {
@@ -5351,7 +5608,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛈️"
     }
   },
   {
@@ -5371,7 +5629,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌲"
     }
   },
   {
@@ -5391,7 +5650,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏜️"
     }
   },
   {
@@ -5411,7 +5671,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏖️"
     }
   },
   {
@@ -5431,7 +5692,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏝️"
     }
   },
   {
@@ -5451,7 +5713,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌋"
     }
   },
   {
@@ -5471,7 +5734,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌿"
     }
   },
   {
@@ -5491,7 +5755,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍃"
     }
   },
   {
@@ -5511,7 +5776,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪨"
     }
   },
   {
@@ -5531,7 +5797,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛱️"
     }
   },
   {
@@ -5551,7 +5818,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌫️"
     }
   },
   {
@@ -5571,7 +5839,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧊"
     }
   },
   {
@@ -5591,7 +5860,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌙"
     }
   },
   {
@@ -5611,7 +5881,8 @@
       "orden": 26,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⭐"
     }
   },
   {
@@ -5631,7 +5902,8 @@
       "orden": 27,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏞️"
     }
   },
   {
@@ -5651,7 +5923,8 @@
       "orden": 28,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌍"
     }
   },
   {
@@ -5671,7 +5944,8 @@
       "orden": 29,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌅"
     }
   },
   {
@@ -5691,7 +5965,8 @@
       "orden": 30,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌇"
     }
   },
   {
@@ -5711,7 +5986,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚗"
     }
   },
   {
@@ -5731,7 +6007,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚌"
     }
   },
   {
@@ -5751,7 +6028,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚲"
     }
   },
   {
@@ -5771,7 +6049,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✈️"
     }
   },
   {
@@ -5791,7 +6070,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛵"
     }
   },
   {
@@ -5811,7 +6091,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚂"
     }
   },
   {
@@ -5831,7 +6112,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏍️"
     }
   },
   {
@@ -5851,7 +6133,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚛"
     }
   },
   {
@@ -5871,7 +6154,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚁"
     }
   },
   {
@@ -5891,7 +6175,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚢"
     }
   },
   {
@@ -5911,7 +6196,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤿"
     }
   },
   {
@@ -5931,7 +6217,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚀"
     }
   },
   {
@@ -5951,7 +6238,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚃"
     }
   },
   {
@@ -5971,7 +6259,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚕"
     }
   },
   {
@@ -5991,7 +6280,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚇"
     }
   },
   {
@@ -6011,7 +6301,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛶"
     }
   },
   {
@@ -6031,7 +6322,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛹"
     }
   },
   {
@@ -6051,7 +6343,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎈"
     }
   },
   {
@@ -6071,7 +6364,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚑"
     }
   },
   {
@@ -6091,7 +6385,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚙"
     }
   },
   {
@@ -6111,7 +6406,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏃"
     }
   },
   {
@@ -6131,7 +6427,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤸"
     }
   },
   {
@@ -6151,7 +6448,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍽️"
     }
   },
   {
@@ -6171,7 +6469,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😴"
     }
   },
   {
@@ -6191,7 +6490,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎮"
     }
   },
   {
@@ -6211,7 +6511,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚶"
     }
   },
   {
@@ -6231,7 +6532,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🗣️"
     }
   },
   {
@@ -6251,7 +6553,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📖"
     }
   },
   {
@@ -6271,7 +6574,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✍️"
     }
   },
   {
@@ -6291,7 +6595,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✏️"
     }
   },
   {
@@ -6311,7 +6616,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎤"
     }
   },
   {
@@ -6331,7 +6637,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💃"
     }
   },
   {
@@ -6351,7 +6658,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏊"
     }
   },
   {
@@ -6371,7 +6679,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦅"
     }
   },
   {
@@ -6391,7 +6700,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😂"
     }
   },
   {
@@ -6411,7 +6721,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😢"
     }
   },
   {
@@ -6431,7 +6742,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤔"
     }
   },
   {
@@ -6451,7 +6763,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👂"
     }
   },
   {
@@ -6471,7 +6784,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👀"
     }
   },
   {
@@ -6491,7 +6805,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👆"
     }
   },
   {
@@ -6511,7 +6826,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚪"
     }
   },
   {
@@ -6531,7 +6847,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔒"
     }
   },
   {
@@ -6551,7 +6868,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎁"
     }
   },
   {
@@ -6571,7 +6889,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤏"
     }
   },
   {
@@ -6591,7 +6910,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤝"
     }
   },
   {
@@ -6611,7 +6931,8 @@
       "orden": 26,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📖"
     }
   },
   {
@@ -6631,7 +6952,8 @@
       "orden": 27,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📚"
     }
   },
   {
@@ -6651,7 +6973,8 @@
       "orden": 28,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍳"
     }
   },
   {
@@ -6671,7 +6994,8 @@
       "orden": 29,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧹"
     }
   },
   {
@@ -6691,7 +7015,8 @@
       "orden": 30,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔨"
     }
   },
   {
@@ -6711,7 +7036,8 @@
       "orden": 31,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💥"
     }
   },
   {
@@ -6731,7 +7057,8 @@
       "orden": 32,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔧"
     }
   },
   {
@@ -6751,7 +7078,8 @@
       "orden": 33,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛒"
     }
   },
   {
@@ -6771,7 +7099,8 @@
       "orden": 34,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💰"
     }
   },
   {
@@ -6791,7 +7120,8 @@
       "orden": 35,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❤️"
     }
   },
   {
@@ -6811,7 +7141,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐘"
     }
   },
   {
@@ -6831,7 +7162,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐭"
     }
   },
   {
@@ -6851,7 +7183,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😊"
     }
   },
   {
@@ -6871,7 +7204,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😢"
     }
   },
   {
@@ -6891,7 +7225,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏎️"
     }
   },
   {
@@ -6911,7 +7246,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐌"
     }
   },
   {
@@ -6931,7 +7267,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔥"
     }
   },
   {
@@ -6951,7 +7288,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❄️"
     }
   },
   {
@@ -6971,7 +7309,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✨"
     }
   },
   {
@@ -6991,7 +7330,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👴"
     }
   },
   {
@@ -7011,7 +7351,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👍"
     }
   },
   {
@@ -7031,7 +7372,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👎"
     }
   },
   {
@@ -7051,7 +7393,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💪"
     }
   },
   {
@@ -7071,7 +7414,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤕"
     }
   },
   {
@@ -7091,7 +7435,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌸"
     }
   },
   {
@@ -7111,7 +7456,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😖"
     }
   },
   {
@@ -7131,7 +7477,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧹"
     }
   },
   {
@@ -7151,7 +7498,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦠"
     }
   },
   {
@@ -7171,7 +7519,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏀"
     }
   },
   {
@@ -7191,7 +7540,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📏"
     }
   },
   {
@@ -7211,7 +7561,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔵"
     }
   },
   {
@@ -7231,7 +7582,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔪"
     }
   },
   {
@@ -7251,7 +7603,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧸"
     }
   },
   {
@@ -7271,7 +7624,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💎"
     }
   },
   {
@@ -7291,7 +7645,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📭"
     }
   },
   {
@@ -7461,7 +7816,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍎"
     }
   },
   {
@@ -7481,7 +7837,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍌"
     }
   },
   {
@@ -7501,7 +7858,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍊"
     }
   },
   {
@@ -7521,7 +7879,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍓"
     }
   },
   {
@@ -7541,7 +7900,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍇"
     }
   },
   {
@@ -7561,7 +7921,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍉"
     }
   },
   {
@@ -7581,7 +7942,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥭"
     }
   },
   {
@@ -7601,7 +7963,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍍"
     }
   },
   {
@@ -7621,7 +7984,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍒"
     }
   },
   {
@@ -7641,7 +8005,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍋"
     }
   },
   {
@@ -7661,7 +8026,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍐"
     }
   },
   {
@@ -7681,7 +8047,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍑"
     }
   },
   {
@@ -7701,7 +8068,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥥"
     }
   },
   {
@@ -7721,7 +8089,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥝"
     }
   },
   {
@@ -7741,7 +8110,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫐"
     }
   },
   {
@@ -7761,7 +8131,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍈"
     }
   },
   {
@@ -7781,7 +8152,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥭"
     }
   },
   {
@@ -7801,7 +8173,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍑"
     }
   },
   {
@@ -7821,7 +8194,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫐"
     }
   },
   {
@@ -7841,7 +8215,8 @@
       "orden": 20,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥑"
     }
   },
   {
@@ -7861,7 +8236,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥕"
     }
   },
   {
@@ -7881,7 +8257,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍅"
     }
   },
   {
@@ -7901,7 +8278,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥔"
     }
   },
   {
@@ -7921,7 +8299,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥦"
     }
   },
   {
@@ -7941,7 +8320,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥬"
     }
   },
   {
@@ -7961,7 +8341,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧅"
     }
   },
   {
@@ -7981,7 +8362,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌽"
     }
   },
   {
@@ -8001,7 +8383,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥒"
     }
   },
   {
@@ -8021,7 +8404,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫛"
     }
   },
   {
@@ -8041,7 +8425,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫘"
     }
   },
   {
@@ -8061,7 +8446,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫑"
     }
   },
   {
@@ -8081,7 +8467,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧄"
     }
   },
   {
@@ -8101,7 +8488,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍆"
     }
   },
   {
@@ -8121,7 +8509,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥬"
     }
   },
   {
@@ -8141,7 +8530,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌿"
     }
   },
   {
@@ -8161,7 +8551,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⭕"
     }
   },
   {
@@ -8181,7 +8572,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🟦"
     }
   },
   {
@@ -8201,7 +8593,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔺"
     }
   },
   {
@@ -8221,7 +8614,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -8241,7 +8635,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⭐"
     }
   },
   {
@@ -8261,7 +8656,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❤️"
     }
   },
   {
@@ -8281,7 +8677,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔷"
     }
   },
   {
@@ -8301,7 +8698,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥚"
     }
   },
   {
@@ -8321,7 +8719,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -8341,7 +8740,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -8361,7 +8761,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "➡️"
     }
   },
   {
@@ -8381,7 +8782,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✝️"
     }
   },
   {
@@ -8401,7 +8803,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8421,7 +8824,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8441,7 +8845,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8461,7 +8866,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8481,7 +8887,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8501,7 +8908,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8521,7 +8929,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📅"
     }
   },
   {
@@ -8541,7 +8950,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❄️"
     }
   },
   {
@@ -8561,7 +8971,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💝"
     }
   },
   {
@@ -8581,7 +8992,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌱"
     }
   },
   {
@@ -8601,7 +9013,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌧️"
     }
   },
   {
@@ -8621,7 +9034,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌸"
     }
   },
   {
@@ -8641,7 +9055,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "☀️"
     }
   },
   {
@@ -8661,7 +9076,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎆"
     }
   },
   {
@@ -8681,7 +9097,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌻"
     }
   },
   {
@@ -8701,7 +9118,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍂"
     }
   },
   {
@@ -8721,7 +9139,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎃"
     }
   },
   {
@@ -8741,7 +9160,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍁"
     }
   },
   {
@@ -8761,7 +9181,8 @@
       "orden": 19,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎄"
     }
   },
   {
@@ -8781,7 +9202,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😊"
     }
   },
   {
@@ -8801,7 +9223,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😢"
     }
   },
   {
@@ -8821,7 +9244,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😠"
     }
   },
   {
@@ -8841,7 +9265,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😨"
     }
   },
   {
@@ -8861,7 +9286,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😲"
     }
   },
   {
@@ -8881,7 +9307,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😴"
     }
   },
   {
@@ -8901,7 +9328,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😑"
     }
   },
   {
@@ -8921,7 +9349,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤩"
     }
   },
   {
@@ -8941,7 +9370,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤔"
     }
   },
   {
@@ -8961,7 +9391,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏆"
     }
   },
   {
@@ -8981,7 +9412,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😰"
     }
   },
   {
@@ -9001,7 +9433,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😌"
     }
   },
   {
@@ -9021,7 +9454,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤢"
     }
   },
   {
@@ -9041,7 +9475,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫣"
     }
   },
   {
@@ -9061,7 +9496,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦁"
     }
   },
   {
@@ -9081,7 +9517,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⚽"
     }
   },
   {
@@ -9101,7 +9538,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏀"
     }
   },
   {
@@ -9121,7 +9559,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏊"
     }
   },
   {
@@ -9141,7 +9580,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏃"
     }
   },
   {
@@ -9161,7 +9601,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎾"
     }
   },
   {
@@ -9181,7 +9622,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⚾"
     }
   },
   {
@@ -9201,7 +9643,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏐"
     }
   },
   {
@@ -9221,7 +9664,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚴"
     }
   },
   {
@@ -9241,7 +9685,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤸"
     }
   },
   {
@@ -9261,7 +9706,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛸️"
     }
   },
   {
@@ -9281,7 +9727,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥊"
     }
   },
   {
@@ -9301,7 +9748,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥋"
     }
   },
   {
@@ -9321,7 +9769,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛳"
     }
   },
   {
@@ -9341,7 +9790,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤼"
     }
   },
   {
@@ -9361,7 +9811,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏹"
     }
   },
   {
@@ -9381,7 +9832,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🏫"
     }
   },
   {
@@ -9401,7 +9853,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👨‍⚕️"
     }
   },
   {
@@ -9421,7 +9874,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👮"
     }
   },
   {
@@ -9441,7 +9895,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🚒"
     }
   },
   {
@@ -9461,7 +9916,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🍳"
     }
   },
   {
@@ -9481,7 +9937,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👨‍⚕️"
     }
   },
   {
@@ -9501,7 +9958,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🌾"
     }
   },
   {
@@ -9521,7 +9979,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍🎨"
     }
   },
   {
@@ -9541,7 +10000,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍✈️"
     }
   },
   {
@@ -9561,7 +10021,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧑‍💻"
     }
   },
   {
@@ -9581,7 +10042,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦷"
     }
   },
   {
@@ -9601,7 +10063,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚗"
     }
   },
   {
@@ -9621,7 +10084,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧱"
     }
   },
   {
@@ -9641,7 +10105,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎤"
     }
   },
   {
@@ -9661,7 +10126,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🔬"
     }
   },
   {
@@ -9681,7 +10147,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏞️"
     }
   },
   {
@@ -9701,7 +10168,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏥"
     }
   },
   {
@@ -9721,7 +10189,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📚"
     }
   },
   {
@@ -9741,7 +10210,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛒"
     }
   },
   {
@@ -9761,7 +10231,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍽️"
     }
   },
   {
@@ -9781,7 +10252,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏖️"
     }
   },
   {
@@ -9801,7 +10273,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏛️"
     }
   },
   {
@@ -9821,7 +10294,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "✈️"
     }
   },
   {
@@ -9841,7 +10315,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⛪"
     }
   },
   {
@@ -9861,7 +10336,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏦"
     }
   },
   {
@@ -9881,7 +10357,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏪"
     }
   },
   {
@@ -9901,7 +10378,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "💊"
     }
   },
   {
@@ -9921,7 +10399,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏫"
     }
   },
   {
@@ -9941,7 +10420,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏨"
     }
   },
   {
@@ -9961,7 +10441,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🦁"
     }
   },
   {
@@ -9981,7 +10462,8 @@
       "orden": 16,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎬"
     }
   },
   {
@@ -10001,7 +10483,8 @@
       "orden": 17,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🏋️"
     }
   },
   {
@@ -10021,7 +10504,8 @@
       "orden": 18,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📬"
     }
   },
   {
@@ -10041,7 +10525,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👋"
     }
   },
   {
@@ -10061,7 +10546,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👋"
     }
   },
   {
@@ -10081,7 +10567,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌅"
     }
   },
   {
@@ -10101,7 +10588,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌇"
     }
   },
   {
@@ -10121,7 +10609,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🌙"
     }
   },
   {
@@ -10141,7 +10630,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🙏"
     }
   },
   {
@@ -10161,7 +10651,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🙏"
     }
   },
   {
@@ -10181,7 +10672,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😔"
     }
   },
   {
@@ -10201,7 +10693,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🚶"
     }
   },
   {
@@ -10221,7 +10714,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "😊"
     }
   },
   {
@@ -10241,7 +10735,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "❓"
     }
   },
   {
@@ -10261,7 +10756,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👤"
     }
   },
   {
@@ -10281,7 +10777,8 @@
       "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤝"
     }
   },
   {
@@ -10301,7 +10798,8 @@
       "orden": 14,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "👋"
     }
   },
   {
@@ -10321,7 +10819,8 @@
       "orden": 15,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🍀"
     }
   },
   {
@@ -10341,7 +10840,8 @@
       "orden": 1,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎸"
     }
   },
   {
@@ -10361,7 +10861,8 @@
       "orden": 2,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎹"
     }
   },
   {
@@ -10381,7 +10882,8 @@
       "orden": 3,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🥁"
     }
   },
   {
@@ -10401,7 +10903,8 @@
       "orden": 4,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎻"
     }
   },
   {
@@ -10421,7 +10924,8 @@
       "orden": 5,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎺"
     }
   },
   {
@@ -10441,7 +10945,8 @@
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪈"
     }
   },
   {
@@ -10461,7 +10966,8 @@
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎵"
     }
   },
   {
@@ -10481,7 +10987,8 @@
       "orden": 8,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎷"
     }
   },
   {
@@ -10501,7 +11008,8 @@
       "orden": 9,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎸"
     }
   },
   {
@@ -10521,7 +11029,8 @@
       "orden": 10,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎵"
     }
   },
   {
@@ -10541,7 +11050,8 @@
       "orden": 11,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🎵"
     }
   },
   {
@@ -10561,7 +11071,8 @@
       "orden": 12,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪗"
     }
   },
   {
@@ -10581,7 +11092,8 @@
       "orden": 41,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐞"
     }
   },
   {
@@ -10601,7 +11113,8 @@
       "orden": 42,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪲"
     }
   },
   {
@@ -10621,7 +11134,8 @@
       "orden": 43,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐌"
     }
   },
   {
@@ -10641,7 +11155,8 @@
       "orden": 44,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🐹"
     }
   },
   {
@@ -10661,7 +11176,8 @@
       "orden": 21,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "☂️"
     }
   },
   {
@@ -10681,7 +11197,8 @@
       "orden": 22,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🩱"
     }
   },
   {
@@ -10701,7 +11218,8 @@
       "orden": 23,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🕶️"
     }
   },
   {
@@ -10721,7 +11239,8 @@
       "orden": 24,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧢"
     }
   },
   {
@@ -10741,7 +11260,8 @@
       "orden": 25,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧥"
     }
   },
   {
@@ -10761,7 +11281,8 @@
       "orden": 26,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📱"
     }
   },
   {
@@ -10781,7 +11302,8 @@
       "orden": 27,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": ""
     }
   },
   {
@@ -10801,7 +11323,8 @@
       "orden": 28,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📝"
     }
   },
   {
@@ -10821,7 +11344,8 @@
       "orden": 29,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📊"
     }
   },
   {
@@ -10841,7 +11365,8 @@
       "orden": 30,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🛝"
     }
   },
   {
@@ -10861,7 +11386,8 @@
       "orden": 36,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "⏰"
     }
   },
   {
@@ -10881,7 +11407,8 @@
       "orden": 37,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🪥"
     }
   },
   {
@@ -10901,7 +11428,8 @@
       "orden": 38,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧼"
     }
   },
   {
@@ -10921,7 +11449,8 @@
       "orden": 39,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🧗"
     }
   },
   {
@@ -10941,7 +11470,8 @@
       "orden": 40,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤜"
     }
   },
   {
@@ -10961,7 +11491,8 @@
       "orden": 41,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "↩️"
     }
   },
   {
@@ -10981,7 +11512,8 @@
       "orden": 42,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "📦"
     }
   },
   {
@@ -11001,7 +11533,8 @@
       "orden": 43,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🤾"
     }
   },
   {
@@ -11021,7 +11554,8 @@
       "orden": 44,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "updated_at": "2024-01-01T00:00:00Z",
+      "emoji": "🫳"
     }
   }
 ]
