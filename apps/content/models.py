@@ -65,6 +65,7 @@ class VocabularioDesbloqueado(models.Model):
         ('inicial', 'Inicial'),
         ('taller', 'Taller'),
         ('minijuego', 'Minijuego'),
+        ('historia', 'Modo Historia'),
     ]
     estudiante = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,

@@ -33,4 +33,7 @@ urlpatterns = [
     path('<int:pk>/bloque/<int:bpk>/completar-minijuego/', views.score_bloque_minijuego, name='score_minijuego'),
     path('<int:pk>/resultado/', views.resultado_taller, name='resultado'),
     path('sesion/<int:pk>/resultado/', views.resultado_sesion, name='resultado_sesion'),
+
+    # AJAX — Widget Milo
+    path('milo-pendientes/', views.milo_pendientes, name='milo_pendientes'),
 ]

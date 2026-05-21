@@ -144,17 +144,15 @@
   </nav>
   {% endif %}{# /embedded nav #}
 
-  <!-- Milo Floating Mascot -->
-  {% if user.is_authenticated and not embedded %}
-  <div class="milo-float" id="miloFloat" onclick="toggleMiloMessage()">
+  <!-- Milo Floating Character -->
+  {% if not embedded %}
+  <div class="milo-float" id="miloFloat">
     <div class="milo-bubble" id="miloBubble">
-      <div class="milo-speech">{{ milo_message.text }}</div>
+      <div class="milo-speech" id="miloSpeech"></div>
+      <div id="miloBubbleExtra"></div>
     </div>
     <div class="milo-avatar">
-      <img src="{% static 'img/milo_rostro.png' %}"
-           id="miloImgFloat"
-           style="width:55px;filter:drop-shadow(0 4px 10px rgba(108,99,255,0.3))"
-           alt="Milo">
+      <img src="{% static 'img/milo_saludando.png' %}" id="miloImgFloat" alt="Milo">
     </div>
   </div>
   {% endif %}
@@ -226,49 +224,6 @@
   </script>
   {% endif %}
 
-  <!-- Botón flotante Asistente Milo (solo profesores) -->
-  {% if user.is_authenticated and user.role == 'profesor' and not embedded %}
-  <a href="{% url 'asistente:index' %}" target="_blank"
-     class="asistente-fab"
-     title="Asistente Milo IA">
-    🤖
-    <span class="asistente-fab-label">Asistente Milo</span>
-  </a>
-  <style>
-    .asistente-fab {
-      position: fixed;
-      bottom: 90px;
-      right: 24px;
-      z-index: 1050;
-      background: linear-gradient(135deg, #6C63FF, #9b59b6);
-      color: white;
-      border-radius: 50px;
-      padding: 0.6rem 1rem;
-      font-size: 1.3rem;
-      text-decoration: none;
-      box-shadow: 0 6px 20px rgba(108,99,255,0.45);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.25s;
-      white-space: nowrap;
-    }
-    .asistente-fab:hover {
-      transform: translateY(-4px) scale(1.04);
-      box-shadow: 0 10px 30px rgba(108,99,255,0.55);
-      color: white;
-    }
-    .asistente-fab-label {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      font-size: 0.8rem;
-    }
-    @media (max-width: 576px) {
-      .asistente-fab-label { display: none; }
-      .asistente-fab { padding: 0.65rem; border-radius: 50%; }
-    }
-  </style>
-  {% endif %}
 
   <!-- Footer -->
   {% if not embedded %}
@@ -294,22 +249,274 @@
   {% block extra_js %}{% endblock %}
 
   <script>
-  let miloClicks = 0;
-  const miloFloat = document.getElementById('miloFloat');
-  if (miloFloat) {
-    miloFloat.addEventListener('click', function() {
-      miloClicks++;
-      if (miloClicks >= 3) {
-        miloClicks = 0;
-        if (typeof lanzarConfetiFuerte === 'function') lanzarConfetiFuerte();
-        const img = document.getElementById('miloImgFloat');
-        if (img) {
-          img.src = "{% static 'img/milo_bai.png' %}";
-          setTimeout(() => img.src = "{% static 'img/milo_fest.png' %}", 3000);
+  // ── Widget Milo ──────────────────────────────────────────────────────────────
+  (function () {
+    const ROLE   = '{{ user.role|default:"" }}';
+    const IS_AUTH = {% if user.is_authenticated %}true{% else %}false{% endif %};
+
+    const IMG = {
+      idle:         "{% static 'img/milo_saludando.png' %}",
+      saludando:    "{% static 'img/milo_fest.png' %}",
+      orgulloso:    "{% static 'img/milo_orgulloso.png' %}",
+      preocupado:   "{% static 'img/milo_preocupado.png' %}",
+      celebrando:   "{% static 'img/milo_fest.png' %}",
+      timido:       "{% static 'img/milo_timido.png' %}",
+      pulgar:       "{% static 'img/milo_pulgar.png' %}",
+      curioso:      "{% static 'img/milo_curioso.png' %}",
+      susurrando:   "{% static 'img/milo_susurrando.png' %}",
+      asombrado:    "{% static 'img/milo_asombrado.png' %}",
+      pensando:     "{% static 'img/milo_duda1.png' %}",
+      buscando:     "{% static 'img/milo_lupa2.png' %}",
+      aplaudiendo:  "{% static 'img/milo_aplaudiendo.png' %}",
+      apuntes:      "{% static 'img/milo_apuntes.png' %}",
+      leyendo:      "{% static 'img/milo_leyendo1.png' %}",
+      emociontotal: "{% static 'img/milo_emociontotal.png' %}",
+    };
+
+    const PAGE_MSGS = {
+      profesor: {
+        dashboard:    { msg: '¡Hola profe! 👋 ¿Planeas una clase hoy? Te cuento un secreto: el Asistente IA puede prepararte toda la lección.', img: IMG.susurrando },
+        talleres:     { msg: '📋 Aquí diseñas talleres con preguntas y minijuegos. ¡Piensa en qué aprenderán tus estudiantes hoy!', img: IMG.pensando },
+        juegos:       { msg: '🔍 Explora los minijuegos disponibles y asígnalos a los períodos de tu salón.', img: IMG.buscando },
+        historia:     { msg: '🗺️ ¡El Modo Historia es increíble! Desbloquea secciones para que tus estudiantes avancen con Milo.', img: IMG.asombrado },
+        contenido:    { msg: '📚 Aquí encuentras todo el vocabulario disponible. ¡Úsalo como base para tus talleres!', img: IMG.curioso },
+        habitacion:   { msg: '🏠 Esta es la habitación virtual de tus estudiantes. ¡Ellos la decoran con Huesos ganados jugando!', img: IMG.orgulloso },
+        login:        { msg: '¡Hola profe! 👋 Inicia sesión para gestionar tus clases, períodos y estudiantes.', img: IMG.saludando },
+        registro:     { msg: '¡Bienvenido a NestGrow! 🎓 Regístrate y empieza a crear talleres para tus estudiantes.', img: IMG.saludando },
+        default:      { msg: '¡Estoy aquí para ayudarte, profe! 🤖 Usa el Asistente IA para planear tus clases.', img: IMG.idle },
+      },
+      estudiante: {
+        dashboard:    { msg: '¡Bienvenido de vuelta! 🎉 ¿Listo para aprender inglés hoy con Milo?', img: IMG.saludando },
+        mis_talleres: { msg: '📋 Aquí están tus actividades del período. ¡Completa todas para ganar puntos y subir de nivel!', img: IMG.preocupado },
+        juegos:       { msg: '🔍 ¡Explora los minijuegos y elige el que más te guste para aprender inglés!', img: IMG.buscando },
+        historia:     { msg: '🗺️ ¡Increíble! ¡Avanza en la historia con Milo y desbloquea nuevas aventuras!', img: IMG.asombrado },
+        contenido:    { msg: '📚 ¡Qué curioso! ¿Sabes todas estas palabras en inglés? Cada categoría tiene imágenes y audio.', img: IMG.curioso },
+        habitacion:   { msg: '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!', img: IMG.orgulloso },
+        tienda:       { msg: '🛍️ ¡Mira todo lo que puedes conseguir! Gasta tus Huesos y desbloquea nuevos juegos.', img: IMG.celebrando },
+        ranking:      { msg: '🏆 ¡Tú puedes llegar al primer lugar! Juega más para ganar puntos y escalar en el ranking.', img: IMG.pulgar },
+        login:        { msg: '¡Hola! 👋 Inicia sesión para continuar tu aventura en NestGrow.', img: IMG.saludando },
+        registro:     { msg: '¡Hola! 🐾 Soy Milo. Regístrate y únete a tu salón para empezar a aprender inglés.', img: IMG.timido },
+        default:      { msg: '¡Hola! Soy Milo 🐾 ¡Estoy aquí para ayudarte a aprender inglés!', img: IMG.idle },
+      },
+      none: {
+        login:    { msg: '¡Hola! 👋 Soy Milo, tu guía en NestGrow. Inicia sesión para continuar tu aventura.', img: IMG.saludando },
+        registro: { msg: '¡Qué emocionante! 🎉 ¡Un nuevo amigo en NestGrow! Crea tu cuenta y empieza a aprender inglés.', img: IMG.asombrado },
+        dashboard: { msg: '¡Hola! 🌟 Soy Milo. En NestGrow aprendes inglés jugando con minijuegos y aventuras. ¡Regístrate gratis!', img: IMG.idle },
+        default:  { msg: '¡Bienvenido a NestGrow! 🐾 Aprende inglés jugando con Milo. ¡Es completamente gratis!', img: IMG.saludando },
+      },
+    };
+
+    function getPageCtx() {
+      const p = window.location.pathname;
+      if (p.startsWith('/juegos/habitacion')) return 'habitacion';
+      if (p.startsWith('/juegos/tienda'))     return 'tienda';
+      if (p.startsWith('/juegos/ranking'))    return 'ranking';
+      if (p.startsWith('/juegos'))            return 'juegos';
+      if (p.startsWith('/talleres/mis'))      return 'mis_talleres';
+      if (p.startsWith('/talleres'))          return 'talleres';
+      if (p.startsWith('/historia'))          return 'historia';
+      if (p.startsWith('/contenido'))         return 'contenido';
+      if (p.startsWith('/accounts/login'))    return 'login';
+      if (p.startsWith('/accounts/registro')) return 'registro';
+      if (p.startsWith('/accounts') || p === '/') return 'dashboard';
+      return 'default';
+    }
+
+    const float  = document.getElementById('miloFloat');
+    const bubble = document.getElementById('miloBubble');
+    const speech = document.getElementById('miloSpeech');
+    const extra  = document.getElementById('miloBubbleExtra');
+    const img    = document.getElementById('miloImgFloat');
+    if (!float) return;
+
+    let isOpen = false, pendientesCache = null, autoCloseTimer = null;
+
+    function setImg(src) {
+      img.style.opacity = '0';
+      setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 180);
+    }
+
+    float.addEventListener('mouseenter', () => { if (!isOpen) setImg(IMG.saludando); });
+    float.addEventListener('mouseleave', () => { if (!isOpen) setImg(IMG.idle); });
+
+    float.addEventListener('click', function (e) {
+      e.stopPropagation();
+      isOpen ? closeBubble() : openBubble();
+    });
+
+    function closeBubble() {
+      clearTimeout(autoCloseTimer);
+      bubble.classList.remove('show');
+      isOpen = false;
+      setImg(IMG.idle);
+    }
+
+    function openBubble() {
+      isOpen = true;
+      const pageCtx = getPageCtx();
+      const role    = IS_AUTH ? (ROLE || 'none') : 'none';
+      const ctxMap  = PAGE_MSGS[role] || PAGE_MSGS.none;
+      const ctx     = ctxMap[pageCtx] || ctxMap.default;
+
+      speech.textContent = ctx.msg;
+      extra.innerHTML = '';
+      setImg(ctx.img || IMG.idle);
+
+      // Páginas donde estudiantes ven sus pendientes vía AJAX
+      const AJAX_CTX = new Set(['dashboard', 'default']);
+
+      if (ROLE === 'profesor' && IS_AUTH && pageCtx !== 'habitacion') {
+        const footer = document.createElement('div');
+        footer.className = 'milo-bubble-footer';
+        const btnIA = document.createElement('a');
+        btnIA.href = "{% url 'asistente:index' %}";
+        btnIA.target = '_blank';
+        btnIA.className = 'milo-btn milo-btn-primary';
+        btnIA.textContent = '🤖 Asistente Milo IA';
+        footer.appendChild(btnIA);
+        extra.appendChild(footer);
+
+      } else if (ROLE === 'estudiante' && IS_AUTH && AJAX_CTX.has(pageCtx)) {
+        if (pendientesCache) {
+          renderPendientes(pendientesCache, pageCtx);
+        } else {
+          fetch("{% url 'talleres:milo_pendientes' %}", {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          })
+          .then(r => r.json())
+          .then(data => { pendientesCache = data; renderPendientes(data, pageCtx); })
+          .catch(() => {});
         }
       }
-    });
-  }
+
+      bubble.classList.add('show');
+
+      // Auto-cierre a los 10 segundos
+      clearTimeout(autoCloseTimer);
+      autoCloseTimer = setTimeout(closeBubble, 10000);
+    }
+
+    function renderPendientes(data, pageCtx) {
+      extra.innerHTML = '';
+      const total = (data.talleres || 0) + (data.minijuegos || 0);
+
+      if (!data.periodo) {
+        speech.textContent = '😊 No hay un período activo en este momento. ¡Sigue practicando!';
+        setImg(IMG.idle);
+      } else if (total === 0) {
+        speech.textContent = '🎉 ¡Todo al día! No tienes actividades pendientes. ¡Excelente trabajo!';
+        setImg(IMG.celebrando);
+      } else {
+        speech.textContent = '📅 ' + data.periodo + ' · vence ' + data.fecha_fin;
+        setImg(IMG.preocupado);
+        const list = document.createElement('ul');
+        list.className = 'milo-pendientes-list';
+        (data.nombres_talleres || []).forEach(n => {
+          const li = document.createElement('li'); li.textContent = '📋 ' + n; list.appendChild(li);
+        });
+        (data.nombres_minijuegos || []).forEach(n => {
+          const li = document.createElement('li'); li.textContent = '🎮 ' + n; list.appendChild(li);
+        });
+        extra.appendChild(list);
+      }
+
+      const footer = document.createElement('div');
+      footer.className = 'milo-bubble-footer';
+      const btnAct = document.createElement('a');
+      btnAct.href = "{% url 'talleres:mis_talleres' %}";
+      btnAct.className = 'milo-btn milo-btn-primary';
+      btnAct.textContent = '📋 Mis Actividades';
+      footer.appendChild(btnAct);
+      extra.appendChild(footer);
+    }
+
+    // Apertura automática al cargar la página (espera a que termine la transición)
+    setTimeout(openBubble, 1800);
+
+    // ── Comentarista Milo: para talleres y modo historia ─────────────────────
+    // tipo: 'correcto' | 'incorrecto' | 'neutro'
+    // datos: { msg?, pregunta?, respuesta_correcta?, respuesta_dada?, contexto? }
+    // onContinuar: callback que se llama cuando el estudiante acepta o se auto-cierra
+    window.miloComentarista = function(tipo, datos, onContinuar) {
+      if (!float) { if (onContinuar) onContinuar(); return; }
+      clearTimeout(autoCloseTimer);
+
+      const d = datos || {};
+
+      if (tipo === 'correcto') {
+        speech.innerHTML = d.msg || '¡Excelente! ¡Respuesta correcta! 🎉';
+        extra.innerHTML = '';
+        setImg(IMG.aplaudiendo);
+        bubble.classList.add('show');
+        isOpen = true;
+        autoCloseTimer = setTimeout(function() {
+          bubble.classList.remove('show');
+          isOpen = false;
+          setImg(IMG.idle);
+          if (onContinuar) onContinuar();
+        }, 2000);
+
+      } else if (tipo === 'incorrecto') {
+        speech.textContent = '🔍 Revisando tu respuesta…';
+        extra.innerHTML = '';
+        setImg(IMG.apuntes);
+        bubble.classList.add('show');
+        isOpen = true;
+
+        fetch("{% url 'asistente:milo_correccion' %}", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+          body: JSON.stringify({
+            pregunta:           d.pregunta || '',
+            respuesta_correcta: d.respuesta_correcta || '',
+            respuesta_dada:     d.respuesta_dada || '',
+            contexto:           d.contexto || '',
+          }),
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          speech.textContent = data.correccion || '¡Sigue practicando! 💪';
+          setImg(IMG.leyendo);
+          _mostrarBotonContinuar(onContinuar);
+        })
+        .catch(function() {
+          speech.textContent = '¡No te rindas! La práctica lleva a la perfección. 💪';
+          setImg(IMG.pulgar);
+          _mostrarBotonContinuar(onContinuar);
+        });
+
+      } else {
+        speech.textContent = d.msg || '¡Muy bien! ✨';
+        extra.innerHTML = '';
+        setImg(IMG.pulgar);
+        bubble.classList.add('show');
+        isOpen = true;
+        autoCloseTimer = setTimeout(function() {
+          bubble.classList.remove('show');
+          isOpen = false;
+          setImg(IMG.idle);
+          if (onContinuar) onContinuar();
+        }, 1400);
+      }
+    };
+
+    function _mostrarBotonContinuar(onContinuar) {
+      extra.innerHTML = '';
+      const footer = document.createElement('div');
+      footer.className = 'milo-bubble-footer';
+      const btn = document.createElement('button');
+      btn.className = 'milo-btn milo-btn-primary';
+      btn.textContent = 'Entendido, continuar →';
+      btn.onclick = function() {
+        bubble.classList.remove('show');
+        isOpen = false;
+        setImg(IMG.idle);
+        if (onContinuar) onContinuar();
+      };
+      footer.appendChild(btn);
+      extra.appendChild(footer);
+    }
+  })();
   </script>
 
   <!-- ══ TRANSICIÓN DE PÁGINA (círculos) ══ -->

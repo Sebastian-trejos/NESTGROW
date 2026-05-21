@@ -1053,18 +1053,80 @@ function collectAnswer(act) {
   return {};  // intro, vocab, dialogo, pronunciacion, minijuego → no answer needed
 }
 
-// ── Show correction panel ─────────────────────────────────────────────────────
-function showCorrection(tipo, msg, sub, duration=2500) {
-  const panel = document.getElementById('corrPanel');
-  panel.className = 'correction-panel ' + tipo;
-  document.getElementById('corrIcon').textContent = tipo === 'correct' ? '✅' : tipo === 'incorrect' ? '❌' : '✨';
-  document.getElementById('corrMsg').textContent  = msg;
-  document.getElementById('corrSub').textContent  = sub || '';
-  panel.style.display = 'flex';
-  return new Promise(res => setTimeout(() => {
-    panel.style.display = 'none';
-    res();
-  }, duration));
+// ── Show correction panel (vía Milo) ──────────────────────────────────────────
+// Retorna una Promise que se resuelve cuando el estudiante continúa
+function showCorrection(tipo, msg, sub, _duration, actDatos) {
+  return new Promise(function(resolve) {
+    if (!window.miloComentarista) {
+      // Fallback: panel clásico si Milo no está disponible
+      const panel = document.getElementById('corrPanel');
+      panel.className = 'correction-panel ' + tipo;
+      document.getElementById('corrIcon').textContent = tipo === 'correct' ? '✅' : tipo === 'incorrect' ? '❌' : '✨';
+      document.getElementById('corrMsg').textContent  = msg;
+      document.getElementById('corrSub').textContent  = sub || '';
+      panel.style.display = 'flex';
+      setTimeout(() => { panel.style.display = 'none'; resolve(); }, _duration || 2500);
+      return;
+    }
+
+    const d = actDatos || {};
+    if (tipo === 'correct') {
+      window.miloComentarista('correcto', { msg: msg || '¡Correcto! 🎉' }, resolve);
+    } else if (tipo === 'incorrect') {
+      window.miloComentarista('incorrecto', {
+        pregunta:           d.pregunta || '',
+        respuesta_correcta: d.respuesta_correcta || '',
+        respuesta_dada:     d.respuesta_dada || '',
+        contexto:           'Modo Historia — inglés para primaria',
+      }, resolve);
+    } else {
+      window.miloComentarista('neutro', { msg: msg || '¡Muy bien! ✨' }, resolve);
+    }
+  });
+}
+
+// ── Extrae contexto de la actividad actual para la corrección de Milo ─────────
+function _extraerContextoActividad(act) {
+  const d = act.datos || {};
+  let pregunta = '';
+  let respuesta_correcta = '';
+  let respuesta_dada = '';
+
+  if (act.tipo === 'listening' || act.tipo === 'reading') {
+    const grids = document.querySelectorAll('[data-qidx]');
+    const primero = grids[0];
+    if (primero) {
+      const preg = d.preguntas && d.preguntas[0];
+      if (preg) {
+        pregunta = preg.pregunta || preg.audio_texto || '';
+        respuesta_correcta = preg.respuesta || '';
+      }
+      const sel = primero.querySelector('.opcion-btn.selected');
+      respuesta_dada = sel ? sel.dataset.val : '';
+    }
+  } else if (act.tipo === 'writing') {
+    const inputs = document.querySelectorAll('.writing-input');
+    const ejs = d.ejercicios || [];
+    const incorrectos = [...inputs].filter(i => i.value.trim().toLowerCase() !== (ejs[parseInt(i.dataset.eidx)]?.en||'').toLowerCase());
+    if (incorrectos.length) {
+      const idx2 = parseInt(incorrectos[0].dataset.eidx);
+      const ej = ejs[idx2] || {};
+      pregunta = '¿Cómo se dice "' + (ej.es || '') + '" en inglés?';
+      respuesta_correcta = ej.en || '';
+      respuesta_dada = incorrectos[0].value;
+    }
+  } else if (act.tipo === 'minijuego_embed') {
+    const tipo = (d.tipo_minijuego || '');
+    if (tipo === 'rellenar' && d.oraciones && d.oraciones[0]) {
+      pregunta = d.oraciones[0].texto || '';
+      respuesta_correcta = d.oraciones[0].respuesta || '';
+    } else if (tipo === 'ordenar_oracion') {
+      pregunta = 'Ordena la oración';
+      respuesta_correcta = (d.oracion || '');
+    }
+  }
+
+  return { pregunta, respuesta_correcta, respuesta_dada };
 }
 
 // ── Main flow ─────────────────────────────────────────────────────────────────
@@ -1091,14 +1153,66 @@ async function onContinue() {
   // Minijuegos con validación cliente antes de enviar al servidor
   if (act.tipo === 'minijuego_embed') {
     const tipo = (act.datos||{}).tipo_minijuego || 'memoria';
+    const d    = act.datos || {};
+
     if (tipo === 'rellenar') {
-      if (!rellenarValidar()) { btn.disabled = true; return; }
+      if (!rellenarValidar()) {
+        btn.disabled = true;
+        // Buscar el primer campo incorrecto para dar contexto a Milo
+        const oraciones = d.oraciones || [];
+        const inputs = document.querySelectorAll('.rellenar-input');
+        let pregunta = '', respuesta_correcta = '', respuesta_dada = '';
+        for (const inp of inputs) {
+          if (inp.value.trim().toLowerCase() !== inp.dataset.resp) {
+            const ridx = parseInt(inp.dataset.ridx);
+            pregunta = (oraciones[ridx]||{}).texto || '';
+            respuesta_correcta = (oraciones[ridx]||{}).respuesta || '';
+            respuesta_dada = inp.value;
+            break;
+          }
+        }
+        if (window.miloComentarista) {
+          window.miloComentarista('incorrecto', {
+            pregunta, respuesta_correcta, respuesta_dada,
+            contexto: 'Modo Historia — rellena el espacio en inglés',
+          }, function() { btn.disabled = false; });
+        }
+        return;
+      }
     }
+
     if (tipo === 'ordenar_oracion') {
-      if (!ordenValidar()) return;
+      // Capturar respuesta antes de que ordenValidar() devuelva las fichas al banco
+      const zona = document.getElementById('palabrasZona');
+      const respuesta_dada = zona
+        ? [...zona.querySelectorAll('.palabra-chip')].map(c => c.dataset.word).join(' ')
+        : '';
+      if (!ordenValidar()) {
+        if (window.miloComentarista) {
+          window.miloComentarista('incorrecto', {
+            pregunta: 'Ordena las palabras para formar la oración correcta',
+            respuesta_correcta: d.oracion || '',
+            respuesta_dada,
+            contexto: 'Modo Historia — ordenar oración en inglés',
+          }, function() { /* el estudiante reintenta */ });
+        }
+        return;
+      }
     }
+
     if (tipo === 'clasificar') {
-      clasificarValidar();
+      const esOk = clasificarValidar();
+      if (!esOk) {
+        if (window.miloComentarista) {
+          window.miloComentarista('incorrecto', {
+            pregunta: 'Clasifica cada palabra en su categoría correcta',
+            respuesta_correcta: '',
+            respuesta_dada: '',
+            contexto: 'Modo Historia — clasificar palabras',
+          }, function() { /* el estudiante reintenta */ });
+        }
+        return;
+      }
     }
   }
 
@@ -1122,10 +1236,12 @@ async function onContinue() {
 
     if (act.tiene_correcta && data.es_correcta !== null) {
       if (data.es_correcta) {
-        await showCorrection('correct', '¡Correcto!',
-          data.puntos > 0 ? `+${data.puntos} puntos` : '');
+        await showCorrection('correct',
+          `¡Correcto!${data.puntos > 0 ? ' +' + data.puntos + ' pts' : ''}`,
+          '', 2000);
       } else {
-        await showCorrection('incorrect', '¡Incorrecto!', '');
+        const actDatos = _extraerContextoActividad(act);
+        await showCorrection('incorrect', '¡Incorrecto!', '', 0, actDatos);
       }
     } else if (['vocabulario','dialogo','introduccion','pronunciacion'].includes(act.tipo)) {
       await showCorrection('neutral', '¡Muy bien!', '', 1200);

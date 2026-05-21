@@ -504,11 +504,22 @@ def guardar_respuesta(request, pk, bpk):
     sesion.bloque_actual += 1
     sesion.save()
 
+    correctas_texto = ' / '.join(
+        pregunta.opciones.filter(es_correcta=True).values_list('texto', flat=True)
+    ) if pregunta.tipo_respuesta in ('opcion_multiple', 'casillas') else ''
+
+    payload_extra = {
+        'enunciado': pregunta.enunciado,
+        'respuesta_correcta': correctas_texto,
+    }
+
     if sesion.bloque_actual >= len(bloques_ids):
         _completar_taller(sesion, taller, request.user)
-        return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk, 'es_correcta': es_correcta, 'puntos': puntos})
+        return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk,
+                             'es_correcta': es_correcta, 'puntos': puntos, **payload_extra})
 
-    return JsonResponse({'ok': True, 'next': 'siguiente', 'es_correcta': es_correcta, 'puntos': puntos})
+    return JsonResponse({'ok': True, 'next': 'siguiente', 'es_correcta': es_correcta,
+                         'puntos': puntos, **payload_extra})
 
 
 @login_required
@@ -903,4 +914,70 @@ def resultado_sesion(request, pk):
         'pct': pct,
         'nota': nota,
         'resumen': resumen,
+    })
+
+
+@login_required
+@estudiante_required
+def milo_pendientes(request):
+    """AJAX: devuelve resumen de actividades pendientes del período activo para el widget de Milo."""
+    try:
+        profile = request.user.estudiante_profile
+    except Exception:
+        return JsonResponse({'talleres': 0, 'minijuegos': 0, 'periodo': None})
+
+    if not profile.salon:
+        return JsonResponse({'talleres': 0, 'minijuegos': 0, 'periodo': None})
+
+    hoy = timezone.now().date()
+    periodo = Periodo.objects.filter(
+        salon=profile.salon,
+        is_activo=True,
+        cerrado=False,
+        fecha_fin__gte=hoy,
+    ).order_by('-fecha_inicio').first()
+
+    if not periodo:
+        return JsonResponse({'talleres': 0, 'minijuegos': 0, 'periodo': None})
+
+    # Talleres pendientes (no completados+revisados)
+    taller_ids = list(periodo.talleres_asignados.values_list('taller_id', flat=True))
+    completados_revisados = set(
+        SesionTaller.objects.filter(
+            estudiante=request.user,
+            taller_id__in=taller_ids,
+            completada=True,
+            revisado=True,
+        ).values_list('taller_id', flat=True)
+    )
+    nombres_talleres = list(
+        periodo.talleres_asignados
+        .exclude(taller_id__in=completados_revisados)
+        .select_related('taller')
+        .values_list('taller__titulo', flat=True)
+    )
+
+    # Minijuegos pendientes (no revisados)
+    asig_ids = list(periodo.minijuegos_asignados.values_list('pk', flat=True))
+    revisados_ids = set(
+        RegistroMinijuegoPeriodo.objects.filter(
+            periodo=periodo,
+            estudiante=request.user,
+            revisado=True,
+        ).values_list('asignacion_id', flat=True)
+    )
+    nombres_minijuegos = list(
+        periodo.minijuegos_asignados
+        .exclude(pk__in=revisados_ids)
+        .select_related('game')
+        .values_list('game__name', flat=True)
+    )
+
+    return JsonResponse({
+        'talleres': len(nombres_talleres),
+        'minijuegos': len(nombres_minijuegos),
+        'periodo': periodo.titulo,
+        'fecha_fin': periodo.fecha_fin.strftime('%d/%m'),
+        'nombres_talleres': nombres_talleres,
+        'nombres_minijuegos': nombres_minijuegos,
     })

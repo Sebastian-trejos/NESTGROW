@@ -2086,48 +2086,6 @@
   },
   {
     "model": "content.vocabularyitem",
-    "pk": 91,
-    "fields": {
-      "category": 4,
-      "word_en": "Apple",
-      "word_es": "Manzana",
-      "descripcion_es": "Fruta redonda crujiente que puede ser roja, verde o amarilla",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": true,
-      "orden": 1,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍎"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 92,
-    "fields": {
-      "category": 4,
-      "word_en": "Banana",
-      "word_es": "Banana",
-      "descripcion_es": "Fruta alargada, amarilla y dulce que le encanta a los monos",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": true,
-      "orden": 2,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍌"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
     "pk": 93,
     "fields": {
       "category": 4,
@@ -2202,7 +2160,7 @@
       "audio": null,
       "hint": "",
       "difficulty": 1,
-      "is_unlocked_by_default": false,
+      "is_unlocked_by_default": true,
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
@@ -2223,7 +2181,7 @@
       "audio": null,
       "hint": "",
       "difficulty": 1,
-      "is_unlocked_by_default": false,
+      "is_unlocked_by_default": true,
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
@@ -2250,27 +2208,6 @@
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
       "emoji": "🍗"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 99,
-    "fields": {
-      "category": 4,
-      "word_en": "Fish",
-      "word_es": "Pescado",
-      "descripcion_es": "Carne de pez, alimento muy saludable rico en proteínas",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 9,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🐟"
     }
   },
   {
@@ -2376,153 +2313,6 @@
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
       "emoji": "🧃"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 105,
-    "fields": {
-      "category": 4,
-      "word_en": "Orange",
-      "word_es": "Naranja",
-      "descripcion_es": "Fruta cítrica redonda con jugo delicioso y vitamina C",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 15,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍊"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 106,
-    "fields": {
-      "category": 4,
-      "word_en": "Strawberry",
-      "word_es": "Fresa",
-      "descripcion_es": "Fruta roja pequeña con semillitas y sabor dulce y ácido",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 16,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍓"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 107,
-    "fields": {
-      "category": 4,
-      "word_en": "Grape",
-      "word_es": "Uva",
-      "descripcion_es": "Fruta pequeña que crece en racimos, puede ser verde o morada",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 17,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍇"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 108,
-    "fields": {
-      "category": 4,
-      "word_en": "Watermelon",
-      "word_es": "Sandía",
-      "descripcion_es": "Fruta enorme verde por fuera y roja y dulce por dentro",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 18,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍉"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 109,
-    "fields": {
-      "category": 4,
-      "word_en": "Tomato",
-      "word_es": "Tomate",
-      "descripcion_es": "Fruta o verdura roja jugosa usada en salsas y ensaladas",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 19,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍅"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 110,
-    "fields": {
-      "category": 4,
-      "word_en": "Carrot",
-      "word_es": "Zanahoria",
-      "descripcion_es": "Verdura alargada de color naranja, muy buena para la vista",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 20,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🥕"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 111,
-    "fields": {
-      "category": 4,
-      "word_en": "Potato",
-      "word_es": "Papa",
-      "descripcion_es": "Tubérculo marrón que se usa para papas fritas, puré o sopas",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 21,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🥔"
     }
   },
   {
@@ -2653,27 +2443,6 @@
   },
   {
     "model": "content.vocabularyitem",
-    "pk": 118,
-    "fields": {
-      "category": 4,
-      "word_en": "Corn",
-      "word_es": "Maíz",
-      "descripcion_es": "Cereal amarillo con granos en mazorca, base de la cocina latina",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 28,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🌽"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
     "pk": 119,
     "fields": {
       "category": 4,
@@ -2775,90 +2544,6 @@
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
       "emoji": "🧂"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 124,
-    "fields": {
-      "category": 4,
-      "word_en": "Lemon",
-      "word_es": "Limón",
-      "descripcion_es": "Fruta amarilla muy ácida usada en bebidas y como condimento",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 2,
-      "is_unlocked_by_default": false,
-      "orden": 34,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍋"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 125,
-    "fields": {
-      "category": 4,
-      "word_en": "Mango",
-      "word_es": "Mango",
-      "descripcion_es": "Fruta tropical dulce y jugosa de pulpa amarilla o naranja",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 35,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🥭"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 126,
-    "fields": {
-      "category": 4,
-      "word_en": "Pineapple",
-      "word_es": "Piña",
-      "descripcion_es": "Fruta tropical con corona verde y pulpa amarilla muy dulce",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 2,
-      "is_unlocked_by_default": false,
-      "orden": 36,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🍍"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 127,
-    "fields": {
-      "category": 4,
-      "word_en": "Avocado",
-      "word_es": "Aguacate",
-      "descripcion_es": "Fruta verde cremosa muy nutritiva, base del guacamole",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 2,
-      "is_unlocked_by_default": false,
-      "orden": 37,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🥑"
     }
   },
   {
@@ -4354,27 +4039,6 @@
   },
   {
     "model": "content.vocabularyitem",
-    "pk": 199,
-    "fields": {
-      "category": 8,
-      "word_en": "Teacher",
-      "word_es": "Profesor",
-      "descripcion_es": "Persona que enseña y guía a los estudiantes en el colegio",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": true,
-      "orden": 4,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🧑‍🏫"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
     "pk": 200,
     "fields": {
       "category": 8,
@@ -4407,7 +4071,7 @@
       "audio": null,
       "hint": "",
       "difficulty": 1,
-      "is_unlocked_by_default": false,
+      "is_unlocked_by_default": true,
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
@@ -4535,27 +4199,6 @@
       "difficulty": 1,
       "is_unlocked_by_default": false,
       "orden": 12,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🪑"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 208,
-    "fields": {
-      "category": 8,
-      "word_en": "Chair",
-      "word_es": "Silla",
-      "descripcion_es": "Mueble con respaldo y cuatro patas para sentarse",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 13,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
@@ -4728,27 +4371,6 @@
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
       "emoji": "📝"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 217,
-    "fields": {
-      "category": 8,
-      "word_en": "Library",
-      "word_es": "Biblioteca",
-      "descripcion_es": "Lugar lleno de libros donde se puede leer y estudiar en silencio",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 2,
-      "is_unlocked_by_default": false,
-      "orden": 22,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "📚"
     }
   },
   {
@@ -5656,27 +5278,6 @@
   },
   {
     "model": "content.vocabularyitem",
-    "pk": 261,
-    "fields": {
-      "category": 10,
-      "word_en": "Beach",
-      "word_es": "Playa",
-      "descripcion_es": "Franja de arena junto al mar donde las olas llegan a la orilla",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 16,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "🏖️"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
     "pk": 262,
     "fields": {
       "category": 10,
@@ -5862,27 +5463,6 @@
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
       "emoji": "🌙"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 271,
-    "fields": {
-      "category": 10,
-      "word_en": "Star",
-      "word_es": "Estrella",
-      "descripcion_es": "Punto brillante de luz que vemos en el cielo durante la noche",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 26,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "⭐"
     }
   },
   {
@@ -7168,48 +6748,6 @@
   },
   {
     "model": "content.vocabularyitem",
-    "pk": 333,
-    "fields": {
-      "category": 13,
-      "word_en": "Happy",
-      "word_es": "Feliz",
-      "descripcion_es": "Que siente alegría, bienestar y satisfacción",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": true,
-      "orden": 3,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "😊"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 334,
-    "fields": {
-      "category": 13,
-      "word_en": "Sad",
-      "word_es": "Triste",
-      "descripcion_es": "Que siente melancolía, pena o desánimo",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": true,
-      "orden": 4,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "😢"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
     "pk": 335,
     "fields": {
       "category": 13,
@@ -7242,7 +6780,7 @@
       "audio": null,
       "hint": "",
       "difficulty": 1,
-      "is_unlocked_by_default": false,
+      "is_unlocked_by_default": true,
       "orden": 6,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
@@ -7263,7 +6801,7 @@
       "audio": null,
       "hint": "",
       "difficulty": 1,
-      "is_unlocked_by_default": false,
+      "is_unlocked_by_default": true,
       "orden": 7,
       "is_active": true,
       "created_at": "2024-01-01T00:00:00Z",
@@ -8637,27 +8175,6 @@
       "created_at": "2024-01-01T00:00:00Z",
       "updated_at": "2024-01-01T00:00:00Z",
       "emoji": "⭐"
-    }
-  },
-  {
-    "model": "content.vocabularyitem",
-    "pk": 396,
-    "fields": {
-      "category": 16,
-      "word_en": "Heart",
-      "word_es": "Corazon",
-      "descripcion_es": "Figura que representa el amor, con dos curvas arriba",
-      "pronunciacion_es": "",
-      "image": null,
-      "audio": null,
-      "hint": "",
-      "difficulty": 1,
-      "is_unlocked_by_default": false,
-      "orden": 6,
-      "is_active": true,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z",
-      "emoji": "❤️"
     }
   },
   {

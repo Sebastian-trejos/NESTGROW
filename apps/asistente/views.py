@@ -1,6 +1,7 @@
 import json
 import asyncio
 
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
@@ -10,6 +11,14 @@ from apps.accounts.decorators import profesor_required
 from apps.accounts.models import EstudianteProfile
 from .models import MensajeChat
 from .services import AsistenteMilo
+
+SYSTEM_CORRECCION = (
+    "Eres Milo, un perro amigable que ayuda a niños de primaria colombiana a aprender inglés. "
+    "Un estudiante respondió incorrectamente. "
+    "Da una corrección MUY breve (máximo 2 oraciones) en español, amigable y motivadora. "
+    "Explica por qué la respuesta correcta es correcta usando lenguaje simple para niños de 8–12 años. "
+    "Termina con una frase motivadora muy corta. NO uses palabras como 'Error' o 'Equivocado'."
+)
 
 
 @profesor_required
@@ -77,6 +86,49 @@ def limpiar_historial(request):
         )
     MensajeChat.objects.filter(profesor=request.user, modo='planeacion').delete()
     return JsonResponse({'ok': True})
+
+
+@require_POST
+@login_required
+@ratelimit(key='user', rate='60/h', method='POST', block=False)
+def milo_correccion(request):
+    """Genera una corrección breve con IA para mostrar al estudiante vía el bubble de Milo."""
+    was_limited = getattr(request, 'limited', False)
+    if was_limited:
+        return JsonResponse({'correccion': '¡Sigue practicando! La constancia lleva al éxito. 💪'})
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'correccion': '¡Inténtalo de nuevo! 💪'})
+
+    pregunta         = (body.get('pregunta') or '').strip()[:300]
+    respuesta_correcta = (body.get('respuesta_correcta') or '').strip()[:200]
+    respuesta_dada   = (body.get('respuesta_dada') or '').strip()[:200]
+    contexto         = (body.get('contexto') or '').strip()[:200]
+
+    partes = []
+    if contexto:
+        partes.append(f'Contexto: {contexto}.')
+    if pregunta:
+        partes.append(f'Pregunta: "{pregunta}".')
+    if respuesta_dada:
+        partes.append(f'El estudiante respondió: "{respuesta_dada}".')
+    if respuesta_correcta:
+        partes.append(f'La respuesta correcta era: "{respuesta_correcta}".')
+    if not partes:
+        return JsonResponse({'correccion': '¡No te rindas! Cada error nos enseña algo nuevo. 💪'})
+
+    mensaje = ' '.join(partes) + ' Dame la corrección breve.'
+    messages = [{'role': 'user', 'content': mensaje}]
+
+    milo = AsistenteMilo()
+    resultado = asyncio.run(milo._llamar_ia(messages, SYSTEM_CORRECCION))
+    texto = resultado.get('texto', '').strip()
+    if not texto or resultado.get('motor') == 'error':
+        texto = '¡Casi lo logras! La respuesta correcta era: ' + (respuesta_correcta or '…') + '. ¡Tú puedes! 💪'
+
+    return JsonResponse({'correccion': texto})
 
 
 @require_POST

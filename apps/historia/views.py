@@ -73,6 +73,22 @@ def _seccion_desbloqueada(seccion, estudiante):
     ).exists()
 
 
+def _desbloquear_vocab_historia(estudiante, actividad):
+    """Desbloquea en VocabularioDesbloqueado las palabras vistas en una actividad de vocabulario."""
+    from apps.content.models import VocabularyItem, VocabularioDesbloqueado
+    tarjetas = actividad.datos.get('tarjetas', [])
+    for tarjeta in tarjetas:
+        word_en = tarjeta.get('en', '').strip()
+        if not word_en:
+            continue
+        for vocab_item in VocabularyItem.objects.filter(word_en__iexact=word_en, is_active=True):
+            VocabularioDesbloqueado.objects.get_or_create(
+                estudiante=estudiante,
+                item=vocab_item,
+                defaults={'fuente': 'historia'},
+            )
+
+
 def _evaluar_respuesta(actividad, respuesta_dada):
     """
     Evaluate a submitted answer for an activity.
@@ -306,6 +322,10 @@ def guardar_respuesta(request):
             update_fields.append('actividad_actual')
         progreso.save(update_fields=update_fields)
         progreso.refresh_from_db()
+
+        # Desbloquear vocabulario al ver una actividad de tipo 'vocabulario'
+        if actividad.tipo == 'vocabulario':
+            _desbloquear_vocab_historia(request.user, actividad)
 
         total_acts   = leccion.actividades.count()
         es_ultima    = progreso.actividad_actual >= total_acts
