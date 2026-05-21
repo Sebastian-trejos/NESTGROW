@@ -488,11 +488,11 @@
   <a href="{% url 'games:tienda' %}" class="room-hud hud-shop"><i class="bi bi-shop"></i> Tienda</a>
 
   <!-- ── Milo ────────────────────────────────────────── -->
-  <div class="milo-lector" id="miloLector" onclick="miloHabla()">
+  <div class="milo-lector" id="miloLector">
     <div class="milo-bubble" id="miloBubble" style="min-width:180px">
       <span id="miloBubbleText">¡Bienvenid@ a mi cuarto! 🎉</span>
     </div>
-    <div class="milo-mood-badge" id="miloBadge">😄</div>
+  
     <div class="milo-lector-wrap">
       <!-- Usa milo_saludando como imagen principal (existe en el proyecto) -->
       <img src="{% static 'img/milo_saludando.png' %}"
@@ -934,6 +934,95 @@ function initSnake() {
     if(map[e.key]){e.preventDefault();const nd=map[e.key];if(nd.x!==-dir.x||nd.y!==-dir.y)nextDir=nd;if(gameState==='idle')startGame();}
     if(e.code==='Space'){e.preventDefault();if(gameState!=='running')startGame();}
   });
+}
+
+/* ─────────────────────────────
+   DRAG & DROP MILO + DORMIR
+───────────────────────────── */
+const milo = document.getElementById("miloLector");
+const room = document.getElementById("roomPage");
+
+let dragging = false;
+let offsetX = 0;
+let offsetY = 0;
+let estaDormido = false; // 👈 NUEVO
+
+milo.addEventListener("mousedown", (e) => {
+  dragging = true;
+  offsetX = e.clientX - milo.offsetLeft;
+  offsetY = e.clientY - milo.offsetTop;
+  milo.style.transition = "none";
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!dragging) return;
+
+  milo.style.left = (e.clientX - offsetX) + "px";
+  milo.style.top = (e.clientY - offsetY) + "px";
+  milo.style.bottom = "auto";
+});
+
+document.addEventListener("mouseup", () => {
+  if (!dragging) return;
+  dragging = false;
+
+  checkBed(); // 👈 revisa al soltar
+});
+
+/* ─────────────────────────────
+   DETECTAR CAMA
+───────────────────────────── */
+function checkBed() {
+  const miloRect = milo.getBoundingClientRect();
+  const roomRect = room.getBoundingClientRect();
+
+  const bedZone = {
+    x1: roomRect.left,
+    x2: roomRect.left + roomRect.width * 0.35,
+    y1: roomRect.top + roomRect.height * 0.55,
+    y2: roomRect.bottom
+  };
+
+  const estaEnCama =
+    miloRect.left > bedZone.x1 &&
+    miloRect.right < bedZone.x2 &&
+    miloRect.bottom > bedZone.y1;
+
+  if (estaEnCama && !estaDormido) {
+    dormirMilo();
+  }
+
+  if (!estaEnCama && estaDormido) {
+    despertarMilo(); // 👈 NUEVO
+  }
+}
+
+/* ─────────────────────────────
+   MILO SE DUERME 🌙
+───────────────────────────── */
+function dormirMilo() {
+  const img = document.getElementById("miloImg");
+
+  estaDormido = true;
+
+  img.src = "{% static 'img/milo_dormido.png' %}";
+
+  room.style.background =
+    "url('{% static 'img/h_noche.png' %}') center center / cover no-repeat";
+}
+
+/* ─────────────────────────────
+   MILO SE DESPIERTA ☀️
+───────────────────────────── */
+function despertarMilo() {
+  const img = document.getElementById("miloImg");
+
+  estaDormido = false;
+
+  img.src = "{% static 'img/milo_saludando.png' %}";
+
+  room.style.background =
+    "url('{% static 'img/h_dia.png' %}') center center / cover no-repeat";
 }
 </script>
 {% endblock %}

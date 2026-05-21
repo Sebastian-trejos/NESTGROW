@@ -3,69 +3,223 @@
 
 {% block extra_css %}
 <style>
-  .museo-header {
-    background: linear-gradient(135deg, #f0eeff, #ffe9f0);
-    border-radius: 24px;
-    padding: 32px;
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  .artwork-card {
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(108,99,255,0.12);
-    transition: all 0.3s;
-  }
-  .artwork-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 16px 40px rgba(108,99,255,0.22);
-  }
-  .artwork-frame {
-    background: linear-gradient(135deg, #f8f6ff, #fff5f0);
-    padding: 12px;
-    border-bottom: 2px solid #f0eeff;
-  }
-  .artwork-frame img {
-    width: 100%;
-    height: 200px;
-    object-fit: contain;
-    border-radius: 12px;
-    background: white;
-  }
-  .artwork-info {
-    padding: 14px 16px;
-  }
-  .artwork-word {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    color: var(--primary);
-  }
-  .artwork-author {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-light);
-  }
-  .artwork-date {
-    font-size: 0.78rem;
-    color: #bbb;
-    font-weight: 600;
-  }
-  .empty-museo {
-    text-align: center;
-    padding: 80px 20px;
-  }
-  .filter-bar {
-    background: white;
-    border-radius: 16px;
-    padding: 16px 20px;
-    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  /* ══════════════════════════════════════
+   FONDO GENERAL TIPO GALERÍA
+══════════════════════════════════════ */
+body {
+  body {
+  background:
+    radial-gradient(circle at 15% 25%, rgba(108,99,255,0.18), transparent 35%),
+    radial-gradient(circle at 85% 20%, rgba(78,205,196,0.18), transparent 35%),
+    radial-gradient(circle at 25% 80%, rgba(255,107,107,0.18), transparent 35%),
+    radial-gradient(circle at 70% 75%, rgba(255,230,109,0.22), transparent 35%), /* amarillo */
+    radial-gradient(circle at 50% 50%, rgba(255,80,80,0.12), transparent 40%), /* rojo suave */
+    linear-gradient(135deg, #f8f7ff, #fffaf7);
+}
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+.museo-header {
+  background: linear-gradient(135deg, #f0eeff, #ffe9f0);
+  border-radius: 28px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 36px;
+  box-shadow: 0 10px 40px rgba(108,99,255,0.15);
+  position: relative;
+  overflow: hidden;
+
+}
+
+.museo-header::before,
+.museo-header::after,
+.museo-header .paint-blob {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.5;
+}
+
+/* morado */
+.museo-header::before {
+  width: 220px;
+  height: 220px;
+  background: #6C63FF;
+  top: -80px;
+  left: -60px;
+}
+
+/* turquesa */
+.museo-header::after {
+  width: 200px;
+  height: 200px;
+  background: #4ECDC4;
+  bottom: -80px;
+  right: -60px;
+}
+
+/* amarillo */
+.museo-header .paint-blob.yellow {
+  width: 160px;
+  height: 160px;
+  background: #FFE66D;
+  top: 10px;
+  right: 20%;
+}
+
+/* rojo */
+.museo-header .paint-blob.red {
+  width: 140px;
+  height: 140px;
+  background: #FF6B6B;
+  bottom: 20px;
+  left: 25%;
+}
+
+/* ══════════════════════════════════════
+   TARJETAS DE ARTE
+══════════════════════════════════════ */
+.artwork-card {
+  background: white;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(108,99,255,0.12);
+  transition: all 0.35s cubic-bezier(.22,1,.36,1);
+  position: relative;
+}
+
+.artwork-card:hover {
+  transform: translateY(-10px) scale(1.04) rotate(-0.5deg);
+  box-shadow: 0 20px 50px rgba(108,99,255,0.25);
+}
+
+/* brillo suave */
+.artwork-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.artwork-card:hover::after {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════
+   MARCO DE LA OBRA
+══════════════════════════════════════ */
+.artwork-frame {
+  background: linear-gradient(135deg, #f8f6ff, #fff5f0);
+  padding: 14px;
+  border-bottom: 2px solid #f0eeff;
+}
+
+.artwork-frame img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: white;
+  transition: transform 0.3s;
+}
+
+.artwork-card:hover img {
+  transform: scale(1.05);
+}
+
+/* ══════════════════════════════════════
+   INFO
+══════════════════════════════════════ */
+.artwork-info {
+  padding: 16px;
+}
+
+.artwork-word {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  color: var(--primary);
+}
+
+.artwork-author {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.artwork-date {
+  font-size: 0.78rem;
+  color: #bbb;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════
+   FILTRO
+══════════════════════════════════════ */
+.filter-bar {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: 0 6px 20px rgba(108,99,255,0.12);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ══════════════════════════════════════
+   EMPTY STATE (CUANDO NO HAY OBRAS)
+══════════════════════════════════════ */
+.empty-museo {
+  text-align: center;
+  padding: 90px 20px;
+  position: relative;
+}
+
+/* manchas detrás de Milo */
+.empty-museo::before,
+.empty-museo::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.25;
+  z-index: 0;
+}
+
+.empty-museo::before {
+  width: 220px;
+  height: 220px;
+  background: #6C63FF;
+  left: 30%;
+  top: 20%;
+}
+
+.empty-museo::after {
+  width: 180px;
+  height: 180px;
+  background: #FF6B6B;
+  right: 30%;
+  bottom: 10%;
+}
+
+/* Milo arriba de las manchas */
+.empty-museo img {
+  position: relative;
+  z-index: 2;
+  animation: floatMilo 3s ease-in-out infinite;
+}
+
+/* animación flotante */
+@keyframes floatMilo {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
 </style>
 {% endblock %}
 
@@ -74,7 +228,9 @@
 
   <!-- Header -->
   <div class="museo-header">
-    <div style="font-size:4rem">🏛️</div>
+    <div class="paint-blob yellow"></div>
+    <div class="paint-blob red"></div>
+    <div style="font-size:4rem"><i class="bi bi-bank2"></i>
     <h1 class="font-fredoka mt-2" style="color:var(--primary)">Museo Virtual NestGrow</h1>
     <p class="fw-bold text-muted fs-5 mb-0">
       {% if user.role == 'profesor' %}
@@ -85,13 +241,13 @@
     </p>
     <div class="mt-3 d-flex justify-content-center gap-3 flex-wrap">
       <span class="badge rounded-pill px-4 py-2 fs-6" style="background:var(--primary);color:white">
-        🎨 {{ artworks.count }} obra{{ artworks.count|pluralize:"s" }}
+        <i class="bi bi-palette-fill"></i> {{ artworks.count }} obra{{ artworks.count|pluralize:"s" }}
       </span>
       {% if user.role == 'estudiante' %}
       <a href="{% url 'games:museo_global' %}"
          class="btn fw-bold rounded-pill px-4 py-2"
          style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;font-family:'Fredoka One',cursive;font-size:1rem;border:none;box-shadow:0 4px 15px rgba(78,205,196,0.35)">
-        🌍 Ver museo global
+        <i class="bi bi-globe-americas"></i> Ver museo global
       </a>
       {% endif %}
     </div>
@@ -102,7 +258,7 @@
     <!-- Filter bar (solo profesor) -->
     {% if user.role == 'profesor' and estudiantes %}
     <div class="filter-bar">
-      <span class="fw-bold" style="color:var(--primary)">🔍 Filtrar por estudiante:</span>
+      <span class="fw-bold" style="color:var(--primary)"><i class="bi bi-search"></i> Filtrar por estudiante:</span>
       <a href="{% url 'games:museo_virtual' %}" class="btn btn-sm rounded-pill {% if not estudiante_filtro %}btn-primary{% else %}btn-outline-secondary{% endif %}">Todos</a>
       {% for est in estudiantes %}
       <a href="{% url 'games:museo_virtual' %}?estudiante={{ est.user.pk }}" class="btn btn-sm rounded-pill {% if estudiante_filtro == est.user.pk|stringformat:'s' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
@@ -123,18 +279,18 @@
           <div class="artwork-info">
             <div class="artwork-word">
               {% if obra.vocabulary_item %}
-                🎨 {{ obra.vocabulary_item.word_en }}
+                <i class="bi bi-palette-fill"></i> {{ obra.vocabulary_item.word_en }}
                 <small class="text-muted">/ {{ obra.vocabulary_item.word_es }}</small>
               {% else %}
-                🎨 {{ obra.title|default:"Sin título" }}
+                <i class="bi bi-palette-fill"></i> {{ obra.title|default:"Sin título" }}
               {% endif %}
             </div>
             {% if user.role == 'profesor' %}
             <div class="artwork-author mt-1">
-              👤 {{ obra.user.get_full_name|default:obra.user.username }}
+              <i class="bi bi-person-fill"></i> {{ obra.user.get_full_name|default:obra.user.username }}
             </div>
             {% endif %}
-            <div class="artwork-date mt-1">📅 {{ obra.created_at|date:"d M Y, H:i" }}</div>
+            <div class="artwork-date mt-1"><i class="bi bi-calendar-date-fill"></i> {{ obra.created_at|date:"d M Y, H:i" }}</div>
           </div>
         </div>
       </div>
@@ -143,16 +299,19 @@
 
   {% else %}
   <div class="empty-museo">
-    <div style="font-size:6rem">🖼️</div>
+    {% load static %}
+    <div style="font-size:6rem">
+     <img src="{% static 'img/milo_duda1.png' %}" style="height:200px;">
+    </div>
     <h3 class="font-fredoka mt-3" style="color:var(--primary)">¡El museo está vacío!</h3>
     {% if user.role == 'estudiante' %}
     <p class="fw-bold text-muted fs-5">Aún no has pintado nada. ¡Ve a jugar y crea tu primera obra!</p>
     <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
-      <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow">🎮 Ir a mis actividades</a>
+      <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow"><i class="bi bi-controller"></i> Ir a mis actividades</a>
       <a href="{% url 'games:museo_global' %}"
          class="btn fw-bold rounded-pill px-4"
          style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;font-family:'Fredoka One',cursive;font-size:1rem;border:none">
-        🌍 Ver museo global
+        <i class="bi bi-globe-americas"></i> Ver museo global
       </a>
     </div>
     {% else %}

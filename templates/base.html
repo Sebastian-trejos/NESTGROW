@@ -12,8 +12,34 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   {% block extra_css %}{% endblock %}
+
+  <style>
+    @keyframes starFloat {
+      0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
+      50%      { transform: translateY(-8px) rotate(15deg); opacity:1; }
+    }
+  </style>
 </head>
 <body class="nestgrow-body">
+  <!-- Fondo animado global con estrellas (igual al dashboard de estudiante) -->
+  <div style="position:fixed;inset:0;z-index:-1;
+              background:linear-gradient(135deg,#f0eeff 0%,#ffe9e9 50%,#e9f9ff 100%);
+              pointer-events:none;overflow:hidden">
+    <i class="bi bi-star-fill"    style="position:absolute;top:5%;left:2%;font-size:1.8rem;color:#6C63FF;opacity:0.2;animation:starFloat 3s ease-in-out infinite"></i>
+    <i class="bi bi-sparkle-fill" style="position:absolute;top:12%;left:8%;font-size:1rem;color:#FF6B6B;opacity:0.25;animation:starFloat 4s ease-in-out infinite 0.5s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:25%;left:1%;font-size:2.2rem;color:#4ECDC4;opacity:0.15;animation:starFloat 5s ease-in-out infinite 1s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:45%;left:3%;font-size:1.4rem;color:#FFB347;opacity:0.2;animation:starFloat 3.5s ease-in-out infinite 0.8s"></i>
+    <i class="bi bi-sparkle-fill" style="position:absolute;top:65%;left:1%;font-size:1.6rem;color:#6C63FF;opacity:0.2;animation:starFloat 4.5s ease-in-out infinite 1.5s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:80%;left:5%;font-size:1.2rem;color:#FF6B6B;opacity:0.25;animation:starFloat 3s ease-in-out infinite 0.3s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:5%;right:3%;font-size:1.5rem;color:#FFB347;opacity:0.2;animation:starFloat 4s ease-in-out infinite 0.2s"></i>
+    <i class="bi bi-sparkle-fill" style="position:absolute;top:18%;right:1%;font-size:2rem;color:#4ECDC4;opacity:0.15;animation:starFloat 5s ease-in-out infinite 1.2s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:35%;right:2%;font-size:1.1rem;color:#6C63FF;opacity:0.2;animation:starFloat 3.5s ease-in-out infinite 0.7s"></i>
+    <i class="bi bi-sparkle-fill" style="position:absolute;top:55%;right:1%;font-size:1.8rem;color:#FF6B6B;opacity:0.2;animation:starFloat 4s ease-in-out infinite 1.8s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:72%;right:3%;font-size:1.3rem;color:#FFB347;opacity:0.25;animation:starFloat 3s ease-in-out infinite 0.4s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:88%;right:2%;font-size:1.6rem;color:#4ECDC4;opacity:0.2;animation:starFloat 5s ease-in-out infinite 0.9s"></i>
+    <i class="bi bi-star-fill"    style="position:absolute;top:40%;left:50%;font-size:0.9rem;color:#FF6B6B;opacity:0.15;animation:starFloat 4s ease-in-out infinite 2s"></i>
+    <i class="bi bi-sparkle-fill" style="position:absolute;top:70%;left:45%;font-size:1.2rem;color:#6C63FF;opacity:0.12;animation:starFloat 3.5s ease-in-out infinite 1.3s"></i>
+  </div>
 
   <!-- Top Nav -->
   {% if not embedded %}

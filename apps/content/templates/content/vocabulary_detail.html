@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'content:category_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <a href="{% url 'content:category_list' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill"></i> Volver</a>
     <div>
       <h3 class="font-fredoka mb-0" style="color:var(--primary)">{{ category.icon }} {{ category.name_en }}</h3>
       <div class="text-muted fw-bold small">{{ category.name }}</div>
@@ -12,9 +12,8 @@
   </div>
 
   <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
     <div class="milo-banner-text">
-      🎵 Click on any word card to hear how it's pronounced! / ¡Haz clic en la tarjeta para escuchar la pronunciación!
+      <i class="bi bi-music-note-beamed"></i> Click on any word card to hear how it's pronounced! / ¡Haz clic en la tarjeta para escuchar la pronunciación!
     </div>
   </div>
 
