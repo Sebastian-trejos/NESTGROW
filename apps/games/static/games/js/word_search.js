@@ -3,12 +3,18 @@
 // Grid size varies by difficulty: easy=8, medium=11, hard=14
 // ============================================================
 
-function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty, penaltyAmount) {
+function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty, penaltyAmount, customWords) {
   const GRID_SIZE = difficulty === 3 ? 14 : difficulty === 2 ? 11 : 8;
   const MAX_WORDS = difficulty === 3 ? 10 : difficulty === 2 ? 7 : 5;
   const COLORS = ['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e91e63','#ff5722'];
 
-  const words = vocabulary.map(v => v.word_en.toUpperCase().replace(/\s/g, '')).slice(0, MAX_WORDS);
+  // Use custom words defined by professor if available, otherwise fall back to vocabulary
+  let words;
+  if (customWords && customWords.length > 0) {
+    words = customWords.map(w => w.toUpperCase().replace(/\s/g, '')).filter(w => w.length >= 2 && w.length <= GRID_SIZE).slice(0, MAX_WORDS);
+  } else {
+    words = vocabulary.map(v => v.word_en.toUpperCase().replace(/\s/g, '')).filter(w => w.length >= 2 && w.length <= GRID_SIZE).slice(0, MAX_WORDS);
+  }
   const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(''));

@@ -6,7 +6,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, PuzzleImage, TiendaItem, InventarioEstudiante
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, PuzzleImage, TiendaItem, InventarioEstudiante, WordSearchWord
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required, estudiante_required
@@ -155,6 +155,13 @@ def game_detail(request, pk):
             for pi in game.puzzle_images.all()
         ])
 
+    # Get word search custom words if word_search game
+    word_search_words_json = '[]'
+    if game.game_type == 'word_search':
+        ws_words = list(game.word_search_words.values_list('word', flat=True))
+        if ws_words:
+            word_search_words_json = json.dumps(ws_words)
+
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
     logros_nuevos = []
@@ -171,6 +178,7 @@ def game_detail(request, pk):
         'words_json': json.dumps(painting_words),
         'vocabulary_json': vocabulary_json,
         'puzzle_images_json': puzzle_images_json,
+        'word_search_words_json': word_search_words_json,
     }
     return render(request, template, context)
 
@@ -210,6 +218,12 @@ def game_embed(request, pk):
             for pi in game.puzzle_images.all()
         ])
 
+    word_search_words_json = '[]'
+    if game.game_type == 'word_search':
+        ws_words = list(game.word_search_words.values_list('word', flat=True))
+        if ws_words:
+            word_search_words_json = json.dumps(ws_words)
+
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
     taller_mode = request.GET.get('taller') == '1'
@@ -222,6 +236,7 @@ def game_embed(request, pk):
         'words_json': json.dumps(painting_words),
         'vocabulary_json': vocabulary_json,
         'puzzle_images_json': puzzle_images_json,
+        'word_search_words_json': word_search_words_json,
         'embedded': True,
         'taller_mode': taller_mode,
     })
@@ -534,6 +549,17 @@ def crear_juego(request):
                             image=img_file,
                             order=i,
                         )
+            # Save word search words if word_search game
+            if juego.game_type == 'word_search':
+                raw = request.POST.get('word_search_words', '[]')
+                try:
+                    ws_words = json.loads(raw)
+                except Exception:
+                    ws_words = []
+                WordSearchWord.objects.filter(game=juego).delete()
+                for i, w in enumerate(ws_words):
+                    if w.strip():
+                        WordSearchWord.objects.create(game=juego, word=w.strip().upper(), order=i)
             messages.success(request, f'🎮 Juego "{juego.title}" creado correctamente.')
             return redirect('games:editar_juego', pk=juego.pk)
     else:
@@ -562,6 +588,17 @@ def editar_juego(request, pk):
                 for i, w in enumerate(words):
                     if w.strip():
                         PaintingWord.objects.create(game=juego, word=w.strip(), order=i)
+            # Save word search words if word_search game
+            if juego.game_type == 'word_search':
+                raw = request.POST.get('word_search_words', '[]')
+                try:
+                    ws_words = json.loads(raw)
+                except Exception:
+                    ws_words = []
+                WordSearchWord.objects.filter(game=juego).delete()
+                for i, w in enumerate(ws_words):
+                    if w.strip():
+                        WordSearchWord.objects.create(game=juego, word=w.strip().upper(), order=i)
             messages.success(request, f'✅ Juego "{juego.title}" actualizado!')
             return redirect('games:gestionar_juegos')
     else:
@@ -570,9 +607,11 @@ def editar_juego(request, pk):
         PuzzleImage.objects.filter(game=juego)
         if juego.game_type == 'puzzle' else []
     )
+    word_search_words = WordSearchWord.objects.filter(game=juego) if juego.game_type == 'word_search' else []
     return render(request, 'games/profesor/juego_form.html', {
         'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar',
         'juego': juego, 'painting_words': painting_words,
+        'word_search_words': word_search_words,
         'puzzle_imagenes': puzzle_imagenes,
         'juego_usa_imagenes': juego.game_type == 'puzzle'})
 

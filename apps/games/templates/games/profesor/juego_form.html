@@ -40,6 +40,7 @@
     <form method="post" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
       <input type="hidden" name="painting_words" id="paintingWordsInput" value="">
+      <input type="hidden" name="word_search_words" id="wordSearchWordsInput" value="">
 
       <div class="row g-3">
         <div class="col-md-6">
@@ -65,6 +66,28 @@
           {{ form.category }}
           {% if form.category.errors %}<div class="text-danger small fw-bold mt-1">{{ form.category.errors.0 }}</div>{% endif %}
           <div class="text-muted small mt-1">¿No ves tu categoría? <a href="{% url 'games:crear_categoria' %}">Créala aquí →</a></div>
+        </div>
+
+        <!-- Palabras para Sopa de Letras -->
+        <div class="col-12" id="word-search-section" style="display:none">
+          <div class="nestgrow-card p-4" style="border:2px solid var(--primary);background:#f0eeff">
+            <h5 class="font-fredoka mb-3" style="color:var(--primary)">🔍 Palabras de la Sopa de Letras</h5>
+            <p class="text-muted small fw-bold mb-3">Escribe cada palabra en MAYÚSCULAS y presiona <strong>+ Añadir</strong> o <kbd>Enter</kbd>. El sistema las ubicará automáticamente en la grilla con letras falsas.</p>
+            <div class="d-flex gap-2 mb-3">
+              <input type="text" id="wsNewWordInput" class="form-control text-uppercase fw-bold" placeholder="Ej: HOUSE, CAT, SCHOOL..." style="max-width:260px;letter-spacing:1px">
+              <button type="button" class="btn btn-nestgrow btn-primary-nestgrow" onclick="wsAddWord()">+ Añadir</button>
+            </div>
+            <div id="wsWordsList" class="d-flex flex-wrap gap-2">
+              {% if word_search_words %}
+                {% for wsw in word_search_words %}
+                <span class="word-tag" data-word="{{ wsw.word }}">
+                  {{ wsw.word }}<span class="remove-word" onclick="wsRemoveWord(this)">×</span>
+                </span>
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="text-muted small mt-2 fw-bold" id="wsWordsCount">0 palabras añadidas</div>
+          </div>
         </div>
 
         <!-- Palabras para pintar -->
@@ -228,6 +251,7 @@
 <script>
 const GAME_TYPE_SEL   = document.getElementById('id_game_type');
 const PAINTING_SEC    = document.getElementById('painting-words-section');
+const WS_SEC          = document.getElementById('word-search-section');
 const IMG_CREATE_SEC  = document.getElementById('imagenes-create-section');
 const IMG_TOTAL_ROWS  = document.getElementById('img-total-rows');
 const TIPOS_IMG       = ['puzzle'];
@@ -235,6 +259,7 @@ const TIPOS_IMG       = ['puzzle'];
 function onGameTypeChange() {
   const tipo = GAME_TYPE_SEL.value;
   PAINTING_SEC.style.display = (tipo === 'painting') ? 'block' : 'none';
+  WS_SEC.style.display = (tipo === 'word_search') ? 'block' : 'none';
   if (IMG_CREATE_SEC) IMG_CREATE_SEC.style.display = TIPOS_IMG.includes(tipo) ? 'block' : 'none';
 }
 GAME_TYPE_SEL.addEventListener('change', onGameTypeChange);
@@ -264,6 +289,46 @@ function addImgCreateRow() {
 
 function removeImgCreateRow(i) {
   document.getElementById(`img-create-row-${i}`)?.remove();
+}
+
+// ── Word Search words ──────────────────────────────────────────────────────
+const wsWordsInput  = document.getElementById('wordSearchWordsInput');
+const wsWordsList   = document.getElementById('wsWordsList');
+const wsWordsCount  = document.getElementById('wsWordsCount');
+let wsWords = [];
+document.querySelectorAll('#wsWordsList .word-tag').forEach(tag => wsWords.push(tag.dataset.word));
+wsUpdateInput();
+
+function wsAddWord() {
+  const input = document.getElementById('wsNewWordInput');
+  const word = input.value.trim().toUpperCase().replace(/\s+/g, '');
+  if (!word) { input.value = ''; return; }
+  if (wsWords.includes(word)) { input.value = ''; input.focus(); return; }
+  if (wsWords.length >= 20) { alert('⚠️ Máximo 20 palabras por sopa de letras.'); return; }
+  wsWords.push(word);
+  wsRenderWords(); wsUpdateInput();
+  input.value = ''; input.focus();
+}
+document.getElementById('wsNewWordInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); wsAddWord(); }
+});
+function wsRemoveWord(el) {
+  wsWords = wsWords.filter(w => w !== el.parentElement.dataset.word);
+  wsRenderWords(); wsUpdateInput();
+}
+function wsRenderWords() {
+  wsWordsList.innerHTML = '';
+  wsWords.forEach(word => {
+    const span = document.createElement('span');
+    span.className = 'word-tag'; span.dataset.word = word;
+    span.innerHTML = `${word} <span class="remove-word" onclick="wsRemoveWord(this)">×</span>`;
+    wsWordsList.appendChild(span);
+  });
+  wsWordsCount.textContent = `${wsWords.length} palabra${wsWords.length !== 1 ? 's' : ''} añadida${wsWords.length !== 1 ? 's' : ''}`;
+}
+function wsUpdateInput() {
+  if (wsWordsInput) wsWordsInput.value = JSON.stringify(wsWords);
+  if (wsWordsCount) wsWordsCount.textContent = `${wsWords.length} palabra${wsWords.length !== 1 ? 's' : ''} añadida${wsWords.length !== 1 ? 's' : ''}`;
 }
 
 // ── Painting words ─────────────────────────────────────────────────────────
