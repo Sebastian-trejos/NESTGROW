@@ -27,20 +27,15 @@
           <label class="form-label fw-bold">{{ form.descripcion.label }}</label>
           {{ form.descripcion }}
         </div>
-        <div class="col-md-5">
-          <label class="form-label fw-bold">{{ form.salon.label }}</label>
-          {{ form.salon }}
-          <div class="form-text">Si no asignas salón, el taller no será visible para ningún estudiante.</div>
-        </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <label class="form-label fw-bold">{{ form.puntos_xp.label }}</label>
           {{ form.puntos_xp }}
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <label class="form-label fw-bold">{{ form.huesos_recompensa.label }}</label>
           {{ form.huesos_recompensa }}
         </div>
-        <div class="col-md-3 d-flex align-items-end pb-1">
+        <div class="col-md-4 d-flex align-items-end pb-1">
           <div class="form-check">
             {{ form.is_active }}
             <label class="form-check-label fw-bold" for="{{ form.is_active.id_for_label }}">

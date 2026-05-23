@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from apps.core.models import TimeStampedModel
-from apps.accounts.models import Salon
 from apps.games.models import Game
 
 
@@ -11,10 +10,6 @@ class Taller(TimeStampedModel):
     profesor = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
         related_name='talleres_creados'
-    )
-    salon = models.ForeignKey(
-        Salon, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name='talleres', verbose_name='Salón'
     )
     puntos_xp = models.IntegerField(default=10, verbose_name='XP al completar')
     huesos_recompensa = models.IntegerField(default=5, verbose_name='Huesos al completar')
@@ -201,12 +196,39 @@ class SesionTaller(TimeStampedModel):
 
 class Periodo(TimeStampedModel):
     """Ciclo de trabajo con fecha límite que el profesor asigna a un salón."""
+
+    COLOR_CHOICES = [
+        ('morado', '🟣 Morado'),
+        ('azul', '🔵 Azul'),
+        ('verde', '🟢 Verde'),
+        ('naranja', '🟠 Naranja'),
+        ('rosado', '🩷 Rosado'),
+        ('rojo', '🔴 Rojo'),
+        ('amarillo', '🟡 Amarillo'),
+        ('turquesa', '🩵 Turquesa'),
+    ]
+
+    COLOR_HEX = {
+        'morado': '#6c63ff',
+        'azul': '#1565c0',
+        'verde': '#2e7d32',
+        'naranja': '#e65100',
+        'rosado': '#c2185b',
+        'rojo': '#c62828',
+        'amarillo': '#f57f17',
+        'turquesa': '#00838f',
+    }
+
     salon = models.ForeignKey(
         'accounts.Salon', on_delete=models.CASCADE, related_name='periodos',
         verbose_name='Salón',
     )
     titulo = models.CharField(max_length=120, verbose_name='Título',
                               help_text='Ej: Periodo 1 — Mayo 2026')
+    color = models.CharField(
+        max_length=20, choices=COLOR_CHOICES, default='morado',
+        verbose_name='Color del encabezado',
+    )
     fecha_inicio = models.DateField(verbose_name='Fecha de inicio')
     fecha_fin = models.DateField(verbose_name='Fecha límite')
     meta_historia = models.PositiveIntegerField(
@@ -224,6 +246,10 @@ class Periodo(TimeStampedModel):
 
     def __str__(self):
         return f"{self.titulo} ({self.salon})"
+
+    @property
+    def color_hex(self):
+        return self.COLOR_HEX.get(self.color, '#6c63ff')
 
     @property
     def estado(self):

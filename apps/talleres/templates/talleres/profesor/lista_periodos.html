@@ -114,47 +114,58 @@
             {% for p in salon_periodos %}
             {% with estado=p.estado %}
             <div class="col-md-6 col-lg-4">
-              <div class="nestgrow-card h-100 p-3">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                  <h5 class="font-fredoka mb-0" style="color:var(--primary)">{{ p.titulo }}</h5>
+              <div class="nestgrow-card h-100 p-0 overflow-hidden">
+                <!-- Encabezado coloreado -->
+                <div class="px-3 py-2 d-flex justify-content-between align-items-center"
+                     style="background:{{ p.color_hex }};border-radius:0">
+                  <h5 class="font-fredoka mb-0 text-white" style="font-size:1rem">{{ p.titulo }}</h5>
                   {% if estado == 'activo' %}
-                    <span class="badge rounded-pill" style="background:#d4f5e0;color:#1a7a3b">🟢 Activo</span>
+                    <span class="badge rounded-pill" style="background:rgba(255,255,255,0.25);color:white;font-size:0.72rem">🟢 Activo</span>
                   {% elif estado == 'vencido' %}
-                    <span class="badge rounded-pill" style="background:#ffe5e5;color:#c0392b">🔴 Vencido</span>
+                    <span class="badge rounded-pill" style="background:rgba(0,0,0,0.25);color:white;font-size:0.72rem">🔴 Vencido</span>
                   {% elif estado == 'cerrado' %}
-                    <span class="badge rounded-pill bg-secondary">⚫ Cerrado</span>
+                    <span class="badge rounded-pill" style="background:rgba(0,0,0,0.35);color:white;font-size:0.72rem">⚫ Cerrado</span>
                   {% else %}
-                    <span class="badge rounded-pill" style="background:#e8f4ff;color:#1565c0">🔵 Futuro</span>
+                    <span class="badge rounded-pill" style="background:rgba(255,255,255,0.25);color:white;font-size:0.72rem">🔵 Futuro</span>
                   {% endif %}
                 </div>
-                <div class="text-muted small mb-2">
-                  <i class="bi bi-calendar-range me-1"></i>{{ p.fecha_inicio|date:"d/m/Y" }} → {{ p.fecha_fin|date:"d/m/Y" }}
-                </div>
-                <div class="d-flex gap-2 mb-3 flex-wrap">
-                  <span class="badge" style="background:#f0ebff;color:#6c4ecb">
-                    🎓 {{ p.talleres_asignados.count }} taller{{ p.talleres_asignados.count|pluralize:"es" }}
-                  </span>
-                  <span class="badge" style="background:#fff3e0;color:#e65100">
-                    🎮 {{ p.minijuegos_asignados.count }} juego{{ p.minijuegos_asignados.count|pluralize:"s" }}
-                  </span>
-                  {% if p.meta_historia > 0 %}
-                  <span class="badge" style="background:#fff9c4;color:#f57f17">
-                    ⭐ Meta: {{ p.meta_historia }}
-                  </span>
-                  {% endif %}
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                  <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm flex-grow-1">
-                    📊 Resultados
-                  </a>
-                  <a href="{% url 'talleres:enviar_informe_periodo' p.pk %}"
-                     class="btn btn-outline-success rounded-pill btn-sm flex-grow-1"
-                     onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
-                    📧 Informe
-                  </a>
-                  <a href="{% url 'talleres:eliminar_periodo' p.pk %}" class="btn btn-outline-danger rounded-pill btn-sm">
-                    🗑️
-                  </a>
+                <!-- Cuerpo -->
+                <div class="p-3">
+                  <div class="text-muted small mb-2">
+                    <i class="bi bi-calendar-range me-1"></i>{{ p.fecha_inicio|date:"d/m/Y" }} → {{ p.fecha_fin|date:"d/m/Y" }}
+                  </div>
+                  <div class="d-flex gap-2 mb-3 flex-wrap">
+                    <span class="badge" style="background:#f0ebff;color:#6c4ecb">
+                      🎓 {{ p.talleres_asignados.count }} taller{{ p.talleres_asignados.count|pluralize:"es" }}
+                    </span>
+                    <span class="badge" style="background:#fff3e0;color:#e65100">
+                      🎮 {{ p.minijuegos_asignados.count }} juego{{ p.minijuegos_asignados.count|pluralize:"s" }}
+                    </span>
+                    {% if p.meta_historia > 0 %}
+                    <span class="badge" style="background:#fff9c4;color:#f57f17">
+                      ⭐ Meta: {{ p.meta_historia }}
+                    </span>
+                    {% endif %}
+                  </div>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'talleres:resultados_periodo' p.pk %}" class="btn btn-outline-primary rounded-pill btn-sm flex-grow-1">
+                      📊 Notas
+                    </a>
+                    {% if not p.cerrado %}
+                    <a href="{% url 'talleres:editar_periodo' p.pk %}" class="btn btn-outline-warning rounded-pill btn-sm flex-grow-1">
+                      ✏️ Editar
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'talleres:enviar_informe_periodo' p.pk %}"
+                       class="btn btn-outline-success rounded-pill btn-sm"
+                       onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')"
+                       title="Enviar informe por correo">
+                      📧
+                    </a>
+                    <a href="{% url 'talleres:eliminar_periodo' p.pk %}" class="btn btn-outline-danger rounded-pill btn-sm" title="Eliminar">
+                      🗑️
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -216,9 +227,6 @@
               <tr>
                 <td class="ps-3">
                   <div class="fw-bold">{{ taller.titulo|truncatechars:30 }}</div>
-                  {% if taller.salon %}
-                  <div class="text-muted" style="font-size:0.78rem">🏫 {{ taller.salon.nombre }}</div>
-                  {% endif %}
                 </td>
                 <td class="text-center">
                   <form method="post" action="{% url 'talleres:toggle' pk=taller.pk %}" class="d-inline">
@@ -233,7 +241,6 @@
                   <div class="d-flex gap-1 justify-content-center">
                     <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-sm btn-outline-primary rounded-pill p-1 px-2" title="Editar" style="font-size:0.75rem">✏️</a>
                     <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill p-1 px-2" title="Vista previa" target="_blank" style="font-size:0.75rem">👁️</a>
-                    <a href="{% url 'talleres:resultados' pk=taller.pk %}" class="btn btn-sm btn-outline-success rounded-pill p-1 px-2" title="Resultados" style="font-size:0.75rem">📊</a>
                     <a href="{% url 'talleres:eliminar' pk=taller.pk %}" class="btn btn-sm btn-outline-danger rounded-pill p-1 px-2" title="Eliminar" style="font-size:0.75rem">🗑️</a>
                   </div>
                 </td>

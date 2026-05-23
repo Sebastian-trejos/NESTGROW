@@ -280,6 +280,8 @@ async function completarMinijuego(bloquePk) {
   const data = await res.json();
   if (data.ok) {
     if (data.next === 'resultado') {
+      /* ⭐ Transición especial de estrellas al completar el taller */
+      sessionStorage.setItem('ngStars', '1');
       window.location.href = data.sesion_pk
         ? RESULTADO_SESION_BASE + data.sesion_pk + '/resultado/'
         : RESULTADO_URL;
@@ -291,6 +293,8 @@ async function completarMinijuego(bloquePk) {
 
 function _navegar(next) {
   if (next === 'resultado') {
+    /* ⭐ Transición especial de estrellas al completar el taller */
+    sessionStorage.setItem('ngStars', '1');
     window.location.href = RESULTADO_URL;
   } else {
     window.location.href = RESOLVER_URL;

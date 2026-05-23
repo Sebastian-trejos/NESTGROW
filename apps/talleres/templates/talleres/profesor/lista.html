@@ -15,7 +15,7 @@
     <div class="milo-banner-owl">🐺</div>
     <div>
       <div class="milo-banner-text">¡Crea talleres combinando preguntas y minijuegos!</div>
-      <div class="text-muted fw-bold small">Los talleres se asignan por salón. Los estudiantes los resuelven bloque a bloque y ganan XP y Huesos al completarlos.</div>
+      <div class="text-muted fw-bold small">Los talleres se asignan desde los períodos. Los estudiantes los resuelven bloque a bloque y ganan XP y Huesos al completarlos.</div>
     </div>
   </div>
 
@@ -26,11 +26,9 @@
         <thead style="background:#f8f6ff">
           <tr>
             <th class="ps-4">Taller</th>
-            <th>Salón</th>
             <th class="text-center">Bloques</th>
             <th class="text-center">XP</th>
             <th class="text-center">🦴</th>
-            <th class="text-center">Completados</th>
             <th class="text-center">Estado</th>
             <th class="text-center">Acciones</th>
           </tr>
@@ -44,15 +42,6 @@
               <div class="text-muted small">{{ taller.descripcion|truncatechars:50 }}</div>
               {% endif %}
             </td>
-            <td>
-              {% if taller.salon %}
-                <span class="badge rounded-pill" style="background:var(--primary)20;color:var(--primary)">
-                  🏫 {{ taller.salon.nombre }}
-                </span>
-              {% else %}
-                <span class="text-muted small">Sin asignar</span>
-              {% endif %}
-            </td>
             <td class="text-center">
               <span class="fw-bold" style="color:var(--primary)">{{ taller.total_bloques }}</span>
             </td>
@@ -61,14 +50,6 @@
             </td>
             <td class="text-center">
               <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ taller.huesos_recompensa }}</span>
-            </td>
-            <td class="text-center">
-              <span class="fw-bold" style="color:var(--accent)">
-                {{ taller.sesiones.filter.completada|default:"0" }}
-                {% with completadas=taller.sesiones.all %}
-                  {% for s in completadas %}{% if s.completada %}{% if forloop.last %}{{ forloop.counter }}{% endif %}{% endif %}{% endfor %}
-                {% endwith %}
-              </span>
             </td>
             <td class="text-center">
               <form method="post" action="{% url 'talleres:toggle' pk=taller.pk %}" class="d-inline">
@@ -83,7 +64,6 @@
               <div class="d-flex gap-1 justify-content-center">
                 <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-sm btn-outline-primary rounded-pill" title="Editar">✏️</a>
                 <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill" title="Vista previa" target="_blank">👁️</a>
-                <a href="{% url 'talleres:resultados' pk=taller.pk %}" class="btn btn-sm btn-outline-success rounded-pill" title="Ver resultados">📊</a>
                 <a href="{% url 'talleres:eliminar' pk=taller.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">🗑️</a>
               </div>
             </td>

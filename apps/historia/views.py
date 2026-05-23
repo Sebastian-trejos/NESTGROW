@@ -238,12 +238,20 @@ def ver_leccion(request, pk):
         defaults={'intentos': 1, 'actividad_actual': 0},
     )
 
-    # Si la lección ya está completada, NO se debe resetear el progreso.
-    # Rehacerla debe ser un "replay" que felicita al estudiante sin alterar
-    # bloqueos del mapa ni estrellas ya ganadas.
+    update_progreso_fields = []
+
     if not created and progreso.intentos == 0:
         progreso.intentos = 1
-        progreso.save(update_fields=['intentos'])
+        update_progreso_fields.append('intentos')
+
+    # Replay: lección ya completada → reiniciar desde el principio para que
+    # el estudiante pueda mejorar sus estrellas.
+    if not created and progreso.completada:
+        progreso.actividad_actual = 0
+        update_progreso_fields.append('actividad_actual')
+
+    if update_progreso_fields:
+        progreso.save(update_fields=update_progreso_fields)
 
     actividades_json = json.dumps([
         {
@@ -287,11 +295,23 @@ def guardar_respuesta(request):
         )
 
         if progreso.completada:
+            # Replay: guardar la respuesta nueva para poder recalcular estrellas,
+            # pero no otorgar puntos ni XP adicionales.
+            es_correcta_replay, _ = _evaluar_respuesta(actividad, respuesta_dada)
+            if es_correcta_replay is not None:   # actividad puntuable
+                RespuestaActividad.objects.update_or_create(
+                    progreso=progreso,
+                    actividad=actividad,
+                    defaults={
+                        'respuesta_dada': respuesta_dada,
+                        'es_correcta':    es_correcta_replay,
+                    },
+                )
             total_acts = leccion.actividades.count()
             return JsonResponse({
-                'status': 'ok',
-                'es_correcta': None,
-                'puntos': 0,
+                'status':              'ok',
+                'es_correcta':         es_correcta_replay,
+                'puntos':              0,
                 'es_ultima_actividad': actividad.orden >= total_acts,
             })
 
@@ -350,7 +370,38 @@ def completar_leccion(request, pk):
         progreso = get_object_or_404(ProgresoLeccion, estudiante=request.user, leccion=leccion)
 
         if progreso.completada:
-            return JsonResponse({'status': 'ya_completada', 'estrellas': progreso.estrellas})
+            # Replay completado: recalcular estrellas con las nuevas respuestas.
+            tipos_con_correcta = ('listening', 'reading', 'writing', 'pronunciacion', 'minijuego_embed')
+            total_scoreable = leccion.actividades.filter(tipo__in=tipos_con_correcta).count()
+            correctas_replay = RespuestaActividad.objects.filter(
+                progreso=progreso, es_correcta=True
+            ).count()
+            nuevas_estrellas = progreso.calcular_estrellas(total_scoreable, correctas_replay)
+
+            if nuevas_estrellas > progreso.estrellas:
+                diff = nuevas_estrellas - progreso.estrellas
+                progreso.estrellas = nuevas_estrellas
+                progreso.save(update_fields=['estrellas'])
+                # Actualizar el total acumulado del perfil
+                try:
+                    from apps.accounts.models import EstudianteProfile
+                    EstudianteProfile.objects.filter(
+                        pk=request.user.estudiante_profile.pk
+                    ).update(
+                        total_estrellas_historia=db_models.F('total_estrellas_historia') + diff
+                    )
+                except Exception:
+                    pass
+
+            return JsonResponse({
+                'status':       'ya_completada',
+                'estrellas':    progreso.estrellas,
+                'puntos_xp':    0,
+                'huesos':       0,
+                'nivel_subio':  False,
+                'nivel_nuevo':  None,
+                'logros_nuevos': [],
+            })
 
         # Count scoreable activities and correct answers
         tipos_con_correcta = ('listening', 'reading', 'writing', 'pronunciacion', 'minijuego_embed')

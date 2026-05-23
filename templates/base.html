@@ -12,6 +12,9 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   {% block extra_css %}{% endblock %}
+  <!-- ── Bloqueo inmediato para evitar flash de la transición de huellas ─────── -->
+  <script>(function(){if(sessionStorage.getItem('ngTransition')==='1'){document.documentElement.dataset.ngPawsEntry='1';}})();</script>
+  <style>html[data-ng-paws-entry] body{visibility:hidden!important}</style>
 </head>
 <body class="nestgrow-body">
 
@@ -127,7 +130,7 @@
                 {% endif %}
                 <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}" data-ng-trans="circles"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
               </ul>
             </li>
           {% else %}
@@ -329,7 +332,12 @@
     const img    = document.getElementById('miloImgFloat');
     if (!float) return;
 
-    let isOpen = false, pendientesCache = null, autoCloseTimer = null;
+    let isOpen = false, pendientesCache = null, autoCloseTimer = null, comentaristaActivo = false;
+
+    function getCsrfToken() {
+      const m = document.cookie.match(/(?:^|; )csrftoken=([^;]*)/);
+      return m ? decodeURIComponent(m[1]) : '';
+    }
 
     function setImg(src) {
       img.style.opacity = '0';
@@ -346,12 +354,14 @@
 
     function closeBubble() {
       clearTimeout(autoCloseTimer);
+      comentaristaActivo = false;
       bubble.classList.remove('show');
       isOpen = false;
       setImg(IMG.idle);
     }
 
     function openBubble() {
+      if (comentaristaActivo) return;
       isOpen = true;
       const pageCtx = getPageCtx();
       const role    = IS_AUTH ? (ROLE || 'none') : 'none';
@@ -440,8 +450,14 @@
     window.miloComentarista = function(tipo, datos, onContinuar) {
       if (!float) { if (onContinuar) onContinuar(); return; }
       clearTimeout(autoCloseTimer);
+      comentaristaActivo = true;
 
       const d = datos || {};
+
+      function _done(cb) {
+        comentaristaActivo = false;
+        if (cb) cb();
+      }
 
       if (tipo === 'correcto') {
         speech.innerHTML = d.msg || '¡Excelente! ¡Respuesta correcta! 🎉';
@@ -453,7 +469,7 @@
           bubble.classList.remove('show');
           isOpen = false;
           setImg(IMG.idle);
-          if (onContinuar) onContinuar();
+          _done(onContinuar);
         }, 2000);
 
       } else if (tipo === 'incorrecto') {
@@ -477,12 +493,12 @@
         .then(function(data) {
           speech.textContent = data.correccion || '¡Sigue practicando! 💪';
           setImg(IMG.leyendo);
-          _mostrarBotonContinuar(onContinuar);
+          _mostrarBotonContinuar(function() { _done(onContinuar); });
         })
         .catch(function() {
           speech.textContent = '¡No te rindas! La práctica lleva a la perfección. 💪';
           setImg(IMG.pulgar);
-          _mostrarBotonContinuar(onContinuar);
+          _mostrarBotonContinuar(function() { _done(onContinuar); });
         });
 
       } else {
@@ -495,7 +511,7 @@
           bubble.classList.remove('show');
           isOpen = false;
           setImg(IMG.idle);
-          if (onContinuar) onContinuar();
+          _done(onContinuar);
         }, 1400);
       }
     };
@@ -519,9 +535,10 @@
   })();
   </script>
 
-  <!-- ══ TRANSICIÓN DE PÁGINA (círculos) ══ -->
+  <!-- ══ TRANSICIÓN ORIGINAL (círculos) — disponible para uso futuro ══
+       Para activarla en un destino: sessionStorage.setItem('ngCircles', '1') -->
   <div id="pg-trans" aria-hidden="true" style="
-    position:fixed;inset:0;z-index:99999;
+    position:fixed;inset:0;z-index:99997;
     pointer-events:none;overflow:hidden;">
     <div class="pg-c" style="background:#6C63FF"></div>
     <div class="pg-c" style="background:#4ECDC4"></div>
@@ -547,7 +564,6 @@
       c.style.height = sizes[i] + 'vmax';
     });
 
-    /* Cubre la pantalla con los círculos, luego llama doneCb */
     function cubrir(doneCb) {
       circles.forEach((c, i) => {
         setTimeout(() => {
@@ -558,7 +574,6 @@
       if (doneCb) setTimeout(doneCb, 60 * (circles.length - 1) + 360);
     }
 
-    /* Descubre la pantalla (los círculos ya están cubiertos) */
     function descubrir() {
       [...circles].reverse().forEach((c, i) => {
         setTimeout(() => {
@@ -568,21 +583,307 @@
       });
     }
 
-    /* ── Página destino: animación completa (cubrir → descubrir) ── */
-    if (sessionStorage.getItem('ngTransition') === '1') {
-      sessionStorage.removeItem('ngTransition');
+    /* Disparador manual + flag dedicado (no interfiere con la transición default) */
+    window.ngCircles = { cubrir, descubrir };
 
-      /* Empieza con los círculos cubriendo la pantalla (sin animación) */
+    if (sessionStorage.getItem('ngCircles') === '1') {
+      sessionStorage.removeItem('ngCircles');
       circles.forEach(c => {
         c.style.transition = 'none';
         c.style.transform  = 'translate(-50%,-50%) scale(1)';
       });
-
-      /* Primero muestra la pantalla cubierta un instante,
-         luego descubre de pequeño a grande                */
       setTimeout(descubrir, 120);
     }
   })();
+  </script>
+
+  <!-- ══ TRANSICIÓN DE PÁGINA: 🐾 Huellas de Milo — enjambre completo ══
+       El grid auto-fill garantiza cobertura total de la pantalla.
+       El script en <head> oculta el body hasta que las huellas cubran la pantalla. -->
+  <div id="pg-paws" aria-hidden="true" style="
+    position:fixed;inset:0;z-index:99999;
+    pointer-events:none;overflow:hidden;opacity:0;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,10vmax);
+    grid-template-rows:repeat(auto-fill,10vmax);
+    align-content:start;
+    background:linear-gradient(135deg,#6C63FF 0%,#8b80f9 35%,#a89dff 60%,#7ec8e3 100%);">
+  </div>
+  <style>
+  .pg-paw-s {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* La celda es 10vmax pero el emoji mide ~20vmax → desborda y solapa a sus vecinos */
+    width: 10vmax;
+    height: 10vmax;
+    overflow: visible;   /* permite que el emoji invada celdas adyacentes */
+    line-height: 1;
+    user-select: none;
+    will-change: transform, opacity;
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  </style>
+  <script>
+  (function () {
+    const wrap = document.getElementById('pg-paws');
+    const N    = 80; /* celdas 10vmax → ~60 en 1080p, ~70 en móvil portrait */
+    const paws = [];
+
+    /* font-size ~2× el tamaño de la celda → cada huella invade a sus 4 vecinas,
+       solapamiento total garantizado sin importar resolución ni orientación       */
+    for (let i = 0; i < N; i++) {
+      const p = document.createElement('span');
+      p.className   = 'pg-paw-s';
+      p.textContent = '🐾';
+      p.style.fontSize = (38 + Math.random() * 10).toFixed(1) + 'vmax'; /* 38–48vmax */
+      p.dataset.rot    = (-40 + Math.random() * 80).toFixed(1);         /* -40°…+40° */
+      wrap.appendChild(p);
+      paws.push(p);
+    }
+
+    /* Orden aleatorio para el efecto enjambre */
+    const order = paws.map((_, i) => i).sort(() => Math.random() - 0.5);
+
+    function cubrir(doneCb) {
+      wrap.style.opacity = '1';
+      order.forEach((idx, seq) => {
+        setTimeout(() => {
+          const p = paws[idx];
+          p.style.transition = 'transform 0.24s cubic-bezier(0.34,1.56,0.64,1), opacity 0.14s';
+          p.style.opacity    = '1';
+          p.style.transform  = `scale(1) rotate(${p.dataset.rot}deg)`;
+        }, seq * 6);
+      });
+      if (doneCb) setTimeout(doneCb, order.length * 6 + 300);
+    }
+
+    function descubrir() {
+      const rev = [...order].reverse();
+      rev.forEach((idx, seq) => {
+        setTimeout(() => {
+          const p = paws[idx];
+          p.style.transition = 'transform 0.20s cubic-bezier(0.55,0,1,0.45), opacity 0.17s';
+          p.style.opacity    = '0';
+          p.style.transform  = `scale(0.08) rotate(${parseFloat(p.dataset.rot) + 65}deg)`;
+        }, seq * 5);
+      });
+      const cleanAt = rev.length * 5 + 240;
+      setTimeout(() => {
+        wrap.style.transition = 'opacity 0.28s';
+        wrap.style.opacity    = '0';
+      }, cleanAt);
+      setTimeout(() => {
+        wrap.style.transition = '';
+        paws.forEach(p => {
+          p.style.transition = 'none';
+          p.style.opacity    = '0';
+          p.style.transform  = 'scale(0)';
+        });
+      }, cleanAt + 320);
+    }
+
+    /* ── Entrada: body estuvo oculto (CSS en <head>), ahora cubrimos y revelamos ── */
+    if (sessionStorage.getItem('ngTransition') === '1') {
+      sessionStorage.removeItem('ngTransition');
+      /* 1. Mostrar overlay de huellas (todas visibles, sin animación) */
+      wrap.style.opacity = '1';
+      paws.forEach(p => {
+        p.style.transition = 'none';
+        p.style.opacity    = '1';
+        p.style.transform  = `scale(1) rotate(${p.dataset.rot}deg)`;
+      });
+      /* 2. Quitar el bloqueo CSS del body — ahora el body se muestra, cubierto por #pg-paws */
+      document.documentElement.removeAttribute('data-ng-paws-entry');
+      void wrap.offsetWidth; /* force reflow */
+      /* 3. Las huellas se van como enjambre, revelando la página */
+      setTimeout(descubrir, 200);
+    } else {
+      /* Si llegamos aquí sin el flag, siempre quitar el bloqueo por seguridad */
+      document.documentElement.removeAttribute('data-ng-paws-entry');
+    }
+
+    window.ngTransicion = { cubrir, descubrir };
+  })();
+  </script>
+
+  <!-- ══ TRANSICIÓN ESPECIAL: ⭐ Estrellas que explotan ══ -->
+  <div id="pg-stars" aria-hidden="true" style="
+    position:fixed;inset:0;z-index:99998;
+    pointer-events:none;overflow:hidden;opacity:0;">
+    <div id="pg-stars-bg"></div>
+    <div id="pg-star-core">⭐</div>
+    <!-- 14 estrellitas se generan dinámicamente -->
+  </div>
+  <style>
+  #pg-stars-bg {
+    position:absolute; inset:0;
+    background: radial-gradient(circle at center,
+                rgba(255,230,109,0.95) 0%,
+                rgba(255,179,71,0.90) 35%,
+                rgba(108,99,255,0.85) 75%,
+                rgba(78,205,196,0.80) 100%);
+    opacity: 0;
+    will-change: opacity;
+  }
+  #pg-star-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    font-size: 6vmax;
+    transform: translate(-50%,-50%) scale(0) rotate(0deg);
+    text-shadow: 0 0 30px rgba(255,230,109,0.9);
+    will-change: transform;
+  }
+  .pg-mini-star {
+    position: absolute;
+    top: 50%; left: 50%;
+    font-size: 2.4vmax;
+    transform: translate(-50%,-50%) scale(0) rotate(0deg);
+    text-shadow: 0 0 12px rgba(255,255,255,0.7);
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+  </style>
+  <script>
+  (function () {
+    const wrap  = document.getElementById('pg-stars');
+    const bg    = document.getElementById('pg-stars-bg');
+    const core  = document.getElementById('pg-star-core');
+    const N     = 14;
+    const stars = [];
+
+    /* Generar mini-estrellas */
+    for (let i = 0; i < N; i++) {
+      const s = document.createElement('div');
+      s.className = 'pg-mini-star';
+      s.textContent = ['⭐','✨','🌟'][i % 3];
+      wrap.appendChild(s);
+      stars.push(s);
+    }
+
+    function explotar() {
+      wrap.style.opacity = '1';
+      bg.style.transition = 'opacity 0.25s ease';
+      bg.style.opacity = '1';
+
+      /* Estrella central crece */
+      core.style.transition = 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)';
+      core.style.transform = 'translate(-50%,-50%) scale(1.6) rotate(20deg)';
+
+      /* Explosión: las mini estrellas vuelan radialmente */
+      setTimeout(() => {
+        core.style.transition = 'transform 0.5s ease-out, opacity 0.4s';
+        core.style.opacity = '0';
+        core.style.transform = 'translate(-50%,-50%) scale(3.5) rotate(180deg)';
+
+        stars.forEach((s, i) => {
+          const angle = (i / N) * Math.PI * 2;
+          const dist  = 60 + Math.random() * 20; /* vmax */
+          const dx = Math.cos(angle) * dist;
+          const dy = Math.sin(angle) * dist;
+          const rot = 360 + Math.random() * 360;
+          s.style.transition = 'transform 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.7s';
+          s.style.opacity = '1';
+          s.style.transform =
+            `translate(calc(-50% + ${dx}vmax), calc(-50% + ${dy}vmax)) scale(${0.8 + Math.random()*0.7}) rotate(${rot}deg)`;
+        });
+      }, 220);
+    }
+
+    function implotar() {
+      /* Las estrellas regresan al centro y desaparecen */
+      stars.forEach((s, i) => {
+        s.style.transition = 'transform 0.55s cubic-bezier(0.55,0,1,0.45), opacity 0.55s';
+        s.style.transform = 'translate(-50%,-50%) scale(0) rotate(0deg)';
+        s.style.opacity = '0';
+      });
+      setTimeout(() => {
+        bg.style.transition = 'opacity 0.45s ease';
+        bg.style.opacity = '0';
+      }, 200);
+      setTimeout(() => {
+        wrap.style.opacity = '0';
+        core.style.transition = 'none';
+        core.style.transform = 'translate(-50%,-50%) scale(0) rotate(0deg)';
+        core.style.opacity = '';
+        stars.forEach(s => { s.style.transition = 'none'; s.style.transform = 'translate(-50%,-50%) scale(0)'; s.style.opacity = '0'; });
+      }, 800);
+    }
+
+    /* Disparador manual: window.ngStars.explotar() */
+    window.ngStars = { explotar, implotar };
+
+    /* ── Página destino: si el flag está activo, descubre con explosión ── */
+    if (sessionStorage.getItem('ngStars') === '1') {
+      sessionStorage.removeItem('ngStars');
+      /* Empieza con bg cubriendo + estrella central visible */
+      wrap.style.opacity = '1';
+      bg.style.transition = 'none';
+      bg.style.opacity = '1';
+      core.style.transition = 'none';
+      core.style.transform = 'translate(-50%,-50%) scale(2.2) rotate(15deg)';
+      stars.forEach((s, i) => {
+        const angle = (i / N) * Math.PI * 2;
+        const dist  = 18;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+        s.style.transition = 'none';
+        s.style.opacity = '1';
+        s.style.transform = `translate(calc(-50% + ${dx}vmax), calc(-50% + ${dy}vmax)) scale(1) rotate(0deg)`;
+      });
+      void bg.offsetWidth;
+      /* Después de un instante, explota hacia afuera revelando la página */
+      setTimeout(() => {
+        stars.forEach((s, i) => {
+          const angle = (i / N) * Math.PI * 2;
+          const dist  = 70 + Math.random() * 20;
+          const dx = Math.cos(angle) * dist;
+          const dy = Math.sin(angle) * dist;
+          const rot = 360 + Math.random() * 360;
+          s.style.transition = 'transform 0.75s cubic-bezier(0.22,1,0.36,1), opacity 0.75s';
+          s.style.transform =
+            `translate(calc(-50% + ${dx}vmax), calc(-50% + ${dy}vmax)) scale(${0.6 + Math.random()*0.6}) rotate(${rot}deg)`;
+          s.style.opacity = '0';
+        });
+        core.style.transition = 'transform 0.5s ease-out, opacity 0.5s';
+        core.style.transform = 'translate(-50%,-50%) scale(5) rotate(180deg)';
+        core.style.opacity = '0';
+        bg.style.transition = 'opacity 0.6s ease';
+        bg.style.opacity = '0';
+        setTimeout(() => { wrap.style.opacity = '0'; }, 750);
+      }, 220);
+    }
+  })();
+  </script>
+
+  <!-- ══ LISTENERS GLOBALES DE TRANSICIONES ══
+       Lógica unificada en un único delegado para evitar conflictos de orden de eventos.
+       Prioridad: data-ng-trans > #btnVolverPanel > catch-all interno → huellas default -->
+  <script>
+  document.addEventListener('click', function (e) {
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    /* Ignorar anchors puros, javascript: y externos */
+    if (!href || href.startsWith('#') || href.startsWith('javascript')) return;
+    const isInternal = !href.startsWith('http') || a.href.startsWith(location.origin);
+    if (!isInternal) return;
+
+    /* 1. Atributo explícito: data-ng-trans="stars|circles|paws" */
+    const explicit = a.dataset.ngTrans;
+    if (explicit === 'stars')   { sessionStorage.setItem('ngStars',    '1'); return; }
+    if (explicit === 'circles') { sessionStorage.setItem('ngCircles',  '1'); return; }
+    if (explicit === 'paws')    { sessionStorage.setItem('ngTransition','1'); return; }
+
+    /* 2. Botón "Volver al panel" de los minijuegos → estrellas */
+    if (a.id === 'btnVolverPanel' || a.closest('#btnVolverPanel')) {
+      sessionStorage.setItem('ngStars', '1'); return;
+    }
+
+    /* 3. Catch-all: cualquier otra navegación interna → huellas de Milo */
+    sessionStorage.setItem('ngTransition', '1');
+  });
   </script>
 
 </body>

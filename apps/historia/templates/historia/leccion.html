@@ -440,7 +440,8 @@
     <div class="recompensas" id="recompensas"></div>
     <div id="logrosNuevos" class="d-flex flex-column gap-2 w-100"></div>
     <div class="d-flex gap-3 mt-2 w-100 justify-content-center">
-      <a href="{% url 'historia:mapa_historia' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
+      <a href="{% url 'historia:mapa_historia' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold"
+         data-ng-trans="stars">
         🗺️ Volver al mapa
       </a>
       <a href="{% url 'historia:ver_leccion' pk=leccion.pk %}" class="btn rounded-pill px-4 fw-bold text-white"
@@ -644,8 +645,21 @@ function renderWriting(d) {
   `;
 }
 
+// ── Variante aleatoria ────────────────────────────────────────────────────────
+// Almacena los datos ya resueltos (con variante aplicada) para que onContinue
+// y _extraerContextoActividad accedan al contenido real que ve el estudiante.
+let _activeMinijuegoDatos = null;
+
+function pickVariante(d) {
+  if (!d.variantes || !d.variantes.length) return d;
+  const v = d.variantes[Math.floor(Math.random() * d.variantes.length)];
+  return Object.assign({}, d, v);
+}
+
 // ── Minijuego router ─────────────────────────────────────────────────────────
 function renderMinijuego(d) {
+  d = pickVariante(d);
+  _activeMinijuegoDatos = d;
   const tipo = d.tipo_minijuego || 'memoria';
   if (tipo === 'memoria')         return renderMemoria(d);
   if (tipo === 'rellenar')        return renderRellenar(d);
@@ -885,22 +899,45 @@ function unirClick(btn) {
   }
 }
 
-// ── Ordenar oración ───────────────────────────────────────────────────────────
-let ordenState = { palabras:[], zona:[] };
+// ── Ordenar oración (multi-oración secuencial) ───────────────────────────────
+// ordenState.oraciones: array de strings con todas las oraciones a completar
+// ordenState.idx:       índice de la oración actual
+// ordenState._actuales: palabras de la oración actual (para validar)
+let ordenState = { oraciones:[], idx:0, _actuales:[] };
 
 function renderOrdenarOracion(d) {
-  const oracion = d.oracion || '';
+  // Soporta tanto d.oraciones (array, nuevo) como d.oracion (string, legado)
+  const oraciones = Array.isArray(d.oraciones) ? d.oraciones
+                  : (d.oracion ? [d.oracion] : ['']);
+  ordenState = { oraciones, idx: 0, _actuales: [] };
+
+  return `
+    <p class="act-title">🧩 ${d.titulo||'¡Arma la oración!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Toca las palabras en el orden correcto para formar la oración.'}</p>
+    <div id="ordenWrap">${_ordenRenderActual()}</div>
+  `;
+}
+
+function _ordenRenderActual() {
+  if (ordenState.idx >= ordenState.oraciones.length) {
+    return `<p class="text-center fw-bold mt-3" style="color:var(--primary);font-size:1.3rem">🎉 ¡Todas las oraciones completadas!</p>`;
+  }
+  const oracion  = ordenState.oraciones[ordenState.idx];
   const palabras = oracion.split(' ').filter(Boolean);
   const shuffled = [...palabras].sort(() => Math.random() - .5);
-  ordenState = { palabras, zona:[] };
+  ordenState._actuales = palabras;
 
   const chips = shuffled.map((p, i) => `
     <span class="palabra-chip" data-word="${p}" data-bidx="${i}" onclick="ordenMoverAZona(this)">${p}</span>
   `).join('');
 
+  const total = ordenState.oraciones.length;
+  const progreso = total > 1
+    ? `<p class="vf-progreso">${ordenState.idx + 1} / ${total}</p>`
+    : '';
+
   return `
-    <p class="act-title">🧩 ${d.titulo||'Arma la oración'} ${d.emoji||''}</p>
-    <p class="act-instruccion">${d.instruccion||'Toca las palabras en el orden correcto para formar la oración.'}</p>
+    ${progreso}
     <div class="orden-zona-label">📦 Palabras disponibles</div>
     <div class="palabras-bank" id="palabrasBank">${chips}</div>
     <div class="orden-zona-label" style="margin-top:14px">📝 Tu oración</div>
@@ -913,10 +950,8 @@ function ordenMoverAZona(chip) {
   if (chip.parentElement.id !== 'palabrasBank') return;
   const zona = document.getElementById('palabrasZona');
   chip.classList.add('en-zona');
-  chip.onclick = null;
   chip.onclick = () => ordenDevolverAlBanco(chip);
   zona.appendChild(chip);
-  ordenState.zona.push(chip.dataset.word);
   ordenActualizarBoton();
 }
 
@@ -924,31 +959,37 @@ function ordenDevolverAlBanco(chip) {
   if (chip.parentElement.id !== 'palabrasZona') return;
   const bank = document.getElementById('palabrasBank');
   chip.classList.remove('en-zona');
-  chip.onclick = null;
   chip.onclick = () => ordenMoverAZona(chip);
   bank.appendChild(chip);
   ordenActualizarBoton();
 }
 
 function ordenActualizarBoton() {
-  const zona = document.getElementById('palabrasZona');
+  // El botón se habilita cuando el banco está vacío (todos los chips en la zona)
+  // y aún hay oraciones pendientes. Cuando todas están completas lo habilita
+  // la lógica de avance en onContinue.
+  if (ordenState.idx >= ordenState.oraciones.length) return; // ya todo completo
+  const zona  = document.getElementById('palabrasZona');
   const count = zona ? zona.querySelectorAll('.palabra-chip').length : 0;
-  document.getElementById('btnContinue').disabled = (count < ordenState.palabras.length);
+  document.getElementById('btnContinue').disabled = (count < ordenState._actuales.length);
 }
 
+// Valida la oración actual. Devuelve true si es correcta.
+// NO avanza el índice — eso lo hace onContinue.
 function ordenValidar() {
   const zona = document.getElementById('palabrasZona');
   if (!zona) return false;
-  const chips = [...zona.querySelectorAll('.palabra-chip')];
+  const chips    = [...zona.querySelectorAll('.palabra-chip')];
   const respuesta = chips.map(c => c.dataset.word).join(' ');
-  const correcta  = ordenState.palabras.join(' ');
-  const resEl = document.getElementById('ordenResultado');
+  const correcta  = ordenState._actuales.join(' ');
+  const resEl     = document.getElementById('ordenResultado');
+
   if (respuesta === correcta) {
-    if (resEl) resEl.innerHTML = '<span style="color:#28a745">✅ ¡Correcto!</span>';
+    if (resEl) resEl.innerHTML = '<span style="color:#28a745;font-size:1.15rem">✅ ¡Correcto!</span>';
     return true;
   } else {
-    if (resEl) resEl.innerHTML = `<span style="color:#dc3545">❌ Orden incorrecto. Respuesta: <em>${correcta}</em></span>`;
-    chips.forEach(c => { c.classList.add('error-chip'); setTimeout(()=>c.classList.remove('error-chip'),400); });
+    if (resEl) resEl.innerHTML = `<span style="color:#dc3545">❌ Intenta de nuevo.</span>`;
+    chips.forEach(c => { c.classList.add('error-chip'); setTimeout(() => c.classList.remove('error-chip'), 400); });
     const bank = document.getElementById('palabrasBank');
     [...zona.querySelectorAll('.palabra-chip')].forEach(c => {
       c.classList.remove('en-zona'); c.onclick = () => ordenMoverAZona(c); bank.appendChild(c);
@@ -1070,9 +1111,20 @@ function showCorrection(tipo, msg, sub, _duration, actDatos) {
     }
 
     const d = actDatos || {};
+
+    // Helper: garantiza que resolve() se llama una sola vez aunque Milo
+    // cancele su timer (p.ej. el estudiante cierra la burbuja manualmente).
+    function makeOnce(timeoutMs) {
+      let done = false;
+      const safe = function() { if (!done) { done = true; resolve(); } };
+      setTimeout(safe, timeoutMs);   // red de seguridad
+      return safe;
+    }
+
     if (tipo === 'correct') {
-      window.miloComentarista('correcto', { msg: msg || '¡Correcto! 🎉' }, resolve);
+      window.miloComentarista('correcto', { msg: msg || '¡Correcto! 🎉' }, makeOnce(3500));
     } else if (tipo === 'incorrect') {
+      // Incorrecto: el estudiante DEBE pulsar "Entendido" — sin timeout automático.
       window.miloComentarista('incorrecto', {
         pregunta:           d.pregunta || '',
         respuesta_correcta: d.respuesta_correcta || '',
@@ -1080,14 +1132,19 @@ function showCorrection(tipo, msg, sub, _duration, actDatos) {
         contexto:           'Modo Historia — inglés para primaria',
       }, resolve);
     } else {
-      window.miloComentarista('neutro', { msg: msg || '¡Muy bien! ✨' }, resolve);
+      // Neutro (intro, vocabulario, dialogo…): avanza aunque el estudiante
+      // haya cerrado la burbuja manualmente antes del autoclose de Milo.
+      window.miloComentarista('neutro', { msg: msg || '¡Muy bien! ✨' }, makeOnce(2500));
     }
   });
 }
 
 // ── Extrae contexto de la actividad actual para la corrección de Milo ─────────
+// Usa _activeMinijuegoDatos (datos ya con variante resuelta) para minijuegos.
 function _extraerContextoActividad(act) {
-  const d = act.datos || {};
+  const d = act.tipo === 'minijuego_embed'
+    ? (_activeMinijuegoDatos || act.datos || {})
+    : (act.datos || {});
   let pregunta = '';
   let respuesta_correcta = '';
   let respuesta_dada = '';
@@ -1117,12 +1174,38 @@ function _extraerContextoActividad(act) {
     }
   } else if (act.tipo === 'minijuego_embed') {
     const tipo = (d.tipo_minijuego || '');
+
     if (tipo === 'rellenar' && d.oraciones && d.oraciones[0]) {
       pregunta = d.oraciones[0].texto || '';
       respuesta_correcta = d.oraciones[0].respuesta || '';
+
     } else if (tipo === 'ordenar_oracion') {
-      pregunta = 'Ordena la oración';
-      respuesta_correcta = (d.oracion || '');
+      // Usa la oración actual en curso (puede ser multi-oración)
+      pregunta = 'Ordena las palabras para formar la oración correcta';
+      respuesta_correcta = ordenState._actuales.join(' ') || (d.oraciones && d.oraciones[0]) || '';
+
+    } else if (tipo === 'verdadero_falso') {
+      const p = vfState.preguntas[vfState.idx] || {};
+      pregunta = p.afirmacion || '';
+      respuesta_correcta = p.respuesta ? 'Verdadero ✅' : 'Falso ❌';
+
+    } else if (tipo === 'unir_pares') {
+      // El par seleccionado de la izquierda que no fue unido correctamente
+      if (unirState.selectedLeft !== null) {
+        const pares = d.pares || [];
+        const par = pares[unirState.selectedLeft] || {};
+        pregunta = `¿Con qué va "${par.izq || ''}"?`;
+        respuesta_correcta = par.der || '';
+      }
+
+    } else if (tipo === 'memoria') {
+      // Contexto general; los pares específicos son difíciles de rastrear en tiempo real
+      pregunta = 'Encuentra los pares que coinciden';
+      respuesta_correcta = '';
+
+    } else if (tipo === 'clasificar') {
+      pregunta = 'Clasifica cada palabra en su categoría correcta';
+      respuesta_correcta = '';
     }
   }
 
@@ -1152,13 +1235,13 @@ async function onContinue() {
 
   // Minijuegos con validación cliente antes de enviar al servidor
   if (act.tipo === 'minijuego_embed') {
-    const tipo = (act.datos||{}).tipo_minijuego || 'memoria';
-    const d    = act.datos || {};
+    // Usar datos con variante ya resuelta (seteados por renderMinijuego → pickVariante)
+    const d    = _activeMinijuegoDatos || act.datos || {};
+    const tipo = d.tipo_minijuego || 'memoria';
 
     if (tipo === 'rellenar') {
       if (!rellenarValidar()) {
         btn.disabled = true;
-        // Buscar el primer campo incorrecto para dar contexto a Milo
         const oraciones = d.oraciones || [];
         const inputs = document.querySelectorAll('.rellenar-input');
         let pregunta = '', respuesta_correcta = '', respuesta_dada = '';
@@ -1187,17 +1270,30 @@ async function onContinue() {
       const respuesta_dada = zona
         ? [...zona.querySelectorAll('.palabra-chip')].map(c => c.dataset.word).join(' ')
         : '';
+
       if (!ordenValidar()) {
+        // Oración incorrecta → Milo comenta y el estudiante reintenta
         if (window.miloComentarista) {
           window.miloComentarista('incorrecto', {
             pregunta: 'Ordena las palabras para formar la oración correcta',
-            respuesta_correcta: d.oracion || '',
+            respuesta_correcta: ordenState._actuales.join(' '),
             respuesta_dada,
             contexto: 'Modo Historia — ordenar oración en inglés',
           }, function() { /* el estudiante reintenta */ });
         }
         return;
       }
+
+      // Oración correcta → avanzar al siguiente si hay más
+      ordenState.idx++;
+      if (ordenState.idx < ordenState.oraciones.length) {
+        // Todavía quedan oraciones: re-renderizar y NO enviar al servidor
+        const wrap = document.getElementById('ordenWrap');
+        if (wrap) wrap.innerHTML = _ordenRenderActual();
+        btn.disabled = true;
+        return;
+      }
+      // Todas las oraciones completadas → caer al envío al servidor abajo
     }
 
     if (tipo === 'clasificar') {
@@ -1275,14 +1371,14 @@ async function finalizarLeccion() {
     });
     const data = await resp.json();
 
-    // Replay de una lección ya completada: solo felicita, no da recompensas ni cambia estrellas.
-    if (data.status === 'ya_completada') {
-      data.puntos_xp = 0;
-      data.huesos = 0;
-      data.nivel_subio = false;
-      data.nivel_nuevo = null;
-      data.logros_nuevos = [];
-    }
+    const esReplay = data.status === 'ya_completada';
+
+    // Campos que el backend ya envía en ambos casos (ok y ya_completada).
+    const puntos_xp   = data.puntos_xp   ?? 0;
+    const huesos      = data.huesos      ?? 0;
+    const nivel_subio = data.nivel_subio ?? false;
+    const nivel_nuevo = data.nivel_nuevo ?? null;
+    const logros      = data.logros_nuevos ?? [];
 
     // Show stars
     const starsRow = document.getElementById('starsRow');
@@ -1294,16 +1390,17 @@ async function finalizarLeccion() {
       setTimeout(() => s.classList.add('active'), i * 300);
     }
 
-    // Rewards
+    // Rewards (replay muestra +0 XP / +0 🦴 — correcto)
     document.getElementById('recompensas').innerHTML = `
-      <div class="recomp-pill">+${data.puntos_xp} XP</div>
-      <div class="recomp-pill">+${data.huesos} 🦴</div>
-      ${data.nivel_subio ? `<div class="recomp-pill">🎉 ¡Nivel ${data.nivel_nuevo}!</div>` : ''}
+      <div class="recomp-pill">+${puntos_xp} XP</div>
+      <div class="recomp-pill">+${huesos} 🦴</div>
+      ${nivel_subio ? `<div class="recomp-pill">🎉 ¡Nivel ${nivel_nuevo}!</div>` : ''}
+      ${esReplay ? '<div class="recomp-pill" style="background:#f0eeff;color:var(--primary)">🔄 Intento de mejora</div>' : ''}
     `;
 
     // Logros
-    if (data.logros_nuevos && data.logros_nuevos.length) {
-      document.getElementById('logrosNuevos').innerHTML = data.logros_nuevos.map(l =>
+    if (logros.length) {
+      document.getElementById('logrosNuevos').innerHTML = logros.map(l =>
         `<div class="nestgrow-card p-2 px-3 fw-bold" style="font-size:.9rem">
            ${l.icono} ¡Nuevo logro! ${l.nombre}
          </div>`
@@ -1319,8 +1416,8 @@ async function finalizarLeccion() {
       setTimeout(() => launchConfetti({ particleCount: 80 }), 600);
     }
 
-    if (data.nivel_subio && data.nivel_nuevo && typeof showLevelUpPopup === 'function') {
-      setTimeout(() => showLevelUpPopup(data.nivel_nuevo), 1500);
+    if (nivel_subio && nivel_nuevo && typeof showLevelUpPopup === 'function') {
+      setTimeout(() => showLevelUpPopup(nivel_nuevo), 1500);
     }
 
   } catch(e) {

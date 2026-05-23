@@ -16,8 +16,8 @@ class BloqueTallerInline(admin.TabularInline):
 
 @admin.register(Taller)
 class TallerAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'profesor', 'salon', 'is_active', 'puntos_xp', 'huesos_recompensa', 'created_at')
-    list_filter = ('is_active', 'salon')
+    list_display = ('titulo', 'profesor', 'is_active', 'puntos_xp', 'huesos_recompensa', 'created_at')
+    list_filter = ('is_active',)
     search_fields = ('titulo', 'profesor__username', 'profesor__first_name')
     inlines = [BloqueTallerInline]
 

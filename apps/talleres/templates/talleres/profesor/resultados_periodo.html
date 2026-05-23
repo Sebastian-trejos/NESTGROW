@@ -54,7 +54,12 @@
             </th>
             {% for asig in talleres_asig %}
             <th class="text-center py-3 text-white fw-bold" style="min-width:110px;opacity:.9">
-              🎓 <span title="{{ asig.taller.titulo }}" style="font-size:.8rem">{{ asig.taller.titulo|truncatechars:16 }}</span>
+              🎓 <a href="{% url 'talleres:resultados' asig.taller.pk %}"
+                    title="Ver detalle: {{ asig.taller.titulo }}"
+                    class="text-white text-decoration-none"
+                    style="font-size:.8rem;border-bottom:1px dashed rgba(255,255,255,.5)">
+                {{ asig.taller.titulo|truncatechars:16 }}
+              </a>
             </th>
             {% endfor %}
             {% for asig in minijuegos_asig %}
