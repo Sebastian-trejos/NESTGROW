@@ -37,7 +37,7 @@
   {% endif %}
 {% if user.role == 'estudiante' %}
 <li class="nav-item">
-  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:category_list' %}"
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:mi_vocabulario' %}"
      style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,107,107,0.25)';this.style.background='#ffd9d9'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff0f0'">
@@ -341,7 +341,12 @@
 
     function setImg(src) {
       img.style.opacity = '0';
-      setTimeout(() => { img.src = src; img.style.opacity = '1'; }, 180);
+      setTimeout(() => {
+        img.src = src;
+        img.style.opacity = '1';
+        // milo_fest.png tiene más espacio interno — se escala para igualar visualmente
+        img.style.transform = (src === IMG.saludando || src === IMG.celebrando) ? 'scale(1.2)' : 'scale(1)';
+      }, 180);
     }
 
     float.addEventListener('mouseenter', () => { if (!isOpen) setImg(IMG.saludando); });
@@ -440,8 +445,10 @@
       extra.appendChild(footer);
     }
 
-    // Apertura automática al cargar la página (espera a que termine la transición)
-    setTimeout(openBubble, 1800);
+    // Apertura automática al cargar la página
+    // Si venimos de una transición (huellas), esperamos 1800ms; si no (ej. login), 900ms
+    const _miloDelay = sessionStorage.getItem('ngTransition') === '1' ? 1800 : 900;
+    setTimeout(openBubble, _miloDelay);
 
     // ── Comentarista Milo: para talleres y modo historia ─────────────────────
     // tipo: 'correcto' | 'incorrecto' | 'neutro'
@@ -597,110 +604,146 @@
   })();
   </script>
 
-  <!-- ══ TRANSICIÓN DE PÁGINA: 🐾 Huellas de Milo — enjambre completo ══
-       El grid auto-fill garantiza cobertura total de la pantalla.
-       El script en <head> oculta el body hasta que las huellas cubran la pantalla. -->
+  <!-- ══ TRANSICIÓN DE PÁGINA: 🐾 Huellas de Milo ══
+       El emoji se pre-renderiza a canvas UNA SOLA VEZ al cargar la página.
+       Los elementos reutilizan la textura PNG ya decodificada → 0 rasterización
+       por elemento durante la animación. Sin DOM en reposo = 0 capas GPU extra. -->
   <div id="pg-paws" aria-hidden="true" style="
     position:fixed;inset:0;z-index:99999;
     pointer-events:none;overflow:hidden;opacity:0;
-    display:grid;
-    grid-template-columns:repeat(auto-fill,10vmax);
-    grid-template-rows:repeat(auto-fill,10vmax);
-    align-content:start;
-    background:linear-gradient(135deg,#6C63FF 0%,#8b80f9 35%,#a89dff 60%,#7ec8e3 100%);">
+    background:linear-gradient(135deg,#6C63FF 0%,#8b80f9 35%,#a89dff 60%,#7ec8e3 100%);
+    will-change:opacity;transform:translateZ(0);">
   </div>
   <style>
   .pg-paw-s {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* La celda es 10vmax pero el emoji mide ~20vmax → desborda y solapa a sus vecinos */
-    width: 10vmax;
-    height: 10vmax;
-    overflow: visible;   /* permite que el emoji invada celdas adyacentes */
-    line-height: 1;
+    position: absolute;
     user-select: none;
-    will-change: transform, opacity;
     opacity: 0;
-    transform: scale(0) rotate(0deg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   </style>
   <script>
   (function () {
     const wrap = document.getElementById('pg-paws');
-    const N    = 80; /* celdas 10vmax → ~60 en 1080p, ~70 en móvil portrait */
-    const paws = [];
+    const COLS = 4, ROWS = 4, N = COLS * ROWS;
 
-    /* font-size ~2× el tamaño de la celda → cada huella invade a sus 4 vecinas,
-       solapamiento total garantizado sin importar resolución ni orientación       */
+    /* ── Paso 1: Pre-renderizar 🐾 a canvas → PNG data URL ────────────────
+       Ocurre una sola vez, sincrónicamente, cuando el script se evalúa
+       (el parser ya terminó, el usuario todavía no puede hacer clic).
+       Coste: ~5-15 ms de CPU, inapreciable al cargar.
+       Beneficio: todos los elementos compartirán la misma textura ya
+       decodificada; el navegador no rasteriza el glifo emoji en cada spawn. */
+    let pawSrc = null;
+    try {
+      const cv  = document.createElement('canvas');
+      cv.width  = cv.height = 320;
+      const ctx = cv.getContext('2d');
+      ctx.font          = '260px serif';
+      ctx.textAlign     = 'center';
+      ctx.textBaseline  = 'middle';
+      ctx.fillText('🐾', 160, 170);
+      pawSrc = cv.toDataURL('image/png');
+    } catch (e) { /* fallback: usa texto */ }
+
+    /* ── Paso 2: Datos de layout por zona (sin DOM) ── */
+    const configs = [];
     for (let i = 0; i < N; i++) {
-      const p = document.createElement('span');
-      p.className   = 'pg-paw-s';
-      p.textContent = '🐾';
-      p.style.fontSize = (38 + Math.random() * 10).toFixed(1) + 'vmax'; /* 38–48vmax */
-      p.dataset.rot    = (-40 + Math.random() * 80).toFixed(1);         /* -40°…+40° */
-      wrap.appendChild(p);
-      paws.push(p);
+      const col = i % COLS, row = Math.floor(i / COLS);
+      const zoneW = 100 / COLS, zoneH = 100 / ROWS, pad = 0.2;
+      configs.push({
+        size: (50 + Math.random() * 15).toFixed(1),
+        rot:  (-40 + Math.random() * 80).toFixed(1),
+        left: (col * zoneW + zoneW * (pad + Math.random() * (1 - 2 * pad))).toFixed(2),
+        top:  (row * zoneH + zoneH * (pad + Math.random() * (1 - 2 * pad))).toFixed(2),
+      });
     }
 
-    /* Orden aleatorio para el efecto enjambre */
-    const order = paws.map((_, i) => i).sort(() => Math.random() - 0.5);
+    const order = configs.map((_, i) => i).sort(() => Math.random() - 0.5);
+    const elems = new Array(N).fill(null);
 
+    /* ── Paso 3: Spawn perezoso — 1 elemento por slot de tiempo ──
+       Si pawSrc está listo usa background-image (textura cacheada, barata).
+       Si no, cae a textContent emoji (nunca debería pasar en producción). */
+    function spawnPaw(cfgIdx, visible) {
+      const c = configs[cfgIdx];
+      const p = document.createElement('span');
+      p.className = 'pg-paw-s';
+      const sz = c.size + 'vmax';
+      if (pawSrc) {
+        p.style.width           = sz;
+        p.style.height          = sz;
+        p.style.backgroundImage = 'url(' + pawSrc + ')';
+      } else {
+        p.textContent  = '🐾';
+        p.style.fontSize = sz;
+        p.style.lineHeight = '1';
+      }
+      p.style.left      = c.left + '%';
+      p.style.top       = c.top  + '%';
+      p.style.opacity   = visible ? '1' : '0';
+      p.style.transform = `translate(-50%,-50%) scale(${visible ? 1 : 0}) rotate(${c.rot}deg)`;
+      wrap.appendChild(p);
+      elems[cfgIdx] = p;
+      return p;
+    }
+
+    function showTf(i) { return `translate(-50%,-50%) scale(1) rotate(${configs[i].rot}deg)`; }
+    function hideTf(i) {
+      return `translate(-50%,-50%) scale(0.08) rotate(${parseFloat(configs[i].rot) + 65}deg)`;
+    }
+
+    function clearElems() {
+      elems.forEach((p, i) => { if (p) { p.remove(); elems[i] = null; } });
+    }
+
+    /* cubrir: un spawn cada 35 ms → el navegador solo procesa 1 elemento por frame */
     function cubrir(doneCb) {
+      clearElems();
       wrap.style.opacity = '1';
-      order.forEach((idx, seq) => {
+      order.forEach((cfgIdx, seq) => {
         setTimeout(() => {
-          const p = paws[idx];
-          p.style.transition = 'transform 0.24s cubic-bezier(0.34,1.56,0.64,1), opacity 0.14s';
+          const p = spawnPaw(cfgIdx, false);
+          void p.offsetWidth;
+          p.style.transition = 'transform 0.55s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s';
           p.style.opacity    = '1';
-          p.style.transform  = `scale(1) rotate(${p.dataset.rot}deg)`;
-        }, seq * 6);
+          p.style.transform  = showTf(cfgIdx);
+        }, seq * 35);
       });
-      if (doneCb) setTimeout(doneCb, order.length * 6 + 300);
+      if (doneCb) setTimeout(doneCb, order.length * 35 + 600);
     }
 
     function descubrir() {
-      const rev = [...order].reverse();
-      rev.forEach((idx, seq) => {
+      [...order].reverse().forEach((cfgIdx, seq) => {
         setTimeout(() => {
-          const p = paws[idx];
-          p.style.transition = 'transform 0.20s cubic-bezier(0.55,0,1,0.45), opacity 0.17s';
+          const p = elems[cfgIdx];
+          if (!p) return;
+          p.style.transition = 'transform 0.50s cubic-bezier(0.55,0,1,0.45), opacity 0.40s';
           p.style.opacity    = '0';
-          p.style.transform  = `scale(0.08) rotate(${parseFloat(p.dataset.rot) + 65}deg)`;
-        }, seq * 5);
+          p.style.transform  = hideTf(cfgIdx);
+        }, seq * 30);
       });
-      const cleanAt = rev.length * 5 + 240;
+      const cleanAt = order.length * 30 + 500;
       setTimeout(() => {
         wrap.style.transition = 'opacity 0.28s';
         wrap.style.opacity    = '0';
       }, cleanAt);
       setTimeout(() => {
         wrap.style.transition = '';
-        paws.forEach(p => {
-          p.style.transition = 'none';
-          p.style.opacity    = '0';
-          p.style.transform  = 'scale(0)';
-        });
+        clearElems();
       }, cleanAt + 320);
     }
 
-    /* ── Entrada: body estuvo oculto (CSS en <head>), ahora cubrimos y revelamos ── */
+    /* Entrada: body oculto por CSS en <head>; crea todos visible y descubre */
     if (sessionStorage.getItem('ngTransition') === '1') {
       sessionStorage.removeItem('ngTransition');
-      /* 1. Mostrar overlay de huellas (todas visibles, sin animación) */
       wrap.style.opacity = '1';
-      paws.forEach(p => {
-        p.style.transition = 'none';
-        p.style.opacity    = '1';
-        p.style.transform  = `scale(1) rotate(${p.dataset.rot}deg)`;
-      });
-      /* 2. Quitar el bloqueo CSS del body — ahora el body se muestra, cubierto por #pg-paws */
+      order.forEach(cfgIdx => spawnPaw(cfgIdx, true));
       document.documentElement.removeAttribute('data-ng-paws-entry');
-      void wrap.offsetWidth; /* force reflow */
-      /* 3. Las huellas se van como enjambre, revelando la página */
-      setTimeout(descubrir, 200);
+      void wrap.offsetWidth;
+      setTimeout(descubrir, 350);
     } else {
-      /* Si llegamos aquí sin el flag, siempre quitar el bloqueo por seguridad */
       document.documentElement.removeAttribute('data-ng-paws-entry');
     }
 

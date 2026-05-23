@@ -126,9 +126,11 @@ body.nestgrow-body {
 }
 
 /* La animación se activa sólo al mostrar, evitando el flash de burbuja vacía */
+/* backwards = el estado "from" se aplica ANTES del primer frame, eliminando el flash blanco */
 .milo-bubble.show {
   display: block;
-  animation: fadeInBubble 0.25s ease;
+  opacity: 1;
+  animation: fadeInBubble 0.25s ease backwards;
 }
 
 .milo-speech {
