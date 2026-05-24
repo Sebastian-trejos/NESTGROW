@@ -234,27 +234,6 @@
   }
 
   /* ── Continue button ── */
-  .continue-fab {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    z-index: 100;
-    padding: .75rem 1.4rem;
-    border-radius: 99px;
-    background: linear-gradient(135deg, #6C63FF, #9c94ff);
-    color: white;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    border: none;
-    box-shadow: 0 6px 20px rgba(108,99,255,0.4);
-    text-decoration: none;
-    transition: transform .2s, box-shadow .2s;
-  }
-  .continue-fab:hover {
-    color: white;
-    transform: scale(1.05);
-    box-shadow: 0 10px 28px rgba(108,99,255,0.5);
-  }
 
   @keyframes fadeInUp {
     from { opacity:0; transform:translateY(8px); }
@@ -397,13 +376,6 @@
 
 </div><!-- /wrap -->
 
-<!-- ── Botón continuar (FAB) ──────────────────────────────────────────── -->
-{% if primera_incompleta %}
-<a href="{% url 'historia:ver_leccion' pk=primera_incompleta.1 %}"
-   class="continue-fab">
-  ▶ Continuar lección
-</a>
-{% endif %}
 
 {% endblock %}
 

@@ -37,13 +37,19 @@ class RegistroForm(UserCreationForm):
         self.fields['username'].label = 'Nombre de usuario'
         self.fields['password1'].label = 'Contraseña'
         self.fields['password2'].label = 'Confirmar contraseña'
+        self.fields['password1'].widget.attrs['autocomplete'] = 'new-password'
+        self.fields['password2'].widget.attrs['autocomplete'] = 'new-password'
+        self.fields['password1'].help_text = (
+            'Mínimo 8 caracteres, al menos un número. '
+            'Evita contraseñas comunes como "12345678" o "password1".'
+        )
 
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Tu usuario'})
-        self.fields['password'].widget.attrs.update({'class': 'form-control', 'placeholder': '••••••••'})
+        self.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Tu usuario', 'autocomplete': 'username'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control', 'placeholder': '••••••••', 'autocomplete': 'current-password'})
 
 
 # ── Profesor ──────────────────────────────────────────────────────────────────

@@ -100,7 +100,9 @@ LECCIONES_POR_SECCION = {
 
 # Activity content definitions keyed by (seccion_pk, leccion_orden, tipo)
 # For brevity we use a helper that generates sensible content per tipo/tema
-def make_actividades(tema_es, tema_en, vocabulario, seccion_titulo, is_repaso=False):
+def make_actividades(tema_es, tema_en, vocabulario, seccion_titulo,
+                     seccion_pk=1, leccion_global_idx=0, dificultad=1,
+                     is_repaso=False):
     """
     Returns a list of activity dicts (sin pk/leccion, those assigned later).
     vocabulario: list of {"es": str, "en": str} dicts (at least 6)
@@ -205,17 +207,7 @@ def make_actividades(tema_es, tema_en, vocabulario, seccion_titulo, is_repaso=Fa
                 ],
             },
         },
-        {
-            "orden": 8,
-            "tipo": "minijuego_embed",
-            "puntos_actividad": 3,
-            "datos": {
-                "titulo": "¡Minijuego!",
-                "tipo_minijuego": "memoria",
-                "instruccion": "Match each word with its image.",
-                "pares": [{"es": w["es"], "en": w["en"], "emoji": w.get("emoji", "📝")} for w in v[:6]],
-            },
-        },
+        _make_minijuego_embed(seccion_pk, leccion_global_idx, v, dificultad),
     ]
 
     if is_repaso:
@@ -684,6 +676,691 @@ VOCABULARIO = {
 }
 
 
+# ── Minijuego rotation & difficulty ──────────────────────────────────────────
+
+TIPO_ROTATION = ['memoria', 'verdadero_falso', 'rellenar', 'clasificar', 'ordenar_oracion', 'unir_pares']
+
+TITULOS_MINIJUEGO = {
+    'memoria':         '¡Memoria!',
+    'verdadero_falso': '¿Verdadero o Falso?',
+    'rellenar':        '¡Rellena el espacio!',
+    'clasificar':      '¡Clasifica las palabras!',
+    'ordenar_oracion': '¡Arma la oración!',
+    'unir_pares':      '¡Une los pares!',
+}
+
+INSTRUCCIONES_MINIJUEGO = {
+    'memoria':         'Voltea las tarjetas y encuentra los pares que coinciden.',
+    'verdadero_falso': 'Lee cada frase y elige si es verdadera o falsa.',
+    'rellenar':        'Escribe la palabra que falta en cada oración.',
+    'clasificar':      'Arrastra cada palabra al grupo donde pertenece.',
+    'ordenar_oracion': 'Toca las palabras en el orden correcto para formar la oración.',
+    'unir_pares':      'Toca una palabra de la izquierda y luego su pareja de la derecha.',
+}
+
+def get_dificultad(seccion_orden):
+    """Returns difficulty level 1-4 based on section (chapter) order."""
+    if seccion_orden <= 2: return 1
+    if seccion_orden <= 5: return 2
+    if seccion_orden <= 8: return 3
+    return 4
+
+# Max items per difficulty level per tipo
+DIFFICULTY_PARAMS = {
+    'memoria':         {1: 4, 2: 4, 3: 5, 4: 6},
+    'unir_pares':      {1: 3, 2: 4, 3: 5, 4: 6},
+    'verdadero_falso': {1: 2, 2: 3, 3: 3, 4: 4},
+    'rellenar':        {1: 1, 2: 2, 3: 2, 4: 3},
+    'ordenar_oracion': {1: 1, 2: 1, 3: 2, 4: 3},
+}
+
+# ── Manual content per section ────────────────────────────────────────────────
+# Keys: seccion_pk (1-10). Each has lists of variant dicts for the 4 manually-
+# crafted types. memoria and unir_pares are auto-generated from VOCABULARIO.
+# Each list should have 4 variants so difficulty slicing always leaves 3+ good ones.
+
+MINIJUEGO_CONTENT = {
+    1: {  # Los Colores del Mundo — D1
+        'ordenar_oracion': [
+            {'oraciones': ['The sky is blue']},
+            {'oraciones': ['Red is my favorite color']},
+            {'oraciones': ['I like yellow and green']},
+            {'oraciones': ['The sun is bright yellow']},
+        ],
+        'rellenar': [
+            {'oraciones': [{'texto': 'The ___ is red.', 'respuesta': 'apple', 'emoji': '🍎'}]},
+            {'oraciones': [{'texto': 'The sky is ___.', 'respuesta': 'blue', 'emoji': '🌤️'}]},
+            {'oraciones': [{'texto': 'Grass is ___.', 'respuesta': 'green', 'emoji': '🌿'}]},
+            {'oraciones': [{'texto': 'The sun is ___.', 'respuesta': 'yellow', 'emoji': '☀️'}]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'Red is a primary color.', 'respuesta': True, 'explicacion': 'Yes! Red, blue, and yellow are the three primary colors.'},
+                {'afirmacion': 'The sky is green.', 'respuesta': False, 'explicacion': 'The sky is blue, not green!'},
+                {'afirmacion': 'Orange is made by mixing red and yellow.', 'respuesta': True, 'explicacion': 'Correct! Orange is a secondary color made from red + yellow.'},
+                {'afirmacion': 'Black is a light color.', 'respuesta': False, 'explicacion': 'Black is the darkest color. White is the lightest.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Yellow is a warm color.', 'respuesta': True, 'explicacion': 'Yes! Red, orange, and yellow are warm colors.'},
+                {'afirmacion': 'Blue is a secondary color.', 'respuesta': False, 'explicacion': 'Blue is a primary color — it cannot be made by mixing others.'},
+                {'afirmacion': 'Pink is a mix of red and white.', 'respuesta': True, 'explicacion': 'Correct! Pink is made by adding white to red.'},
+                {'afirmacion': 'Green is a primary color.', 'respuesta': False, 'explicacion': 'Green is secondary — it is made by mixing blue and yellow.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'White is a light color.', 'respuesta': True, 'explicacion': 'Yes! White is the lightest color of all.'},
+                {'afirmacion': 'Purple is made from blue and red.', 'respuesta': True, 'explicacion': 'Correct! Purple is a secondary color made from blue + red.'},
+                {'afirmacion': 'A banana is red.', 'respuesta': False, 'explicacion': 'A banana is yellow, not red!'},
+                {'afirmacion': 'Gray is a mix of black and white.', 'respuesta': True, 'explicacion': 'Yes! Gray is made by mixing black and white together.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Colores primarios', 'emoji': '🎨', 'items': ['red', 'blue', 'yellow']},
+                {'nombre': 'Colores secundarios', 'emoji': '🖌️', 'items': ['green', 'orange', 'purple']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Colores cálidos', 'emoji': '☀️', 'items': ['red', 'orange', 'yellow']},
+                {'nombre': 'Colores fríos', 'emoji': '❄️', 'items': ['blue', 'green', 'purple']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Colores oscuros', 'emoji': '🌑', 'items': ['black', 'dark blue', 'dark green']},
+                {'nombre': 'Colores claros', 'emoji': '🌟', 'items': ['white', 'pink', 'light blue']},
+            ]},
+        ],
+    },
+    2: {  # Mi Familia y Yo — D1
+        'ordenar_oracion': [
+            {'oraciones': ['She is my mother']},
+            {'oraciones': ['He is my brother']},
+            {'oraciones': ['I love my family']},
+            {'oraciones': ['My sister is very tall']},
+        ],
+        'rellenar': [
+            {'oraciones': [{'texto': 'My ___ is tall.', 'respuesta': 'father', 'emoji': '👨'}]},
+            {'oraciones': [{'texto': 'I have a ___.', 'respuesta': 'sister', 'emoji': '👧'}]},
+            {'oraciones': [{'texto': 'My ___ is kind.', 'respuesta': 'mother', 'emoji': '👩'}]},
+            {'oraciones': [{'texto': 'He is my ___.', 'respuesta': 'brother', 'emoji': '👦'}]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'A mother is a woman.', 'respuesta': True, 'explicacion': 'Yes! Mother means mamá in English.'},
+                {'afirmacion': 'A brother is a girl.', 'respuesta': False, 'explicacion': 'A brother is a boy. A girl is called a sister.'},
+                {'afirmacion': 'Parents are mother and father.', 'respuesta': True, 'explicacion': 'Correct! Parents means mamá y papá in English.'},
+                {'afirmacion': 'Grandparents are younger than parents.', 'respuesta': False, 'explicacion': 'Grandparents are older — they are the parents of your parents.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A sister is a girl.', 'respuesta': True, 'explicacion': 'Yes! A sister is a girl who shares the same parents as you.'},
+                {'afirmacion': 'An uncle is a child.', 'respuesta': False, 'explicacion': 'An uncle is an adult — the brother of your mother or father.'},
+                {'afirmacion': 'Twins are born on the same day.', 'respuesta': True, 'explicacion': 'Yes! Twins are two siblings born at the same time.'},
+                {'afirmacion': 'A grandmother is a young person.', 'respuesta': False, 'explicacion': 'A grandmother is older — she is the mother of your parents.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A father is a man.', 'respuesta': True, 'explicacion': 'Correct! Father means papá — he is a man.'},
+                {'afirmacion': 'A cousin is your brother or sister.', 'respuesta': False, 'explicacion': 'A cousin is the child of your aunt or uncle.'},
+                {'afirmacion': 'A family can be big or small.', 'respuesta': True, 'explicacion': 'Yes! Some families are big, others are small.'},
+                {'afirmacion': 'A niece is a boy.', 'respuesta': False, 'explicacion': 'A niece is a girl. A boy is called a nephew.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Familia directa', 'emoji': '🏠', 'items': ['father', 'mother', 'brother', 'sister']},
+                {'nombre': 'Familia extendida', 'emoji': '👨‍👩‍👧‍👦', 'items': ['grandfather', 'grandmother', 'uncle', 'aunt']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Hombres', 'emoji': '👨', 'items': ['father', 'brother', 'grandfather', 'uncle']},
+                {'nombre': 'Mujeres', 'emoji': '👩', 'items': ['mother', 'sister', 'grandmother', 'aunt']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Mayores', 'emoji': '👴', 'items': ['grandfather', 'grandmother', 'father', 'mother']},
+                {'nombre': 'Jóvenes', 'emoji': '👦', 'items': ['brother', 'sister', 'cousin']},
+            ]},
+        ],
+    },
+    3: {  # Los Números Mágicos — D2
+        'ordenar_oracion': [
+            {'oraciones': ['I have two brothers']},
+            {'oraciones': ['There are five cats']},
+            {'oraciones': ['She is ten years old']},
+            {'oraciones': ['My sister has three dogs']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'I am ___ years old.', 'respuesta': 'ten', 'emoji': '🔟'},
+                {'texto': 'There are ___ dogs.', 'respuesta': 'five', 'emoji': '🐕'},
+            ]},
+            {'oraciones': [
+                {'texto': 'He has ___ apples.', 'respuesta': 'three', 'emoji': '🍎'},
+                {'texto': 'I see ___ birds.', 'respuesta': 'four', 'emoji': '🐦'},
+            ]},
+            {'oraciones': [
+                {'texto': 'There are ___ months in a year.', 'respuesta': 'twelve', 'emoji': '📅'},
+                {'texto': 'A week has ___ days.', 'respuesta': 'seven', 'emoji': '📆'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I have ___ fingers on each hand.', 'respuesta': 'five', 'emoji': '✋'},
+                {'texto': 'I count to ___.', 'respuesta': 'twenty', 'emoji': '2️⃣0️⃣'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'Ten is more than five.', 'respuesta': True, 'explicacion': 'Yes! Ten (10) is bigger than five (5).'},
+                {'afirmacion': 'Twenty comes before ten.', 'respuesta': False, 'explicacion': 'Ten (10) comes before twenty (20). 10 < 20.'},
+                {'afirmacion': 'First is number one.', 'respuesta': True, 'explicacion': 'Correct! First is the ordinal form of the number one.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Fifteen is between ten and twenty.', 'respuesta': True, 'explicacion': 'Yes! 10 < 15 < 20.'},
+                {'afirmacion': 'Two plus two equals five.', 'respuesta': False, 'explicacion': 'Two plus two equals four (2 + 2 = 4).'},
+                {'afirmacion': 'Third comes after second.', 'respuesta': True, 'explicacion': 'Correct! The order is: first, second, third...'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'One hundred is more than fifty.', 'respuesta': True, 'explicacion': 'Yes! 100 is bigger than 50.'},
+                {'afirmacion': 'Fourth is before third.', 'respuesta': False, 'explicacion': 'Third comes before fourth: first, second, third, fourth.'},
+                {'afirmacion': 'Twenty is less than thirty.', 'respuesta': True, 'explicacion': 'Yes! 20 < 30.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Del 1 al 5', 'emoji': '🖐️', 'items': ['one', 'two', 'three', 'four', 'five']},
+                {'nombre': 'Del 6 al 10', 'emoji': '🔟', 'items': ['six', 'seven', 'eight', 'nine', 'ten']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Números pares', 'emoji': '2️⃣', 'items': ['two', 'four', 'six', 'eight', 'ten']},
+                {'nombre': 'Números impares', 'emoji': '1️⃣', 'items': ['one', 'three', 'five', 'seven', 'nine']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Ordinales', 'emoji': '🥇', 'items': ['first', 'second', 'third']},
+                {'nombre': 'Cardinales', 'emoji': '🔢', 'items': ['one', 'two', 'three', 'four', 'five', 'ten']},
+            ]},
+        ],
+    },
+    4: {  # Animales del Mundo — D2
+        'ordenar_oracion': [
+            {'oraciones': ['The dog is very big']},
+            {'oraciones': ['I like the little cat']},
+            {'oraciones': ['The lion is very fast']},
+            {'oraciones': ['The fish lives in water']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'The ___ says meow.', 'respuesta': 'cat', 'emoji': '🐱'},
+                {'texto': 'A ___ lives on a farm.', 'respuesta': 'cow', 'emoji': '🐄'},
+            ]},
+            {'oraciones': [
+                {'texto': 'The ___ is the king of the jungle.', 'respuesta': 'lion', 'emoji': '🦁'},
+                {'texto': 'A ___ can swim very fast.', 'respuesta': 'fish', 'emoji': '🐟'},
+            ]},
+            {'oraciones': [
+                {'texto': 'The ___ has a very long neck.', 'respuesta': 'giraffe', 'emoji': '🦒'},
+                {'texto': 'A ___ is a very big sea animal.', 'respuesta': 'whale', 'emoji': '🐳'},
+            ]},
+            {'oraciones': [
+                {'texto': 'The ___ says bark.', 'respuesta': 'dog', 'emoji': '🐕'},
+                {'texto': 'An ___ is very big and gray.', 'respuesta': 'elephant', 'emoji': '🐘'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'A dog is a pet.', 'respuesta': True, 'explicacion': 'Yes! Dogs are very common pets that live with families.'},
+                {'afirmacion': 'A lion lives on a farm.', 'respuesta': False, 'explicacion': 'Lions live in the savanna, not on a farm!'},
+                {'afirmacion': 'Fish live in water.', 'respuesta': True, 'explicacion': 'Yes! Fish live in rivers, lakes, and the ocean.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A cat says bark.', 'respuesta': False, 'explicacion': 'A cat says meow! Dogs say bark.'},
+                {'afirmacion': 'Elephants are big animals.', 'respuesta': True, 'explicacion': 'Yes! Elephants are the largest land animals.'},
+                {'afirmacion': 'A shark lives in the forest.', 'respuesta': False, 'explicacion': 'Sharks live in the ocean, not in the forest!'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A cow gives us milk.', 'respuesta': True, 'explicacion': 'Yes! Cows are farm animals that produce milk.'},
+                {'afirmacion': 'A monkey can fly.', 'respuesta': False, 'explicacion': 'Monkeys cannot fly — they swing from tree to tree!'},
+                {'afirmacion': 'A dolphin is a smart animal.', 'respuesta': True, 'explicacion': 'Yes! Dolphins are very intelligent sea animals.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Animales de granja', 'emoji': '🌾', 'items': ['cow', 'pig', 'chicken', 'horse', 'dog', 'cat']},
+                {'nombre': 'Animales salvajes', 'emoji': '🌿', 'items': ['lion', 'elephant', 'monkey', 'giraffe', 'tiger', 'snake']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Animales del mar', 'emoji': '🌊', 'items': ['fish', 'shark', 'dolphin', 'whale', 'octopus', 'crab']},
+                {'nombre': 'Animales de tierra', 'emoji': '🌍', 'items': ['dog', 'cat', 'cow', 'horse', 'lion', 'elephant']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Animales grandes', 'emoji': '🐘', 'items': ['elephant', 'whale', 'horse', 'cow', 'lion', 'giraffe']},
+                {'nombre': 'Animales pequeños', 'emoji': '🐱', 'items': ['cat', 'fish', 'crab', 'snake', 'chicken', 'monkey']},
+            ]},
+        ],
+    },
+    5: {  # Mi Cuerpo — D2
+        'ordenar_oracion': [
+            {'oraciones': ['My head is on top']},
+            {'oraciones': ['I wash my hands every day']},
+            {'oraciones': ['My feet are on the floor']},
+            {'oraciones': ['She has beautiful blue eyes']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'I have two ___.', 'respuesta': 'hands', 'emoji': '✋'},
+                {'texto': 'My ___ are on my face.', 'respuesta': 'eyes', 'emoji': '👁️'},
+            ]},
+            {'oraciones': [
+                {'texto': 'My ___ hurts today.', 'respuesta': 'head', 'emoji': '🗣️'},
+                {'texto': 'I use my ___ to walk.', 'respuesta': 'feet', 'emoji': '🦶'},
+            ]},
+            {'oraciones': [
+                {'texto': 'She is ___ today.', 'respuesta': 'happy', 'emoji': '😊'},
+                {'texto': 'He feels very ___.', 'respuesta': 'tired', 'emoji': '😴'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I use my ___ to hear.', 'respuesta': 'ears', 'emoji': '👂'},
+                {'texto': 'My ___ is very strong.', 'respuesta': 'arm', 'emoji': '💪'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'We have two eyes.', 'respuesta': True, 'explicacion': 'Yes! Most people have two eyes on their face.'},
+                {'afirmacion': 'A nose is on the arm.', 'respuesta': False, 'explicacion': 'A nose is on the face, not on the arm!'},
+                {'afirmacion': 'Feet are at the bottom of the body.', 'respuesta': True, 'explicacion': 'Yes! Feet are at the very bottom of our body.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'We use our ears to see.', 'respuesta': False, 'explicacion': 'We use our ears to hear. We use our eyes to see!'},
+                {'afirmacion': 'A hand has five fingers.', 'respuesta': True, 'explicacion': 'Yes! Each hand has five fingers.'},
+                {'afirmacion': 'Happy and sad are feelings.', 'respuesta': True, 'explicacion': 'Correct! Happy and sad describe how we feel.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'We breathe with our nose.', 'respuesta': True, 'explicacion': 'Yes! We breathe in and out through our nose.'},
+                {'afirmacion': 'Legs are on our head.', 'respuesta': False, 'explicacion': 'Legs are at the bottom of our body!'},
+                {'afirmacion': 'Being hungry is a feeling.', 'respuesta': True, 'explicacion': 'Yes! Hungry, tired, happy — these are all feelings.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Partes de la cara', 'emoji': '😊', 'items': ['eye', 'nose', 'mouth', 'ear', 'hair']},
+                {'nombre': 'Partes del cuerpo', 'emoji': '💪', 'items': ['arm', 'hand', 'leg', 'foot', 'back']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Sentimientos positivos', 'emoji': '😊', 'items': ['happy', 'excited', 'proud']},
+                {'nombre': 'Sentimientos negativos', 'emoji': '😢', 'items': ['sad', 'angry', 'scared', 'tired', 'hungry']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Arriba del cuerpo', 'emoji': '🗣️', 'items': ['head', 'eye', 'ear', 'nose', 'mouth', 'arm']},
+                {'nombre': 'Abajo del cuerpo', 'emoji': '🦵', 'items': ['leg', 'foot', 'knee', 'toe']},
+            ]},
+        ],
+    },
+    6: {  # La Comida Rica — D3
+        'ordenar_oracion': [
+            {'oraciones': ['I like apples and bananas', 'Carrots are orange vegetables']},
+            {'oraciones': ['She eats eggs for breakfast', 'Milk is good for you']},
+            {'oraciones': ['I would like some rice please', 'The salad is fresh and green']},
+            {'oraciones': ['Do you like this food', 'I love eating with my family']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'An ___ a day keeps the doctor away.', 'respuesta': 'apple', 'emoji': '🍎'},
+                {'texto': 'I drink ___ every morning.', 'respuesta': 'milk', 'emoji': '🥛'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I like ___ with butter.', 'respuesta': 'bread', 'emoji': '🍞'},
+                {'texto': 'Fried ___ is a great breakfast.', 'respuesta': 'egg', 'emoji': '🥚'},
+            ]},
+            {'oraciones': [
+                {'texto': 'My mom cooks ___ with chicken.', 'respuesta': 'rice', 'emoji': '🍚'},
+                {'texto': 'I love tomato ___.', 'respuesta': 'soup', 'emoji': '🍲'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I ___ pizza very much.', 'respuesta': 'like', 'emoji': '🍕'},
+                {'texto': 'The food is ___.', 'respuesta': 'delicious', 'emoji': '😋'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'An apple is a fruit.', 'respuesta': True, 'explicacion': 'Yes! Apples, bananas, and grapes are all fruits.'},
+                {'afirmacion': 'A carrot is a fruit.', 'respuesta': False, 'explicacion': 'A carrot is a vegetable, not a fruit!'},
+                {'afirmacion': 'Milk comes from cows.', 'respuesta': True, 'explicacion': 'Yes! Cows give us milk.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Bread is a breakfast food.', 'respuesta': True, 'explicacion': 'Yes! Bread with butter or jam is a common breakfast.'},
+                {'afirmacion': 'Rice is a vegetable.', 'respuesta': False, 'explicacion': 'Rice is a grain or cereal, not a vegetable.'},
+                {'afirmacion': '"I like" means "me gusta" in English.', 'respuesta': True, 'explicacion': 'Correct! "I like pizza" = "Me gusta la pizza."'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Breakfast is the first meal of the day.', 'respuesta': True, 'explicacion': 'Yes! Breakfast is the meal we eat in the morning.'},
+                {'afirmacion': 'A banana is a vegetable.', 'respuesta': False, 'explicacion': 'A banana is a fruit, not a vegetable!'},
+                {'afirmacion': 'Delicious means very tasty.', 'respuesta': True, 'explicacion': 'Yes! Delicious means that food tastes very good.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Frutas', 'emoji': '🍎', 'items': ['apple', 'banana', 'grapes', 'mango', 'orange']},
+                {'nombre': 'Verduras', 'emoji': '🥕', 'items': ['carrot', 'lettuce', 'tomato', 'potato', 'onion']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Desayuno', 'emoji': '🌅', 'items': ['egg', 'bread', 'milk', 'cereal', 'juice', 'butter']},
+                {'nombre': 'Almuerzo / Cena', 'emoji': '🍽️', 'items': ['rice', 'chicken', 'soup', 'salad', 'pasta', 'meat']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Me gusta ❤️', 'emoji': '👍', 'items': ['pizza', 'apple', 'rice', 'milk']},
+                {'nombre': 'No me gusta 💔', 'emoji': '👎', 'items': ['broccoli', 'liver', 'raw onion', 'bitter melon']},
+            ]},
+        ],
+    },
+    7: {  # Mi Casa y mis Cosas — D3
+        'ordenar_oracion': [
+            {'oraciones': ['My bedroom is very big', 'I sleep in my bed every night']},
+            {'oraciones': ['The kitchen has a refrigerator', 'We eat in the dining room']},
+            {'oraciones': ['The book is on the table', 'My shoes are under the bed']},
+            {'oraciones': ['I watch TV in the living room', 'My room has a big window']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'I sleep in my ___.', 'respuesta': 'bed', 'emoji': '🛏️'},
+                {'texto': 'We cook in the ___.', 'respuesta': 'kitchen', 'emoji': '🍳'},
+            ]},
+            {'oraciones': [
+                {'texto': 'The cat is ___ the table.', 'respuesta': 'under', 'emoji': '⬇️'},
+                {'texto': 'My book is ___ the desk.', 'respuesta': 'on', 'emoji': '📚'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I watch TV in the ___ room.', 'respuesta': 'living', 'emoji': '📺'},
+                {'texto': 'The ___ keeps food cold.', 'respuesta': 'refrigerator', 'emoji': '🧊'},
+            ]},
+            {'oraciones': [
+                {'texto': 'My room is ___ the bathroom.', 'respuesta': 'next to', 'emoji': '↔️'},
+                {'texto': 'The lamp is ___ the table.', 'respuesta': 'on', 'emoji': '💡'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'A bedroom is where you sleep.', 'respuesta': True, 'explicacion': 'Yes! We sleep in the bedroom.'},
+                {'afirmacion': 'We cook food in the bathroom.', 'respuesta': False, 'explicacion': 'We cook food in the kitchen, not the bathroom!'},
+                {'afirmacion': '"Under" means debajo.', 'respuesta': True, 'explicacion': 'Correct! Under means debajo in Spanish.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A refrigerator keeps food cold.', 'respuesta': True, 'explicacion': 'Yes! The refrigerator keeps food fresh and cold.'},
+                {'afirmacion': '"Next to" means debajo.', 'respuesta': False, 'explicacion': '"Next to" means al lado. "Under" means debajo.'},
+                {'afirmacion': 'A living room has a sofa.', 'respuesta': True, 'explicacion': 'Yes! We usually have a sofa and TV in the living room.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A lamp gives light.', 'respuesta': True, 'explicacion': 'Yes! We turn on a lamp to light up a room.'},
+                {'afirmacion': '"On top of" means debajo.', 'respuesta': False, 'explicacion': '"On top of" means encima. "Under" means debajo.'},
+                {'afirmacion': 'A table is a piece of furniture.', 'respuesta': True, 'explicacion': 'Yes! Tables, chairs, and beds are all furniture.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Cuartos', 'emoji': '🏠', 'items': ['living room', 'kitchen', 'bedroom', 'bathroom', 'garage', 'garden']},
+                {'nombre': 'Muebles', 'emoji': '🛋️', 'items': ['table', 'chair', 'bed', 'lamp', 'sofa', 'desk']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Encima / Sobre', 'emoji': '⬆️', 'items': ['on', 'on top of', 'above']},
+                {'nombre': 'Abajo / Al lado', 'emoji': '⬇️', 'items': ['under', 'below', 'next to', 'behind']},
+            ]},
+            {'categorias': [
+                {'nombre': 'En la cocina', 'emoji': '🍳', 'items': ['refrigerator', 'stove', 'table', 'fork', 'plate']},
+                {'nombre': 'En la habitación', 'emoji': '🛏️', 'items': ['bed', 'pillow', 'lamp', 'desk', 'closet']},
+            ]},
+        ],
+    },
+    8: {  # El Tiempo y las Estaciones — D3
+        'ordenar_oracion': [
+            {'oraciones': ['Today the weather is sunny', 'I wear a coat when it is cold']},
+            {'oraciones': ['Spring is my favorite season', 'Flowers bloom in spring']},
+            {'oraciones': ['In winter we wear boots', 'Snow falls in December']},
+            {'oraciones': ['Summer is hot and sunny', 'We swim in the summer']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'Today is ___ and warm.', 'respuesta': 'sunny', 'emoji': '☀️'},
+                {'texto': 'I use my ___ when it rains.', 'respuesta': 'umbrella', 'emoji': '☂️'},
+            ]},
+            {'oraciones': [
+                {'texto': 'In ___, flowers bloom.', 'respuesta': 'spring', 'emoji': '🌸'},
+                {'texto': 'I wear a ___ in winter.', 'respuesta': 'coat', 'emoji': '🧥'},
+            ]},
+            {'oraciones': [
+                {'texto': 'It is very ___ in summer.', 'respuesta': 'hot', 'emoji': '🥵'},
+                {'texto': 'December is a ___ month.', 'respuesta': 'winter', 'emoji': '❄️'},
+            ]},
+            {'oraciones': [
+                {'texto': 'It is ___ today, bring an umbrella.', 'respuesta': 'rainy', 'emoji': '🌧️'},
+                {'texto': 'The wind is very ___ today.', 'respuesta': 'strong', 'emoji': '💨'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'Summer is the hottest season.', 'respuesta': True, 'explicacion': 'Yes! Summer is the warmest time of the year.'},
+                {'afirmacion': 'It snows in summer.', 'respuesta': False, 'explicacion': 'It usually snows in winter, not in summer!'},
+                {'afirmacion': 'We use an umbrella when it rains.', 'respuesta': True, 'explicacion': 'Yes! An umbrella protects us from the rain.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Spring comes after winter.', 'respuesta': True, 'explicacion': 'Yes! Winter → Spring → Summer → Fall.'},
+                {'afirmacion': 'A coat is used in summer.', 'respuesta': False, 'explicacion': 'We wear coats in cold weather, not in summer!'},
+                {'afirmacion': 'There are four seasons in a year.', 'respuesta': True, 'explicacion': 'Yes! Spring, summer, fall, and winter.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'December is a winter month.', 'respuesta': True, 'explicacion': 'Yes! December is in winter in the Northern Hemisphere.'},
+                {'afirmacion': 'Windy means very cold.', 'respuesta': False, 'explicacion': 'Windy means there is a lot of wind — not necessarily cold.'},
+                {'afirmacion': 'We wear boots when it snows.', 'respuesta': True, 'explicacion': 'Yes! Boots protect our feet from snow and rain.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Tiempo cálido', 'emoji': '☀️', 'items': ['sunny', 'hot', 'warm', 'humid']},
+                {'nombre': 'Tiempo frío', 'emoji': '❄️', 'items': ['cold', 'snowy', 'windy', 'rainy', 'cloudy']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Estaciones cálidas', 'emoji': '🌸', 'items': ['spring', 'summer']},
+                {'nombre': 'Estaciones frías', 'emoji': '🍂', 'items': ['fall', 'autumn', 'winter']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Ropa para frío', 'emoji': '🧥', 'items': ['coat', 'boots', 'sweater', 'scarf', 'gloves']},
+                {'nombre': 'Ropa para calor', 'emoji': '👙', 'items': ['sandals', 'sunglasses', 'shorts', 'hat']},
+            ]},
+        ],
+    },
+    9: {  # Mis Actividades Favoritas — D4
+        'ordenar_oracion': [
+            {'oraciones': ['I play soccer on Saturdays', 'My team wins every game', 'Soccer is my favorite sport']},
+            {'oraciones': ['She reads books every evening', 'I love drawing animals', 'Music is great for everyone']},
+            {'oraciones': ['On Monday I go to school', 'After school I do my homework', 'I sleep at nine oclock']},
+            {'oraciones': ['I play video games on weekends', 'My hobby is cooking with mom', 'Dancing is a lot of fun']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'I play ___ every Saturday.', 'respuesta': 'soccer', 'emoji': '⚽'},
+                {'texto': 'She loves ___ books.', 'respuesta': 'reading', 'emoji': '📚'},
+                {'texto': 'Monday is the first day of the ___.', 'respuesta': 'week', 'emoji': '📅'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I ___ my homework after school.', 'respuesta': 'do', 'emoji': '📝'},
+                {'texto': 'Basketball is a team ___.', 'respuesta': 'sport', 'emoji': '🏀'},
+                {'texto': 'I go to ___ on weekdays.', 'respuesta': 'school', 'emoji': '🏫'},
+            ]},
+            {'oraciones': [
+                {'texto': 'My favorite ___ is swimming.', 'respuesta': 'sport', 'emoji': '🏊'},
+                {'texto': 'I love ___ to music.', 'respuesta': 'listening', 'emoji': '🎵'},
+                {'texto': 'She ___ very well.', 'respuesta': 'dances', 'emoji': '💃'},
+            ]},
+            {'oraciones': [
+                {'texto': 'After school I ___ with my friends.', 'respuesta': 'play', 'emoji': '🎮'},
+                {'texto': 'I eat ___ with my family.', 'respuesta': 'dinner', 'emoji': '🍽️'},
+                {'texto': 'On ___ we rest and play.', 'respuesta': 'weekends', 'emoji': '🎉'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'Soccer is played with a round ball.', 'respuesta': True, 'explicacion': 'Yes! Soccer is played with a round ball on a grass field.'},
+                {'afirmacion': 'Monday is the last day of the week.', 'respuesta': False, 'explicacion': 'Monday is the first day of the week.'},
+                {'afirmacion': 'Reading is a hobby.', 'respuesta': True, 'explicacion': 'Yes! Reading books, drawing, and dancing are all hobbies.'},
+                {'afirmacion': 'We do homework in the swimming pool.', 'respuesta': False, 'explicacion': 'We do homework at home or school, not in a pool!'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Friday is before Saturday.', 'respuesta': True, 'explicacion': 'Correct! Friday → Saturday → Sunday.'},
+                {'afirmacion': 'Swimming is a land sport.', 'respuesta': False, 'explicacion': 'Swimming is a water sport!'},
+                {'afirmacion': 'Dancing is a fun activity.', 'respuesta': True, 'explicacion': 'Yes! Dancing is a great way to have fun and exercise.'},
+                {'afirmacion': 'The weekend has five days.', 'respuesta': False, 'explicacion': 'The weekend is only Saturday and Sunday — two days!'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'Basketball is played with a hoop.', 'respuesta': True, 'explicacion': 'Yes! In basketball, you throw the ball into a hoop to score.'},
+                {'afirmacion': '"After school" means before school.', 'respuesta': False, 'explicacion': '"After school" means when school is over, not before!'},
+                {'afirmacion': 'A hobby is something you enjoy doing.', 'respuesta': True, 'explicacion': 'Yes! A hobby is an activity you do for fun in your free time.'},
+                {'afirmacion': 'Wednesday comes after Thursday.', 'respuesta': False, 'explicacion': 'Wednesday comes BEFORE Thursday.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Deportes en equipo', 'emoji': '⚽', 'items': ['soccer', 'basketball', 'baseball', 'volleyball']},
+                {'nombre': 'Deportes individuales', 'emoji': '🏊', 'items': ['swimming', 'cycling', 'gymnastics', 'running', 'tennis']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Días de semana', 'emoji': '📚', 'items': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']},
+                {'nombre': 'Fin de semana', 'emoji': '🎉', 'items': ['Saturday', 'Sunday']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Actividades artísticas', 'emoji': '🎨', 'items': ['drawing', 'painting', 'singing', 'dancing', 'playing music']},
+                {'nombre': 'Actividades deportivas', 'emoji': '🏃', 'items': ['soccer', 'swimming', 'cycling', 'running', 'basketball']},
+            ]},
+        ],
+    },
+    10: {  # Mi Pueblo, Mi Mundo — D4
+        'ordenar_oracion': [
+            {'oraciones': ['The school is near the park', 'I walk to school every morning', 'My neighborhood is very safe']},
+            {'oraciones': ['Turn left at the traffic light', 'Go straight for two blocks', 'The hospital is on the right']},
+            {'oraciones': ['I take the bus to school', 'The market is very busy today', 'My town has many people']},
+            {'oraciones': ['The library is next to the bank', 'We live in a beautiful city', 'Our community helps each other']},
+        ],
+        'rellenar': [
+            {'oraciones': [
+                {'texto': 'I go to ___ every day to learn.', 'respuesta': 'school', 'emoji': '🏫'},
+                {'texto': 'We buy food at the ___.', 'respuesta': 'market', 'emoji': '🛒'},
+                {'texto': 'Sick people go to the ___.', 'respuesta': 'hospital', 'emoji': '🏥'},
+            ]},
+            {'oraciones': [
+                {'texto': '___ left and you will see the park.', 'respuesta': 'Turn', 'emoji': '⬅️'},
+                {'texto': 'Go ___ for two blocks.', 'respuesta': 'straight', 'emoji': '⬆️'},
+                {'texto': 'The school is ___ the park.', 'respuesta': 'near', 'emoji': '📍'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I take the ___ to get to school.', 'respuesta': 'bus', 'emoji': '🚌'},
+                {'texto': 'My ___ is a friendly place to live.', 'respuesta': 'neighborhood', 'emoji': '🏘️'},
+                {'texto': 'We borrow books from the ___.', 'respuesta': 'library', 'emoji': '📚'},
+            ]},
+            {'oraciones': [
+                {'texto': 'I ride my ___ to the park.', 'respuesta': 'bicycle', 'emoji': '🚲'},
+                {'texto': 'Our ___ helps people feel safe.', 'respuesta': 'community', 'emoji': '🏘️'},
+                {'texto': 'The ___ is very busy in the morning.', 'respuesta': 'street', 'emoji': '🛣️'},
+            ]},
+        ],
+        'verdadero_falso': [
+            {'preguntas': [
+                {'afirmacion': 'A school is where we learn.', 'respuesta': True, 'explicacion': 'Yes! We go to school to study and learn new things.'},
+                {'afirmacion': 'A hospital is where we buy food.', 'respuesta': False, 'explicacion': 'We go to a hospital when we are sick. We buy food at a market!'},
+                {'afirmacion': '"Turn left" means girar a la izquierda.', 'respuesta': True, 'explicacion': 'Correct! Turn left = girar a la izquierda.'},
+                {'afirmacion': 'A bus is a type of transportation.', 'respuesta': True, 'explicacion': 'Yes! Buses, cars, and bikes are all transportation.'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A library is full of books.', 'respuesta': True, 'explicacion': 'Yes! Libraries have many books that you can borrow.'},
+                {'afirmacion': '"Go straight" means turn right.', 'respuesta': False, 'explicacion': '"Go straight" means seguir derecho. Turn right = girar a la derecha.'},
+                {'afirmacion': 'A community is a group of people living together.', 'respuesta': True, 'explicacion': 'Yes! A community is a group of neighbors and families.'},
+                {'afirmacion': 'A bicycle has four wheels.', 'respuesta': False, 'explicacion': 'A bicycle has two wheels, not four!'},
+            ]},
+            {'preguntas': [
+                {'afirmacion': 'A park is a good place to play.', 'respuesta': True, 'explicacion': 'Yes! Parks have grass and space to play.'},
+                {'afirmacion': '"Near" means lejos in Spanish.', 'respuesta': False, 'explicacion': '"Near" means cerca. "Far" means lejos.'},
+                {'afirmacion': 'A neighborhood is part of a city.', 'respuesta': True, 'explicacion': 'Yes! A city is made up of many neighborhoods.'},
+                {'afirmacion': 'A taxi is the same as a bus.', 'respuesta': False, 'explicacion': 'A taxi is a small private car. A bus carries many people.'},
+            ]},
+        ],
+        'clasificar': [
+            {'categorias': [
+                {'nombre': 'Lugares del pueblo', 'emoji': '🏘️', 'items': ['school', 'park', 'market', 'hospital', 'library', 'church']},
+                {'nombre': 'Medios de transporte', 'emoji': '🚌', 'items': ['bus', 'car', 'bicycle', 'motorcycle', 'taxi', 'on foot']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Direcciones', 'emoji': '🗺️', 'items': ['turn left', 'turn right', 'go straight', 'stop', 'near', 'far']},
+                {'nombre': 'Comunidad', 'emoji': '🏘️', 'items': ['neighbor', 'community', 'street', 'neighborhood', 'town', 'city']},
+            ]},
+            {'categorias': [
+                {'nombre': 'Transporte público', 'emoji': '🚌', 'items': ['bus', 'taxi', 'train', 'metro']},
+                {'nombre': 'Transporte privado', 'emoji': '🚗', 'items': ['car', 'bicycle', 'motorcycle', 'on foot']},
+            ]},
+        ],
+    },
+}
+
+
+def _make_variantes_memoria(vocab, max_pares):
+    """Auto-generate 3 memoria variants by rotating through vocabulary subsets."""
+    variantes = []
+    n = len(vocab)
+    for start in range(3):
+        subset = [vocab[(start * 2 + i) % n] for i in range(min(max_pares, n))]
+        pares = [{'es': w['es'], 'en': w['en'], 'emoji': w.get('emoji', '📝')} for w in subset]
+        variantes.append({'pares': pares})
+    return variantes
+
+
+def _make_variantes_unir(vocab, max_pares):
+    """Auto-generate 3 unir_pares variants by rotating through vocabulary subsets."""
+    variantes = []
+    n = len(vocab)
+    for start in range(3):
+        subset = [vocab[(start * 2 + i) % n] for i in range(min(max_pares, n))]
+        pares = [{'izq': w['es'], 'der': f"{w.get('emoji', '📝')} {w['en']}"} for w in subset]
+        variantes.append({'pares': pares})
+    return variantes
+
+
+def _escalar_variantes(tipo, dificultad, variantes):
+    """Trim content arrays inside each variant to match the difficulty level."""
+    max_items = DIFFICULTY_PARAMS.get(tipo, {}).get(dificultad)
+    if max_items is None:
+        return variantes
+    resultado = []
+    for v in variantes:
+        v2 = dict(v)
+        if tipo in ('memoria', 'unir_pares') and 'pares' in v2:
+            v2['pares'] = v2['pares'][:max_items]
+        elif tipo == 'verdadero_falso' and 'preguntas' in v2:
+            v2['preguntas'] = v2['preguntas'][:max_items]
+        elif tipo == 'rellenar' and 'oraciones' in v2:
+            v2['oraciones'] = v2['oraciones'][:max_items]
+        elif tipo == 'ordenar_oracion' and 'oraciones' in v2:
+            v2['oraciones'] = v2['oraciones'][:max_items]
+        resultado.append(v2)
+    return resultado
+
+
+def _make_variantes(tipo, seccion_pk, vocab, dificultad):
+    """Return the variantes list for a given tipo, section, and difficulty."""
+    if tipo == 'memoria':
+        return _make_variantes_memoria(vocab, DIFFICULTY_PARAMS['memoria'][dificultad])
+    if tipo == 'unir_pares':
+        return _make_variantes_unir(vocab, DIFFICULTY_PARAMS['unir_pares'][dificultad])
+    sec_content = MINIJUEGO_CONTENT.get(seccion_pk, {})
+    variantes = sec_content.get(tipo, [])
+    if not variantes:
+        return _make_variantes_memoria(vocab, DIFFICULTY_PARAMS['memoria'][dificultad])
+    return _escalar_variantes(tipo, dificultad, variantes)
+
+
+def _make_minijuego_embed(seccion_pk, leccion_global_idx, vocab, dificultad):
+    """Generate the minijuego_embed activity dict for a lesson."""
+    tipo = TIPO_ROTATION[leccion_global_idx % len(TIPO_ROTATION)]
+    variantes = _make_variantes(tipo, seccion_pk, vocab, dificultad)
+    return {
+        "orden": 8,
+        "tipo": "minijuego_embed",
+        "puntos_actividad": 3,
+        "datos": {
+            "titulo": TITULOS_MINIJUEGO[tipo],
+            "tipo_minijuego": tipo,
+            "instruccion": INSTRUCCIONES_MINIJUEGO[tipo],
+            "variantes": variantes,
+        },
+    }
+
+
 class Command(BaseCommand):
     help = 'Generate Historia mode fixture with sections, lessons, and activities.'
 
@@ -691,6 +1368,7 @@ class Command(BaseCommand):
         fixture = []
         leccion_pk = 0
         actividad_pk = 0
+        leccion_global_idx = 0  # 0-based counter across all lessons for tipo rotation
 
         # SeccionHistoria records
         for sec in SECCIONES:
@@ -709,6 +1387,7 @@ class Command(BaseCommand):
         # Leccion + ActividadLeccion records
         for sec in SECCIONES:
             sec_pk = sec["pk"]
+            dificultad = get_dificultad(sec["orden"])
             lecciones = LECCIONES_POR_SECCION[sec_pk]
             for orden_idx, lec in enumerate(lecciones, start=1):
                 leccion_pk += 1
@@ -743,7 +1422,14 @@ class Command(BaseCommand):
                 tema_es = lec["titulo"]
                 tema_en = lec["titulo"]
 
-                actividades = make_actividades(tema_es, tema_en, vocab, sec["titulo"], is_repaso=is_repaso)
+                actividades = make_actividades(
+                    tema_es, tema_en, vocab, sec["titulo"],
+                    seccion_pk=sec_pk,
+                    leccion_global_idx=leccion_global_idx,
+                    dificultad=dificultad,
+                    is_repaso=is_repaso,
+                )
+                leccion_global_idx += 1
 
                 for act in actividades:
                     actividad_pk += 1

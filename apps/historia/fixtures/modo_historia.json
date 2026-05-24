@@ -453,39 +453,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "rojo",
-            "en": "red",
-            "emoji": "🔴"
+            "pares": [
+              {
+                "es": "rojo",
+                "en": "red",
+                "emoji": "🔴"
+              },
+              {
+                "es": "azul",
+                "en": "blue",
+                "emoji": "🔵"
+              },
+              {
+                "es": "amarillo",
+                "en": "yellow",
+                "emoji": "🟡"
+              },
+              {
+                "es": "color",
+                "en": "color",
+                "emoji": "🎨"
+              }
+            ]
           },
           {
-            "es": "azul",
-            "en": "blue",
-            "emoji": "🔵"
+            "pares": [
+              {
+                "es": "amarillo",
+                "en": "yellow",
+                "emoji": "🟡"
+              },
+              {
+                "es": "color",
+                "en": "color",
+                "emoji": "🎨"
+              },
+              {
+                "es": "claro",
+                "en": "light",
+                "emoji": "🌟"
+              },
+              {
+                "es": "oscuro",
+                "en": "dark",
+                "emoji": "🌑"
+              }
+            ]
           },
           {
-            "es": "amarillo",
-            "en": "yellow",
-            "emoji": "🟡"
-          },
-          {
-            "es": "color",
-            "en": "color",
-            "emoji": "🎨"
-          },
-          {
-            "es": "claro",
-            "en": "light",
-            "emoji": "🌟"
-          },
-          {
-            "es": "oscuro",
-            "en": "dark",
-            "emoji": "🌑"
+            "pares": [
+              {
+                "es": "claro",
+                "en": "light",
+                "emoji": "🌟"
+              },
+              {
+                "es": "oscuro",
+                "en": "dark",
+                "emoji": "🌑"
+              },
+              {
+                "es": "rojo",
+                "en": "red",
+                "emoji": "🔴"
+              },
+              {
+                "es": "azul",
+                "en": "blue",
+                "emoji": "🔵"
+              }
+            ]
           }
         ]
       },
@@ -808,39 +850,51 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "verde",
-            "en": "green",
-            "emoji": "🟢"
+            "preguntas": [
+              {
+                "afirmacion": "Red is a primary color.",
+                "respuesta": true,
+                "explicacion": "Yes! Red, blue, and yellow are the three primary colors."
+              },
+              {
+                "afirmacion": "The sky is green.",
+                "respuesta": false,
+                "explicacion": "The sky is blue, not green!"
+              }
+            ]
           },
           {
-            "es": "naranja",
-            "en": "orange",
-            "emoji": "🟠"
+            "preguntas": [
+              {
+                "afirmacion": "Yellow is a warm color.",
+                "respuesta": true,
+                "explicacion": "Yes! Red, orange, and yellow are warm colors."
+              },
+              {
+                "afirmacion": "Blue is a secondary color.",
+                "respuesta": false,
+                "explicacion": "Blue is a primary color — it cannot be made by mixing others."
+              }
+            ]
           },
           {
-            "es": "morado",
-            "en": "purple",
-            "emoji": "🟣"
-          },
-          {
-            "es": "mezclar",
-            "en": "mix",
-            "emoji": "🎨"
-          },
-          {
-            "es": "pintar",
-            "en": "paint",
-            "emoji": "🖌️"
-          },
-          {
-            "es": "brillante",
-            "en": "bright",
-            "emoji": "✨"
+            "preguntas": [
+              {
+                "afirmacion": "White is a light color.",
+                "respuesta": true,
+                "explicacion": "Yes! White is the lightest color of all."
+              },
+              {
+                "afirmacion": "Purple is made from blue and red.",
+                "respuesta": true,
+                "explicacion": "Correct! Purple is a secondary color made from blue + red."
+              }
+            ]
           }
         ]
       },
@@ -1163,39 +1217,45 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "negro",
-            "en": "black",
-            "emoji": "⚫"
+            "oraciones": [
+              {
+                "texto": "The ___ is red.",
+                "respuesta": "apple",
+                "emoji": "🍎"
+              }
+            ]
           },
           {
-            "es": "blanco",
-            "en": "white",
-            "emoji": "⚪"
+            "oraciones": [
+              {
+                "texto": "The sky is ___.",
+                "respuesta": "blue",
+                "emoji": "🌤️"
+              }
+            ]
           },
           {
-            "es": "gris",
-            "en": "gray",
-            "emoji": "🩶"
+            "oraciones": [
+              {
+                "texto": "Grass is ___.",
+                "respuesta": "green",
+                "emoji": "🌿"
+              }
+            ]
           },
           {
-            "es": "rosado",
-            "en": "pink",
-            "emoji": "🌸"
-          },
-          {
-            "es": "café/marrón",
-            "en": "brown",
-            "emoji": "🟤"
-          },
-          {
-            "es": "plateado",
-            "en": "silver",
-            "emoji": "🪙"
+            "oraciones": [
+              {
+                "texto": "The sun is ___.",
+                "respuesta": "yellow",
+                "emoji": "☀️"
+              }
+            ]
           }
         ]
       },
@@ -1518,39 +1578,75 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "¿De qué color es?",
-            "en": "What color is it?",
-            "emoji": "❓"
+            "categorias": [
+              {
+                "nombre": "Colores primarios",
+                "emoji": "🎨",
+                "items": [
+                  "red",
+                  "blue",
+                  "yellow"
+                ]
+              },
+              {
+                "nombre": "Colores secundarios",
+                "emoji": "🖌️",
+                "items": [
+                  "green",
+                  "orange",
+                  "purple"
+                ]
+              }
+            ]
           },
           {
-            "es": "Es...",
-            "en": "It is...",
-            "emoji": "👉"
+            "categorias": [
+              {
+                "nombre": "Colores cálidos",
+                "emoji": "☀️",
+                "items": [
+                  "red",
+                  "orange",
+                  "yellow"
+                ]
+              },
+              {
+                "nombre": "Colores fríos",
+                "emoji": "❄️",
+                "items": [
+                  "blue",
+                  "green",
+                  "purple"
+                ]
+              }
+            ]
           },
           {
-            "es": "cielo",
-            "en": "sky",
-            "emoji": "🌤️"
-          },
-          {
-            "es": "hierba",
-            "en": "grass",
-            "emoji": "🌿"
-          },
-          {
-            "es": "sol",
-            "en": "sun",
-            "emoji": "☀️"
-          },
-          {
-            "es": "noche",
-            "en": "night",
-            "emoji": "🌙"
+            "categorias": [
+              {
+                "nombre": "Colores oscuros",
+                "emoji": "🌑",
+                "items": [
+                  "black",
+                  "dark blue",
+                  "dark green"
+                ]
+              },
+              {
+                "nombre": "Colores claros",
+                "emoji": "🌟",
+                "items": [
+                  "white",
+                  "pink",
+                  "light blue"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -1876,39 +1972,29 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "rojo",
-            "en": "red",
-            "emoji": "🔴"
+            "oraciones": [
+              "The sky is blue"
+            ]
           },
           {
-            "es": "azul",
-            "en": "blue",
-            "emoji": "🔵"
+            "oraciones": [
+              "Red is my favorite color"
+            ]
           },
           {
-            "es": "verde",
-            "en": "green",
-            "emoji": "🟢"
+            "oraciones": [
+              "I like yellow and green"
+            ]
           },
           {
-            "es": "amarillo",
-            "en": "yellow",
-            "emoji": "🟡"
-          },
-          {
-            "es": "naranja",
-            "en": "orange",
-            "emoji": "🟠"
-          },
-          {
-            "es": "morado",
-            "en": "purple",
-            "emoji": "🟣"
+            "oraciones": [
+              "The sun is bright yellow"
+            ]
           }
         ]
       },
@@ -2231,39 +2317,57 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "papá",
-            "en": "father",
-            "emoji": "👨"
+            "pares": [
+              {
+                "izq": "papá",
+                "der": "👨 father"
+              },
+              {
+                "izq": "mamá",
+                "der": "👩 mother"
+              },
+              {
+                "izq": "familia",
+                "der": "👨‍👩‍👧 family"
+              }
+            ]
           },
           {
-            "es": "mamá",
-            "en": "mother",
-            "emoji": "👩"
+            "pares": [
+              {
+                "izq": "familia",
+                "der": "👨‍👩‍👧 family"
+              },
+              {
+                "izq": "padres",
+                "der": "👫 parents"
+              },
+              {
+                "izq": "hijo",
+                "der": "👦 son"
+              }
+            ]
           },
           {
-            "es": "familia",
-            "en": "family",
-            "emoji": "👨‍👩‍👧"
-          },
-          {
-            "es": "padres",
-            "en": "parents",
-            "emoji": "👫"
-          },
-          {
-            "es": "hijo",
-            "en": "son",
-            "emoji": "👦"
-          },
-          {
-            "es": "hija",
-            "en": "daughter",
-            "emoji": "👧"
+            "pares": [
+              {
+                "izq": "hijo",
+                "der": "👦 son"
+              },
+              {
+                "izq": "hija",
+                "der": "👧 daughter"
+              },
+              {
+                "izq": "papá",
+                "der": "👨 father"
+              }
+            ]
           }
         ]
       },
@@ -2586,39 +2690,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "hermano",
-            "en": "brother",
-            "emoji": "👦"
+            "pares": [
+              {
+                "es": "hermano",
+                "en": "brother",
+                "emoji": "👦"
+              },
+              {
+                "es": "hermana",
+                "en": "sister",
+                "emoji": "👧"
+              },
+              {
+                "es": "hermanos",
+                "en": "siblings",
+                "emoji": "👫"
+              },
+              {
+                "es": "mayor",
+                "en": "older",
+                "emoji": "⬆️"
+              }
+            ]
           },
           {
-            "es": "hermana",
-            "en": "sister",
-            "emoji": "👧"
+            "pares": [
+              {
+                "es": "hermanos",
+                "en": "siblings",
+                "emoji": "👫"
+              },
+              {
+                "es": "mayor",
+                "en": "older",
+                "emoji": "⬆️"
+              },
+              {
+                "es": "menor",
+                "en": "younger",
+                "emoji": "⬇️"
+              },
+              {
+                "es": "gemelos",
+                "en": "twins",
+                "emoji": "👯"
+              }
+            ]
           },
           {
-            "es": "hermanos",
-            "en": "siblings",
-            "emoji": "👫"
-          },
-          {
-            "es": "mayor",
-            "en": "older",
-            "emoji": "⬆️"
-          },
-          {
-            "es": "menor",
-            "en": "younger",
-            "emoji": "⬇️"
-          },
-          {
-            "es": "gemelos",
-            "en": "twins",
-            "emoji": "👯"
+            "pares": [
+              {
+                "es": "menor",
+                "en": "younger",
+                "emoji": "⬇️"
+              },
+              {
+                "es": "gemelos",
+                "en": "twins",
+                "emoji": "👯"
+              },
+              {
+                "es": "hermano",
+                "en": "brother",
+                "emoji": "👦"
+              },
+              {
+                "es": "hermana",
+                "en": "sister",
+                "emoji": "👧"
+              }
+            ]
           }
         ]
       },
@@ -2941,39 +3087,51 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "abuelo",
-            "en": "grandfather",
-            "emoji": "👴"
+            "preguntas": [
+              {
+                "afirmacion": "A mother is a woman.",
+                "respuesta": true,
+                "explicacion": "Yes! Mother means mamá in English."
+              },
+              {
+                "afirmacion": "A brother is a girl.",
+                "respuesta": false,
+                "explicacion": "A brother is a boy. A girl is called a sister."
+              }
+            ]
           },
           {
-            "es": "abuela",
-            "en": "grandmother",
-            "emoji": "👵"
+            "preguntas": [
+              {
+                "afirmacion": "A sister is a girl.",
+                "respuesta": true,
+                "explicacion": "Yes! A sister is a girl who shares the same parents as you."
+              },
+              {
+                "afirmacion": "An uncle is a child.",
+                "respuesta": false,
+                "explicacion": "An uncle is an adult — the brother of your mother or father."
+              }
+            ]
           },
           {
-            "es": "tío",
-            "en": "uncle",
-            "emoji": "👨"
-          },
-          {
-            "es": "tía",
-            "en": "aunt",
-            "emoji": "👩"
-          },
-          {
-            "es": "primo/prima",
-            "en": "cousin",
-            "emoji": "🧑"
-          },
-          {
-            "es": "sobrino/sobrina",
-            "en": "nephew/niece",
-            "emoji": "👶"
+            "preguntas": [
+              {
+                "afirmacion": "A father is a man.",
+                "respuesta": true,
+                "explicacion": "Correct! Father means papá — he is a man."
+              },
+              {
+                "afirmacion": "A cousin is your brother or sister.",
+                "respuesta": false,
+                "explicacion": "A cousin is the child of your aunt or uncle."
+              }
+            ]
           }
         ]
       },
@@ -3296,39 +3454,45 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "Esta es mi familia",
-            "en": "This is my family",
-            "emoji": "📸"
+            "oraciones": [
+              {
+                "texto": "My ___ is tall.",
+                "respuesta": "father",
+                "emoji": "👨"
+              }
+            ]
           },
           {
-            "es": "Él es mi...",
-            "en": "He is my...",
-            "emoji": "👨"
+            "oraciones": [
+              {
+                "texto": "I have a ___.",
+                "respuesta": "sister",
+                "emoji": "👧"
+              }
+            ]
           },
           {
-            "es": "Ella es mi...",
-            "en": "She is my...",
-            "emoji": "👩"
+            "oraciones": [
+              {
+                "texto": "My ___ is kind.",
+                "respuesta": "mother",
+                "emoji": "👩"
+              }
+            ]
           },
           {
-            "es": "Ellos son mis...",
-            "en": "They are my...",
-            "emoji": "👨‍👩‍👧"
-          },
-          {
-            "es": "Tengo... hermanos",
-            "en": "I have... siblings",
-            "emoji": "🔢"
-          },
-          {
-            "es": "Mi familia es grande",
-            "en": "My family is big",
-            "emoji": "🏠"
+            "oraciones": [
+              {
+                "texto": "He is my ___.",
+                "respuesta": "brother",
+                "emoji": "👦"
+              }
+            ]
           }
         ]
       },
@@ -3654,39 +3818,80 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "papá",
-            "en": "father",
-            "emoji": "👨"
+            "categorias": [
+              {
+                "nombre": "Familia directa",
+                "emoji": "🏠",
+                "items": [
+                  "father",
+                  "mother",
+                  "brother",
+                  "sister"
+                ]
+              },
+              {
+                "nombre": "Familia extendida",
+                "emoji": "👨‍👩‍👧‍👦",
+                "items": [
+                  "grandfather",
+                  "grandmother",
+                  "uncle",
+                  "aunt"
+                ]
+              }
+            ]
           },
           {
-            "es": "mamá",
-            "en": "mother",
-            "emoji": "👩"
+            "categorias": [
+              {
+                "nombre": "Hombres",
+                "emoji": "👨",
+                "items": [
+                  "father",
+                  "brother",
+                  "grandfather",
+                  "uncle"
+                ]
+              },
+              {
+                "nombre": "Mujeres",
+                "emoji": "👩",
+                "items": [
+                  "mother",
+                  "sister",
+                  "grandmother",
+                  "aunt"
+                ]
+              }
+            ]
           },
           {
-            "es": "hermano",
-            "en": "brother",
-            "emoji": "👦"
-          },
-          {
-            "es": "hermana",
-            "en": "sister",
-            "emoji": "👧"
-          },
-          {
-            "es": "abuelo",
-            "en": "grandfather",
-            "emoji": "👴"
-          },
-          {
-            "es": "abuela",
-            "en": "grandmother",
-            "emoji": "👵"
+            "categorias": [
+              {
+                "nombre": "Mayores",
+                "emoji": "👴",
+                "items": [
+                  "grandfather",
+                  "grandmother",
+                  "father",
+                  "mother"
+                ]
+              },
+              {
+                "nombre": "Jóvenes",
+                "emoji": "👦",
+                "items": [
+                  "brother",
+                  "sister",
+                  "cousin"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -4009,39 +4214,29 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "uno",
-            "en": "one",
-            "emoji": "1️⃣"
+            "oraciones": [
+              "I have two brothers"
+            ]
           },
           {
-            "es": "dos",
-            "en": "two",
-            "emoji": "2️⃣"
+            "oraciones": [
+              "There are five cats"
+            ]
           },
           {
-            "es": "tres",
-            "en": "three",
-            "emoji": "3️⃣"
+            "oraciones": [
+              "She is ten years old"
+            ]
           },
           {
-            "es": "cuatro",
-            "en": "four",
-            "emoji": "4️⃣"
-          },
-          {
-            "es": "cinco",
-            "en": "five",
-            "emoji": "5️⃣"
-          },
-          {
-            "es": "diez",
-            "en": "ten",
-            "emoji": "🔟"
+            "oraciones": [
+              "My sister has three dogs"
+            ]
           }
         ]
       },
@@ -4364,39 +4559,69 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "once",
-            "en": "eleven",
-            "emoji": "1️⃣1️⃣"
+            "pares": [
+              {
+                "izq": "once",
+                "der": "1️⃣1️⃣ eleven"
+              },
+              {
+                "izq": "doce",
+                "der": "1️⃣2️⃣ twelve"
+              },
+              {
+                "izq": "trece",
+                "der": "1️⃣3️⃣ thirteen"
+              },
+              {
+                "izq": "catorce",
+                "der": "1️⃣4️⃣ fourteen"
+              }
+            ]
           },
           {
-            "es": "doce",
-            "en": "twelve",
-            "emoji": "1️⃣2️⃣"
+            "pares": [
+              {
+                "izq": "trece",
+                "der": "1️⃣3️⃣ thirteen"
+              },
+              {
+                "izq": "catorce",
+                "der": "1️⃣4️⃣ fourteen"
+              },
+              {
+                "izq": "quince",
+                "der": "1️⃣5️⃣ fifteen"
+              },
+              {
+                "izq": "veinte",
+                "der": "2️⃣0️⃣ twenty"
+              }
+            ]
           },
           {
-            "es": "trece",
-            "en": "thirteen",
-            "emoji": "1️⃣3️⃣"
-          },
-          {
-            "es": "catorce",
-            "en": "fourteen",
-            "emoji": "1️⃣4️⃣"
-          },
-          {
-            "es": "quince",
-            "en": "fifteen",
-            "emoji": "1️⃣5️⃣"
-          },
-          {
-            "es": "veinte",
-            "en": "twenty",
-            "emoji": "2️⃣0️⃣"
+            "pares": [
+              {
+                "izq": "quince",
+                "der": "1️⃣5️⃣ fifteen"
+              },
+              {
+                "izq": "veinte",
+                "der": "2️⃣0️⃣ twenty"
+              },
+              {
+                "izq": "once",
+                "der": "1️⃣1️⃣ eleven"
+              },
+              {
+                "izq": "doce",
+                "der": "1️⃣2️⃣ twelve"
+              }
+            ]
           }
         ]
       },
@@ -4719,39 +4944,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "diez",
-            "en": "ten",
-            "emoji": "🔟"
+            "pares": [
+              {
+                "es": "diez",
+                "en": "ten",
+                "emoji": "🔟"
+              },
+              {
+                "es": "veinte",
+                "en": "twenty",
+                "emoji": "2️⃣0️⃣"
+              },
+              {
+                "es": "treinta",
+                "en": "thirty",
+                "emoji": "3️⃣0️⃣"
+              },
+              {
+                "es": "cuarenta",
+                "en": "forty",
+                "emoji": "4️⃣0️⃣"
+              }
+            ]
           },
           {
-            "es": "veinte",
-            "en": "twenty",
-            "emoji": "2️⃣0️⃣"
+            "pares": [
+              {
+                "es": "treinta",
+                "en": "thirty",
+                "emoji": "3️⃣0️⃣"
+              },
+              {
+                "es": "cuarenta",
+                "en": "forty",
+                "emoji": "4️⃣0️⃣"
+              },
+              {
+                "es": "cincuenta",
+                "en": "fifty",
+                "emoji": "5️⃣0️⃣"
+              },
+              {
+                "es": "cien",
+                "en": "one hundred",
+                "emoji": "💯"
+              }
+            ]
           },
           {
-            "es": "treinta",
-            "en": "thirty",
-            "emoji": "3️⃣0️⃣"
-          },
-          {
-            "es": "cuarenta",
-            "en": "forty",
-            "emoji": "4️⃣0️⃣"
-          },
-          {
-            "es": "cincuenta",
-            "en": "fifty",
-            "emoji": "5️⃣0️⃣"
-          },
-          {
-            "es": "cien",
-            "en": "one hundred",
-            "emoji": "💯"
+            "pares": [
+              {
+                "es": "cincuenta",
+                "en": "fifty",
+                "emoji": "5️⃣0️⃣"
+              },
+              {
+                "es": "cien",
+                "en": "one hundred",
+                "emoji": "💯"
+              },
+              {
+                "es": "diez",
+                "en": "ten",
+                "emoji": "🔟"
+              },
+              {
+                "es": "veinte",
+                "en": "twenty",
+                "emoji": "2️⃣0️⃣"
+              }
+            ]
           }
         ]
       },
@@ -5074,39 +5341,66 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "¿Cuántos hay?",
-            "en": "How many are there?",
-            "emoji": "❓"
+            "preguntas": [
+              {
+                "afirmacion": "Ten is more than five.",
+                "respuesta": true,
+                "explicacion": "Yes! Ten (10) is bigger than five (5)."
+              },
+              {
+                "afirmacion": "Twenty comes before ten.",
+                "respuesta": false,
+                "explicacion": "Ten (10) comes before twenty (20). 10 < 20."
+              },
+              {
+                "afirmacion": "First is number one.",
+                "respuesta": true,
+                "explicacion": "Correct! First is the ordinal form of the number one."
+              }
+            ]
           },
           {
-            "es": "Hay...",
-            "en": "There are...",
-            "emoji": "👉"
+            "preguntas": [
+              {
+                "afirmacion": "Fifteen is between ten and twenty.",
+                "respuesta": true,
+                "explicacion": "Yes! 10 < 15 < 20."
+              },
+              {
+                "afirmacion": "Two plus two equals five.",
+                "respuesta": false,
+                "explicacion": "Two plus two equals four (2 + 2 = 4)."
+              },
+              {
+                "afirmacion": "Third comes after second.",
+                "respuesta": true,
+                "explicacion": "Correct! The order is: first, second, third..."
+              }
+            ]
           },
           {
-            "es": "muchos",
-            "en": "many",
-            "emoji": "🔢"
-          },
-          {
-            "es": "pocos",
-            "en": "few",
-            "emoji": "🔣"
-          },
-          {
-            "es": "ninguno",
-            "en": "none",
-            "emoji": "0️⃣"
-          },
-          {
-            "es": "algunos",
-            "en": "some",
-            "emoji": "➕"
+            "preguntas": [
+              {
+                "afirmacion": "One hundred is more than fifty.",
+                "respuesta": true,
+                "explicacion": "Yes! 100 is bigger than 50."
+              },
+              {
+                "afirmacion": "Fourth is before third.",
+                "respuesta": false,
+                "explicacion": "Third comes before fourth: first, second, third, fourth."
+              },
+              {
+                "afirmacion": "Twenty is less than thirty.",
+                "respuesta": true,
+                "explicacion": "Yes! 20 < 30."
+              }
+            ]
           }
         ]
       },
@@ -5429,39 +5723,65 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "primero",
-            "en": "first",
-            "emoji": "🥇"
+            "oraciones": [
+              {
+                "texto": "I am ___ years old.",
+                "respuesta": "ten",
+                "emoji": "🔟"
+              },
+              {
+                "texto": "There are ___ dogs.",
+                "respuesta": "five",
+                "emoji": "🐕"
+              }
+            ]
           },
           {
-            "es": "segundo",
-            "en": "second",
-            "emoji": "🥈"
+            "oraciones": [
+              {
+                "texto": "He has ___ apples.",
+                "respuesta": "three",
+                "emoji": "🍎"
+              },
+              {
+                "texto": "I see ___ birds.",
+                "respuesta": "four",
+                "emoji": "🐦"
+              }
+            ]
           },
           {
-            "es": "tercero",
-            "en": "third",
-            "emoji": "🥉"
+            "oraciones": [
+              {
+                "texto": "There are ___ months in a year.",
+                "respuesta": "twelve",
+                "emoji": "📅"
+              },
+              {
+                "texto": "A week has ___ days.",
+                "respuesta": "seven",
+                "emoji": "📆"
+              }
+            ]
           },
           {
-            "es": "cuarto",
-            "en": "fourth",
-            "emoji": "4️⃣"
-          },
-          {
-            "es": "quinto",
-            "en": "fifth",
-            "emoji": "5️⃣"
-          },
-          {
-            "es": "último",
-            "en": "last",
-            "emoji": "🏁"
+            "oraciones": [
+              {
+                "texto": "I have ___ fingers on each hand.",
+                "respuesta": "five",
+                "emoji": "✋"
+              },
+              {
+                "texto": "I count to ___.",
+                "respuesta": "twenty",
+                "emoji": "2️⃣0️⃣"
+              }
+            ]
           }
         ]
       },
@@ -5787,39 +6107,86 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "uno",
-            "en": "one",
-            "emoji": "1️⃣"
+            "categorias": [
+              {
+                "nombre": "Del 1 al 5",
+                "emoji": "🖐️",
+                "items": [
+                  "one",
+                  "two",
+                  "three",
+                  "four",
+                  "five"
+                ]
+              },
+              {
+                "nombre": "Del 6 al 10",
+                "emoji": "🔟",
+                "items": [
+                  "six",
+                  "seven",
+                  "eight",
+                  "nine",
+                  "ten"
+                ]
+              }
+            ]
           },
           {
-            "es": "cinco",
-            "en": "five",
-            "emoji": "5️⃣"
+            "categorias": [
+              {
+                "nombre": "Números pares",
+                "emoji": "2️⃣",
+                "items": [
+                  "two",
+                  "four",
+                  "six",
+                  "eight",
+                  "ten"
+                ]
+              },
+              {
+                "nombre": "Números impares",
+                "emoji": "1️⃣",
+                "items": [
+                  "one",
+                  "three",
+                  "five",
+                  "seven",
+                  "nine"
+                ]
+              }
+            ]
           },
           {
-            "es": "diez",
-            "en": "ten",
-            "emoji": "🔟"
-          },
-          {
-            "es": "veinte",
-            "en": "twenty",
-            "emoji": "2️⃣0️⃣"
-          },
-          {
-            "es": "primero",
-            "en": "first",
-            "emoji": "🥇"
-          },
-          {
-            "es": "último",
-            "en": "last",
-            "emoji": "🏁"
+            "categorias": [
+              {
+                "nombre": "Ordinales",
+                "emoji": "🥇",
+                "items": [
+                  "first",
+                  "second",
+                  "third"
+                ]
+              },
+              {
+                "nombre": "Cardinales",
+                "emoji": "🔢",
+                "items": [
+                  "one",
+                  "two",
+                  "three",
+                  "four",
+                  "five",
+                  "ten"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -6142,39 +6509,29 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "vaca",
-            "en": "cow",
-            "emoji": "🐄"
+            "oraciones": [
+              "The dog is very big"
+            ]
           },
           {
-            "es": "caballo",
-            "en": "horse",
-            "emoji": "🐴"
+            "oraciones": [
+              "I like the little cat"
+            ]
           },
           {
-            "es": "cerdo",
-            "en": "pig",
-            "emoji": "🐷"
+            "oraciones": [
+              "The lion is very fast"
+            ]
           },
           {
-            "es": "gallina",
-            "en": "chicken",
-            "emoji": "🐔"
-          },
-          {
-            "es": "perro",
-            "en": "dog",
-            "emoji": "🐕"
-          },
-          {
-            "es": "gato",
-            "en": "cat",
-            "emoji": "🐈"
+            "oraciones": [
+              "The fish lives in water"
+            ]
           }
         ]
       },
@@ -6497,39 +6854,69 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "león",
-            "en": "lion",
-            "emoji": "🦁"
+            "pares": [
+              {
+                "izq": "león",
+                "der": "🦁 lion"
+              },
+              {
+                "izq": "elefante",
+                "der": "🐘 elephant"
+              },
+              {
+                "izq": "mono",
+                "der": "🐒 monkey"
+              },
+              {
+                "izq": "jirafa",
+                "der": "🦒 giraffe"
+              }
+            ]
           },
           {
-            "es": "elefante",
-            "en": "elephant",
-            "emoji": "🐘"
+            "pares": [
+              {
+                "izq": "mono",
+                "der": "🐒 monkey"
+              },
+              {
+                "izq": "jirafa",
+                "der": "🦒 giraffe"
+              },
+              {
+                "izq": "tigre",
+                "der": "🐯 tiger"
+              },
+              {
+                "izq": "serpiente",
+                "der": "🐍 snake"
+              }
+            ]
           },
           {
-            "es": "mono",
-            "en": "monkey",
-            "emoji": "🐒"
-          },
-          {
-            "es": "jirafa",
-            "en": "giraffe",
-            "emoji": "🦒"
-          },
-          {
-            "es": "tigre",
-            "en": "tiger",
-            "emoji": "🐯"
-          },
-          {
-            "es": "serpiente",
-            "en": "snake",
-            "emoji": "🐍"
+            "pares": [
+              {
+                "izq": "tigre",
+                "der": "🐯 tiger"
+              },
+              {
+                "izq": "serpiente",
+                "der": "🐍 snake"
+              },
+              {
+                "izq": "león",
+                "der": "🦁 lion"
+              },
+              {
+                "izq": "elefante",
+                "der": "🐘 elephant"
+              }
+            ]
           }
         ]
       },
@@ -6852,39 +7239,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "pez",
-            "en": "fish",
-            "emoji": "🐟"
+            "pares": [
+              {
+                "es": "pez",
+                "en": "fish",
+                "emoji": "🐟"
+              },
+              {
+                "es": "tiburón",
+                "en": "shark",
+                "emoji": "🦈"
+              },
+              {
+                "es": "delfín",
+                "en": "dolphin",
+                "emoji": "🐬"
+              },
+              {
+                "es": "pulpo",
+                "en": "octopus",
+                "emoji": "🐙"
+              }
+            ]
           },
           {
-            "es": "tiburón",
-            "en": "shark",
-            "emoji": "🦈"
+            "pares": [
+              {
+                "es": "delfín",
+                "en": "dolphin",
+                "emoji": "🐬"
+              },
+              {
+                "es": "pulpo",
+                "en": "octopus",
+                "emoji": "🐙"
+              },
+              {
+                "es": "ballena",
+                "en": "whale",
+                "emoji": "🐳"
+              },
+              {
+                "es": "cangrejo",
+                "en": "crab",
+                "emoji": "🦀"
+              }
+            ]
           },
           {
-            "es": "delfín",
-            "en": "dolphin",
-            "emoji": "🐬"
-          },
-          {
-            "es": "pulpo",
-            "en": "octopus",
-            "emoji": "🐙"
-          },
-          {
-            "es": "ballena",
-            "en": "whale",
-            "emoji": "🐳"
-          },
-          {
-            "es": "cangrejo",
-            "en": "crab",
-            "emoji": "🦀"
+            "pares": [
+              {
+                "es": "ballena",
+                "en": "whale",
+                "emoji": "🐳"
+              },
+              {
+                "es": "cangrejo",
+                "en": "crab",
+                "emoji": "🦀"
+              },
+              {
+                "es": "pez",
+                "en": "fish",
+                "emoji": "🐟"
+              },
+              {
+                "es": "tiburón",
+                "en": "shark",
+                "emoji": "🦈"
+              }
+            ]
           }
         ]
       },
@@ -7207,39 +7636,66 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "ladrido",
-            "en": "bark",
-            "emoji": "🐕"
+            "preguntas": [
+              {
+                "afirmacion": "A dog is a pet.",
+                "respuesta": true,
+                "explicacion": "Yes! Dogs are very common pets that live with families."
+              },
+              {
+                "afirmacion": "A lion lives on a farm.",
+                "respuesta": false,
+                "explicacion": "Lions live in the savanna, not on a farm!"
+              },
+              {
+                "afirmacion": "Fish live in water.",
+                "respuesta": true,
+                "explicacion": "Yes! Fish live in rivers, lakes, and the ocean."
+              }
+            ]
           },
           {
-            "es": "rugido",
-            "en": "roar",
-            "emoji": "🦁"
+            "preguntas": [
+              {
+                "afirmacion": "A cat says bark.",
+                "respuesta": false,
+                "explicacion": "A cat says meow! Dogs say bark."
+              },
+              {
+                "afirmacion": "Elephants are big animals.",
+                "respuesta": true,
+                "explicacion": "Yes! Elephants are the largest land animals."
+              },
+              {
+                "afirmacion": "A shark lives in the forest.",
+                "respuesta": false,
+                "explicacion": "Sharks live in the ocean, not in the forest!"
+              }
+            ]
           },
           {
-            "es": "maullido",
-            "en": "meow",
-            "emoji": "🐈"
-          },
-          {
-            "es": "mugido",
-            "en": "moo",
-            "emoji": "🐄"
-          },
-          {
-            "es": "canto",
-            "en": "chirp",
-            "emoji": "🐦"
-          },
-          {
-            "es": "silbido",
-            "en": "hiss",
-            "emoji": "🐍"
+            "preguntas": [
+              {
+                "afirmacion": "A cow gives us milk.",
+                "respuesta": true,
+                "explicacion": "Yes! Cows are farm animals that produce milk."
+              },
+              {
+                "afirmacion": "A monkey can fly.",
+                "respuesta": false,
+                "explicacion": "Monkeys cannot fly — they swing from tree to tree!"
+              },
+              {
+                "afirmacion": "A dolphin is a smart animal.",
+                "respuesta": true,
+                "explicacion": "Yes! Dolphins are very intelligent sea animals."
+              }
+            ]
           }
         ]
       },
@@ -7565,39 +8021,65 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "vaca",
-            "en": "cow",
-            "emoji": "🐄"
+            "oraciones": [
+              {
+                "texto": "The ___ says meow.",
+                "respuesta": "cat",
+                "emoji": "🐱"
+              },
+              {
+                "texto": "A ___ lives on a farm.",
+                "respuesta": "cow",
+                "emoji": "🐄"
+              }
+            ]
           },
           {
-            "es": "león",
-            "en": "lion",
-            "emoji": "🦁"
+            "oraciones": [
+              {
+                "texto": "The ___ is the king of the jungle.",
+                "respuesta": "lion",
+                "emoji": "🦁"
+              },
+              {
+                "texto": "A ___ can swim very fast.",
+                "respuesta": "fish",
+                "emoji": "🐟"
+              }
+            ]
           },
           {
-            "es": "pez",
-            "en": "fish",
-            "emoji": "🐟"
+            "oraciones": [
+              {
+                "texto": "The ___ has a very long neck.",
+                "respuesta": "giraffe",
+                "emoji": "🦒"
+              },
+              {
+                "texto": "A ___ is a very big sea animal.",
+                "respuesta": "whale",
+                "emoji": "🐳"
+              }
+            ]
           },
           {
-            "es": "perro",
-            "en": "dog",
-            "emoji": "🐕"
-          },
-          {
-            "es": "elefante",
-            "en": "elephant",
-            "emoji": "🐘"
-          },
-          {
-            "es": "tiburón",
-            "en": "shark",
-            "emoji": "🦈"
+            "oraciones": [
+              {
+                "texto": "The ___ says bark.",
+                "respuesta": "dog",
+                "emoji": "🐕"
+              },
+              {
+                "texto": "An ___ is very big and gray.",
+                "respuesta": "elephant",
+                "emoji": "🐘"
+              }
+            ]
           }
         ]
       },
@@ -7920,39 +8402,85 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "cabeza",
-            "en": "head",
-            "emoji": "🗣️"
+            "categorias": [
+              {
+                "nombre": "Partes de la cara",
+                "emoji": "😊",
+                "items": [
+                  "eye",
+                  "nose",
+                  "mouth",
+                  "ear",
+                  "hair"
+                ]
+              },
+              {
+                "nombre": "Partes del cuerpo",
+                "emoji": "💪",
+                "items": [
+                  "arm",
+                  "hand",
+                  "leg",
+                  "foot",
+                  "back"
+                ]
+              }
+            ]
           },
           {
-            "es": "ojo",
-            "en": "eye",
-            "emoji": "👁️"
+            "categorias": [
+              {
+                "nombre": "Sentimientos positivos",
+                "emoji": "😊",
+                "items": [
+                  "happy",
+                  "excited",
+                  "proud"
+                ]
+              },
+              {
+                "nombre": "Sentimientos negativos",
+                "emoji": "😢",
+                "items": [
+                  "sad",
+                  "angry",
+                  "scared",
+                  "tired",
+                  "hungry"
+                ]
+              }
+            ]
           },
           {
-            "es": "oreja",
-            "en": "ear",
-            "emoji": "👂"
-          },
-          {
-            "es": "nariz",
-            "en": "nose",
-            "emoji": "👃"
-          },
-          {
-            "es": "boca",
-            "en": "mouth",
-            "emoji": "👄"
-          },
-          {
-            "es": "cabello",
-            "en": "hair",
-            "emoji": "💇"
+            "categorias": [
+              {
+                "nombre": "Arriba del cuerpo",
+                "emoji": "🗣️",
+                "items": [
+                  "head",
+                  "eye",
+                  "ear",
+                  "nose",
+                  "mouth",
+                  "arm"
+                ]
+              },
+              {
+                "nombre": "Abajo del cuerpo",
+                "emoji": "🦵",
+                "items": [
+                  "leg",
+                  "foot",
+                  "knee",
+                  "toe"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -8275,39 +8803,29 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "brazo",
-            "en": "arm",
-            "emoji": "💪"
+            "oraciones": [
+              "My head is on top"
+            ]
           },
           {
-            "es": "mano",
-            "en": "hand",
-            "emoji": "✋"
+            "oraciones": [
+              "I wash my hands every day"
+            ]
           },
           {
-            "es": "pierna",
-            "en": "leg",
-            "emoji": "🦵"
+            "oraciones": [
+              "My feet are on the floor"
+            ]
           },
           {
-            "es": "pie",
-            "en": "foot",
-            "emoji": "🦶"
-          },
-          {
-            "es": "espalda",
-            "en": "back",
-            "emoji": "🔙"
-          },
-          {
-            "es": "dedo",
-            "en": "finger",
-            "emoji": "☝️"
+            "oraciones": [
+              "She has beautiful blue eyes"
+            ]
           }
         ]
       },
@@ -8630,39 +9148,69 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "feliz",
-            "en": "happy",
-            "emoji": "😊"
+            "pares": [
+              {
+                "izq": "feliz",
+                "der": "😊 happy"
+              },
+              {
+                "izq": "triste",
+                "der": "😢 sad"
+              },
+              {
+                "izq": "cansado",
+                "der": "😴 tired"
+              },
+              {
+                "izq": "hambriento",
+                "der": "😋 hungry"
+              }
+            ]
           },
           {
-            "es": "triste",
-            "en": "sad",
-            "emoji": "😢"
+            "pares": [
+              {
+                "izq": "cansado",
+                "der": "😴 tired"
+              },
+              {
+                "izq": "hambriento",
+                "der": "😋 hungry"
+              },
+              {
+                "izq": "enojado",
+                "der": "😠 angry"
+              },
+              {
+                "izq": "asustado",
+                "der": "😨 scared"
+              }
+            ]
           },
           {
-            "es": "cansado",
-            "en": "tired",
-            "emoji": "😴"
-          },
-          {
-            "es": "hambriento",
-            "en": "hungry",
-            "emoji": "😋"
-          },
-          {
-            "es": "enojado",
-            "en": "angry",
-            "emoji": "😠"
-          },
-          {
-            "es": "asustado",
-            "en": "scared",
-            "emoji": "😨"
+            "pares": [
+              {
+                "izq": "enojado",
+                "der": "😠 angry"
+              },
+              {
+                "izq": "asustado",
+                "der": "😨 scared"
+              },
+              {
+                "izq": "feliz",
+                "der": "😊 happy"
+              },
+              {
+                "izq": "triste",
+                "der": "😢 sad"
+              }
+            ]
           }
         ]
       },
@@ -8985,39 +9533,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "Me duele la cabeza",
-            "en": "My head hurts",
-            "emoji": "🤕"
+            "pares": [
+              {
+                "es": "Me duele la cabeza",
+                "en": "My head hurts",
+                "emoji": "🤕"
+              },
+              {
+                "es": "Tengo fiebre",
+                "en": "I have a fever",
+                "emoji": "🤒"
+              },
+              {
+                "es": "Estoy enfermo",
+                "en": "I am sick",
+                "emoji": "🏥"
+              },
+              {
+                "es": "Me siento bien",
+                "en": "I feel good",
+                "emoji": "👍"
+              }
+            ]
           },
           {
-            "es": "Tengo fiebre",
-            "en": "I have a fever",
-            "emoji": "🤒"
+            "pares": [
+              {
+                "es": "Estoy enfermo",
+                "en": "I am sick",
+                "emoji": "🏥"
+              },
+              {
+                "es": "Me siento bien",
+                "en": "I feel good",
+                "emoji": "👍"
+              },
+              {
+                "es": "Necesito descansar",
+                "en": "I need to rest",
+                "emoji": "😴"
+              },
+              {
+                "es": "Necesito agua",
+                "en": "I need water",
+                "emoji": "💧"
+              }
+            ]
           },
           {
-            "es": "Estoy enfermo",
-            "en": "I am sick",
-            "emoji": "🏥"
-          },
-          {
-            "es": "Me siento bien",
-            "en": "I feel good",
-            "emoji": "👍"
-          },
-          {
-            "es": "Necesito descansar",
-            "en": "I need to rest",
-            "emoji": "😴"
-          },
-          {
-            "es": "Necesito agua",
-            "en": "I need water",
-            "emoji": "💧"
+            "pares": [
+              {
+                "es": "Necesito descansar",
+                "en": "I need to rest",
+                "emoji": "😴"
+              },
+              {
+                "es": "Necesito agua",
+                "en": "I need water",
+                "emoji": "💧"
+              },
+              {
+                "es": "Me duele la cabeza",
+                "en": "My head hurts",
+                "emoji": "🤕"
+              },
+              {
+                "es": "Tengo fiebre",
+                "en": "I have a fever",
+                "emoji": "🤒"
+              }
+            ]
           }
         ]
       },
@@ -9343,39 +9933,66 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "cabeza",
-            "en": "head",
-            "emoji": "🗣️"
+            "preguntas": [
+              {
+                "afirmacion": "We have two eyes.",
+                "respuesta": true,
+                "explicacion": "Yes! Most people have two eyes on their face."
+              },
+              {
+                "afirmacion": "A nose is on the arm.",
+                "respuesta": false,
+                "explicacion": "A nose is on the face, not on the arm!"
+              },
+              {
+                "afirmacion": "Feet are at the bottom of the body.",
+                "respuesta": true,
+                "explicacion": "Yes! Feet are at the very bottom of our body."
+              }
+            ]
           },
           {
-            "es": "mano",
-            "en": "hand",
-            "emoji": "✋"
+            "preguntas": [
+              {
+                "afirmacion": "We use our ears to see.",
+                "respuesta": false,
+                "explicacion": "We use our ears to hear. We use our eyes to see!"
+              },
+              {
+                "afirmacion": "A hand has five fingers.",
+                "respuesta": true,
+                "explicacion": "Yes! Each hand has five fingers."
+              },
+              {
+                "afirmacion": "Happy and sad are feelings.",
+                "respuesta": true,
+                "explicacion": "Correct! Happy and sad describe how we feel."
+              }
+            ]
           },
           {
-            "es": "pie",
-            "en": "foot",
-            "emoji": "🦶"
-          },
-          {
-            "es": "feliz",
-            "en": "happy",
-            "emoji": "😊"
-          },
-          {
-            "es": "triste",
-            "en": "sad",
-            "emoji": "😢"
-          },
-          {
-            "es": "enfermo",
-            "en": "sick",
-            "emoji": "🤒"
+            "preguntas": [
+              {
+                "afirmacion": "We breathe with our nose.",
+                "respuesta": true,
+                "explicacion": "Yes! We breathe in and out through our nose."
+              },
+              {
+                "afirmacion": "Legs are on our head.",
+                "respuesta": false,
+                "explicacion": "Legs are at the bottom of our body!"
+              },
+              {
+                "afirmacion": "Being hungry is a feeling.",
+                "respuesta": true,
+                "explicacion": "Yes! Hungry, tired, happy — these are all feelings."
+              }
+            ]
           }
         ]
       },
@@ -9698,39 +10315,65 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "manzana",
-            "en": "apple",
-            "emoji": "🍎"
+            "oraciones": [
+              {
+                "texto": "An ___ a day keeps the doctor away.",
+                "respuesta": "apple",
+                "emoji": "🍎"
+              },
+              {
+                "texto": "I drink ___ every morning.",
+                "respuesta": "milk",
+                "emoji": "🥛"
+              }
+            ]
           },
           {
-            "es": "plátano",
-            "en": "banana",
-            "emoji": "🍌"
+            "oraciones": [
+              {
+                "texto": "I like ___ with butter.",
+                "respuesta": "bread",
+                "emoji": "🍞"
+              },
+              {
+                "texto": "Fried ___ is a great breakfast.",
+                "respuesta": "egg",
+                "emoji": "🥚"
+              }
+            ]
           },
           {
-            "es": "zanahoria",
-            "en": "carrot",
-            "emoji": "🥕"
+            "oraciones": [
+              {
+                "texto": "My mom cooks ___ with chicken.",
+                "respuesta": "rice",
+                "emoji": "🍚"
+              },
+              {
+                "texto": "I love tomato ___.",
+                "respuesta": "soup",
+                "emoji": "🍲"
+              }
+            ]
           },
           {
-            "es": "tomate",
-            "en": "tomato",
-            "emoji": "🍅"
-          },
-          {
-            "es": "uvas",
-            "en": "grapes",
-            "emoji": "🍇"
-          },
-          {
-            "es": "lechuga",
-            "en": "lettuce",
-            "emoji": "🥬"
+            "oraciones": [
+              {
+                "texto": "I ___ pizza very much.",
+                "respuesta": "like",
+                "emoji": "🍕"
+              },
+              {
+                "texto": "The food is ___.",
+                "respuesta": "delicious",
+                "emoji": "😋"
+              }
+            ]
           }
         ]
       },
@@ -10053,39 +10696,87 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "huevo",
-            "en": "egg",
-            "emoji": "🥚"
+            "categorias": [
+              {
+                "nombre": "Frutas",
+                "emoji": "🍎",
+                "items": [
+                  "apple",
+                  "banana",
+                  "grapes",
+                  "mango",
+                  "orange"
+                ]
+              },
+              {
+                "nombre": "Verduras",
+                "emoji": "🥕",
+                "items": [
+                  "carrot",
+                  "lettuce",
+                  "tomato",
+                  "potato",
+                  "onion"
+                ]
+              }
+            ]
           },
           {
-            "es": "pan",
-            "en": "bread",
-            "emoji": "🍞"
+            "categorias": [
+              {
+                "nombre": "Desayuno",
+                "emoji": "🌅",
+                "items": [
+                  "egg",
+                  "bread",
+                  "milk",
+                  "cereal",
+                  "juice",
+                  "butter"
+                ]
+              },
+              {
+                "nombre": "Almuerzo / Cena",
+                "emoji": "🍽️",
+                "items": [
+                  "rice",
+                  "chicken",
+                  "soup",
+                  "salad",
+                  "pasta",
+                  "meat"
+                ]
+              }
+            ]
           },
           {
-            "es": "leche",
-            "en": "milk",
-            "emoji": "🥛"
-          },
-          {
-            "es": "cereal",
-            "en": "cereal",
-            "emoji": "🥣"
-          },
-          {
-            "es": "mantequilla",
-            "en": "butter",
-            "emoji": "🧈"
-          },
-          {
-            "es": "jugo",
-            "en": "juice",
-            "emoji": "🧃"
+            "categorias": [
+              {
+                "nombre": "Me gusta ❤️",
+                "emoji": "👍",
+                "items": [
+                  "pizza",
+                  "apple",
+                  "rice",
+                  "milk"
+                ]
+              },
+              {
+                "nombre": "No me gusta 💔",
+                "emoji": "👎",
+                "items": [
+                  "broccoli",
+                  "liver",
+                  "raw onion",
+                  "bitter melon"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -10408,39 +11099,33 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "arroz",
-            "en": "rice",
-            "emoji": "🍚"
+            "oraciones": [
+              "I like apples and bananas",
+              "Carrots are orange vegetables"
+            ]
           },
           {
-            "es": "pollo",
-            "en": "chicken",
-            "emoji": "🍗"
+            "oraciones": [
+              "She eats eggs for breakfast",
+              "Milk is good for you"
+            ]
           },
           {
-            "es": "sopa",
-            "en": "soup",
-            "emoji": "🍲"
+            "oraciones": [
+              "I would like some rice please",
+              "The salad is fresh and green"
+            ]
           },
           {
-            "es": "ensalada",
-            "en": "salad",
-            "emoji": "🥗"
-          },
-          {
-            "es": "pasta",
-            "en": "pasta",
-            "emoji": "🍝"
-          },
-          {
-            "es": "carne",
-            "en": "meat",
-            "emoji": "🥩"
+            "oraciones": [
+              "Do you like this food",
+              "I love eating with my family"
+            ]
           }
         ]
       },
@@ -10763,39 +11448,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "Me gusta",
-            "en": "I like",
-            "emoji": "👍"
+            "pares": [
+              {
+                "izq": "Me gusta",
+                "der": "👍 I like"
+              },
+              {
+                "izq": "No me gusta",
+                "der": "👎 I don't like"
+              },
+              {
+                "izq": "Me encanta",
+                "der": "❤️ I love"
+              },
+              {
+                "izq": "Odio",
+                "der": "💔 I hate"
+              },
+              {
+                "izq": "Prefiero",
+                "der": "⭐ I prefer"
+              }
+            ]
           },
           {
-            "es": "No me gusta",
-            "en": "I don't like",
-            "emoji": "👎"
+            "pares": [
+              {
+                "izq": "Me encanta",
+                "der": "❤️ I love"
+              },
+              {
+                "izq": "Odio",
+                "der": "💔 I hate"
+              },
+              {
+                "izq": "Prefiero",
+                "der": "⭐ I prefer"
+              },
+              {
+                "izq": "¿Te gusta?",
+                "der": "❓ Do you like it?"
+              },
+              {
+                "izq": "Me gusta",
+                "der": "👍 I like"
+              }
+            ]
           },
           {
-            "es": "Me encanta",
-            "en": "I love",
-            "emoji": "❤️"
-          },
-          {
-            "es": "Odio",
-            "en": "I hate",
-            "emoji": "💔"
-          },
-          {
-            "es": "Prefiero",
-            "en": "I prefer",
-            "emoji": "⭐"
-          },
-          {
-            "es": "¿Te gusta?",
-            "en": "Do you like it?",
-            "emoji": "❓"
+            "pares": [
+              {
+                "izq": "Prefiero",
+                "der": "⭐ I prefer"
+              },
+              {
+                "izq": "¿Te gusta?",
+                "der": "❓ Do you like it?"
+              },
+              {
+                "izq": "Me gusta",
+                "der": "👍 I like"
+              },
+              {
+                "izq": "No me gusta",
+                "der": "👎 I don't like"
+              },
+              {
+                "izq": "Me encanta",
+                "der": "❤️ I love"
+              }
+            ]
           }
         ]
       },
@@ -11118,39 +11845,96 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "restaurante",
-            "en": "restaurant",
-            "emoji": "🍽️"
+            "pares": [
+              {
+                "es": "restaurante",
+                "en": "restaurant",
+                "emoji": "🍽️"
+              },
+              {
+                "es": "menú",
+                "en": "menu",
+                "emoji": "📋"
+              },
+              {
+                "es": "mesero",
+                "en": "waiter",
+                "emoji": "🧑‍🍳"
+              },
+              {
+                "es": "Quiero...",
+                "en": "I would like...",
+                "emoji": "🤲"
+              },
+              {
+                "es": "La cuenta",
+                "en": "The check",
+                "emoji": "💳"
+              }
+            ]
           },
           {
-            "es": "menú",
-            "en": "menu",
-            "emoji": "📋"
+            "pares": [
+              {
+                "es": "mesero",
+                "en": "waiter",
+                "emoji": "🧑‍🍳"
+              },
+              {
+                "es": "Quiero...",
+                "en": "I would like...",
+                "emoji": "🤲"
+              },
+              {
+                "es": "La cuenta",
+                "en": "The check",
+                "emoji": "💳"
+              },
+              {
+                "es": "Delicioso",
+                "en": "Delicious",
+                "emoji": "😋"
+              },
+              {
+                "es": "restaurante",
+                "en": "restaurant",
+                "emoji": "🍽️"
+              }
+            ]
           },
           {
-            "es": "mesero",
-            "en": "waiter",
-            "emoji": "🧑‍🍳"
-          },
-          {
-            "es": "Quiero...",
-            "en": "I would like...",
-            "emoji": "🤲"
-          },
-          {
-            "es": "La cuenta",
-            "en": "The check",
-            "emoji": "💳"
-          },
-          {
-            "es": "Delicioso",
-            "en": "Delicious",
-            "emoji": "😋"
+            "pares": [
+              {
+                "es": "La cuenta",
+                "en": "The check",
+                "emoji": "💳"
+              },
+              {
+                "es": "Delicioso",
+                "en": "Delicious",
+                "emoji": "😋"
+              },
+              {
+                "es": "restaurante",
+                "en": "restaurant",
+                "emoji": "🍽️"
+              },
+              {
+                "es": "menú",
+                "en": "menu",
+                "emoji": "📋"
+              },
+              {
+                "es": "mesero",
+                "en": "waiter",
+                "emoji": "🧑‍🍳"
+              }
+            ]
           }
         ]
       },
@@ -11476,39 +12260,66 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "manzana",
-            "en": "apple",
-            "emoji": "🍎"
+            "preguntas": [
+              {
+                "afirmacion": "An apple is a fruit.",
+                "respuesta": true,
+                "explicacion": "Yes! Apples, bananas, and grapes are all fruits."
+              },
+              {
+                "afirmacion": "A carrot is a fruit.",
+                "respuesta": false,
+                "explicacion": "A carrot is a vegetable, not a fruit!"
+              },
+              {
+                "afirmacion": "Milk comes from cows.",
+                "respuesta": true,
+                "explicacion": "Yes! Cows give us milk."
+              }
+            ]
           },
           {
-            "es": "huevo",
-            "en": "egg",
-            "emoji": "🥚"
+            "preguntas": [
+              {
+                "afirmacion": "Bread is a breakfast food.",
+                "respuesta": true,
+                "explicacion": "Yes! Bread with butter or jam is a common breakfast."
+              },
+              {
+                "afirmacion": "Rice is a vegetable.",
+                "respuesta": false,
+                "explicacion": "Rice is a grain or cereal, not a vegetable."
+              },
+              {
+                "afirmacion": "\"I like\" means \"me gusta\" in English.",
+                "respuesta": true,
+                "explicacion": "Correct! \"I like pizza\" = \"Me gusta la pizza.\""
+              }
+            ]
           },
           {
-            "es": "arroz",
-            "en": "rice",
-            "emoji": "🍚"
-          },
-          {
-            "es": "Me gusta",
-            "en": "I like",
-            "emoji": "👍"
-          },
-          {
-            "es": "restaurante",
-            "en": "restaurant",
-            "emoji": "🍽️"
-          },
-          {
-            "es": "delicioso",
-            "en": "delicious",
-            "emoji": "😋"
+            "preguntas": [
+              {
+                "afirmacion": "Breakfast is the first meal of the day.",
+                "respuesta": true,
+                "explicacion": "Yes! Breakfast is the meal we eat in the morning."
+              },
+              {
+                "afirmacion": "A banana is a vegetable.",
+                "respuesta": false,
+                "explicacion": "A banana is a fruit, not a vegetable!"
+              },
+              {
+                "afirmacion": "Delicious means very tasty.",
+                "respuesta": true,
+                "explicacion": "Yes! Delicious means that food tastes very good."
+              }
+            ]
           }
         ]
       },
@@ -11831,39 +12642,65 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "sala",
-            "en": "living room",
-            "emoji": "🛋️"
+            "oraciones": [
+              {
+                "texto": "I sleep in my ___.",
+                "respuesta": "bed",
+                "emoji": "🛏️"
+              },
+              {
+                "texto": "We cook in the ___.",
+                "respuesta": "kitchen",
+                "emoji": "🍳"
+              }
+            ]
           },
           {
-            "es": "cocina",
-            "en": "kitchen",
-            "emoji": "🍳"
+            "oraciones": [
+              {
+                "texto": "The cat is ___ the table.",
+                "respuesta": "under",
+                "emoji": "⬇️"
+              },
+              {
+                "texto": "My book is ___ the desk.",
+                "respuesta": "on",
+                "emoji": "📚"
+              }
+            ]
           },
           {
-            "es": "cuarto",
-            "en": "bedroom",
-            "emoji": "🛏️"
+            "oraciones": [
+              {
+                "texto": "I watch TV in the ___ room.",
+                "respuesta": "living",
+                "emoji": "📺"
+              },
+              {
+                "texto": "The ___ keeps food cold.",
+                "respuesta": "refrigerator",
+                "emoji": "🧊"
+              }
+            ]
           },
           {
-            "es": "baño",
-            "en": "bathroom",
-            "emoji": "🚿"
-          },
-          {
-            "es": "jardín",
-            "en": "garden",
-            "emoji": "🌻"
-          },
-          {
-            "es": "garaje",
-            "en": "garage",
-            "emoji": "🚗"
+            "oraciones": [
+              {
+                "texto": "My room is ___ the bathroom.",
+                "respuesta": "next to",
+                "emoji": "↔️"
+              },
+              {
+                "texto": "The lamp is ___ the table.",
+                "respuesta": "on",
+                "emoji": "💡"
+              }
+            ]
           }
         ]
       },
@@ -12186,39 +13023,86 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "mesa",
-            "en": "table",
-            "emoji": "🪑"
+            "categorias": [
+              {
+                "nombre": "Cuartos",
+                "emoji": "🏠",
+                "items": [
+                  "living room",
+                  "kitchen",
+                  "bedroom",
+                  "bathroom",
+                  "garage",
+                  "garden"
+                ]
+              },
+              {
+                "nombre": "Muebles",
+                "emoji": "🛋️",
+                "items": [
+                  "table",
+                  "chair",
+                  "bed",
+                  "lamp",
+                  "sofa",
+                  "desk"
+                ]
+              }
+            ]
           },
           {
-            "es": "silla",
-            "en": "chair",
-            "emoji": "🪑"
+            "categorias": [
+              {
+                "nombre": "Encima / Sobre",
+                "emoji": "⬆️",
+                "items": [
+                  "on",
+                  "on top of",
+                  "above"
+                ]
+              },
+              {
+                "nombre": "Abajo / Al lado",
+                "emoji": "⬇️",
+                "items": [
+                  "under",
+                  "below",
+                  "next to",
+                  "behind"
+                ]
+              }
+            ]
           },
           {
-            "es": "cama",
-            "en": "bed",
-            "emoji": "🛏️"
-          },
-          {
-            "es": "lámpara",
-            "en": "lamp",
-            "emoji": "💡"
-          },
-          {
-            "es": "televisor",
-            "en": "television",
-            "emoji": "📺"
-          },
-          {
-            "es": "nevera",
-            "en": "refrigerator",
-            "emoji": "🧊"
+            "categorias": [
+              {
+                "nombre": "En la cocina",
+                "emoji": "🍳",
+                "items": [
+                  "refrigerator",
+                  "stove",
+                  "table",
+                  "fork",
+                  "plate"
+                ]
+              },
+              {
+                "nombre": "En la habitación",
+                "emoji": "🛏️",
+                "items": [
+                  "bed",
+                  "pillow",
+                  "lamp",
+                  "desk",
+                  "closet"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -12541,39 +13425,33 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "adentro",
-            "en": "inside",
-            "emoji": "🏠"
+            "oraciones": [
+              "My bedroom is very big",
+              "I sleep in my bed every night"
+            ]
           },
           {
-            "es": "afuera",
-            "en": "outside",
-            "emoji": "🌳"
+            "oraciones": [
+              "The kitchen has a refrigerator",
+              "We eat in the dining room"
+            ]
           },
           {
-            "es": "encima",
-            "en": "on top of",
-            "emoji": "⬆️"
+            "oraciones": [
+              "The book is on the table",
+              "My shoes are under the bed"
+            ]
           },
           {
-            "es": "debajo",
-            "en": "under",
-            "emoji": "⬇️"
-          },
-          {
-            "es": "al lado",
-            "en": "next to",
-            "emoji": "↔️"
-          },
-          {
-            "es": "detrás",
-            "en": "behind",
-            "emoji": "↩️"
+            "oraciones": [
+              "I watch TV in the living room",
+              "My room has a big window"
+            ]
           }
         ]
       },
@@ -12896,39 +13774,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "mi habitación",
-            "en": "my bedroom",
-            "emoji": "🛏️"
+            "pares": [
+              {
+                "izq": "mi habitación",
+                "der": "🛏️ my bedroom"
+              },
+              {
+                "izq": "Mi cama es...",
+                "der": "🛏️ My bed is..."
+              },
+              {
+                "izq": "Tengo una ventana",
+                "der": "🪟 I have a window"
+              },
+              {
+                "izq": "Mi cuarto es grande",
+                "der": "📐 My room is big"
+              },
+              {
+                "izq": "El piso es de madera",
+                "der": "🪵 The floor is wood"
+              }
+            ]
           },
           {
-            "es": "Mi cama es...",
-            "en": "My bed is...",
-            "emoji": "🛏️"
+            "pares": [
+              {
+                "izq": "Tengo una ventana",
+                "der": "🪟 I have a window"
+              },
+              {
+                "izq": "Mi cuarto es grande",
+                "der": "📐 My room is big"
+              },
+              {
+                "izq": "El piso es de madera",
+                "der": "🪵 The floor is wood"
+              },
+              {
+                "izq": "Hay muchos juguetes",
+                "der": "🧸 There are many toys"
+              },
+              {
+                "izq": "mi habitación",
+                "der": "🛏️ my bedroom"
+              }
+            ]
           },
           {
-            "es": "Tengo una ventana",
-            "en": "I have a window",
-            "emoji": "🪟"
-          },
-          {
-            "es": "Mi cuarto es grande",
-            "en": "My room is big",
-            "emoji": "📐"
-          },
-          {
-            "es": "El piso es de madera",
-            "en": "The floor is wood",
-            "emoji": "🪵"
-          },
-          {
-            "es": "Hay muchos juguetes",
-            "en": "There are many toys",
-            "emoji": "🧸"
+            "pares": [
+              {
+                "izq": "El piso es de madera",
+                "der": "🪵 The floor is wood"
+              },
+              {
+                "izq": "Hay muchos juguetes",
+                "der": "🧸 There are many toys"
+              },
+              {
+                "izq": "mi habitación",
+                "der": "🛏️ my bedroom"
+              },
+              {
+                "izq": "Mi cama es...",
+                "der": "🛏️ My bed is..."
+              },
+              {
+                "izq": "Tengo una ventana",
+                "der": "🪟 I have a window"
+              }
+            ]
           }
         ]
       },
@@ -13254,39 +14174,96 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "sala",
-            "en": "living room",
-            "emoji": "🛋️"
+            "pares": [
+              {
+                "es": "sala",
+                "en": "living room",
+                "emoji": "🛋️"
+              },
+              {
+                "es": "cocina",
+                "en": "kitchen",
+                "emoji": "🍳"
+              },
+              {
+                "es": "cama",
+                "en": "bed",
+                "emoji": "🛏️"
+              },
+              {
+                "es": "encima",
+                "en": "on top of",
+                "emoji": "⬆️"
+              },
+              {
+                "es": "debajo",
+                "en": "under",
+                "emoji": "⬇️"
+              }
+            ]
           },
           {
-            "es": "cocina",
-            "en": "kitchen",
-            "emoji": "🍳"
+            "pares": [
+              {
+                "es": "cama",
+                "en": "bed",
+                "emoji": "🛏️"
+              },
+              {
+                "es": "encima",
+                "en": "on top of",
+                "emoji": "⬆️"
+              },
+              {
+                "es": "debajo",
+                "en": "under",
+                "emoji": "⬇️"
+              },
+              {
+                "es": "al lado",
+                "en": "next to",
+                "emoji": "↔️"
+              },
+              {
+                "es": "sala",
+                "en": "living room",
+                "emoji": "🛋️"
+              }
+            ]
           },
           {
-            "es": "cama",
-            "en": "bed",
-            "emoji": "🛏️"
-          },
-          {
-            "es": "encima",
-            "en": "on top of",
-            "emoji": "⬆️"
-          },
-          {
-            "es": "debajo",
-            "en": "under",
-            "emoji": "⬇️"
-          },
-          {
-            "es": "al lado",
-            "en": "next to",
-            "emoji": "↔️"
+            "pares": [
+              {
+                "es": "debajo",
+                "en": "under",
+                "emoji": "⬇️"
+              },
+              {
+                "es": "al lado",
+                "en": "next to",
+                "emoji": "↔️"
+              },
+              {
+                "es": "sala",
+                "en": "living room",
+                "emoji": "🛋️"
+              },
+              {
+                "es": "cocina",
+                "en": "kitchen",
+                "emoji": "🍳"
+              },
+              {
+                "es": "cama",
+                "en": "bed",
+                "emoji": "🛏️"
+              }
+            ]
           }
         ]
       },
@@ -13609,39 +14586,66 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "soleado",
-            "en": "sunny",
-            "emoji": "☀️"
+            "preguntas": [
+              {
+                "afirmacion": "Summer is the hottest season.",
+                "respuesta": true,
+                "explicacion": "Yes! Summer is the warmest time of the year."
+              },
+              {
+                "afirmacion": "It snows in summer.",
+                "respuesta": false,
+                "explicacion": "It usually snows in winter, not in summer!"
+              },
+              {
+                "afirmacion": "We use an umbrella when it rains.",
+                "respuesta": true,
+                "explicacion": "Yes! An umbrella protects us from the rain."
+              }
+            ]
           },
           {
-            "es": "nublado",
-            "en": "cloudy",
-            "emoji": "☁️"
+            "preguntas": [
+              {
+                "afirmacion": "Spring comes after winter.",
+                "respuesta": true,
+                "explicacion": "Yes! Winter → Spring → Summer → Fall."
+              },
+              {
+                "afirmacion": "A coat is used in summer.",
+                "respuesta": false,
+                "explicacion": "We wear coats in cold weather, not in summer!"
+              },
+              {
+                "afirmacion": "There are four seasons in a year.",
+                "respuesta": true,
+                "explicacion": "Yes! Spring, summer, fall, and winter."
+              }
+            ]
           },
           {
-            "es": "lluvioso",
-            "en": "rainy",
-            "emoji": "🌧️"
-          },
-          {
-            "es": "ventoso",
-            "en": "windy",
-            "emoji": "💨"
-          },
-          {
-            "es": "nevado",
-            "en": "snowy",
-            "emoji": "❄️"
-          },
-          {
-            "es": "caliente",
-            "en": "hot",
-            "emoji": "🥵"
+            "preguntas": [
+              {
+                "afirmacion": "December is a winter month.",
+                "respuesta": true,
+                "explicacion": "Yes! December is in winter in the Northern Hemisphere."
+              },
+              {
+                "afirmacion": "Windy means very cold.",
+                "respuesta": false,
+                "explicacion": "Windy means there is a lot of wind — not necessarily cold."
+              },
+              {
+                "afirmacion": "We wear boots when it snows.",
+                "respuesta": true,
+                "explicacion": "Yes! Boots protect our feet from snow and rain."
+              }
+            ]
           }
         ]
       },
@@ -13964,39 +14968,65 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "primavera",
-            "en": "spring",
-            "emoji": "🌸"
+            "oraciones": [
+              {
+                "texto": "Today is ___ and warm.",
+                "respuesta": "sunny",
+                "emoji": "☀️"
+              },
+              {
+                "texto": "I use my ___ when it rains.",
+                "respuesta": "umbrella",
+                "emoji": "☂️"
+              }
+            ]
           },
           {
-            "es": "verano",
-            "en": "summer",
-            "emoji": "☀️"
+            "oraciones": [
+              {
+                "texto": "In ___, flowers bloom.",
+                "respuesta": "spring",
+                "emoji": "🌸"
+              },
+              {
+                "texto": "I wear a ___ in winter.",
+                "respuesta": "coat",
+                "emoji": "🧥"
+              }
+            ]
           },
           {
-            "es": "otoño",
-            "en": "fall/autumn",
-            "emoji": "🍂"
+            "oraciones": [
+              {
+                "texto": "It is very ___ in summer.",
+                "respuesta": "hot",
+                "emoji": "🥵"
+              },
+              {
+                "texto": "December is a ___ month.",
+                "respuesta": "winter",
+                "emoji": "❄️"
+              }
+            ]
           },
           {
-            "es": "invierno",
-            "en": "winter",
-            "emoji": "❄️"
-          },
-          {
-            "es": "estación",
-            "en": "season",
-            "emoji": "🌍"
-          },
-          {
-            "es": "año",
-            "en": "year",
-            "emoji": "📅"
+            "oraciones": [
+              {
+                "texto": "It is ___ today, bring an umbrella.",
+                "respuesta": "rainy",
+                "emoji": "🌧️"
+              },
+              {
+                "texto": "The wind is very ___ today.",
+                "respuesta": "strong",
+                "emoji": "💨"
+              }
+            ]
           }
         ]
       },
@@ -14319,39 +15349,80 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "abrigo",
-            "en": "coat",
-            "emoji": "🧥"
+            "categorias": [
+              {
+                "nombre": "Tiempo cálido",
+                "emoji": "☀️",
+                "items": [
+                  "sunny",
+                  "hot",
+                  "warm",
+                  "humid"
+                ]
+              },
+              {
+                "nombre": "Tiempo frío",
+                "emoji": "❄️",
+                "items": [
+                  "cold",
+                  "snowy",
+                  "windy",
+                  "rainy",
+                  "cloudy"
+                ]
+              }
+            ]
           },
           {
-            "es": "botas",
-            "en": "boots",
-            "emoji": "👢"
+            "categorias": [
+              {
+                "nombre": "Estaciones cálidas",
+                "emoji": "🌸",
+                "items": [
+                  "spring",
+                  "summer"
+                ]
+              },
+              {
+                "nombre": "Estaciones frías",
+                "emoji": "🍂",
+                "items": [
+                  "fall",
+                  "autumn",
+                  "winter"
+                ]
+              }
+            ]
           },
           {
-            "es": "sombrilla",
-            "en": "umbrella",
-            "emoji": "☂️"
-          },
-          {
-            "es": "gafas de sol",
-            "en": "sunglasses",
-            "emoji": "😎"
-          },
-          {
-            "es": "suéter",
-            "en": "sweater",
-            "emoji": "🧶"
-          },
-          {
-            "es": "sandalias",
-            "en": "sandals",
-            "emoji": "👡"
+            "categorias": [
+              {
+                "nombre": "Ropa para frío",
+                "emoji": "🧥",
+                "items": [
+                  "coat",
+                  "boots",
+                  "sweater",
+                  "scarf",
+                  "gloves"
+                ]
+              },
+              {
+                "nombre": "Ropa para calor",
+                "emoji": "👙",
+                "items": [
+                  "sandals",
+                  "sunglasses",
+                  "shorts",
+                  "hat"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -14674,39 +15745,33 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "enero",
-            "en": "January",
-            "emoji": "1️⃣"
+            "oraciones": [
+              "Today the weather is sunny",
+              "I wear a coat when it is cold"
+            ]
           },
           {
-            "es": "febrero",
-            "en": "February",
-            "emoji": "2️⃣"
+            "oraciones": [
+              "Spring is my favorite season",
+              "Flowers bloom in spring"
+            ]
           },
           {
-            "es": "marzo",
-            "en": "March",
-            "emoji": "3️⃣"
+            "oraciones": [
+              "In winter we wear boots",
+              "Snow falls in December"
+            ]
           },
           {
-            "es": "junio",
-            "en": "June",
-            "emoji": "6️⃣"
-          },
-          {
-            "es": "diciembre",
-            "en": "December",
-            "emoji": "1️⃣2️⃣"
-          },
-          {
-            "es": "mes",
-            "en": "month",
-            "emoji": "📅"
+            "oraciones": [
+              "Summer is hot and sunny",
+              "We swim in the summer"
+            ]
           }
         ]
       },
@@ -15032,39 +16097,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "soleado",
-            "en": "sunny",
-            "emoji": "☀️"
+            "pares": [
+              {
+                "izq": "soleado",
+                "der": "☀️ sunny"
+              },
+              {
+                "izq": "lluvioso",
+                "der": "🌧️ rainy"
+              },
+              {
+                "izq": "primavera",
+                "der": "🌸 spring"
+              },
+              {
+                "izq": "invierno",
+                "der": "❄️ winter"
+              },
+              {
+                "izq": "abrigo",
+                "der": "🧥 coat"
+              }
+            ]
           },
           {
-            "es": "lluvioso",
-            "en": "rainy",
-            "emoji": "🌧️"
+            "pares": [
+              {
+                "izq": "primavera",
+                "der": "🌸 spring"
+              },
+              {
+                "izq": "invierno",
+                "der": "❄️ winter"
+              },
+              {
+                "izq": "abrigo",
+                "der": "🧥 coat"
+              },
+              {
+                "izq": "enero",
+                "der": "1️⃣ January"
+              },
+              {
+                "izq": "soleado",
+                "der": "☀️ sunny"
+              }
+            ]
           },
           {
-            "es": "primavera",
-            "en": "spring",
-            "emoji": "🌸"
-          },
-          {
-            "es": "invierno",
-            "en": "winter",
-            "emoji": "❄️"
-          },
-          {
-            "es": "abrigo",
-            "en": "coat",
-            "emoji": "🧥"
-          },
-          {
-            "es": "enero",
-            "en": "January",
-            "emoji": "1️⃣"
+            "pares": [
+              {
+                "izq": "abrigo",
+                "der": "🧥 coat"
+              },
+              {
+                "izq": "enero",
+                "der": "1️⃣ January"
+              },
+              {
+                "izq": "soleado",
+                "der": "☀️ sunny"
+              },
+              {
+                "izq": "lluvioso",
+                "der": "🌧️ rainy"
+              },
+              {
+                "izq": "primavera",
+                "der": "🌸 spring"
+              }
+            ]
           }
         ]
       },
@@ -15387,39 +16494,111 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "fútbol",
-            "en": "soccer",
-            "emoji": "⚽"
+            "pares": [
+              {
+                "es": "fútbol",
+                "en": "soccer",
+                "emoji": "⚽"
+              },
+              {
+                "es": "baloncesto",
+                "en": "basketball",
+                "emoji": "🏀"
+              },
+              {
+                "es": "natación",
+                "en": "swimming",
+                "emoji": "🏊"
+              },
+              {
+                "es": "béisbol",
+                "en": "baseball",
+                "emoji": "⚾"
+              },
+              {
+                "es": "ciclismo",
+                "en": "cycling",
+                "emoji": "🚴"
+              },
+              {
+                "es": "atletismo",
+                "en": "track and field",
+                "emoji": "🏃"
+              }
+            ]
           },
           {
-            "es": "baloncesto",
-            "en": "basketball",
-            "emoji": "🏀"
+            "pares": [
+              {
+                "es": "natación",
+                "en": "swimming",
+                "emoji": "🏊"
+              },
+              {
+                "es": "béisbol",
+                "en": "baseball",
+                "emoji": "⚾"
+              },
+              {
+                "es": "ciclismo",
+                "en": "cycling",
+                "emoji": "🚴"
+              },
+              {
+                "es": "atletismo",
+                "en": "track and field",
+                "emoji": "🏃"
+              },
+              {
+                "es": "fútbol",
+                "en": "soccer",
+                "emoji": "⚽"
+              },
+              {
+                "es": "baloncesto",
+                "en": "basketball",
+                "emoji": "🏀"
+              }
+            ]
           },
           {
-            "es": "natación",
-            "en": "swimming",
-            "emoji": "🏊"
-          },
-          {
-            "es": "béisbol",
-            "en": "baseball",
-            "emoji": "⚾"
-          },
-          {
-            "es": "ciclismo",
-            "en": "cycling",
-            "emoji": "🚴"
-          },
-          {
-            "es": "atletismo",
-            "en": "track and field",
-            "emoji": "🏃"
+            "pares": [
+              {
+                "es": "ciclismo",
+                "en": "cycling",
+                "emoji": "🚴"
+              },
+              {
+                "es": "atletismo",
+                "en": "track and field",
+                "emoji": "🏃"
+              },
+              {
+                "es": "fútbol",
+                "en": "soccer",
+                "emoji": "⚽"
+              },
+              {
+                "es": "baloncesto",
+                "en": "basketball",
+                "emoji": "🏀"
+              },
+              {
+                "es": "natación",
+                "en": "swimming",
+                "emoji": "🏊"
+              },
+              {
+                "es": "béisbol",
+                "en": "baseball",
+                "emoji": "⚾"
+              }
+            ]
           }
         ]
       },
@@ -15742,39 +16921,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "leer",
-            "en": "reading",
-            "emoji": "📚"
+            "preguntas": [
+              {
+                "afirmacion": "Soccer is played with a round ball.",
+                "respuesta": true,
+                "explicacion": "Yes! Soccer is played with a round ball on a grass field."
+              },
+              {
+                "afirmacion": "Monday is the last day of the week.",
+                "respuesta": false,
+                "explicacion": "Monday is the first day of the week."
+              },
+              {
+                "afirmacion": "Reading is a hobby.",
+                "respuesta": true,
+                "explicacion": "Yes! Reading books, drawing, and dancing are all hobbies."
+              },
+              {
+                "afirmacion": "We do homework in the swimming pool.",
+                "respuesta": false,
+                "explicacion": "We do homework at home or school, not in a pool!"
+              }
+            ]
           },
           {
-            "es": "dibujar",
-            "en": "drawing",
-            "emoji": "✏️"
+            "preguntas": [
+              {
+                "afirmacion": "Friday is before Saturday.",
+                "respuesta": true,
+                "explicacion": "Correct! Friday → Saturday → Sunday."
+              },
+              {
+                "afirmacion": "Swimming is a land sport.",
+                "respuesta": false,
+                "explicacion": "Swimming is a water sport!"
+              },
+              {
+                "afirmacion": "Dancing is a fun activity.",
+                "respuesta": true,
+                "explicacion": "Yes! Dancing is a great way to have fun and exercise."
+              },
+              {
+                "afirmacion": "The weekend has five days.",
+                "respuesta": false,
+                "explicacion": "The weekend is only Saturday and Sunday — two days!"
+              }
+            ]
           },
           {
-            "es": "bailar",
-            "en": "dancing",
-            "emoji": "💃"
-          },
-          {
-            "es": "cantar",
-            "en": "singing",
-            "emoji": "🎤"
-          },
-          {
-            "es": "cocinar",
-            "en": "cooking",
-            "emoji": "🍳"
-          },
-          {
-            "es": "videojuegos",
-            "en": "video games",
-            "emoji": "🎮"
+            "preguntas": [
+              {
+                "afirmacion": "Basketball is played with a hoop.",
+                "respuesta": true,
+                "explicacion": "Yes! In basketball, you throw the ball into a hoop to score."
+              },
+              {
+                "afirmacion": "\"After school\" means before school.",
+                "respuesta": false,
+                "explicacion": "\"After school\" means when school is over, not before!"
+              },
+              {
+                "afirmacion": "A hobby is something you enjoy doing.",
+                "respuesta": true,
+                "explicacion": "Yes! A hobby is an activity you do for fun in your free time."
+              },
+              {
+                "afirmacion": "Wednesday comes after Thursday.",
+                "respuesta": false,
+                "explicacion": "Wednesday comes BEFORE Thursday."
+              }
+            ]
           }
         ]
       },
@@ -16097,39 +17318,85 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "lunes",
-            "en": "Monday",
-            "emoji": "1️⃣"
+            "oraciones": [
+              {
+                "texto": "I play ___ every Saturday.",
+                "respuesta": "soccer",
+                "emoji": "⚽"
+              },
+              {
+                "texto": "She loves ___ books.",
+                "respuesta": "reading",
+                "emoji": "📚"
+              },
+              {
+                "texto": "Monday is the first day of the ___.",
+                "respuesta": "week",
+                "emoji": "📅"
+              }
+            ]
           },
           {
-            "es": "martes",
-            "en": "Tuesday",
-            "emoji": "2️⃣"
+            "oraciones": [
+              {
+                "texto": "I ___ my homework after school.",
+                "respuesta": "do",
+                "emoji": "📝"
+              },
+              {
+                "texto": "Basketball is a team ___.",
+                "respuesta": "sport",
+                "emoji": "🏀"
+              },
+              {
+                "texto": "I go to ___ on weekdays.",
+                "respuesta": "school",
+                "emoji": "🏫"
+              }
+            ]
           },
           {
-            "es": "miércoles",
-            "en": "Wednesday",
-            "emoji": "3️⃣"
+            "oraciones": [
+              {
+                "texto": "My favorite ___ is swimming.",
+                "respuesta": "sport",
+                "emoji": "🏊"
+              },
+              {
+                "texto": "I love ___ to music.",
+                "respuesta": "listening",
+                "emoji": "🎵"
+              },
+              {
+                "texto": "She ___ very well.",
+                "respuesta": "dances",
+                "emoji": "💃"
+              }
+            ]
           },
           {
-            "es": "jueves",
-            "en": "Thursday",
-            "emoji": "4️⃣"
-          },
-          {
-            "es": "viernes",
-            "en": "Friday",
-            "emoji": "5️⃣"
-          },
-          {
-            "es": "fin de semana",
-            "en": "weekend",
-            "emoji": "🎉"
+            "oraciones": [
+              {
+                "texto": "After school I ___ with my friends.",
+                "respuesta": "play",
+                "emoji": "🎮"
+              },
+              {
+                "texto": "I eat ___ with my family.",
+                "respuesta": "dinner",
+                "emoji": "🍽️"
+              },
+              {
+                "texto": "On ___ we rest and play.",
+                "respuesta": "weekends",
+                "emoji": "🎉"
+              }
+            ]
           }
         ]
       },
@@ -16452,39 +17719,83 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "después del colegio",
-            "en": "after school",
-            "emoji": "🏫"
+            "categorias": [
+              {
+                "nombre": "Deportes en equipo",
+                "emoji": "⚽",
+                "items": [
+                  "soccer",
+                  "basketball",
+                  "baseball",
+                  "volleyball"
+                ]
+              },
+              {
+                "nombre": "Deportes individuales",
+                "emoji": "🏊",
+                "items": [
+                  "swimming",
+                  "cycling",
+                  "gymnastics",
+                  "running",
+                  "tennis"
+                ]
+              }
+            ]
           },
           {
-            "es": "Voy a...",
-            "en": "I go to...",
-            "emoji": "🚶"
+            "categorias": [
+              {
+                "nombre": "Días de semana",
+                "emoji": "📚",
+                "items": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ]
+              },
+              {
+                "nombre": "Fin de semana",
+                "emoji": "🎉",
+                "items": [
+                  "Saturday",
+                  "Sunday"
+                ]
+              }
+            ]
           },
           {
-            "es": "Juego...",
-            "en": "I play...",
-            "emoji": "🎮"
-          },
-          {
-            "es": "Hago mis tareas",
-            "en": "I do my homework",
-            "emoji": "📝"
-          },
-          {
-            "es": "Como con mi familia",
-            "en": "I eat with my family",
-            "emoji": "🍽️"
-          },
-          {
-            "es": "Me duermo a las...",
-            "en": "I go to sleep at...",
-            "emoji": "😴"
+            "categorias": [
+              {
+                "nombre": "Actividades artísticas",
+                "emoji": "🎨",
+                "items": [
+                  "drawing",
+                  "painting",
+                  "singing",
+                  "dancing",
+                  "playing music"
+                ]
+              },
+              {
+                "nombre": "Actividades deportivas",
+                "emoji": "🏃",
+                "items": [
+                  "soccer",
+                  "swimming",
+                  "cycling",
+                  "running",
+                  "basketball"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -16810,39 +18121,37 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Arma la oración!",
+        "tipo_minijuego": "ordenar_oracion",
+        "instruccion": "Toca las palabras en el orden correcto para formar la oración.",
+        "variantes": [
           {
-            "es": "fútbol",
-            "en": "soccer",
-            "emoji": "⚽"
+            "oraciones": [
+              "I play soccer on Saturdays",
+              "My team wins every game",
+              "Soccer is my favorite sport"
+            ]
           },
           {
-            "es": "dibujar",
-            "en": "drawing",
-            "emoji": "✏️"
+            "oraciones": [
+              "She reads books every evening",
+              "I love drawing animals",
+              "Music is great for everyone"
+            ]
           },
           {
-            "es": "lunes",
-            "en": "Monday",
-            "emoji": "1️⃣"
+            "oraciones": [
+              "On Monday I go to school",
+              "After school I do my homework",
+              "I sleep at nine oclock"
+            ]
           },
           {
-            "es": "viernes",
-            "en": "Friday",
-            "emoji": "5️⃣"
-          },
-          {
-            "es": "Juego...",
-            "en": "I play...",
-            "emoji": "🎮"
-          },
-          {
-            "es": "Hago mis tareas",
-            "en": "I do my homework",
-            "emoji": "📝"
+            "oraciones": [
+              "I play video games on weekends",
+              "My hobby is cooking with mom",
+              "Dancing is a lot of fun"
+            ]
           }
         ]
       },
@@ -17165,39 +18474,93 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Une los pares!",
+        "tipo_minijuego": "unir_pares",
+        "instruccion": "Toca una palabra de la izquierda y luego su pareja de la derecha.",
+        "variantes": [
           {
-            "es": "colegio",
-            "en": "school",
-            "emoji": "🏫"
+            "pares": [
+              {
+                "izq": "colegio",
+                "der": "🏫 school"
+              },
+              {
+                "izq": "parque",
+                "der": "🌳 park"
+              },
+              {
+                "izq": "mercado",
+                "der": "🛒 market"
+              },
+              {
+                "izq": "hospital",
+                "der": "🏥 hospital"
+              },
+              {
+                "izq": "iglesia",
+                "der": "⛪ church"
+              },
+              {
+                "izq": "biblioteca",
+                "der": "📚 library"
+              }
+            ]
           },
           {
-            "es": "parque",
-            "en": "park",
-            "emoji": "🌳"
+            "pares": [
+              {
+                "izq": "mercado",
+                "der": "🛒 market"
+              },
+              {
+                "izq": "hospital",
+                "der": "🏥 hospital"
+              },
+              {
+                "izq": "iglesia",
+                "der": "⛪ church"
+              },
+              {
+                "izq": "biblioteca",
+                "der": "📚 library"
+              },
+              {
+                "izq": "colegio",
+                "der": "🏫 school"
+              },
+              {
+                "izq": "parque",
+                "der": "🌳 park"
+              }
+            ]
           },
           {
-            "es": "mercado",
-            "en": "market",
-            "emoji": "🛒"
-          },
-          {
-            "es": "hospital",
-            "en": "hospital",
-            "emoji": "🏥"
-          },
-          {
-            "es": "iglesia",
-            "en": "church",
-            "emoji": "⛪"
-          },
-          {
-            "es": "biblioteca",
-            "en": "library",
-            "emoji": "📚"
+            "pares": [
+              {
+                "izq": "iglesia",
+                "der": "⛪ church"
+              },
+              {
+                "izq": "biblioteca",
+                "der": "📚 library"
+              },
+              {
+                "izq": "colegio",
+                "der": "🏫 school"
+              },
+              {
+                "izq": "parque",
+                "der": "🌳 park"
+              },
+              {
+                "izq": "mercado",
+                "der": "🛒 market"
+              },
+              {
+                "izq": "hospital",
+                "der": "🏥 hospital"
+              }
+            ]
           }
         ]
       },
@@ -17520,39 +18883,111 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
+        "titulo": "¡Memoria!",
         "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "instruccion": "Voltea las tarjetas y encuentra los pares que coinciden.",
+        "variantes": [
           {
-            "es": "gira a la izquierda",
-            "en": "turn left",
-            "emoji": "⬅️"
+            "pares": [
+              {
+                "es": "gira a la izquierda",
+                "en": "turn left",
+                "emoji": "⬅️"
+              },
+              {
+                "es": "gira a la derecha",
+                "en": "turn right",
+                "emoji": "➡️"
+              },
+              {
+                "es": "sigue derecho",
+                "en": "go straight",
+                "emoji": "⬆️"
+              },
+              {
+                "es": "para",
+                "en": "stop",
+                "emoji": "🛑"
+              },
+              {
+                "es": "cerca",
+                "en": "near",
+                "emoji": "📍"
+              },
+              {
+                "es": "lejos",
+                "en": "far",
+                "emoji": "🗺️"
+              }
+            ]
           },
           {
-            "es": "gira a la derecha",
-            "en": "turn right",
-            "emoji": "➡️"
+            "pares": [
+              {
+                "es": "sigue derecho",
+                "en": "go straight",
+                "emoji": "⬆️"
+              },
+              {
+                "es": "para",
+                "en": "stop",
+                "emoji": "🛑"
+              },
+              {
+                "es": "cerca",
+                "en": "near",
+                "emoji": "📍"
+              },
+              {
+                "es": "lejos",
+                "en": "far",
+                "emoji": "🗺️"
+              },
+              {
+                "es": "gira a la izquierda",
+                "en": "turn left",
+                "emoji": "⬅️"
+              },
+              {
+                "es": "gira a la derecha",
+                "en": "turn right",
+                "emoji": "➡️"
+              }
+            ]
           },
           {
-            "es": "sigue derecho",
-            "en": "go straight",
-            "emoji": "⬆️"
-          },
-          {
-            "es": "para",
-            "en": "stop",
-            "emoji": "🛑"
-          },
-          {
-            "es": "cerca",
-            "en": "near",
-            "emoji": "📍"
-          },
-          {
-            "es": "lejos",
-            "en": "far",
-            "emoji": "🗺️"
+            "pares": [
+              {
+                "es": "cerca",
+                "en": "near",
+                "emoji": "📍"
+              },
+              {
+                "es": "lejos",
+                "en": "far",
+                "emoji": "🗺️"
+              },
+              {
+                "es": "gira a la izquierda",
+                "en": "turn left",
+                "emoji": "⬅️"
+              },
+              {
+                "es": "gira a la derecha",
+                "en": "turn right",
+                "emoji": "➡️"
+              },
+              {
+                "es": "sigue derecho",
+                "en": "go straight",
+                "emoji": "⬆️"
+              },
+              {
+                "es": "para",
+                "en": "stop",
+                "emoji": "🛑"
+              }
+            ]
           }
         ]
       },
@@ -17875,39 +19310,81 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¿Verdadero o Falso?",
+        "tipo_minijuego": "verdadero_falso",
+        "instruccion": "Lee cada frase y elige si es verdadera o falsa.",
+        "variantes": [
           {
-            "es": "bus",
-            "en": "bus",
-            "emoji": "🚌"
+            "preguntas": [
+              {
+                "afirmacion": "A school is where we learn.",
+                "respuesta": true,
+                "explicacion": "Yes! We go to school to study and learn new things."
+              },
+              {
+                "afirmacion": "A hospital is where we buy food.",
+                "respuesta": false,
+                "explicacion": "We go to a hospital when we are sick. We buy food at a market!"
+              },
+              {
+                "afirmacion": "\"Turn left\" means girar a la izquierda.",
+                "respuesta": true,
+                "explicacion": "Correct! Turn left = girar a la izquierda."
+              },
+              {
+                "afirmacion": "A bus is a type of transportation.",
+                "respuesta": true,
+                "explicacion": "Yes! Buses, cars, and bikes are all transportation."
+              }
+            ]
           },
           {
-            "es": "carro",
-            "en": "car",
-            "emoji": "🚗"
+            "preguntas": [
+              {
+                "afirmacion": "A library is full of books.",
+                "respuesta": true,
+                "explicacion": "Yes! Libraries have many books that you can borrow."
+              },
+              {
+                "afirmacion": "\"Go straight\" means turn right.",
+                "respuesta": false,
+                "explicacion": "\"Go straight\" means seguir derecho. Turn right = girar a la derecha."
+              },
+              {
+                "afirmacion": "A community is a group of people living together.",
+                "respuesta": true,
+                "explicacion": "Yes! A community is a group of neighbors and families."
+              },
+              {
+                "afirmacion": "A bicycle has four wheels.",
+                "respuesta": false,
+                "explicacion": "A bicycle has two wheels, not four!"
+              }
+            ]
           },
           {
-            "es": "bicicleta",
-            "en": "bicycle",
-            "emoji": "🚲"
-          },
-          {
-            "es": "moto",
-            "en": "motorcycle",
-            "emoji": "🏍️"
-          },
-          {
-            "es": "taxi",
-            "en": "taxi",
-            "emoji": "🚕"
-          },
-          {
-            "es": "a pie",
-            "en": "on foot",
-            "emoji": "🚶"
+            "preguntas": [
+              {
+                "afirmacion": "A park is a good place to play.",
+                "respuesta": true,
+                "explicacion": "Yes! Parks have grass and space to play."
+              },
+              {
+                "afirmacion": "\"Near\" means lejos in Spanish.",
+                "respuesta": false,
+                "explicacion": "\"Near\" means cerca. \"Far\" means lejos."
+              },
+              {
+                "afirmacion": "A neighborhood is part of a city.",
+                "respuesta": true,
+                "explicacion": "Yes! A city is made up of many neighborhoods."
+              },
+              {
+                "afirmacion": "A taxi is the same as a bus.",
+                "respuesta": false,
+                "explicacion": "A taxi is a small private car. A bus carries many people."
+              }
+            ]
           }
         ]
       },
@@ -18230,39 +19707,85 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Rellena el espacio!",
+        "tipo_minijuego": "rellenar",
+        "instruccion": "Escribe la palabra que falta en cada oración.",
+        "variantes": [
           {
-            "es": "vecino",
-            "en": "neighbor",
-            "emoji": "👋"
+            "oraciones": [
+              {
+                "texto": "I go to ___ every day to learn.",
+                "respuesta": "school",
+                "emoji": "🏫"
+              },
+              {
+                "texto": "We buy food at the ___.",
+                "respuesta": "market",
+                "emoji": "🛒"
+              },
+              {
+                "texto": "Sick people go to the ___.",
+                "respuesta": "hospital",
+                "emoji": "🏥"
+              }
+            ]
           },
           {
-            "es": "comunidad",
-            "en": "community",
-            "emoji": "🏘️"
+            "oraciones": [
+              {
+                "texto": "___ left and you will see the park.",
+                "respuesta": "Turn",
+                "emoji": "⬅️"
+              },
+              {
+                "texto": "Go ___ for two blocks.",
+                "respuesta": "straight",
+                "emoji": "⬆️"
+              },
+              {
+                "texto": "The school is ___ the park.",
+                "respuesta": "near",
+                "emoji": "📍"
+              }
+            ]
           },
           {
-            "es": "calle",
-            "en": "street",
-            "emoji": "🛣️"
+            "oraciones": [
+              {
+                "texto": "I take the ___ to get to school.",
+                "respuesta": "bus",
+                "emoji": "🚌"
+              },
+              {
+                "texto": "My ___ is a friendly place to live.",
+                "respuesta": "neighborhood",
+                "emoji": "🏘️"
+              },
+              {
+                "texto": "We borrow books from the ___.",
+                "respuesta": "library",
+                "emoji": "📚"
+              }
+            ]
           },
           {
-            "es": "barrio",
-            "en": "neighborhood",
-            "emoji": "🏙️"
-          },
-          {
-            "es": "pueblo",
-            "en": "town",
-            "emoji": "🏡"
-          },
-          {
-            "es": "ciudad",
-            "en": "city",
-            "emoji": "🌆"
+            "oraciones": [
+              {
+                "texto": "I ride my ___ to the park.",
+                "respuesta": "bicycle",
+                "emoji": "🚲"
+              },
+              {
+                "texto": "Our ___ helps people feel safe.",
+                "respuesta": "community",
+                "emoji": "🏘️"
+              },
+              {
+                "texto": "The ___ is very busy in the morning.",
+                "respuesta": "street",
+                "emoji": "🛣️"
+              }
+            ]
           }
         ]
       },
@@ -18588,39 +20111,89 @@
       "orden": 8,
       "tipo": "minijuego_embed",
       "datos": {
-        "titulo": "¡Minijuego!",
-        "tipo_minijuego": "memoria",
-        "instruccion": "Match each word with its image.",
-        "pares": [
+        "titulo": "¡Clasifica las palabras!",
+        "tipo_minijuego": "clasificar",
+        "instruccion": "Arrastra cada palabra al grupo donde pertenece.",
+        "variantes": [
           {
-            "es": "colegio",
-            "en": "school",
-            "emoji": "🏫"
+            "categorias": [
+              {
+                "nombre": "Lugares del pueblo",
+                "emoji": "🏘️",
+                "items": [
+                  "school",
+                  "park",
+                  "market",
+                  "hospital",
+                  "library",
+                  "church"
+                ]
+              },
+              {
+                "nombre": "Medios de transporte",
+                "emoji": "🚌",
+                "items": [
+                  "bus",
+                  "car",
+                  "bicycle",
+                  "motorcycle",
+                  "taxi",
+                  "on foot"
+                ]
+              }
+            ]
           },
           {
-            "es": "bus",
-            "en": "bus",
-            "emoji": "🚌"
+            "categorias": [
+              {
+                "nombre": "Direcciones",
+                "emoji": "🗺️",
+                "items": [
+                  "turn left",
+                  "turn right",
+                  "go straight",
+                  "stop",
+                  "near",
+                  "far"
+                ]
+              },
+              {
+                "nombre": "Comunidad",
+                "emoji": "🏘️",
+                "items": [
+                  "neighbor",
+                  "community",
+                  "street",
+                  "neighborhood",
+                  "town",
+                  "city"
+                ]
+              }
+            ]
           },
           {
-            "es": "gira a la izquierda",
-            "en": "turn left",
-            "emoji": "⬅️"
-          },
-          {
-            "es": "sigue derecho",
-            "en": "go straight",
-            "emoji": "⬆️"
-          },
-          {
-            "es": "comunidad",
-            "en": "community",
-            "emoji": "🏘️"
-          },
-          {
-            "es": "ciudad",
-            "en": "city",
-            "emoji": "🌆"
+            "categorias": [
+              {
+                "nombre": "Transporte público",
+                "emoji": "🚌",
+                "items": [
+                  "bus",
+                  "taxi",
+                  "train",
+                  "metro"
+                ]
+              },
+              {
+                "nombre": "Transporte privado",
+                "emoji": "🚗",
+                "items": [
+                  "car",
+                  "bicycle",
+                  "motorcycle",
+                  "on foot"
+                ]
+              }
+            ]
           }
         ]
       },

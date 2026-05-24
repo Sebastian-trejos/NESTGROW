@@ -5,16 +5,16 @@
 
 {% block extra_css %}
 <style>
-  body { background: #F8F6FF; }
+  body { background: linear-gradient(160deg, #F0EDFF 0%, #E8F5FF 100%); min-height:100vh; }
 
   /* ── Shell ── */
   .leccion-shell {
-    max-width: 680px;
+    max-width: 700px;
     margin: 0 auto;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 0 1rem 2rem;
+    padding: 0 1rem 2.5rem;
   }
 
   /* ── Top bar ── */
@@ -22,242 +22,385 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1rem 0 .5rem;
+    padding: 1rem 0 .6rem;
     position: sticky;
     top: 0;
-    background: #F8F6FF;
+    background: linear-gradient(160deg, #F0EDFF 0%, #E8F5FF 100%);
     z-index: 10;
   }
   .back-btn {
-    width: 36px; height: 36px;
+    width: 42px; height: 42px;
     border-radius: 50%;
-    border: 2px solid #d8d0ff;
+    border: none;
     background: white;
     display: flex; align-items: center; justify-content: center;
     color: var(--primary);
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1.2rem;
     flex-shrink: 0;
-    transition: background .15s;
+    box-shadow: 0 3px 10px rgba(108,99,255,0.18);
+    transition: transform .15s, box-shadow .15s;
   }
-  .back-btn:hover { background: #f0eeff; color: var(--primary); }
+  .back-btn:hover { transform:scale(1.08); box-shadow:0 5px 14px rgba(108,99,255,0.28); color:var(--primary); }
   .prog-outer {
     flex: 1;
-    height: 10px;
-    background: #e8e4ff;
+    height: 14px;
+    background: rgba(108,99,255,0.12);
     border-radius: 99px;
     overflow: hidden;
   }
   .prog-inner {
     height: 100%;
-    background: linear-gradient(90deg, #6C63FF, #9c94ff);
+    background: linear-gradient(90deg, #6C63FF, #FF6B9D);
     border-radius: 99px;
-    transition: width .4s ease;
+    transition: width .4s cubic-bezier(.34,1.56,.64,1);
   }
   .prog-label {
     font-family: 'Fredoka One', cursive;
-    font-size: .9rem;
+    font-size: 1rem;
     color: var(--primary);
     flex-shrink: 0;
-    min-width: 36px;
+    min-width: 40px;
     text-align: right;
   }
 
   /* ── Activity card ── */
   .activity-card {
     background: white;
-    border-radius: 28px;
-    padding: 1.8rem 1.5rem;
-    box-shadow: 0 8px 30px rgba(108,99,255,0.1);
+    border-radius: 32px;
+    padding: 2.2rem 2rem;
+    box-shadow: 0 10px 40px rgba(108,99,255,0.12);
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    animation: fadeIn .35s ease;
+    gap: 1.8rem;
+    animation: fadeIn .35s cubic-bezier(.22,1,.36,1);
     margin-top: .8rem;
   }
   @keyframes fadeIn {
-    from { opacity:0; transform:translateY(10px); }
-    to   { opacity:1; transform:translateY(0); }
+    from { opacity:0; transform:translateY(16px) scale(.98); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
   }
   .act-title {
     font-family: 'Fredoka One', cursive;
-    font-size: 1.25rem;
+    font-size: 2rem;
     color: var(--primary);
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
   }
   .act-instruccion {
-    color: #666;
-    font-size: .95rem;
+    background: linear-gradient(135deg, #f0eeff, #e8f5ff);
+    border-left: 5px solid var(--primary);
+    border-radius: 0 16px 16px 0;
+    color: #555;
+    font-size: 1.2rem;
     font-weight: 600;
     margin: 0;
+    padding: 1rem 1.4rem;
+    line-height: 1.5;
   }
 
   /* Vocabulario flip cards */
-  .vocab-grid { display:flex; flex-wrap:wrap; gap:12px; }
+  .vocab-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:16px; }
   .flip-card {
-    width: 110px; height: 90px;
-    perspective: 600px;
+    height: 155px;
+    perspective: 700px;
     cursor: pointer;
   }
   .flip-inner {
     position: relative;
     width:100%; height:100%;
-    transition: transform .5s;
+    transition: transform .5s cubic-bezier(.4,0,.2,1);
     transform-style: preserve-3d;
   }
   .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
   .flip-face {
     position:absolute; width:100%; height:100%;
     backface-visibility: hidden;
-    border-radius: 14px;
+    border-radius: 24px;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-size: .85rem; font-weight: 700; text-align: center; padding: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 1.1rem; font-weight: 700; text-align: center; padding: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
   }
-  .flip-front { background:#f0eeff; color:#444; }
-  .flip-back  { background: var(--primary); color:white; transform:rotateY(180deg); }
-  .flip-emoji { font-size: 1.6rem; margin-bottom: 4px; }
+  .flip-front { background:linear-gradient(135deg,#f0eeff,#e8e4ff); color:#444; }
+  .flip-back  { background: linear-gradient(135deg,var(--primary),#9c94ff); color:white; transform:rotateY(180deg); }
+  .flip-emoji { font-size: 2.5rem; margin-bottom: 8px; }
 
   /* Dialogo chat bubbles */
-  .dialogo-wrap { display:flex; flex-direction:column; gap:10px; }
+  .dialogo-wrap { display:flex; flex-direction:column; gap:14px; }
   .burbuja {
-    max-width:80%; padding:.7rem 1rem;
-    border-radius:18px; font-size:.93rem; font-weight:600;
+    max-width:88%; padding:1.1rem 1.5rem;
+    border-radius:24px; font-size:1.15rem; font-weight:600;
     animation: slideIn .3s ease both;
+    line-height: 1.6;
   }
   @keyframes slideIn { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:translateX(0)} }
-  .burbuja.milo  { background:#f0eeff; color:#444; border-radius:18px 18px 18px 4px; align-self:flex-start; }
-  .burbuja.yo    { background:var(--primary); color:white; border-radius:18px 18px 4px 18px; align-self:flex-end; }
-  .burbuja-author { font-size:.75rem; color:#999; margin-bottom:2px; }
+  .burbuja.milo  { background:#f0eeff; color:#444; border-radius:22px 22px 22px 6px; align-self:flex-start; }
+  .burbuja.yo    { background:linear-gradient(135deg,var(--primary),#9c94ff); color:white; border-radius:22px 22px 6px 22px; align-self:flex-end; }
+  .burbuja-author { font-size:.8rem; color:#999; margin-bottom:3px; font-weight:700; }
 
   /* Listening */
   .play-btn {
-    width:64px; height:64px; border-radius:50%;
-    background: linear-gradient(135deg, #6C63FF, #9c94ff);
-    border:none; color:white; font-size:1.6rem;
+    width:90px; height:90px; border-radius:50%;
+    background: linear-gradient(135deg, #6C63FF, #FF6B9D);
+    border:none; color:white; font-size:2.2rem;
     cursor:pointer; transition:transform .15s, box-shadow .15s;
-    box-shadow: 0 4px 14px rgba(108,99,255,0.4);
+    box-shadow: 0 6px 18px rgba(108,99,255,0.45);
     display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
   }
-  .play-btn:hover { transform:scale(1.07); box-shadow:0 8px 20px rgba(108,99,255,0.5); }
-  .play-btn:active { transform:scale(.95); }
-  .opciones-grid { display:flex; flex-direction:column; gap:8px; }
+  .play-btn:hover { transform:scale(1.1); box-shadow:0 10px 24px rgba(108,99,255,0.55); }
+  .play-btn:active { transform:scale(.93); }
+  .opciones-grid { display:flex; flex-direction:column; gap:12px; }
   .opcion-btn {
-    padding:.7rem 1rem; border-radius:14px;
-    border:2px solid #e8e4ff; background:white;
-    font-size:.95rem; font-weight:700; color:#444;
+    padding:1.1rem 1.5rem; border-radius:22px;
+    border:3px solid #e8e4ff; background:white;
+    font-size:1.15rem; font-weight:700; color:#444;
     cursor:pointer; text-align:left; transition:all .15s;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.07);
   }
-  .opcion-btn:hover { border-color:var(--primary); background:#f0eeff; }
-  .opcion-btn.selected { border-color:var(--primary); background:#f0eeff; color:var(--primary); }
+  .opcion-btn:hover { border-color:var(--primary); background:#f0eeff; transform:translateX(4px); }
+  .opcion-btn.selected { border-color:var(--primary); background:linear-gradient(135deg,#f0eeff,#e8e4ff); color:var(--primary); }
   .opcion-btn.disabled { pointer-events:none; }
 
   /* Pronunciacion */
-  .pron-list { display:flex; flex-direction:column; gap:10px; }
+  .pron-list { display:flex; flex-direction:column; gap:14px; }
   .pron-item {
-    display:flex; align-items:center; gap:1rem;
-    background:#f8f6ff; border-radius:14px; padding:.8rem 1rem;
+    display:flex; align-items:center; gap:1.4rem;
+    background:linear-gradient(135deg,#f8f6ff,#f0f8ff); border-radius:22px; padding:1.3rem 1.6rem;
+    box-shadow: 0 2px 10px rgba(108,99,255,0.08);
   }
-  .pron-word { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--primary); flex:1; }
-  .pron-trans { font-size:.85rem; color:#888; font-weight:600; }
+  .pron-word { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--primary); flex:1; }
+  .pron-trans { font-size:1rem; color:#888; font-weight:700; }
   .pron-play {
-    width:38px; height:38px; border-radius:50%; border:none;
-    background:#f0eeff; color:var(--primary); cursor:pointer;
-    font-size:1rem; display:flex; align-items:center; justify-content:center;
-    transition:background .15s;
+    width:58px; height:58px; border-radius:50%; border:none;
+    background:linear-gradient(135deg,#6C63FF,#9c94ff); color:white; cursor:pointer;
+    font-size:1.5rem; display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 3px 10px rgba(108,99,255,0.35);
+    transition:transform .15s;
   }
-  .pron-play:hover { background:#e0d8ff; }
+  .pron-play:hover { transform:scale(1.12); }
 
   /* Reading */
   .reading-texto {
-    background:#f8f6ff; border-radius:16px; padding:1rem 1.2rem;
-    font-size:.95rem; line-height:1.7; color:#444; font-weight:500;
+    background:linear-gradient(135deg,#f8f6ff,#f0f8ff); border-radius:22px; padding:1.5rem 1.8rem;
+    font-size:1.15rem; line-height:1.9; color:#444; font-weight:500;
+    border-left: 5px solid #9c94ff;
   }
-  .reading-pregs { display:flex; flex-direction:column; gap:14px; }
-  .preg-num { font-size:.8rem; color:#888; font-weight:700; margin-bottom:4px; }
+  .reading-pregs { display:flex; flex-direction:column; gap:20px; }
+  .preg-num {
+    font-size:.95rem; color:white; font-weight:700; margin-bottom:8px;
+    background:var(--primary); display:inline-block; padding:3px 14px; border-radius:99px;
+  }
 
   /* Writing */
-  .writing-list { display:flex; flex-direction:column; gap:12px; }
+  .writing-list { display:flex; flex-direction:column; gap:16px; }
   .writing-item {
-    background:#f8f6ff; border-radius:14px; padding:.9rem 1rem;
-    display:flex; align-items:center; gap:.8rem;
+    background:linear-gradient(135deg,#f8f6ff,#f0f8ff); border-radius:22px; padding:1.4rem 1.5rem;
+    display:flex; align-items:center; gap:1.2rem;
+    box-shadow: 0 2px 10px rgba(108,99,255,0.08);
   }
-  .writing-emoji { font-size:1.6rem; }
-  .writing-label { font-weight:700; color:#444; font-size:.9rem; flex:1; }
+  .writing-emoji { font-size:2.5rem; }
+  .writing-label { font-weight:700; color:#444; font-size:1.2rem; flex:1; }
   .writing-input {
-    border:2px solid #e8e4ff; border-radius:10px; padding:.4rem .7rem;
-    font-size:.95rem; width:130px; outline:none; font-weight:600;
-    transition:border-color .15s;
+    border:3px solid #e8e4ff; border-radius:18px; padding:.65rem 1rem;
+    font-size:1.15rem; width:165px; outline:none; font-weight:700;
+    transition:border-color .15s, box-shadow .15s;
+    text-align:center;
   }
-  .writing-input:focus { border-color:var(--primary); }
+  .writing-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(108,99,255,0.15); }
 
   /* Memoria minijuego */
-  .memo-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .memo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   .memo-card {
-    aspect-ratio:1; border-radius:14px; cursor:pointer;
+    aspect-ratio:1; border-radius:24px; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
-    font-size:1.2rem; font-weight:700;
-    background:#e8e4ff; color:transparent;
-    border:2px solid #d8d0ff;
-    transition:all .25s;
+    font-size:1.8rem; font-weight:700;
+    background:linear-gradient(135deg,#e8e4ff,#d8d0ff); color:transparent;
+    border:3px solid #c8c0ff;
+    transition:all .25s cubic-bezier(.34,1.56,.64,1);
     user-select:none;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.15);
   }
-  .memo-card.face-up   { background:white; color:#444; border-color:var(--primary); }
-  .memo-card.matched   { background:#d4edda; color:#155724; border-color:#28a745; cursor:default; }
-  .memo-card.unmatched { background:#f8d7da; animation:shake .3s; }
+  .memo-card:hover { transform:scale(1.05); }
+  .memo-card.face-up   { background:white; color:#333; border-color:var(--primary); transform:scale(1.05); box-shadow:0 6px 18px rgba(108,99,255,0.25); }
+  .memo-card.matched   { background:linear-gradient(135deg,#d4edda,#b8e6c0); color:#155724; border-color:#28a745; cursor:default; transform:scale(1); }
+  .memo-card.unmatched { background:linear-gradient(135deg,#f8d7da,#ffc8cc); animation:shake .3s; }
   @keyframes shake {
-    0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)}
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)}
   }
   .memo-card span { pointer-events:none; }
 
-  /* ── Continue button ── */
-  .continue-wrap { padding-top:1rem; }
-  .btn-continue {
-    width:100%; padding:.9rem; border-radius:16px;
-    background:linear-gradient(135deg, #6C63FF, #9c94ff);
-    border:none; color:white; font-family:'Fredoka One',cursive;
-    font-size:1.1rem; cursor:pointer;
-    box-shadow:0 6px 18px rgba(108,99,255,0.35);
-    transition:transform .15s, box-shadow .15s;
+  /* ── Rellenar el espacio ── */
+  .rellenar-wrap { display:flex; flex-direction:column; gap:20px; }
+  .rellenar-row {
+    display:flex; align-items:center; gap:12px; font-size:1.3rem; flex-wrap:wrap;
+    background:linear-gradient(135deg,#f8f6ff,#f0f8ff); border-radius:22px; padding:1.3rem 1.5rem;
+    box-shadow: 0 2px 10px rgba(108,99,255,0.08);
   }
-  .btn-continue:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(108,99,255,0.45); }
-  .btn-continue:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+  .rellenar-emoji { font-size:2.6rem; flex-shrink:0; }
+  .rellenar-texto { font-weight:700; color:#444; }
+  .rellenar-input {
+    border:3px solid #d8d0ff; border-radius:18px; padding:9px 14px;
+    font-size:1.2rem; width:150px; outline:none; font-weight:700;
+    transition:border-color .15s, box-shadow .15s; text-align:center;
+    background: #f8f6ff;
+  }
+  .rellenar-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(108,99,255,0.15); background:white; }
+  .rellenar-input.correct { border-color:#28a745; background:linear-gradient(135deg,#d4edda,#b8e6c0); color:#155724; }
+  .rellenar-input.incorrect { border-color:#dc3545; background:linear-gradient(135deg,#f8d7da,#ffc8cc); color:#721c24; animation:shake .3s; }
+  .rellenar-hint {
+    font-size:1rem; color:var(--primary); font-weight:700;
+    background:#f0eeff; border-radius:14px; padding:.7rem 1.2rem; text-align:center;
+  }
+
+  /* ── Ordenar oración ── */
+  .orden-zona-label {
+    font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--primary);
+    margin-bottom:8px; display:flex; align-items:center; gap:.4rem;
+  }
+  .palabras-bank {
+    display:flex; flex-wrap:wrap; gap:12px; min-height:80px; padding:16px;
+    border-radius:22px; background:linear-gradient(135deg,#f0eeff,#e8e4ff); border:3px dashed #c8c0ff;
+  }
+  .palabras-zona {
+    display:flex; flex-wrap:wrap; gap:12px; min-height:80px; padding:16px;
+    border-radius:22px; background:linear-gradient(135deg,#e8f5e9,#d4edda); border:3px dashed #28a745;
+  }
+  .palabra-chip {
+    background:white; border:3px solid var(--primary); border-radius:99px;
+    padding:10px 22px; cursor:pointer; font-weight:700; font-size:1.15rem;
+    user-select:none; transition:transform .15s, box-shadow .15s;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.15);
+  }
+  .palabra-chip:hover { transform:translateY(-3px) scale(1.05); box-shadow:0 6px 14px rgba(108,99,255,0.25); }
+  .palabra-chip.en-zona { border-color:#28a745; background:linear-gradient(135deg,#e8f5e9,#d4edda); }
+  .orden-resultado { font-size:1.1rem; font-weight:700; margin-top:10px; min-height:1.6rem; text-align:center; }
+
+  /* ── Unir pares ── */
+  .unir-cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+  .unir-col { display:flex; flex-direction:column; gap:12px; }
+  .unir-btn {
+    padding:18px 14px; border-radius:22px; border:3px solid #e8e4ff;
+    background:white; cursor:pointer; font-size:1.15rem; font-weight:700;
+    transition:all .2s cubic-bezier(.34,1.56,.64,1); text-align:center; word-break:break-word;
+    box-shadow: 0 3px 10px rgba(108,99,255,0.08); min-height:72px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .unir-btn:hover:not([disabled]) { border-color:var(--primary); background:#f0eeff; transform:scale(1.05); }
+  .unir-btn.selected { border-color:var(--primary); background:linear-gradient(135deg,#e8e4ff,#f0eeff); transform:scale(1.07); box-shadow:0 6px 16px rgba(108,99,255,0.25); }
+  .unir-btn.matched  { border-color:#28a745; cursor:default; font-weight:800; }
+  .unir-btn.error    { border-color:#dc3545; background:linear-gradient(135deg,#f8d7da,#ffc8cc); animation:shake .3s; }
+  .unir-msg { text-align:center; font-weight:700; margin-top:10px; min-height:1.6rem; color:var(--primary); font-size:1.05rem; }
+
+  /* ── Verdadero o Falso ── */
+  .vf-progreso {
+    text-align:center; font-family:'Fredoka One',cursive; font-size:1.1rem;
+    color:var(--primary); margin-bottom:8px;
+    background:#f0eeff; border-radius:99px; padding:6px 20px; display:inline-block; align-self:center;
+  }
+  .vf-afirmacion {
+    font-size:1.5rem; font-weight:700; text-align:center; color:#333;
+    background:linear-gradient(135deg,#f8f6ff,#f0f8ff); border-radius:28px;
+    padding:2rem 1.8rem; line-height:1.6;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.1);
+  }
+  .vf-botones { display:flex; gap:20px; justify-content:center; margin-top:8px; }
+  .vf-btn {
+    flex:1; padding:26px 14px; border-radius:28px; border:none;
+    font-size:1.8rem; font-weight:700; cursor:pointer;
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+  }
+  .vf-btn:hover { transform:translateY(-5px) scale(1.06); box-shadow:0 10px 24px rgba(0,0,0,0.18); }
+  .vf-btn.verdadero { background:linear-gradient(135deg,#d4edda,#b2dfcc); color:#155724; }
+  .vf-btn.falso     { background:linear-gradient(135deg,#f8d7da,#ffc8cc); color:#721c24; }
+  .vf-btn.correcto  { transform:scale(1.1); box-shadow:0 8px 20px rgba(40,167,69,.35); }
+  .vf-btn.incorrecto-flash { animation:shake .3s; }
+  .vf-btn:disabled  { opacity:.6; cursor:default; transform:none; box-shadow:none; }
+  .vf-explicacion   {
+    text-align:center; font-size:1.1rem; font-weight:700; min-height:2rem; color:#555;
+    background:#f8f6ff; border-radius:18px; padding:.8rem 1.2rem; margin-top:4px;
+  }
+
+  /* ── Clasificar ── */
+  .clasificar-bank {
+    display:flex; flex-wrap:wrap; gap:12px; min-height:80px; padding:16px;
+    border-radius:22px; background:linear-gradient(135deg,#f0eeff,#e8e4ff); border:3px dashed #c8c0ff; margin-bottom:16px;
+  }
+  .clasificar-cajones { display:grid; gap:16px; }
+  .clasificar-cajon {
+    min-height:100px; padding:14px 16px; border-radius:22px;
+    background:white; border:3px dashed #bbb;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+  }
+  .clasificar-cajon-label {
+    font-family:'Fredoka One',cursive; font-size:1.15rem; color:var(--primary); margin-bottom:12px;
+  }
+  .clasificar-chip {
+    display:inline-block; background:white; border:3px solid var(--primary);
+    border-radius:99px; padding:10px 20px; cursor:grab; font-weight:700;
+    font-size:1.1rem; user-select:none; margin:4px;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.12);
+    transition: transform .15s;
+  }
+  .clasificar-chip:hover { transform: scale(1.05); }
+  .clasificar-chip.correcto  { border-color:#28a745; background:linear-gradient(135deg,#d4edda,#b2dfcc); color:#155724; cursor:default; }
+  .clasificar-chip.incorrecto{ border-color:#dc3545; background:linear-gradient(135deg,#f8d7da,#ffc8cc); color:#721c24; }
+  .clasificar-msg { text-align:center; font-weight:700; margin-top:10px; min-height:1.6rem; color:var(--primary); font-size:1.15rem; }
+
+  /* ── Continue button ── */
+  .continue-wrap { padding-top:1.2rem; }
+  .btn-continue {
+    width:100%; padding:1.3rem; border-radius:99px;
+    background:linear-gradient(135deg, #6C63FF, #FF6B9D);
+    border:none; color:white; font-family:'Fredoka One',cursive;
+    font-size:1.4rem; cursor:pointer; letter-spacing:.03em;
+    box-shadow:0 8px 24px rgba(108,99,255,0.4);
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+  }
+  .btn-continue:hover { transform:translateY(-3px) scale(1.02); box-shadow:0 14px 32px rgba(108,99,255,0.5); }
+  .btn-continue:active { transform:scale(.97); }
+  .btn-continue:disabled { opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; background:linear-gradient(135deg,#aaa,#ccc); }
 
   /* ── Correction overlay ── */
   .correction-panel {
     position:fixed; left:0; right:0; bottom:0;
-    padding:1.2rem 1.5rem; z-index:200;
-    display:none; flex-direction:column; align-items:center; gap:.3rem;
-    animation:slideUp .25s ease;
+    padding:1.4rem 1.8rem; z-index:200;
+    display:none; flex-direction:column; align-items:center; gap:.4rem;
+    animation:slideUp .3s cubic-bezier(.22,1,.36,1);
+    border-radius:28px 28px 0 0;
+    box-shadow: 0 -6px 30px rgba(0,0,0,0.1);
   }
   @keyframes slideUp {
     from{transform:translateY(100%)} to{transform:translateY(0)}
   }
-  .correction-panel.correct { background:#d4edda; }
-  .correction-panel.incorrect { background:#f8d7da; }
-  .correction-panel.neutral { background:#f0eeff; }
-  .corr-icon { font-size:2rem; }
-  .corr-msg  { font-family:'Fredoka One',cursive; font-size:1.2rem; }
-  .corr-sub  { font-size:.9rem; font-weight:600; color:#555; }
+  .correction-panel.correct   { background:linear-gradient(135deg,#d4edda,#b2dfcc); }
+  .correction-panel.incorrect { background:linear-gradient(135deg,#f8d7da,#ffc8cc); }
+  .correction-panel.neutral   { background:linear-gradient(135deg,#f0eeff,#e8e4ff); }
+  .corr-icon { font-size:2.5rem; }
+  .corr-msg  { font-family:'Fredoka One',cursive; font-size:1.4rem; }
+  .corr-sub  { font-size:1rem; font-weight:700; color:#555; }
 
   /* ── Final screen ── */
   .final-screen {
     display:none; flex-direction:column; align-items:center; justify-content:center;
-    min-height:70vh; text-align:center; gap:1rem; padding:2rem;
+    min-height:70vh; text-align:center; gap:1.2rem; padding:2rem;
   }
-  .stars-row { display:flex; gap:8px; justify-content:center; }
+  .stars-row { display:flex; gap:10px; justify-content:center; }
   .star-big {
-    font-size:3.5rem; transition:transform .4s;
-    filter:drop-shadow(0 4px 8px rgba(255,230,109,0.5));
+    font-size:4rem; transition:transform .4s;
+    filter:drop-shadow(0 5px 10px rgba(255,200,50,0.55));
   }
-  .star-big.active { animation:popStar .4s cubic-bezier(.22,1,.36,1) both; }
+  .star-big.active { animation:popStar .5s cubic-bezier(.22,1,.36,1) both; }
   @keyframes popStar { from{transform:scale(0)rotate(-30deg)} to{transform:scale(1)rotate(0)} }
   .recompensas { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
   .recomp-pill {
-    background:white; border-radius:14px; padding:.6rem 1.2rem;
-    font-family:'Fredoka One',cursive; font-size:1rem;
-    box-shadow:0 4px 14px rgba(108,99,255,0.1);
+    background:white; border-radius:99px; padding:.7rem 1.5rem;
+    font-family:'Fredoka One',cursive; font-size:1.1rem;
+    box-shadow:0 5px 18px rgba(108,99,255,0.15);
   }
 </style>
 {% endblock %}
@@ -267,7 +410,7 @@
 
   <!-- Top bar -->
   <div class="top-bar">
-    <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Volver al mapa">←</a>
+    <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Volver al mapa">⬅</a>
     <div class="prog-outer">
       <div class="prog-inner" id="progBar" style="width:0%"></div>
     </div>
@@ -285,7 +428,7 @@
   <!-- Continue button -->
   <div class="continue-wrap">
     <button class="btn-continue" id="btnContinue" onclick="onContinue()">
-      Continuar ▶
+      ¡Continuar! 🚀
     </button>
   </div>
 
@@ -297,7 +440,8 @@
     <div class="recompensas" id="recompensas"></div>
     <div id="logrosNuevos" class="d-flex flex-column gap-2 w-100"></div>
     <div class="d-flex gap-3 mt-2 w-100 justify-content-center">
-      <a href="{% url 'historia:mapa_historia' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
+      <a href="{% url 'historia:mapa_historia' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold"
+         data-ng-trans="stars">
         🗺️ Volver al mapa
       </a>
       <a href="{% url 'historia:ver_leccion' pk=leccion.pk %}" class="btn rounded-pill px-4 fw-bold text-white"
@@ -390,8 +534,8 @@ function renderVocabulario(d) {
     </div>
   `).join('');
   return `
-    <p class="act-title">${d.titulo||'Vocabulario'}</p>
-    <p class="act-instruccion">Toca cada tarjeta para ver la palabra en inglés.</p>
+    <p class="act-title">🃏 ${d.titulo||'Vocabulario'}</p>
+    <p class="act-instruccion">🖐️ Toca cada tarjeta para ver cómo se dice en inglés.</p>
     <div class="vocab-grid">${tarjetas}</div>
   `;
 }
@@ -422,7 +566,7 @@ function renderListening(d) {
       <div class="mb-3">
         <div class="d-flex align-items-center gap-3 mb-2">
           <button class="play-btn" onclick="speak('${p.audio_texto.replace(/'/g,"\\'")}')">🔊</button>
-          <span class="fw-bold text-muted" style="font-size:.9rem">Pregunta ${i+1}</span>
+          <span class="fw-bold" style="font-size:1.2rem;color:var(--primary)">Pregunta ${i+1}</span>
         </div>
         <div class="opciones-grid" data-qidx="${i}">
           ${opciones.map(op => `
@@ -433,8 +577,8 @@ function renderListening(d) {
     `;
   }).join('');
   return `
-    <p class="act-title">${d.titulo||'Listening'}</p>
-    <p class="act-instruccion">${d.instruccion||'Escucha y selecciona la respuesta correcta.'}</p>
+    <p class="act-title">🔊 ${d.titulo||'¡Escucha!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Escucha el audio y elige la respuesta correcta.'}</p>
     ${bloques}
   `;
 }
@@ -456,8 +600,8 @@ function renderPronunciacion(d) {
     </div>
   `).join('');
   return `
-    <p class="act-title">${d.titulo||'Pronunciación'}</p>
-    <p class="act-instruccion">${d.instruccion||'Escucha y repite cada palabra en voz alta.'}</p>
+    <p class="act-title">🗣️ ${d.titulo||'¡Pronunciación!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Presiona el botón 🔊, escucha la palabra y repítela en voz alta.'}</p>
     <div class="pron-list">${palabras}</div>
   `;
 }
@@ -468,7 +612,7 @@ function renderReading(d) {
     return `
       <div>
         <div class="preg-num">Pregunta ${i+1}</div>
-        <div class="fw-bold mb-2 small">${p.pregunta}</div>
+        <div class="fw-bold mb-2" style="font-size:1.15rem">${p.pregunta}</div>
         <div class="opciones-grid" data-qidx="${i}">
           ${opciones.map(op => `
             <button class="opcion-btn" data-val="${op}" onclick="selectOpcion(this, ${i})">${op}</button>
@@ -478,7 +622,8 @@ function renderReading(d) {
     `;
   }).join('');
   return `
-    <p class="act-title">${d.titulo||'Reading'}</p>
+    <p class="act-title">📖 ${d.titulo||'¡Lectura!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Lee el texto con atención y responde las preguntas.'}</p>
     <div class="reading-texto">${d.texto||''}</div>
     <div class="reading-pregs">${preguntas}</div>
   `;
@@ -494,16 +639,41 @@ function renderWriting(d) {
     </div>
   `).join('');
   return `
-    <p class="act-title">${d.titulo||'Writing'}</p>
-    <p class="act-instruccion">${d.instruccion||'Escribe la traducción en inglés.'}</p>
+    <p class="act-title">✏️ ${d.titulo||'¡Escritura!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Escribe cómo se dice cada palabra en inglés.'}</p>
     <div class="writing-list">${ejercicios}</div>
   `;
 }
 
-// ── Memory card minijuego ─────────────────────────────────────────────────────
+// ── Variante aleatoria ────────────────────────────────────────────────────────
+// Almacena los datos ya resueltos (con variante aplicada) para que onContinue
+// y _extraerContextoActividad accedan al contenido real que ve el estudiante.
+let _activeMinijuegoDatos = null;
+
+function pickVariante(d) {
+  if (!d.variantes || !d.variantes.length) return d;
+  const v = d.variantes[Math.floor(Math.random() * d.variantes.length)];
+  return Object.assign({}, d, v);
+}
+
+// ── Minijuego router ─────────────────────────────────────────────────────────
+function renderMinijuego(d) {
+  d = pickVariante(d);
+  _activeMinijuegoDatos = d;
+  const tipo = d.tipo_minijuego || 'memoria';
+  if (tipo === 'memoria')         return renderMemoria(d);
+  if (tipo === 'rellenar')        return renderRellenar(d);
+  if (tipo === 'ordenar_oracion') return renderOrdenarOracion(d);
+  if (tipo === 'unir_pares')      return renderUnirPares(d);
+  if (tipo === 'verdadero_falso') return renderVerdaderoFalso(d);
+  if (tipo === 'clasificar')      return renderClasificar(d);
+  return renderMemoria(d);
+}
+
+// ── Memory card ───────────────────────────────────────────────────────────────
 let memoState = { flipped:[], matched:0, total:0, locked:false, done:false };
 
-function renderMinijuego(d) {
+function renderMemoria(d) {
   const pares = (d.pares||[]).slice(0,6);
   memoState = { flipped:[], matched:0, total:pares.length, locked:false, done:false };
 
@@ -523,10 +693,10 @@ function renderMinijuego(d) {
   `).join('');
 
   return `
-    <p class="act-title">${d.titulo||'Minijuego'}</p>
-    <p class="act-instruccion">${d.instruccion||'Encuentra los pares que coinciden.'}</p>
+    <p class="act-title">🧠 ${d.titulo||'¡Memoria!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Voltea las tarjetas y encuentra los pares que coinciden.'}</p>
     <div class="memo-grid">${grid}</div>
-    <div id="memoMsg" class="text-center fw-bold mt-2" style="color:var(--primary);min-height:1.5rem"></div>
+    <div id="memoMsg" class="text-center fw-bold mt-2" style="color:var(--primary);min-height:1.5rem;font-size:1.3rem"></div>
   `;
 }
 
@@ -565,6 +735,347 @@ function memoClick(card) {
   }
 }
 
+// ── Verdadero o Falso ─────────────────────────────────────────────────────────
+let vfState = { preguntas:[], idx:0, respondidas:0 };
+
+function renderVerdaderoFalso(d) {
+  vfState = { preguntas: d.preguntas||[], idx:0, respondidas:0 };
+  return `
+    <p class="act-title">🤔 ${d.titulo||'¿Verdadero o Falso?'}</p>
+    <p class="act-instruccion">${d.instruccion||'Lee cada frase y elige si es verdadera o falsa.'}</p>
+    <div id="vfWrap" style="display:flex;flex-direction:column;gap:16px">${_vfRenderPregunta()}</div>
+  `;
+}
+
+function _vfRenderPregunta() {
+  const total = vfState.preguntas.length;
+  if (vfState.idx >= total) return '<p class="text-center fw-bold" style="color:var(--primary)">🎉 ¡Completado!</p>';
+  const p = vfState.preguntas[vfState.idx];
+  return `
+    <p class="vf-progreso">${vfState.idx + 1} / ${total}</p>
+    <div class="vf-afirmacion">${p.afirmacion}</div>
+    <div class="vf-botones">
+      <button class="vf-btn verdadero" id="vfBtnV" onclick="vfResponder(true)">✅ Verdadero</button>
+      <button class="vf-btn falso"     id="vfBtnF" onclick="vfResponder(false)">❌ Falso</button>
+    </div>
+    <div class="vf-explicacion" id="vfExpl"></div>
+  `;
+}
+
+function vfResponder(respuesta) {
+  const p = vfState.preguntas[vfState.idx];
+  const esCorrecta = (respuesta === p.respuesta);
+  const btnV = document.getElementById('vfBtnV');
+  const btnF = document.getElementById('vfBtnF');
+  btnV.disabled = true; btnF.disabled = true;
+
+  const btnPulsado = respuesta ? btnV : btnF;
+  if (esCorrecta) {
+    btnPulsado.classList.add('correcto');
+  } else {
+    btnPulsado.classList.add('incorrecto-flash');
+    (respuesta ? btnF : btnV).classList.add('correcto');
+  }
+  document.getElementById('vfExpl').textContent = p.explicacion || '';
+
+  setTimeout(() => {
+    vfState.idx++;
+    vfState.respondidas++;
+    const wrap = document.getElementById('vfWrap');
+    if (wrap) {
+      wrap.innerHTML = _vfRenderPregunta();
+      if (vfState.idx >= vfState.preguntas.length) {
+        document.getElementById('btnContinue').disabled = false;
+      }
+    }
+  }, 1600);
+}
+
+// ── Rellenar el espacio ───────────────────────────────────────────────────────
+function renderRellenar(d) {
+  const oraciones = d.oraciones || [];
+  const filas = oraciones.map((o, i) => {
+    const partes = o.texto.split('___');
+    let contenido = '';
+    partes.forEach((parte, pi) => {
+      contenido += `<span class="rellenar-texto">${parte}</span>`;
+      if (pi < partes.length - 1) {
+        contenido += `<input class="rellenar-input" type="text" data-ridx="${i}"
+                        data-resp="${(o.respuesta||'').toLowerCase().trim()}"
+                        autocomplete="off" spellcheck="false" placeholder="___"
+                        oninput="rellenarCheckAll()">`;
+      }
+    });
+    return `<div class="rellenar-row"><span class="rellenar-emoji">${o.emoji||'📝'}</span>${contenido}</div>`;
+  }).join('');
+  return `
+    <p class="act-title">✍️ ${d.titulo||'Rellena el espacio'}</p>
+    <p class="act-instruccion">${d.instruccion||'Escribe la palabra que falta en cada oración.'}</p>
+    <div class="rellenar-wrap">${filas}</div>
+    <div class="rellenar-hint">💡 No importa si usas mayúsculas o minúsculas.</div>
+  `;
+}
+
+function rellenarCheckAll() {
+  const inputs = document.querySelectorAll('.rellenar-input');
+  const allFilled = [...inputs].every(i => i.value.trim() !== '');
+  document.getElementById('btnContinue').disabled = !allFilled;
+}
+
+function rellenarValidar() {
+  const inputs = document.querySelectorAll('.rellenar-input');
+  let allOk = true;
+  inputs.forEach(inp => {
+    inp.classList.remove('correct', 'incorrect');
+    if (inp.value.trim().toLowerCase() === inp.dataset.resp) {
+      inp.classList.add('correct');
+    } else {
+      inp.classList.add('incorrect');
+      inp.disabled = false;
+      allOk = false;
+    }
+  });
+  return allOk;
+}
+
+// ── Unir pares ────────────────────────────────────────────────────────────────
+let unirState = { selectedLeft:null, matchedCount:0, total:0, colores:[] };
+const UNIR_COLORS = ['#e8e4ff','#fff0d4','#d4edda','#fde8f0','#d4edf5','#fdf4d4'];
+
+function renderUnirPares(d) {
+  const pares = d.pares || [];
+  unirState = { selectedLeft:null, matchedCount:0, total:pares.length, colores:UNIR_COLORS.slice() };
+
+  const izqItems = pares.map((p,i) => `
+    <button class="unir-btn" id="unir-izq-${i}" data-idx="${i}" data-lado="izq" onclick="unirClick(this)">
+      ${p.izq}
+    </button>`).join('');
+
+  const derShuffled = pares.map((_,i) => i).sort(() => Math.random() - .5);
+  const derItems = derShuffled.map(origIdx => `
+    <button class="unir-btn" id="unir-der-${origIdx}" data-idx="${origIdx}" data-lado="der" onclick="unirClick(this)">
+      ${pares[origIdx].der}
+    </button>`).join('');
+
+  return `
+    <p class="act-title">🔗 ${d.titulo||'Une los pares'}</p>
+    <p class="act-instruccion">${d.instruccion||'Toca una palabra de la columna izquierda y luego su pareja de la derecha.'}</p>
+    <div class="unir-cols">
+      <div class="unir-col" id="unirIzq">${izqItems}</div>
+      <div class="unir-col" id="unirDer">${derItems}</div>
+    </div>
+    <div class="unir-msg" id="unirMsg"></div>
+  `;
+}
+
+function unirClick(btn) {
+  if (btn.classList.contains('matched')) return;
+  const lado = btn.dataset.lado;
+  const idx  = parseInt(btn.dataset.idx);
+
+  if (lado === 'izq') {
+    document.querySelectorAll('.unir-btn[data-lado="izq"]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    unirState.selectedLeft = idx;
+  } else {
+    if (unirState.selectedLeft === null) return;
+    const izqBtn = document.getElementById(`unir-izq-${unirState.selectedLeft}`);
+    if (unirState.selectedLeft === idx) {
+      const color = unirState.colores[unirState.matchedCount % unirState.colores.length];
+      izqBtn.classList.remove('selected'); izqBtn.classList.add('matched'); izqBtn.style.background = color;
+      btn.classList.add('matched'); btn.style.background = color;
+      unirState.matchedCount++;
+      unirState.selectedLeft = null;
+      if (unirState.matchedCount >= unirState.total) {
+        document.getElementById('unirMsg').textContent = '🎉 ¡Todos los pares unidos!';
+        document.getElementById('btnContinue').disabled = false;
+      }
+    } else {
+      btn.classList.add('error');
+      setTimeout(() => btn.classList.remove('error'), 400);
+      izqBtn.classList.remove('selected');
+      unirState.selectedLeft = null;
+    }
+  }
+}
+
+// ── Ordenar oración (multi-oración secuencial) ───────────────────────────────
+// ordenState.oraciones: array de strings con todas las oraciones a completar
+// ordenState.idx:       índice de la oración actual
+// ordenState._actuales: palabras de la oración actual (para validar)
+let ordenState = { oraciones:[], idx:0, _actuales:[] };
+
+function renderOrdenarOracion(d) {
+  // Soporta tanto d.oraciones (array, nuevo) como d.oracion (string, legado)
+  const oraciones = Array.isArray(d.oraciones) ? d.oraciones
+                  : (d.oracion ? [d.oracion] : ['']);
+  ordenState = { oraciones, idx: 0, _actuales: [] };
+
+  return `
+    <p class="act-title">🧩 ${d.titulo||'¡Arma la oración!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Toca las palabras en el orden correcto para formar la oración.'}</p>
+    <div id="ordenWrap">${_ordenRenderActual()}</div>
+  `;
+}
+
+function _ordenRenderActual() {
+  if (ordenState.idx >= ordenState.oraciones.length) {
+    return `<p class="text-center fw-bold mt-3" style="color:var(--primary);font-size:1.3rem">🎉 ¡Todas las oraciones completadas!</p>`;
+  }
+  const oracion  = ordenState.oraciones[ordenState.idx];
+  const palabras = oracion.split(' ').filter(Boolean);
+  const shuffled = [...palabras].sort(() => Math.random() - .5);
+  ordenState._actuales = palabras;
+
+  const chips = shuffled.map((p, i) => `
+    <span class="palabra-chip" data-word="${p}" data-bidx="${i}" onclick="ordenMoverAZona(this)">${p}</span>
+  `).join('');
+
+  const total = ordenState.oraciones.length;
+  const progreso = total > 1
+    ? `<p class="vf-progreso">${ordenState.idx + 1} / ${total}</p>`
+    : '';
+
+  return `
+    ${progreso}
+    <div class="orden-zona-label">📦 Palabras disponibles</div>
+    <div class="palabras-bank" id="palabrasBank">${chips}</div>
+    <div class="orden-zona-label" style="margin-top:14px">📝 Tu oración</div>
+    <div class="palabras-zona" id="palabrasZona"></div>
+    <div class="orden-resultado" id="ordenResultado"></div>
+  `;
+}
+
+function ordenMoverAZona(chip) {
+  if (chip.parentElement.id !== 'palabrasBank') return;
+  const zona = document.getElementById('palabrasZona');
+  chip.classList.add('en-zona');
+  chip.onclick = () => ordenDevolverAlBanco(chip);
+  zona.appendChild(chip);
+  ordenActualizarBoton();
+}
+
+function ordenDevolverAlBanco(chip) {
+  if (chip.parentElement.id !== 'palabrasZona') return;
+  const bank = document.getElementById('palabrasBank');
+  chip.classList.remove('en-zona');
+  chip.onclick = () => ordenMoverAZona(chip);
+  bank.appendChild(chip);
+  ordenActualizarBoton();
+}
+
+function ordenActualizarBoton() {
+  // El botón se habilita cuando el banco está vacío (todos los chips en la zona)
+  // y aún hay oraciones pendientes. Cuando todas están completas lo habilita
+  // la lógica de avance en onContinue.
+  if (ordenState.idx >= ordenState.oraciones.length) return; // ya todo completo
+  const zona  = document.getElementById('palabrasZona');
+  const count = zona ? zona.querySelectorAll('.palabra-chip').length : 0;
+  document.getElementById('btnContinue').disabled = (count < ordenState._actuales.length);
+}
+
+// Valida la oración actual. Devuelve true si es correcta.
+// NO avanza el índice — eso lo hace onContinue.
+function ordenValidar() {
+  const zona = document.getElementById('palabrasZona');
+  if (!zona) return false;
+  const chips    = [...zona.querySelectorAll('.palabra-chip')];
+  const respuesta = chips.map(c => c.dataset.word).join(' ');
+  const correcta  = ordenState._actuales.join(' ');
+  const resEl     = document.getElementById('ordenResultado');
+
+  if (respuesta === correcta) {
+    if (resEl) resEl.innerHTML = '<span style="color:#28a745;font-size:1.15rem">✅ ¡Correcto!</span>';
+    return true;
+  } else {
+    if (resEl) resEl.innerHTML = `<span style="color:#dc3545">❌ Intenta de nuevo.</span>`;
+    chips.forEach(c => { c.classList.add('error-chip'); setTimeout(() => c.classList.remove('error-chip'), 400); });
+    const bank = document.getElementById('palabrasBank');
+    [...zona.querySelectorAll('.palabra-chip')].forEach(c => {
+      c.classList.remove('en-zona'); c.onclick = () => ordenMoverAZona(c); bank.appendChild(c);
+    });
+    document.getElementById('btnContinue').disabled = true;
+    return false;
+  }
+}
+
+// ── Clasificar en categorías ──────────────────────────────────────────────────
+let clasificarSortables = [];
+
+function renderClasificar(d) {
+  const categorias = d.categorias || [];
+  const todosItems = categorias.flatMap((cat, ci) =>
+    (cat.items||[]).map(item => ({ item, catIdx: ci }))
+  ).sort(() => Math.random() - .5);
+
+  const chips = todosItems.map((obj, i) =>
+    `<span class="clasificar-chip" data-cat="${obj.catIdx}" data-item="${obj.item}">${obj.item}</span>`
+  ).join('');
+
+  const gridCols = categorias.length <= 2 ? '1fr 1fr' : '1fr';
+  const cajones = categorias.map((cat, ci) => `
+    <div class="clasificar-cajon" id="cajon-${ci}" data-catidx="${ci}">
+      <div class="clasificar-cajon-label">${cat.emoji||''} ${cat.nombre}</div>
+    </div>
+  `).join('');
+
+  setTimeout(() => _initClasificarSortable(categorias.length), 50);
+
+  return `
+    <p class="act-title">🗂️ ${d.titulo||'Organiza en grupos'}</p>
+    <p class="act-instruccion">${d.instruccion||'Arrastra cada palabra al grupo donde pertenece.'}</p>
+    <div class="clasificar-bank" id="clasificarBank">${chips}</div>
+    <div class="clasificar-cajones" style="grid-template-columns:${gridCols}">${cajones}</div>
+    <div class="clasificar-msg" id="clasificarMsg"></div>
+  `;
+}
+
+function _initClasificarSortable(numCats) {
+  clasificarSortables.forEach(s => s.destroy && s.destroy());
+  clasificarSortables = [];
+  const bank = document.getElementById('clasificarBank');
+  if (!bank) return;
+
+  const opts = {
+    group: 'clasificar', animation: 150,
+    onAdd: _clasificarCheckDone, onRemove: _clasificarCheckDone,
+  };
+  clasificarSortables.push(Sortable.create(bank, opts));
+  for (let i = 0; i < numCats; i++) {
+    const el = document.getElementById(`cajon-${i}`);
+    if (el) clasificarSortables.push(Sortable.create(el, opts));
+  }
+}
+
+function _clasificarCheckDone() {
+  const bank = document.getElementById('clasificarBank');
+  if (!bank) return;
+  const isEmpty = bank.querySelectorAll('.clasificar-chip').length === 0;
+  document.getElementById('btnContinue').disabled = !isEmpty;
+}
+
+function clasificarValidar() {
+  let allOk = true;
+  document.querySelectorAll('.clasificar-chip').forEach(chip => {
+    chip.classList.remove('correcto', 'incorrecto');
+    const catCorrecta = parseInt(chip.dataset.cat);
+    const cajonActual = chip.closest('.clasificar-cajon');
+    if (cajonActual && parseInt(cajonActual.dataset.catidx) === catCorrecta) {
+      chip.classList.add('correcto');
+    } else {
+      chip.classList.add('incorrecto');
+      allOk = false;
+    }
+  });
+  const msg = document.getElementById('clasificarMsg');
+  if (allOk) {
+    if (msg) msg.textContent = '🎉 ¡Todo en su lugar!';
+  } else {
+    if (msg) msg.textContent = '❌ Algunos no están en el lugar correcto.';
+  }
+  return allOk;
+}
+
 // ── Answer collector ──────────────────────────────────────────────────────────
 function collectAnswer(act) {
   if (act.tipo === 'listening' || act.tipo === 'reading') {
@@ -583,18 +1094,122 @@ function collectAnswer(act) {
   return {};  // intro, vocab, dialogo, pronunciacion, minijuego → no answer needed
 }
 
-// ── Show correction panel ─────────────────────────────────────────────────────
-function showCorrection(tipo, msg, sub, duration=2500) {
-  const panel = document.getElementById('corrPanel');
-  panel.className = 'correction-panel ' + tipo;
-  document.getElementById('corrIcon').textContent = tipo === 'correct' ? '✅' : tipo === 'incorrect' ? '❌' : '✨';
-  document.getElementById('corrMsg').textContent  = msg;
-  document.getElementById('corrSub').textContent  = sub || '';
-  panel.style.display = 'flex';
-  return new Promise(res => setTimeout(() => {
-    panel.style.display = 'none';
-    res();
-  }, duration));
+// ── Show correction panel (vía Milo) ──────────────────────────────────────────
+// Retorna una Promise que se resuelve cuando el estudiante continúa
+function showCorrection(tipo, msg, sub, _duration, actDatos) {
+  return new Promise(function(resolve) {
+    if (!window.miloComentarista) {
+      // Fallback: panel clásico si Milo no está disponible
+      const panel = document.getElementById('corrPanel');
+      panel.className = 'correction-panel ' + tipo;
+      document.getElementById('corrIcon').textContent = tipo === 'correct' ? '✅' : tipo === 'incorrect' ? '❌' : '✨';
+      document.getElementById('corrMsg').textContent  = msg;
+      document.getElementById('corrSub').textContent  = sub || '';
+      panel.style.display = 'flex';
+      setTimeout(() => { panel.style.display = 'none'; resolve(); }, _duration || 2500);
+      return;
+    }
+
+    const d = actDatos || {};
+
+    // Helper: garantiza que resolve() se llama una sola vez aunque Milo
+    // cancele su timer (p.ej. el estudiante cierra la burbuja manualmente).
+    function makeOnce(timeoutMs) {
+      let done = false;
+      const safe = function() { if (!done) { done = true; resolve(); } };
+      setTimeout(safe, timeoutMs);   // red de seguridad
+      return safe;
+    }
+
+    if (tipo === 'correct') {
+      window.miloComentarista('correcto', { msg: msg || '¡Correcto! 🎉' }, makeOnce(3500));
+    } else if (tipo === 'incorrect') {
+      // Incorrecto: el estudiante DEBE pulsar "Entendido" — sin timeout automático.
+      window.miloComentarista('incorrecto', {
+        pregunta:           d.pregunta || '',
+        respuesta_correcta: d.respuesta_correcta || '',
+        respuesta_dada:     d.respuesta_dada || '',
+        contexto:           'Modo Historia — inglés para primaria',
+      }, resolve);
+    } else {
+      // Neutro (intro, vocabulario, dialogo…): avanza aunque el estudiante
+      // haya cerrado la burbuja manualmente antes del autoclose de Milo.
+      window.miloComentarista('neutro', { msg: msg || '¡Muy bien! ✨' }, makeOnce(2500));
+    }
+  });
+}
+
+// ── Extrae contexto de la actividad actual para la corrección de Milo ─────────
+// Usa _activeMinijuegoDatos (datos ya con variante resuelta) para minijuegos.
+function _extraerContextoActividad(act) {
+  const d = act.tipo === 'minijuego_embed'
+    ? (_activeMinijuegoDatos || act.datos || {})
+    : (act.datos || {});
+  let pregunta = '';
+  let respuesta_correcta = '';
+  let respuesta_dada = '';
+
+  if (act.tipo === 'listening' || act.tipo === 'reading') {
+    const grids = document.querySelectorAll('[data-qidx]');
+    const primero = grids[0];
+    if (primero) {
+      const preg = d.preguntas && d.preguntas[0];
+      if (preg) {
+        pregunta = preg.pregunta || preg.audio_texto || '';
+        respuesta_correcta = preg.respuesta || '';
+      }
+      const sel = primero.querySelector('.opcion-btn.selected');
+      respuesta_dada = sel ? sel.dataset.val : '';
+    }
+  } else if (act.tipo === 'writing') {
+    const inputs = document.querySelectorAll('.writing-input');
+    const ejs = d.ejercicios || [];
+    const incorrectos = [...inputs].filter(i => i.value.trim().toLowerCase() !== (ejs[parseInt(i.dataset.eidx)]?.en||'').toLowerCase());
+    if (incorrectos.length) {
+      const idx2 = parseInt(incorrectos[0].dataset.eidx);
+      const ej = ejs[idx2] || {};
+      pregunta = '¿Cómo se dice "' + (ej.es || '') + '" en inglés?';
+      respuesta_correcta = ej.en || '';
+      respuesta_dada = incorrectos[0].value;
+    }
+  } else if (act.tipo === 'minijuego_embed') {
+    const tipo = (d.tipo_minijuego || '');
+
+    if (tipo === 'rellenar' && d.oraciones && d.oraciones[0]) {
+      pregunta = d.oraciones[0].texto || '';
+      respuesta_correcta = d.oraciones[0].respuesta || '';
+
+    } else if (tipo === 'ordenar_oracion') {
+      // Usa la oración actual en curso (puede ser multi-oración)
+      pregunta = 'Ordena las palabras para formar la oración correcta';
+      respuesta_correcta = ordenState._actuales.join(' ') || (d.oraciones && d.oraciones[0]) || '';
+
+    } else if (tipo === 'verdadero_falso') {
+      const p = vfState.preguntas[vfState.idx] || {};
+      pregunta = p.afirmacion || '';
+      respuesta_correcta = p.respuesta ? 'Verdadero ✅' : 'Falso ❌';
+
+    } else if (tipo === 'unir_pares') {
+      // El par seleccionado de la izquierda que no fue unido correctamente
+      if (unirState.selectedLeft !== null) {
+        const pares = d.pares || [];
+        const par = pares[unirState.selectedLeft] || {};
+        pregunta = `¿Con qué va "${par.izq || ''}"?`;
+        respuesta_correcta = par.der || '';
+      }
+
+    } else if (tipo === 'memoria') {
+      // Contexto general; los pares específicos son difíciles de rastrear en tiempo real
+      pregunta = 'Encuentra los pares que coinciden';
+      respuesta_correcta = '';
+
+    } else if (tipo === 'clasificar') {
+      pregunta = 'Clasifica cada palabra en su categoría correcta';
+      respuesta_correcta = '';
+    }
+  }
+
+  return { pregunta, respuesta_correcta, respuesta_dada };
 }
 
 // ── Main flow ─────────────────────────────────────────────────────────────────
@@ -616,9 +1231,88 @@ function showActivity(idx) {
 
 async function onContinue() {
   const btn = document.getElementById('btnContinue');
-  btn.disabled = true;
-
   const act = ACTIVIDADES[currentIdx];
+
+  // Minijuegos con validación cliente antes de enviar al servidor
+  if (act.tipo === 'minijuego_embed') {
+    // Usar datos con variante ya resuelta (seteados por renderMinijuego → pickVariante)
+    const d    = _activeMinijuegoDatos || act.datos || {};
+    const tipo = d.tipo_minijuego || 'memoria';
+
+    if (tipo === 'rellenar') {
+      if (!rellenarValidar()) {
+        btn.disabled = true;
+        const oraciones = d.oraciones || [];
+        const inputs = document.querySelectorAll('.rellenar-input');
+        let pregunta = '', respuesta_correcta = '', respuesta_dada = '';
+        for (const inp of inputs) {
+          if (inp.value.trim().toLowerCase() !== inp.dataset.resp) {
+            const ridx = parseInt(inp.dataset.ridx);
+            pregunta = (oraciones[ridx]||{}).texto || '';
+            respuesta_correcta = (oraciones[ridx]||{}).respuesta || '';
+            respuesta_dada = inp.value;
+            break;
+          }
+        }
+        if (window.miloComentarista) {
+          window.miloComentarista('incorrecto', {
+            pregunta, respuesta_correcta, respuesta_dada,
+            contexto: 'Modo Historia — rellena el espacio en inglés',
+          }, function() { btn.disabled = false; });
+        }
+        return;
+      }
+    }
+
+    if (tipo === 'ordenar_oracion') {
+      // Capturar respuesta antes de que ordenValidar() devuelva las fichas al banco
+      const zona = document.getElementById('palabrasZona');
+      const respuesta_dada = zona
+        ? [...zona.querySelectorAll('.palabra-chip')].map(c => c.dataset.word).join(' ')
+        : '';
+
+      if (!ordenValidar()) {
+        // Oración incorrecta → Milo comenta y el estudiante reintenta
+        if (window.miloComentarista) {
+          window.miloComentarista('incorrecto', {
+            pregunta: 'Ordena las palabras para formar la oración correcta',
+            respuesta_correcta: ordenState._actuales.join(' '),
+            respuesta_dada,
+            contexto: 'Modo Historia — ordenar oración en inglés',
+          }, function() { /* el estudiante reintenta */ });
+        }
+        return;
+      }
+
+      // Oración correcta → avanzar al siguiente si hay más
+      ordenState.idx++;
+      if (ordenState.idx < ordenState.oraciones.length) {
+        // Todavía quedan oraciones: re-renderizar y NO enviar al servidor
+        const wrap = document.getElementById('ordenWrap');
+        if (wrap) wrap.innerHTML = _ordenRenderActual();
+        btn.disabled = true;
+        return;
+      }
+      // Todas las oraciones completadas → caer al envío al servidor abajo
+    }
+
+    if (tipo === 'clasificar') {
+      const esOk = clasificarValidar();
+      if (!esOk) {
+        if (window.miloComentarista) {
+          window.miloComentarista('incorrecto', {
+            pregunta: 'Clasifica cada palabra en su categoría correcta',
+            respuesta_correcta: '',
+            respuesta_dada: '',
+            contexto: 'Modo Historia — clasificar palabras',
+          }, function() { /* el estudiante reintenta */ });
+        }
+        return;
+      }
+    }
+  }
+
+  btn.disabled = true;
   const respuesta_dada = collectAnswer(act);
 
   try {
@@ -638,10 +1332,12 @@ async function onContinue() {
 
     if (act.tiene_correcta && data.es_correcta !== null) {
       if (data.es_correcta) {
-        await showCorrection('correct', '¡Correcto!',
-          data.puntos > 0 ? `+${data.puntos} puntos` : '');
+        await showCorrection('correct',
+          `¡Correcto!${data.puntos > 0 ? ' +' + data.puntos + ' pts' : ''}`,
+          '', 2000);
       } else {
-        await showCorrection('incorrect', '¡Incorrecto!', '');
+        const actDatos = _extraerContextoActividad(act);
+        await showCorrection('incorrect', '¡Incorrecto!', '', 0, actDatos);
       }
     } else if (['vocabulario','dialogo','introduccion','pronunciacion'].includes(act.tipo)) {
       await showCorrection('neutral', '¡Muy bien!', '', 1200);
@@ -675,14 +1371,14 @@ async function finalizarLeccion() {
     });
     const data = await resp.json();
 
-    // Replay de una lección ya completada: solo felicita, no da recompensas ni cambia estrellas.
-    if (data.status === 'ya_completada') {
-      data.puntos_xp = 0;
-      data.huesos = 0;
-      data.nivel_subio = false;
-      data.nivel_nuevo = null;
-      data.logros_nuevos = [];
-    }
+    const esReplay = data.status === 'ya_completada';
+
+    // Campos que el backend ya envía en ambos casos (ok y ya_completada).
+    const puntos_xp   = data.puntos_xp   ?? 0;
+    const huesos      = data.huesos      ?? 0;
+    const nivel_subio = data.nivel_subio ?? false;
+    const nivel_nuevo = data.nivel_nuevo ?? null;
+    const logros      = data.logros_nuevos ?? [];
 
     // Show stars
     const starsRow = document.getElementById('starsRow');
@@ -694,16 +1390,17 @@ async function finalizarLeccion() {
       setTimeout(() => s.classList.add('active'), i * 300);
     }
 
-    // Rewards
+    // Rewards (replay muestra +0 XP / +0 🦴 — correcto)
     document.getElementById('recompensas').innerHTML = `
-      <div class="recomp-pill">+${data.puntos_xp} XP</div>
-      <div class="recomp-pill">+${data.huesos} 🦴</div>
-      ${data.nivel_subio ? `<div class="recomp-pill">🎉 ¡Nivel ${data.nivel_nuevo}!</div>` : ''}
+      <div class="recomp-pill">+${puntos_xp} XP</div>
+      <div class="recomp-pill">+${huesos} 🦴</div>
+      ${nivel_subio ? `<div class="recomp-pill">🎉 ¡Nivel ${nivel_nuevo}!</div>` : ''}
+      ${esReplay ? '<div class="recomp-pill" style="background:#f0eeff;color:var(--primary)">🔄 Intento de mejora</div>' : ''}
     `;
 
     // Logros
-    if (data.logros_nuevos && data.logros_nuevos.length) {
-      document.getElementById('logrosNuevos').innerHTML = data.logros_nuevos.map(l =>
+    if (logros.length) {
+      document.getElementById('logrosNuevos').innerHTML = logros.map(l =>
         `<div class="nestgrow-card p-2 px-3 fw-bold" style="font-size:.9rem">
            ${l.icono} ¡Nuevo logro! ${l.nombre}
          </div>`
@@ -719,8 +1416,8 @@ async function finalizarLeccion() {
       setTimeout(() => launchConfetti({ particleCount: 80 }), 600);
     }
 
-    if (data.nivel_subio && data.nivel_nuevo && typeof showLevelUpPopup === 'function') {
-      setTimeout(() => showLevelUpPopup(data.nivel_nuevo), 1500);
+    if (nivel_subio && nivel_nuevo && typeof showLevelUpPopup === 'function') {
+      setTimeout(() => showLevelUpPopup(nivel_nuevo), 1500);
     }
 
   } catch(e) {

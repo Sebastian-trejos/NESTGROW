@@ -83,60 +83,103 @@ body.nestgrow-body {
 /* --- Milo Floating Mascot --- */
 .milo-float {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: -100px;
+  right: 20px;
   z-index: 9999;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 10px;
+  gap: 8px;
+  user-select: none;
 }
 
 .milo-avatar {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 25px rgba(108,99,255,0.4);
-  transition: var(--transition);
-  border: 4px solid white;
+  width: 280px;
+  transition: transform 0.2s ease;
   animation: miloFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 -4px 28px rgba(108,99,255,0.45));
 }
 
-.milo-avatar:hover { transform: scale(1.1); }
+.milo-avatar:hover { transform: scale(1.06); }
 
-.milo-owl { font-size: 2.2rem; }
+#miloImgFloat {
+  width: 280px;
+  transition: opacity 0.18s ease;
+  display: block;
+}
 
 @keyframes miloFloat {
-  0%, 100% { transform: translateY(0); box-shadow: 0 8px 25px rgba(108,99,255,0.4); }
-  50% { transform: translateY(-8px); box-shadow: 0 18px 35px rgba(108,99,255,0.3); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
 }
 
 .milo-bubble {
   background: white;
   border-radius: 18px 18px 5px 18px;
-  padding: 12px 18px;
-  max-width: 250px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  padding: 16px 18px;
+  max-width: 320px;
+  min-width: 220px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.14);
   display: none;
-  animation: fadeInBubble 0.3s ease;
+  position: relative;
 }
 
-.milo-bubble.show { display: block; }
+/* La animación se activa sólo al mostrar, evitando el flash de burbuja vacía */
+/* backwards = el estado "from" se aplica ANTES del primer frame, eliminando el flash blanco */
+.milo-bubble.show {
+  display: block;
+  opacity: 1;
+  animation: fadeInBubble 0.25s ease backwards;
+}
 
 .milo-speech {
-  font-size: 0.88rem;
+  font-size: 0.96rem;
   font-weight: 700;
   color: var(--text);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
+/* Lista de pendientes dentro de la burbuja */
+.milo-pendientes-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.milo-pendientes-list li {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #555;
+  padding: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.milo-bubble-footer {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.milo-btn {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-family: 'Nunito', sans-serif;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.milo-btn:hover { opacity: 0.85; text-decoration: none; }
+.milo-btn-primary { background: linear-gradient(135deg, #6C63FF, #9b59b6); color: white; }
+.milo-btn-secondary { background: #f0f0f9; color: #6C63FF; }
+
 @keyframes fadeInBubble {
-  from { opacity: 0; transform: translateY(10px) scale(0.9); }
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -765,8 +808,9 @@ body.nestgrow-body {
 /* Responsive */
 @media (max-width: 768px) {
   .auth-card { padding: 30px 24px; }
-  .milo-float { bottom: 20px; right: 20px; }
-  .milo-avatar { width: 55px; height: 55px; }
+  .milo-float { bottom: -60px; right: 10px; }
+  .milo-avatar { width: 180px; }
+  #miloImgFloat { width: 180px; }
   .ws-cell { width: 28px; height: 28px; font-size: 0.85rem; }
 }
 

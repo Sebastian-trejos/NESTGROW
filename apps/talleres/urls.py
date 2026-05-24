@@ -21,6 +21,7 @@ urlpatterns = [
     # ── Periodos — Profesor ───────────────────────────────────────────────────
     path('periodos/', views.lista_periodos, name='lista_periodos'),
     path('periodos/crear/', views.crear_periodo, name='crear_periodo'),
+    path('periodos/<int:pk>/editar/', views.editar_periodo, name='editar_periodo'),
     path('periodos/<int:pk>/resultados/', views.resultados_periodo, name='resultados_periodo'),
     path('periodos/<int:pk>/cerrar/', views.cerrar_periodo, name='cerrar_periodo'),
     path('periodos/<int:pk>/eliminar/', views.eliminar_periodo, name='eliminar_periodo'),
@@ -33,4 +34,7 @@ urlpatterns = [
     path('<int:pk>/bloque/<int:bpk>/completar-minijuego/', views.score_bloque_minijuego, name='score_minijuego'),
     path('<int:pk>/resultado/', views.resultado_taller, name='resultado'),
     path('sesion/<int:pk>/resultado/', views.resultado_sesion, name='resultado_sesion'),
+
+    # AJAX — Widget Milo
+    path('milo-pendientes/', views.milo_pendientes, name='milo_pendientes'),
 ]
