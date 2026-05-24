@@ -202,15 +202,6 @@
   {% endwith %}
   {% endif %}
 
-  <!-- Overlay de feedback -->
-  <div id="feedback-overlay" class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-       style="background:rgba(0,0,0,0.5);z-index:9999">
-    <div class="nestgrow-card p-5 text-center" style="max-width:360px;width:90%">
-      <div id="feedback-icono" style="font-size:5rem"></div>
-      <div id="feedback-texto" class="font-fredoka mt-2" style="font-size:1.8rem"></div>
-      <div id="feedback-puntos" class="text-muted fw-bold mt-1"></div>
-    </div>
-  </div>
 
 </div>
 {% endblock %}
@@ -271,7 +262,8 @@ async function enviarRespuesta(bloquePk, tipoRespuesta) {
   const data = await res.json();
 
   if (data.ok) {
-    mostrarFeedback(data.es_correcta, data.puntos, data.next);
+    mostrarFeedback(data.es_correcta, data.puntos, data.next,
+                    data.enunciado || '', data.respuesta_correcta || '');
   } else {
     alert('❌ Error al enviar. Recarga la página e intenta de nuevo.');
     btn.disabled = false;
@@ -288,6 +280,8 @@ async function completarMinijuego(bloquePk) {
   const data = await res.json();
   if (data.ok) {
     if (data.next === 'resultado') {
+      /* ⭐ Transición especial de estrellas al completar el taller */
+      sessionStorage.setItem('ngStars', '1');
       window.location.href = data.sesion_pk
         ? RESULTADO_SESION_BASE + data.sesion_pk + '/resultado/'
         : RESULTADO_URL;
@@ -297,33 +291,42 @@ async function completarMinijuego(bloquePk) {
   }
 }
 
-function mostrarFeedback(esCorrecta, puntos, next) {
-  const overlay = document.getElementById('feedback-overlay');
-  overlay.classList.remove('d-none');
-  overlay.style.display = 'flex';
-
-  if (esCorrecta === null) {
-    document.getElementById('feedback-icono').textContent = '✍️';
-    document.getElementById('feedback-texto').textContent = '¡Respuesta enviada!';
-    document.getElementById('feedback-puntos').textContent = 'Respuesta libre registrada.';
-  } else if (esCorrecta) {
-    const esDibujo = !!document.getElementById('drawing-canvas');
-    document.getElementById('feedback-icono').textContent = esDibujo ? '🎨' : '🎉';
-    document.getElementById('feedback-texto').textContent = esDibujo ? '¡Dibujo enviado!' : '¡Correcto!';
-    document.getElementById('feedback-puntos').textContent = `+${puntos} puntos`;
+function _navegar(next) {
+  if (next === 'resultado') {
+    /* ⭐ Transición especial de estrellas al completar el taller */
+    sessionStorage.setItem('ngStars', '1');
+    window.location.href = RESULTADO_URL;
   } else {
-    document.getElementById('feedback-icono').textContent = '💪';
-    document.getElementById('feedback-texto').textContent = '¡Sigue intentando!';
-    document.getElementById('feedback-puntos').textContent = 'Respuesta incorrecta.';
+    window.location.href = RESOLVER_URL;
+  }
+}
+
+function mostrarFeedback(esCorrecta, puntos, next, enunciado, respuestaCorrecta) {
+  const esDibujo = !!document.getElementById('drawing-canvas');
+
+  if (!window.miloComentarista) {
+    setTimeout(() => _navegar(next), 1800);
+    return;
   }
 
-  setTimeout(() => {
-    if (next === 'resultado') {
-      window.location.href = RESULTADO_URL;
-    } else {
-      window.location.href = RESOLVER_URL;
-    }
-  }, 1800);
+  if (esCorrecta === null || esDibujo) {
+    window.miloComentarista('neutro',
+      { msg: esDibujo ? '🎨 ¡Dibujo enviado!' : '✍️ ¡Respuesta registrada!' },
+      () => _navegar(next)
+    );
+  } else if (esCorrecta) {
+    window.miloComentarista('correcto',
+      { msg: `¡Correcto! +${puntos} puntos 🎉` },
+      () => _navegar(next)
+    );
+  } else {
+    window.miloComentarista('incorrecto', {
+      pregunta: enunciado,
+      respuesta_correcta: respuestaCorrecta,
+      respuesta_dada: '',
+      contexto: 'Taller de inglés',
+    }, () => _navegar(next));
+  }
 }
 
 // ── Canvas de dibujo (lógica del juego de pintar) ────────────────────────────

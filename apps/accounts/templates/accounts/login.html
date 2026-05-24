@@ -100,7 +100,7 @@
     pointer-events: none;
     z-index: 1;
   }
-  .milo-bubble {
+  .login-deco-bubble {
     display: block;
     position: absolute;
     top: 20px;
@@ -160,8 +160,8 @@
       <div class="col-lg-5 text-center d-none d-lg-block">
         <div style="position:relative;display:inline-block">
 
-          <!-- Burbuja oculta por defecto -->
-          <div id="miloBubble" class="milo-bubble">
+          <!-- Burbuja decorativa de la imagen de Milo (independiente del widget global) -->
+          <div class="login-deco-bubble">
             <div class="fw-bold" style="font-size:0.85rem;color:var(--primary)">
               <i class="bi bi-patch-question-fill me-1" style="color:#FFB347"></i>
               ¿Ya tienes cuenta?
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
   form.addEventListener('submit', function () {
     const user = form.querySelector('[name="username"]')?.value?.trim();
     const pwd  = form.querySelector('[name="password"]')?.value;
-    if (user && pwd) sessionStorage.setItem('ngTransition', '1');
+    if (user && pwd) sessionStorage.setItem('ngCircles', '1');
   });
 });
 </script>

@@ -15,7 +15,7 @@ class TallerForm(forms.ModelForm):
 
     class Meta:
         model = Taller
-        fields = ('titulo', 'descripcion', 'salon', 'puntos_xp', 'huesos_recompensa',
+        fields = ('titulo', 'descripcion', 'puntos_xp', 'huesos_recompensa',
                   'categorias_vocabulario', 'is_active')
         widgets = {
             'titulo': forms.TextInput(attrs={
@@ -26,7 +26,6 @@ class TallerForm(forms.ModelForm):
                 'class': 'form-control', 'rows': 2,
                 'placeholder': 'Descripción corta del taller...'
             }),
-            'salon': forms.Select(attrs={'class': 'form-select'}),
             'puntos_xp': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
             'huesos_recompensa': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -34,7 +33,6 @@ class TallerForm(forms.ModelForm):
         labels = {
             'titulo': 'Título del taller',
             'descripcion': 'Descripción (opcional)',
-            'salon': 'Asignar a salón (opcional)',
             'puntos_xp': 'XP que otorga al completarse',
             'huesos_recompensa': 'Huesos de Milo al completar 🦴',
             'is_active': '¿Publicado? (visible para estudiantes)',
@@ -42,14 +40,14 @@ class TallerForm(forms.ModelForm):
 
 
 class PeriodoForm(forms.ModelForm):
-    """Formulario para que el profesor cree un Período."""
+    """Formulario para crear o editar un Período."""
 
     talleres_asignados = forms.ModelMultipleChoiceField(
         queryset=Taller.objects.none(),
         required=False,
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'periodo-checkbox'}),
         label='Talleres del período (máx. 5)',
-        help_text='Solo talleres publicados de este salón.',
+        help_text='Talleres publicados disponibles para este período.',
     )
 
     minijuegos_asignados = forms.ModelMultipleChoiceField(
@@ -61,12 +59,13 @@ class PeriodoForm(forms.ModelForm):
 
     class Meta:
         model = Periodo
-        fields = ('titulo', 'salon', 'fecha_inicio', 'fecha_fin', 'meta_historia')
+        fields = ('titulo', 'color', 'salon', 'fecha_inicio', 'fecha_fin', 'meta_historia')
         widgets = {
             'titulo': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ej: Período 1 — Mayo 2026',
             }),
+            'color': forms.RadioSelect(attrs={'class': 'color-radio'}),
             'salon': forms.Select(attrs={'class': 'form-select'}),
             'fecha_inicio': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'fecha_fin': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -77,20 +76,29 @@ class PeriodoForm(forms.ModelForm):
         }
         labels = {
             'titulo': 'Título del período',
+            'color': 'Color del encabezado',
             'salon': 'Salón',
             'fecha_inicio': 'Fecha de inicio',
             'fecha_fin': 'Fecha límite',
             'meta_historia': 'Meta de estrellas de historia ⭐ (0 = sin meta)',
         }
 
-    def __init__(self, *args, salon_qs=None, **kwargs):
+    def __init__(self, *args, salon_qs=None, profesor=None, **kwargs):
         super().__init__(*args, **kwargs)
         if salon_qs is not None:
             self.fields['salon'].queryset = salon_qs
-        # Al editar, pre-filtrar talleres del salón seleccionado
-        if self.instance and self.instance.pk and self.instance.salon_id:
-            self.fields['talleres_asignados'].queryset = Taller.objects.filter(
-                salon=self.instance.salon, is_active=True
+        # Talleres disponibles: todos los publicados del profesor (sin filtro por salón)
+        talleres_qs = Taller.objects.filter(is_active=True)
+        if profesor is not None:
+            talleres_qs = talleres_qs.filter(profesor=profesor)
+        self.fields['talleres_asignados'].queryset = talleres_qs.order_by('titulo')
+        # Al editar, pre-seleccionar asignaciones existentes
+        if self.instance and self.instance.pk:
+            self.fields['talleres_asignados'].initial = list(
+                self.instance.talleres_asignados.values_list('taller_id', flat=True)
+            )
+            self.fields['minijuegos_asignados'].initial = list(
+                self.instance.minijuegos_asignados.values_list('game_id', flat=True)
             )
 
     def clean(self):

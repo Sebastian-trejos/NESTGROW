@@ -419,10 +419,6 @@ def resolver_taller(request, pk):
     taller = get_object_or_404(Taller, pk=pk, is_active=True)
     profile = request.user.estudiante_profile
 
-    if taller.salon and taller.salon != profile.salon:
-        messages.error(request, '⛔ Este taller no está asignado a tu salón.')
-        return redirect('talleres:mis_talleres')
-
     sesion, _ = SesionTaller.objects.get_or_create(
         taller=taller, estudiante=request.user,
         defaults={'bloque_actual': 0},
@@ -504,11 +500,22 @@ def guardar_respuesta(request, pk, bpk):
     sesion.bloque_actual += 1
     sesion.save()
 
+    correctas_texto = ' / '.join(
+        pregunta.opciones.filter(es_correcta=True).values_list('texto', flat=True)
+    ) if pregunta.tipo_respuesta in ('opcion_multiple', 'casillas') else ''
+
+    payload_extra = {
+        'enunciado': pregunta.enunciado,
+        'respuesta_correcta': correctas_texto,
+    }
+
     if sesion.bloque_actual >= len(bloques_ids):
         _completar_taller(sesion, taller, request.user)
-        return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk, 'es_correcta': es_correcta, 'puntos': puntos})
+        return JsonResponse({'ok': True, 'next': 'resultado', 'sesion_pk': sesion.pk,
+                             'es_correcta': es_correcta, 'puntos': puntos, **payload_extra})
 
-    return JsonResponse({'ok': True, 'next': 'siguiente', 'es_correcta': es_correcta, 'puntos': puntos})
+    return JsonResponse({'ok': True, 'next': 'siguiente', 'es_correcta': es_correcta,
+                         'puntos': puntos, **payload_extra})
 
 
 @login_required
@@ -587,16 +594,9 @@ def crear_periodo(request):
     """El profesor crea un nuevo período con sus asignaciones."""
     salon_qs = _salon_qs(request.user)
     if request.method == 'POST':
-        form = PeriodoForm(request.POST, salon_qs=salon_qs)
-        # Filtrar talleres del salón seleccionado dinámicamente
-        salon_id = request.POST.get('salon')
-        if salon_id:
-            form.fields['talleres_asignados'].queryset = Taller.objects.filter(
-                salon_id=salon_id, is_active=True
-            )
+        form = PeriodoForm(request.POST, salon_qs=salon_qs, profesor=request.user)
         if form.is_valid():
             periodo = form.save()
-            # Crear asignaciones
             for i, taller in enumerate(form.cleaned_data['talleres_asignados'], start=1):
                 AsignacionTaller.objects.create(periodo=periodo, taller=taller, orden=i)
             for i, game in enumerate(form.cleaned_data['minijuegos_asignados'], start=1):
@@ -604,17 +604,53 @@ def crear_periodo(request):
             messages.success(request, f'✅ Período "{periodo.titulo}" creado exitosamente.')
             return redirect('talleres:lista_periodos')
     else:
-        form = PeriodoForm(salon_qs=salon_qs)
-    # Para el JS que filtra talleres por salón
-    talleres_por_salon = {}
-    for salon in salon_qs:
-        talleres_por_salon[salon.pk] = list(
-            Taller.objects.filter(salon=salon, is_active=True).values('pk', 'titulo')
-        )
-    import json as _json
-    return render(request, 'talleres/profesor/crear_periodo.html', {
+        form = PeriodoForm(salon_qs=salon_qs, profesor=request.user)
+    return render(request, 'talleres/profesor/crear_periodo.html', {'form': form})
+
+
+@login_required
+@profesor_required
+def editar_periodo(request, pk):
+    """El profesor edita un período existente: datos, talleres y minijuegos."""
+    salon_qs = _salon_qs(request.user)
+    periodo = get_object_or_404(Periodo, pk=pk, salon__in=salon_qs)
+    if periodo.cerrado:
+        messages.error(request, '🔒 Este período está cerrado y no se puede editar.')
+        return redirect('talleres:resultados_periodo', pk=pk)
+
+    if request.method == 'POST':
+        form = PeriodoForm(request.POST, instance=periodo, salon_qs=salon_qs, profesor=request.user)
+        if form.is_valid():
+            form.save()
+            # Sincronizar talleres asignados
+            talleres_nuevos = list(form.cleaned_data['talleres_asignados'])
+            AsignacionTaller.objects.filter(periodo=periodo).exclude(
+                taller__in=talleres_nuevos
+            ).delete()
+            existentes_t = set(
+                AsignacionTaller.objects.filter(periodo=periodo).values_list('taller_id', flat=True)
+            )
+            for i, taller in enumerate(talleres_nuevos, start=1):
+                if taller.pk not in existentes_t:
+                    AsignacionTaller.objects.create(periodo=periodo, taller=taller, orden=i)
+            # Sincronizar minijuegos asignados
+            games_nuevos = list(form.cleaned_data['minijuegos_asignados'])
+            AsignacionMinijuego.objects.filter(periodo=periodo).exclude(
+                game__in=games_nuevos
+            ).delete()
+            existentes_g = set(
+                AsignacionMinijuego.objects.filter(periodo=periodo).values_list('game_id', flat=True)
+            )
+            for i, game in enumerate(games_nuevos, start=1):
+                if game.pk not in existentes_g:
+                    AsignacionMinijuego.objects.create(periodo=periodo, game=game, orden=i)
+            messages.success(request, f'✅ Período "{periodo.titulo}" actualizado.')
+            return redirect('talleres:lista_periodos')
+    else:
+        form = PeriodoForm(instance=periodo, salon_qs=salon_qs, profesor=request.user)
+    return render(request, 'talleres/profesor/editar_periodo.html', {
         'form': form,
-        'talleres_por_salon_json': _json.dumps(talleres_por_salon),
+        'periodo': periodo,
     })
 
 
@@ -903,4 +939,70 @@ def resultado_sesion(request, pk):
         'pct': pct,
         'nota': nota,
         'resumen': resumen,
+    })
+
+
+@login_required
+@estudiante_required
+def milo_pendientes(request):
+    """AJAX: devuelve resumen de actividades pendientes del período activo para el widget de Milo."""
+    try:
+        profile = request.user.estudiante_profile
+    except Exception:
+        return JsonResponse({'talleres': 0, 'minijuegos': 0, 'periodo': None})
+
+    if not profile.salon:
+        return JsonResponse({'talleres': 0, 'minijuegos': 0, 'periodo': None})
+
+    hoy = timezone.now().date()
+    periodo = Periodo.objects.filter(
+        salon=profile.salon,
+        is_activo=True,
+        cerrado=False,
+        fecha_fin__gte=hoy,
+    ).order_by('-fecha_inicio').first()
+
+    if not periodo:
+        return JsonResponse({'talleres': 0, 'minijuegos': 0, 'periodo': None})
+
+    # Talleres pendientes (no completados+revisados)
+    taller_ids = list(periodo.talleres_asignados.values_list('taller_id', flat=True))
+    completados_revisados = set(
+        SesionTaller.objects.filter(
+            estudiante=request.user,
+            taller_id__in=taller_ids,
+            completada=True,
+            revisado=True,
+        ).values_list('taller_id', flat=True)
+    )
+    nombres_talleres = list(
+        periodo.talleres_asignados
+        .exclude(taller_id__in=completados_revisados)
+        .select_related('taller')
+        .values_list('taller__titulo', flat=True)
+    )
+
+    # Minijuegos pendientes (no revisados)
+    asig_ids = list(periodo.minijuegos_asignados.values_list('pk', flat=True))
+    revisados_ids = set(
+        RegistroMinijuegoPeriodo.objects.filter(
+            periodo=periodo,
+            estudiante=request.user,
+            revisado=True,
+        ).values_list('asignacion_id', flat=True)
+    )
+    nombres_minijuegos = list(
+        periodo.minijuegos_asignados
+        .exclude(pk__in=revisados_ids)
+        .select_related('game')
+        .values_list('game__name', flat=True)
+    )
+
+    return JsonResponse({
+        'talleres': len(nombres_talleres),
+        'minijuegos': len(nombres_minijuegos),
+        'periodo': periodo.titulo,
+        'fecha_fin': periodo.fecha_fin.strftime('%d/%m'),
+        'nombres_talleres': nombres_talleres,
+        'nombres_minijuegos': nombres_minijuegos,
     })

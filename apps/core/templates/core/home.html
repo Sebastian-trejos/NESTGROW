@@ -1,543 +1,629 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}NestGrow - ¡Aprende Inglés Jugando!{% endblock %}
+{% block title %}NestGrow — Aprende Inglés Jugando{% endblock %}
 
 {% block extra_css %}
 <style>
-  .hero-section {
-    min-height: 88vh;
-    display: flex;
-    align-items: center;
-    background: linear-gradient(135deg, #f0eeff 0%, #ffe9e9 50%, #e9f9ff 100%);
-    position: relative;
-    overflow: hidden;
+  /* ── Variables y reset ──────────────────────────────────────────────────── */
+  :root {
+    --p: #6C63FF; --s: #FF6B6B; --t: #4ECDC4; --a: #FFB347; --y: #FFE66D;
   }
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(108,99,255,0.08), transparent);
-    border-radius: 50%;
-    top: -100px; left: -100px;
-    animation: floatBubble 8s ease-in-out infinite;
+
+  /* Ocultar Milo flotante solo en la home */
+  #miloFloat { display: none !important; }
+
+  /* ── Decoraciones flotantes ─────────────────────────────────────────────── */
+  .deco { position:absolute; pointer-events:none; user-select:none; }
+  .deco-bubble {
+    border-radius:50%;
+    background: radial-gradient(circle, var(--c,rgba(108,99,255,0.12)), transparent 70%);
   }
-  .hero-section::after {
-    content: '';
-    position: absolute;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(255,107,107,0.08), transparent);
-    border-radius: 50%;
-    bottom: -80px; right: -80px;
-    animation: floatBubble 6s ease-in-out infinite reverse;
-  }
-  @keyframes floatBubble {
-    0%,100% { transform: translateY(0) scale(1); }
-    50%      { transform: translateY(-20px) scale(1.05); }
+  @keyframes floatA { 0%,100%{transform:translateY(0) rotate(0deg) scale(1)} 50%{transform:translateY(-22px) rotate(8deg) scale(1.05)} }
+  @keyframes floatB { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-14px) rotate(-6deg)} }
+  @keyframes floatC { 0%,100%{transform:translateY(0) scale(1) rotate(0deg)} 50%{transform:translateY(-18px) scale(1.08) rotate(12deg)} }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  @keyframes pulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+  .fa { animation: floatA var(--dur,4s) ease-in-out infinite; animation-delay:var(--del,0s); }
+  .fb { animation: floatB var(--dur,5s) ease-in-out infinite; animation-delay:var(--del,0s); }
+  .fc { animation: floatC var(--dur,3.5s) ease-in-out infinite; animation-delay:var(--del,0s); }
+  .fp { animation: pulse var(--dur,2.5s) ease-in-out infinite; animation-delay:var(--del,0s); }
+
+  /* ── Hero ───────────────────────────────────────────────────────────────── */
+  .hero {
+    min-height: 92vh;
+    display: flex; align-items: center;
+    background: linear-gradient(140deg, #f0eeff 0%, #ffe9f0 50%, #e6f9ff 100%);
+    position: relative; overflow: hidden;
   }
   .hero-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    color: var(--primary);
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    padding-bottom: 0.1em;
-  }
-  .hero-subtitle {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    font-weight: 700;
-    color: #666;
-    margin-bottom: 2rem;
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(2.4rem,5.5vw,4.4rem);
+    line-height:1.15; color:var(--p);
   }
   .milo-hero {
-    width: clamp(200px, 35vw, 380px);
-    filter: drop-shadow(0 20px 40px rgba(108,99,255,0.2));
-    animation: miloFloat 4s ease-in-out infinite;
+    width:clamp(200px,32vw,380px);
+    filter:drop-shadow(0 24px 48px rgba(108,99,255,0.22));
+    animation:floatA 4s ease-in-out infinite;
   }
-  @keyframes miloFloat {
-    0%,100% { transform: translateY(0) rotate(-2deg); }
-    50%      { transform: translateY(-18px) rotate(2deg); }
+  .btn-main {
+    background:linear-gradient(135deg,#6C63FF,#9c94ff); color:white;
+    border:none; border-radius:50px; padding:14px 38px;
+    font-family:'Fredoka One',cursive; font-size:1.15rem;
+    box-shadow:0 8px 24px rgba(108,99,255,0.38);
+    text-decoration:none; display:inline-block; transition:all .3s;
   }
-  .btn-hero-main {
-    background: linear-gradient(135deg, var(--primary), #9c94ff);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 14px 36px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem;
-    box-shadow: 0 8px 25px rgba(108,99,255,0.4);
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-block;
+  .btn-main:hover { transform:translateY(-3px); box-shadow:0 14px 32px rgba(108,99,255,0.5); color:white; }
+  .btn-sec {
+    background:white; color:var(--p); border:2.5px solid var(--p);
+    border-radius:50px; padding:12px 32px;
+    font-family:'Fredoka One',cursive; font-size:1.15rem;
+    text-decoration:none; display:inline-block; transition:all .3s;
   }
-  .btn-hero-main:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 35px rgba(108,99,255,0.5);
-    color: white;
+  .btn-sec:hover { background:var(--p); color:white; transform:translateY(-3px); }
+
+  /* ── Sección alternada imagen+texto ─────────────────────────────────────── */
+  .feat-section { padding:5rem 0; position:relative; overflow:hidden; }
+  .feat-section:nth-child(even) { background:#f8f6ff; }
+  .feat-img {
+    width:clamp(180px,28vw,300px);
+    filter:drop-shadow(0 16px 32px rgba(0,0,0,0.12));
+    animation:floatA 4.5s ease-in-out infinite;
   }
-  .btn-hero-sec {
-    background: white;
-    color: var(--primary);
-    border: 3px solid var(--primary);
-    border-radius: 50px;
-    padding: 12px 32px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-block;
+  .feat-badge {
+    display:inline-flex; align-items:center; gap:.5rem;
+    border-radius:50px; padding:.5rem 1.2rem;
+    font-weight:800; font-size:.85rem;
+    margin-bottom:.8rem;
   }
-  .btn-hero-sec:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-3px);
+  .feat-title { font-family:'Fredoka One',cursive; font-size:clamp(1.8rem,3vw,2.6rem); line-height:1.2; }
+  .feat-desc { font-weight:700; color:#555; font-size:1.05rem; line-height:1.7; }
+  .feat-chip {
+    display:inline-flex; align-items:center; gap:.4rem;
+    background:white; border-radius:50px; padding:.5rem 1rem;
+    font-weight:800; font-size:.85rem; color:#444;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
   }
-  .feature-card {
-    background: white;
-    border-radius: 24px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 8px 30px rgba(108,99,255,0.1);
-    transition: all 0.3s;
-    border: 3px solid transparent;
-    height: 100%;
+
+  /* ── Novedades ───────────────────────────────────────────────────────────── */
+  .news-card {
+    background:white; border-radius:22px; padding:1.5rem 1.6rem;
+    box-shadow:0 6px 24px rgba(108,99,255,0.09);
+    border-left:5px solid var(--p);
+    transition:transform .25s, box-shadow .25s; height:100%;
+    position:relative; overflow:hidden;
   }
-  .feature-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(108,99,255,0.2); }
-  .feature-card.c1:hover { border-color: #6C63FF; }
-  .feature-card.c2:hover { border-color: #FF6B6B; }
-  .feature-card.c3:hover { border-color: #4ECDC4; }
-  .feature-card.c4:hover { border-color: #FFB347; }
-  .feature-icon-wrap {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 2.2rem;
+  .news-card::after {
+    content:attr(data-emoji);
+    position:absolute; bottom:-10px; right:8px;
+    font-size:5rem; opacity:.07; pointer-events:none; line-height:1;
   }
-  .stats-bar {
-    background: linear-gradient(135deg, #6C63FF, #9c94ff);
-    color: white;
-    padding: 2.5rem 0;
+  .news-card:hover { transform:translateY(-5px); box-shadow:0 16px 40px rgba(108,99,255,0.18); }
+  .news-card.ct { border-left-color:#4ECDC4; }
+  .news-card.cs { border-left-color:#FF6B6B; }
+  .news-card.ca { border-left-color:#FFB347; }
+  .news-tag {
+    display:inline-block; border-radius:50px; padding:.18rem .75rem;
+    font-size:.7rem; font-weight:900; letter-spacing:.05em;
+    text-transform:uppercase; margin-bottom:.55rem;
   }
-  .stat-item { text-align: center; }
-  .stat-num { font-family: 'Fredoka One', cursive; font-size: 2.8rem; line-height: 1; }
-  .stat-txt { font-weight: 700; font-size: 0.95rem; opacity: 0.9; }
-  .milo-meet {
-    background: linear-gradient(135deg, #fffbf0, #fff0f9);
-    border-radius: 32px;
-    padding: 3rem;
-    position: relative;
-    overflow: hidden;
+  .tn { background:#d4edda; color:#155724; }
+  .tu { background:#d1ecf1; color:#0c5460; }
+
+  /* ── Profesores ──────────────────────────────────────────────────────────── */
+  .prof-wrap {
+    background:linear-gradient(135deg,#6C63FF 0%,#9c94ff 60%,#4ECDC4 100%);
+    border-radius:32px; padding:3rem 2.5rem; color:white;
+    position:relative; overflow:hidden;
   }
-  .milo-meet::before {
-    content: '';
-    position: absolute;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(255,179,71,0.15), transparent);
-    border-radius: 50%;
-    top: -50px; right: -50px;
+  .prof-wrap::before {
+    content:'';position:absolute;
+    width:350px;height:350px;border-radius:50%;
+    background:rgba(255,255,255,0.06);
+    top:-100px;right:-80px;pointer-events:none;
   }
-  .teacher-card {
-    background: linear-gradient(135deg, #6C63FF, #9c94ff);
-    border-radius: 28px;
-    padding: 3rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-  .teacher-deco {
-    position: absolute;
-    right: -20px; bottom: -20px;
-    opacity: 0.08;
-    font-size: 12rem;
-    line-height: 1;
-    color: white;
-  }
-  .step-card {
-    background: white;
-    border-radius: 24px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 8px 30px rgba(108,99,255,0.1);
-    height: 100%;
-    transition: all 0.3s;
-  }
-  .step-card:hover { transform: translateY(-6px); }
-  .step-circle {
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.5rem;
-    color: white;
-    margin: 0 auto 1.2rem;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  }
-  .step-icon-wrap {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1.2rem;
-    font-size: 2.5rem;
-  }
-  .star-deco {
-    position: absolute;
-    animation: starFloat 3s ease-in-out infinite;
-    pointer-events: none;
-  }
-  @keyframes starFloat {
-    0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
-    50%      { transform: translateY(-12px) rotate(15deg); opacity:1; }
-  }
+  .check-row { display:flex; align-items:center; gap:.7rem; font-weight:700; margin-bottom:.6rem; }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- HERO -->
-<section class="hero-section">
+<!-- ══════════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- Burbujas de fondo -->
+  <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.12);width:500px;height:500px;top:-150px;left:-150px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(255,107,107,0.10);width:380px;height:380px;bottom:-100px;right:-100px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(78,205,196,0.09);width:250px;height:250px;top:30%;right:10%"></div>
+
+  <!-- Iconos flotantes del hero -->
+  <span class="deco fa" style="--dur:4s;--del:0s;top:10%;left:5%;font-size:2rem;color:#FFE66D"><i class="bi bi-star-fill"></i></span>
+  <span class="deco fb" style="--dur:5s;--del:0.7s;top:20%;left:12%;font-size:1.1rem;color:#6C63FF"><i class="bi bi-sparkle-fill"></i></span>
+  <span class="deco fc" style="--dur:3.5s;--del:1.2s;top:70%;left:6%;font-size:1.8rem;color:#FF6B6B"><i class="bi bi-stars"></i></span>
+  <span class="deco fa" style="--dur:4.5s;--del:0.3s;top:85%;left:14%;font-size:1.3rem;color:#4ECDC4"><i class="bi bi-diamond-fill"></i></span>
+  <span class="deco fb" style="--dur:6s;--del:0.9s;top:50%;left:3%;font-size:2.2rem;color:#FFB347"><i class="bi bi-star-fill"></i></span>
+
+  <span class="deco fc" style="--dur:3.8s;--del:0.5s;top:8%;right:5%;font-size:1.6rem;color:#FF6B6B"><i class="bi bi-sparkle-fill"></i></span>
+  <span class="deco fa" style="--dur:5s;--del:1.1s;top:28%;right:3%;font-size:2.3rem;color:#FFE66D"><i class="bi bi-star-fill"></i></span>
+  <span class="deco fb" style="--dur:4.2s;--del:0.2s;top:55%;right:6%;font-size:1.2rem;color:#6C63FF"><i class="bi bi-diamond-fill"></i></span>
+  <span class="deco fc" style="--dur:4.8s;--del:1.5s;top:75%;right:4%;font-size:1.9rem;color:#4ECDC4"><i class="bi bi-stars"></i></span>
+  <span class="deco fa" style="--dur:3.2s;--del:0.8s;top:90%;right:12%;font-size:1rem;color:#FFB347"><i class="bi bi-sparkle-fill"></i></span>
+
   <div class="container position-relative" style="z-index:2">
     <div class="row align-items-center g-5">
+
       <div class="col-lg-6 text-center text-lg-start">
         <div class="d-inline-flex align-items-center gap-2 mb-3 px-4 py-2 rounded-pill fw-bold"
-             style="background:white; color:var(--primary); box-shadow:0 4px 15px rgba(108,99,255,0.15); font-size:0.95rem">
+             style="background:white;color:var(--p);box-shadow:0 4px 15px rgba(108,99,255,0.18);font-size:.9rem">
           <i class="bi bi-stars" style="color:#FFB347"></i>
-          ¡La app de inglés más divertida!
+          Plataforma educativa para primaria 🇨🇴
         </div>
 
-        <h1 class="hero-title">
+        <h1 class="hero-title mb-3">
           ¡Aprende Inglés<br>
-          <span style="color:var(--secondary)">jugando</span> con<br>
-          <span style="background:linear-gradient(135deg,#6C63FF,#FF6B6B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-block;padding-bottom:4px">Milo!</span>
+          <span style="color:var(--s)">jugando</span> con<br>
+          <span style="background:linear-gradient(135deg,#6C63FF,#FF6B6B);
+                       -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+                       display:inline-block;padding-bottom:4px">Milo! 🐺</span>
         </h1>
 
-        <p class="hero-subtitle">
-          Juegos divertidos, vocabulario y actividades interactivas
-          para niños de primaria. ¡Aprende sin darte cuenta! <i class="bi bi-award-fill"></i>
+        <p style="font-size:1.1rem;font-weight:700;color:#666;max-width:470px;line-height:1.7" class="mb-4">
+          Minijuegos, talleres interactivos y modo historia para que los niños
+          aprendan vocabulario en inglés <strong style="color:var(--p)">sin darse cuenta</strong>. 🎯
         </p>
 
-        <div class="d-flex gap-3 flex-wrap justify-content-center justify-content-lg-start">
+        <div class="d-flex gap-3 flex-wrap justify-content-center justify-content-lg-start mb-4">
           {% if user.is_authenticated %}
-            <a href="{% url 'games:game_list' %}" class="btn-hero-main">
-              <i class="bi bi-controller me-2"></i>¡Jugar Ahora!
-            </a>
-            <a href="{% url 'accounts:dashboard' %}" class="btn-hero-sec">
-              Mi Panel →
+            <a href="{% url 'accounts:dashboard' %}" class="btn-main">
+              <i class="bi bi-house-fill me-2"></i>Mi Panel
             </a>
           {% else %}
-            <a href="{% url 'accounts:registro' %}" class="btn-hero-main">
+            <a href="{% url 'accounts:registro' %}" class="btn-main">
               <i class="bi bi-rocket-takeoff me-2"></i>¡Empezar Gratis!
             </a>
-            <a href="{% url 'accounts:login' %}" class="btn-hero-sec">
+            <a href="{% url 'accounts:login' %}" class="btn-sec">
               Iniciar Sesión
             </a>
           {% endif %}
         </div>
 
-        <div class="d-flex gap-4 mt-4 justify-content-center justify-content-lg-start flex-wrap">
-          <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-star-fill fs-5" style="color:#865bff""></i>
-            <span class="fw-bold small" style="color:#555">Juegos</span>
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-trophy-fill fs-5" style="color:#FFB347"></i>
-            <span class="fw-bold small" style="color:#555">Sistema de logros</span>
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-heart-fill fs-5" style="color:var(--secondary)"></i>
-            <span class="fw-bold small" style="color:#555">100% gratis</span>
-          </div>
+        <!-- Chips de features rápidas -->
+        <div class="d-flex flex-wrap gap-2">
+          <span class="feat-chip"><i class="bi bi-controller-fill" style="color:#6C63FF"></i>10 Minijuegos</span>
+          <span class="feat-chip"><i class="bi bi-map-fill" style="color:#4ECDC4"></i>Modo Historia</span>
+          <span class="feat-chip"><i class="bi bi-trophy-fill" style="color:#FFB347"></i>Logros</span>
+          <span class="feat-chip"><i class="bi bi-heart-fill" style="color:#FF6B6B"></i>100% Gratis</span>
         </div>
       </div>
 
       <div class="col-lg-6 text-center position-relative">
-       <!-- Lado izquierdo -->
-    <span class="star-deco" style="top:10%;left:2%;animation-delay:0s;font-size:2rem">
-     <i class="bi bi-star-fill" style="color:#FFE66D"></i>
-    </span>
-    <span class="star-deco" style="top:30%;left:0%;animation-delay:0.8s;font-size:1rem">
-     <i class="bi bi-sparkle-fill" style="color:#6C63FF"></i>
-    </span>
-    <span class="star-deco" style="top:55%;left:3%;animation-delay:1.5s;font-size:1.6rem">
-     <i class="bi bi-star-fill" style="color:#FF6B6B"></i>
-    </span>
-    <span class="star-deco" style="top:75%;left:1%;animation-delay:0.4s;font-size:0.9rem">
-     <i class="bi bi-sparkle-fill" style="color:#4ECDC4"></i>
-    </span>
-    <span class="star-deco" style="top:88%;left:8%;animation-delay:1.2s;font-size:1.3rem">
-     <i class="bi bi-star-fill" style="color:#FFB347"></i>
-    </span>
+        <div class="deco" style="width:320px;height:320px;border-radius:50%;
+             background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(255,107,107,0.08));
+             top:50%;left:50%;transform:translate(-50%,-50%);z-index:0"></div>
 
-<!-- Lado derecho -->
-<span class="star-deco" style="top:8%;right:2%;animation-delay:0.5s;font-size:1.4rem">
-  <i class="bi bi-sparkle-fill" style="color:#FF6B6B"></i>
-</span>
-<span class="star-deco" style="top:28%;right:1%;animation-delay:1s;font-size:2.2rem">
-  <i class="bi bi-star-fill" style="color:#6C63FF"></i>
-</span>
-<span class="star-deco" style="top:50%;right:0%;animation-delay:0.2s;font-size:1rem">
-  <i class="bi bi-sparkle-fill" style="color:#FFE66D"></i>
-</span>
-<span class="star-deco" style="top:70%;right:3%;animation-delay:1.7s;font-size:1.8rem">
-  <i class="bi bi-star-fill" style="color:#4ECDC4"></i>
-</span>
-<span class="star-deco" style="top:85%;right:5%;animation-delay:0.6s;font-size:1.1rem">
-  <i class="bi bi-sparkle-fill" style="color:#FFB347"></i>
-</span>
-
-        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-                    width:320px;height:320px;border-radius:50%;
-                    background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(255,107,107,0.1));
-                    z-index:0"></div>
-
-        <video class="milo-hero position-relative"
-               style="z-index:1"
-               autoplay loop muted playsinline>
-           <source src="{% static 'img/milo_video1.webm' %}" type="video/mp4">
+        <video class="milo-hero position-relative" style="z-index:1" autoplay loop muted playsinline>
+          <source src="{% static 'img/milo_video1.webm' %}" type="video/webm">
         </video>
 
-        <div style="position:absolute;top:5%;right:0;background:white;border-radius:20px 20px 20px 5px;
-                    padding:12px 18px;box-shadow:0 8px 25px rgba(0,0,0,0.12);max-width:180px;z-index:2">
-          <div class="fw-bold" style="font-size:0.9rem;color:var(--primary)">¡Hola! Soy Milo
-            <i class="bi bi-hand-wave-fill ms-1" style="color:#FFB347"></i>
+        <!-- Burbuja de diálogo -->
+        <div class="deco" style="top:6%;right:0;background:white;border-radius:18px 18px 18px 4px;
+             padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,0.11);max-width:175px;z-index:3">
+          <div class="fw-bold" style="font-size:.85rem;color:var(--p)">
+            ¡Hola! Soy Milo <i class="bi bi-hand-wave-fill" style="color:#FFB347"></i>
           </div>
-          <div style="font-size:0.78rem;color:#888;font-weight:700">¡Vamos a aprender inglés juntos!</div>
+          <div style="font-size:.73rem;color:#888;font-weight:700">¡Aprendamos inglés juntos!</div>
         </div>
+
       </div>
     </div>
   </div>
 </section>
 
-<!-- STATS BAR -->
-<div class="stats-bar">
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEAT 1 — MINIJUEGOS (imagen izquierda)
+══════════════════════════════════════════════════════════════ -->
+<section class="feat-section" style="background:white">
+  <!-- Decoraciones -->
+  <span class="deco fa" style="--dur:4s;top:10%;right:4%;font-size:2.5rem;color:#FFE66D;opacity:.7"><i class="bi bi-controller-fill"></i></span>
+  <span class="deco fc" style="--dur:3s;bottom:15%;left:3%;font-size:1.8rem;color:#6C63FF;opacity:.5"><i class="bi bi-sparkle-fill"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.07);width:300px;height:300px;bottom:-80px;right:-80px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(255,230,109,0.1);width:180px;height:180px;top:10%;left:-40px"></div>
+
   <div class="container">
-    <div class="row g-4 justify-content-center">
-      <div class="col-6 col-md-3">
-        <div class="stat-item">
-          <div class="stat-num">
-            <i class="bi bi-controller"></i>
-          </div>
-          <div class="stat-txt">Juegos</div>
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-5 text-center">
+        <img src="{% static 'img/milo_bai.png' %}" alt="Milo bailando" class="feat-img"
+             style="animation-delay:.2s">
+      </div>
+
+      <div class="col-lg-7">
+        <div class="feat-badge" style="background:#f0eeff;color:#6C63FF">
+          <i class="bi bi-controller-fill"></i> Minijuegos educativos
+        </div>
+        <h2 class="feat-title mb-3" style="color:#6C63FF">
+          🎮 10 minijuegos<br>para aprender inglés
+        </h2>
+        <p class="feat-desc mb-4">
+          Arrastra palabras, completa sopas de letras, forma parejas con audio,
+          pinta en canvas, juega ahorcado, ordena letras y más —
+          todo con vocabulario real en inglés.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="feat-chip" style="color:#6C63FF"><i class="bi bi-cursor-fill"></i> Drag & Drop</span>
+          <span class="feat-chip" style="color:#6C63FF"><i class="bi bi-search"></i> Sopa de letras</span>
+          <span class="feat-chip" style="color:#6C63FF"><i class="bi bi-headphones-fill"></i> Audio</span>
+          <span class="feat-chip" style="color:#6C63FF"><i class="bi bi-brush-fill"></i> Pintura</span>
+          <span class="feat-chip" style="color:#6C63FF"><i class="bi bi-alphabet-uppercase"></i> Ahorcado</span>
+          <span class="feat-chip" style="color:#6C63FF"><i class="bi bi-puzzle-fill"></i> +5 más</span>
         </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-item">
-          <i class="bi bi-bar-chart-fill fs-1"></i>
-          <div class="stat-txt">Niveles para subir</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-item">
-          <div class="stat-num">
-            <i class="bi bi-magic"></i>
-          </div>
-          <div class="stat-txt">Huesos de Milo</div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-item">
-          <div class="stat-num"><i class="bi bi-stars" style="font-size:2.2rem"></i></div>
-          <div class="stat-txt">Diversión garantizada</div>
-        </div>
-      </div>
+
     </div>
   </div>
-</div>
+</section>
 
-<!-- FEATURES -->
-<section class="py-5 my-2">
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEAT 2 — TALLERES (imagen derecha)
+══════════════════════════════════════════════════════════════ -->
+<section class="feat-section" style="background:#fef6ff">
+  <span class="deco fb" style="--dur:5s;top:8%;left:4%;font-size:2rem;color:#FF6B6B;opacity:.6"><i class="bi bi-journal-text"></i></span>
+  <span class="deco fa" style="--dur:3.5s;bottom:10%;right:5%;font-size:1.5rem;color:#FFB347;opacity:.6"><i class="bi bi-star-fill"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(255,107,107,0.07);width:280px;height:280px;top:-60px;left:-60px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(255,179,71,0.09);width:160px;height:160px;bottom:0;right:15%"></div>
+
   <div class="container">
-    <div class="text-center mb-5">
-      <span class="badge rounded-pill px-4 py-2 mb-3 fw-bold"
-            style="background:#f0eeff;color:var(--primary);font-size:0.9rem">
-        <i class="bi bi-grid-3x3-gap-fill me-1"></i> Actividades
-      </span>
-      <h2 class="font-fredoka fs-1" style="color:var(--primary)">¿Qué puedes hacer en NestGrow?</h2>
-      <p class="text-muted fw-bold">¡Cuatro formas súper divertidas de aprender inglés!</p>
+    <div class="row align-items-center g-5 flex-lg-row-reverse">
+
+      <div class="col-lg-5 text-center">
+        <img src="{% static 'img/milo_apuntes.png' %}" alt="Milo con apuntes" class="feat-img"
+             style="animation-delay:.4s">
+      </div>
+
+      <div class="col-lg-7">
+        <div class="feat-badge" style="background:#fff0f0;color:#FF6B6B">
+          <i class="bi bi-journal-check"></i> Talleres interactivos
+        </div>
+        <h2 class="feat-title mb-3" style="color:#FF6B6B">
+          📝 Talleres con<br>calificación automática
+        </h2>
+        <p class="feat-desc mb-4">
+          Los profesores crean talleres con preguntas de opción múltiple,
+          casillas de verificación, respuestas escritas y ¡<strong style="color:#FF6B6B">dibujos en canvas</strong>!
+          Cada taller tiene nota en escala colombiana (1.0 – 5.0).
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="feat-chip" style="color:#FF6B6B"><i class="bi bi-check2-square"></i> Opción múltiple</span>
+          <span class="feat-chip" style="color:#FF6B6B"><i class="bi bi-pencil-fill"></i> Respuesta escrita</span>
+          <span class="feat-chip" style="color:#FF6B6B"><i class="bi bi-palette-fill"></i> Dibujo en canvas</span>
+          <span class="feat-chip" style="color:#FF6B6B"><i class="bi bi-bar-chart-fill"></i> Nota automática</span>
+        </div>
+      </div>
+
     </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEAT 3 — MODO HISTORIA (imagen izquierda)
+══════════════════════════════════════════════════════════════ -->
+<section class="feat-section" style="background:white">
+  <span class="deco fc" style="--dur:4s;top:12%;right:6%;font-size:2rem;color:#4ECDC4;opacity:.7"><i class="bi bi-map-fill"></i></span>
+  <span class="deco fb" style="--dur:5s;bottom:8%;left:4%;font-size:1.6rem;color:#FFE66D;opacity:.6"><i class="bi bi-stars"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(78,205,196,0.08);width:320px;height:320px;bottom:-80px;right:-60px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(78,205,196,0.07);width:150px;height:150px;top:5%;left:-30px"></div>
+
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-5 text-center">
+        <img src="{% static 'img/milo_curioso.png' %}" alt="Milo curioso" class="feat-img"
+             style="animation-delay:.1s">
+      </div>
+
+      <div class="col-lg-7">
+        <div class="feat-badge" style="background:#f0fffe;color:#4ECDC4">
+          <i class="bi bi-map-fill"></i> Modo Historia
+        </div>
+        <h2 class="feat-title mb-3" style="color:#4ECDC4">
+          🗺️ Milo te guía por<br>un mundo de aventuras
+        </h2>
+        <p class="feat-desc mb-4">
+          Un mapa interactivo con secciones que el profesor desbloquea para su salón.
+          Cada lección tiene actividades variadas, sistema de estrellas ⭐⭐⭐
+          y recompensas en Huesos de Milo.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="feat-chip" style="color:#4ECDC4"><i class="bi bi-map-fill"></i> Mapa interactivo</span>
+          <span class="feat-chip" style="color:#4ECDC4"><i class="bi bi-star-fill"></i> Sistema de estrellas</span>
+          <span class="feat-chip" style="color:#4ECDC4"><i class="bi bi-lock-fill"></i> Secciones desbloqueables</span>
+          <span class="feat-chip" style="color:#4ECDC4"><i class="bi bi-gift-fill"></i> Recompensas</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEAT 4 — GAMIFICACIÓN (imagen derecha)
+══════════════════════════════════════════════════════════════ -->
+<section class="feat-section" style="background:#fffbf0">
+  <span class="deco fa" style="--dur:3.5s;top:10%;left:5%;font-size:2.2rem;color:#FFB347;opacity:.7"><i class="bi bi-trophy-fill"></i></span>
+  <span class="deco fc" style="--dur:4.5s;bottom:12%;right:4%;font-size:1.8rem;color:#6C63FF;opacity:.5"><i class="bi bi-sparkle-fill"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(255,179,71,0.1);width:280px;height:280px;top:-60px;right:-60px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.07);width:170px;height:170px;bottom:0;left:10%"></div>
+
+  <div class="container">
+    <div class="row align-items-center g-5 flex-lg-row-reverse">
+
+      <div class="col-lg-5 text-center">
+        <img src="{% static 'img/milo_emociontotal.png' %}" alt="Milo emocionado" class="feat-img"
+             style="animation-delay:.3s">
+      </div>
+
+      <div class="col-lg-7">
+        <div class="feat-badge" style="background:#fff9ee;color:#FFB347">
+          <i class="bi bi-trophy-fill"></i> Sistema de progreso
+        </div>
+        <h2 class="feat-title mb-3" style="color:#FFB347">
+          🏆 Puntos, niveles<br>y premios con Milo
+        </h2>
+        <p class="feat-desc mb-4">
+          Cada actividad otorga XP y Huesos de Milo 🦴. Al subir de nivel se desbloquean
+          logros y se ganan huesos extra para gastar en la
+          <strong style="color:#FFB347">Tienda de Milo</strong> y decorar la habitación virtual.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <span class="feat-chip" style="color:#FFB347"><i class="bi bi-lightning-fill"></i> XP y niveles 1–50</span>
+          <span class="feat-chip" style="color:#FFB347">🦴 Huesos de Milo</span>
+          <span class="feat-chip" style="color:#FFB347"><i class="bi bi-patch-check-fill"></i> +30 logros</span>
+          <span class="feat-chip" style="color:#FFB347"><i class="bi bi-house-heart-fill"></i> Habitación virtual</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     NOVEDADES
+══════════════════════════════════════════════════════════════ -->
+<section class="py-5" style="background:#f8f6ff;position:relative;overflow:hidden">
+  <!-- Decoraciones -->
+  <span class="deco fa" style="--dur:4s;top:5%;left:2%;font-size:2rem;color:#6C63FF;opacity:.4"><i class="bi bi-sparkle-fill"></i></span>
+  <span class="deco fb" style="--dur:5s;top:5%;right:3%;font-size:1.5rem;color:#4ECDC4;opacity:.5"><i class="bi bi-stars"></i></span>
+  <span class="deco fc" style="--dur:3.5s;bottom:5%;left:5%;font-size:1.3rem;color:#FFB347;opacity:.5"><i class="bi bi-star-fill"></i></span>
+  <span class="deco fa" style="--dur:4.5s;bottom:5%;right:5%;font-size:1.8rem;color:#FF6B6B;opacity:.4"><i class="bi bi-diamond-fill"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.08);width:260px;height:260px;top:-60px;left:-60px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(78,205,196,0.08);width:200px;height:200px;bottom:-50px;right:-40px"></div>
+
+  <div class="container position-relative" style="z-index:1">
+    <div class="row align-items-center mb-5 g-4">
+      <div class="col-md-8">
+        <span class="badge rounded-pill px-4 py-2 mb-3 fw-bold"
+              style="background:#d4edda;color:#155724;font-size:.9rem">
+          <i class="bi bi-lightning-charge-fill me-1"></i> Últimas actualizaciones
+        </span>
+        <h2 class="font-fredoka fs-1 mb-1" style="color:var(--p)">¿Qué hay de nuevo en NestGrow?</h2>
+        <p class="text-muted fw-bold mb-0">La plataforma crece constantemente con nuevas funciones</p>
+      </div>
+      <div class="col-md-4 text-center text-md-end">
+        <img src="{% static 'img/milo_aplaudiendo.png' %}" alt="Milo aplaudiendo"
+             style="width:130px;filter:drop-shadow(0 10px 20px rgba(108,99,255,0.2));
+                    animation:floatA 3.5s ease-in-out infinite">
+      </div>
+    </div>
+
     <div class="row g-4">
-      <div class="col-sm-6 col-lg-3 fade-in-up stagger-1">
-        <div class="feature-card c1">
-          <div class="feature-icon-wrap" style="background:#f0eeff">
-            <i class="bi bi-hand-index-thumb-fill" style="color:#6C63FF"></i>
-          </div>
-          <h5 class="font-fredoka fs-4 mt-2" style="color:#6C63FF">Arrastra y Suelta</h5>
-          <p class="text-muted small fw-bold mb-3">Conecta imágenes con palabras en inglés arrastrándolas al lugar correcto.</p>
-          <span class="badge rounded-pill" style="background:#f0eeff;color:#6C63FF">
-            <i class="bi bi-controller me-1"></i>Interactivo
-          </span>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-3 fade-in-up stagger-2">
-        <div class="feature-card c2">
-          <div class="feature-icon-wrap" style="background:#fff0f0">
-            <i class="bi bi-search-heart-fill" style="color:#FF6B6B"></i>
-          </div>
-          <h5 class="font-fredoka fs-4 mt-2" style="color:#FF6B6B">Sopa de Letras</h5>
-          <p class="text-muted small fw-bold mb-3">¡Encuentra las palabras escondidas antes de que se acabe el tiempo!</p>
-          <span class="badge rounded-pill" style="background:#fff0f0;color:#FF6B6B">
-            <i class="bi bi-clock me-1"></i>Con tiempo
-          </span>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-3 fade-in-up stagger-3">
-        <div class="feature-card c3">
-          <div class="feature-icon-wrap" style="background:#f0fffe">
-            <i class="bi bi-puzzle-fill" style="color:#4ECDC4"></i>
-          </div>
-          <h5 class="font-fredoka fs-4 mt-2" style="color:#4ECDC4">Rompecabezas</h5>
-          <p class="text-muted small fw-bold mb-3">Conecta imágenes con sus palabras en inglés y forma parejas perfectas.</p>
-          <span class="badge rounded-pill" style="background:#f0fffe;color:#4ECDC4">
-            <i class="bi bi-lightning me-1"></i>Rápido
-          </span>
-        </div>
-      </div>
-      <div class="col-sm-6 col-lg-3 fade-in-up stagger-4">
-        <div class="feature-card c4">
-          <div class="feature-icon-wrap" style="background:#fff9ee">
-            <i class="bi bi-music-note-beamed" style="color:#FFB347"></i>
-          </div>
-          <h5 class="font-fredoka fs-4 mt-2" style="color:#FFB347">Juego de Audio</h5>
-          <p class="text-muted small fw-bold mb-3">Escucha la pronunciación y elige la imagen correcta. ¡Entrena tu oído!</p>
-          <span class="badge rounded-pill" style="background:#fff9ee;color:#FFB347">
-            <i class="bi bi-ear me-1"></i>Auditivo
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- CÓMO FUNCIONA -->
-<section class="py-5" style="background:#f8f6ff">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="font-fredoka fs-1" style="color:var(--primary)">¿Cómo funciona? <i class="bi bi-emoji-surprise-fill"></i></h2>
-      <p class="text-muted fw-bold">¡En 3 pasos ya estás aprendiendo!</p>
-    </div>
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-circle" style="background:linear-gradient(135deg,#6C63FF,#9c94ff)">1</div>
-          <div class="step-icon-wrap" style="background:#f0eeff">
-            <i class="bi bi-person-plus-fill" style="color:#6C63FF;font-size:2.5rem"></i>
+      <div class="col-md-6 col-lg-4">
+        <div class="news-card" data-emoji="🎨">
+          <span class="news-tag tn">Nuevo</span>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.7rem">🎨</span>
+            <h5 class="font-fredoka mb-0" style="color:#6C63FF;font-size:1.15rem">Bloque de Dibujo</h5>
           </div>
-          <h5 class="font-fredoka fs-4" style="color:var(--primary)">Regístrate gratis</h5>
-          <p class="text-muted fw-bold small">Crea tu cuenta en segundos y únete a la clase de tu profe con un código.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-circle" style="background:linear-gradient(135deg,#FF6B6B,#ff9494)">2</div>
-          <div class="step-icon-wrap" style="background:#fff0f0">
-            <i class="bi bi-joystick" style="color:#FF6B6B;font-size:2.5rem"></i>
-          </div>
-          <h5 class="font-fredoka fs-4" style="color:var(--secondary)">Elige un juego</h5>
-          <p class="text-muted fw-bold small">Escoge entre 4 tipos de juegos y empieza a aprender vocabulario en inglés.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="step-card">
-          <div class="step-circle" style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2)">3</div>
-          <div class="step-icon-wrap" style="background:#f0fffe">
-            <i class="bi bi-trophy-fill" style="color:#4ECDC4;font-size:2.5rem"></i>
-          </div>
-          <h5 class="font-fredoka fs-4" style="color:var(--accent)">¡Gana premios!</h5>
-          <p class="text-muted fw-bold small">Acumula puntos, sube de nivel y desbloquea logros especiales con Milo.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONOCE A MILO -->
-<section class="py-5">
-  <div class="container">
-    <div class="milo-meet">
-      <div class="row align-items-center g-4">
-        <div class="col-md-5 text-center">
-          <img src="{% static 'img/milo_fest.png' %}"
-               alt="Milo bailando"
-               style="width:clamp(180px,30vw,280px);filter:drop-shadow(0 15px 30px rgba(255,179,71,0.3));animation:miloFloat 4s ease-in-out infinite">
-        </div>
-        <div class="col-md-7">
-          <span class="badge rounded-pill px-3 py-2 mb-3 fw-bold"
-                style="background:rgba(108,99,255,0.1);color:var(--primary)">
-            <i class="bi bi-patch-heart-fill me-1"></i> Tu compañero de aventuras
-          </span>
-          <h2 class="font-fredoka" style="font-size:2.5rem;color:var(--primary)">¡Hola, soy Milo!</h2>
-          <p class="fw-bold fs-5 text-muted">
-            Soy tu compañero en NestGrow. Estoy aquí para guiarte en cada actividad,
-            darte ánimo cuando lo necesites y celebrar contigo cada logro.
-            ¡Juntos vamos a aprender inglés de una forma súper divertida!
+          <p class="text-muted small fw-bold mb-0">
+            Nuevo tipo de pregunta en talleres: el estudiante dibuja su respuesta
+            en un canvas con herramientas de pintura. El profesor ve los dibujos en los resultados.
           </p>
-          <div class="d-flex gap-3 flex-wrap mt-3">
-            <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-bold"
-                 style="background:rgba(108,99,255,0.1);color:var(--primary)">
-              <i class="bi bi-trophy-fill"></i> Retos y logros
-            </div>
-            <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-bold"
-                 style="background:rgba(255,107,107,0.1);color:var(--secondary)">
-              <i class="bi bi-star-fill"></i> Puntos y niveles
-            </div>
-            <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill fw-bold"
-                 style="background:rgba(78,205,196,0.1);color:var(--accent)">
-              <i class="bi bi-gift-fill"></i> Premios especiales
-            </div>
-          </div>
         </div>
       </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="news-card ca" data-emoji="📅">
+          <span class="news-tag tn">Nuevo</span>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.7rem">📅</span>
+            <h5 class="font-fredoka mb-0" style="color:#FFB347;font-size:1.15rem">Sistema de Períodos</h5>
+          </div>
+          <p class="text-muted small fw-bold mb-0">
+            Períodos académicos con fecha límite, asignación de talleres y minijuegos,
+            y resultados consolidados con nota 1.0–5.0 por estudiante.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="news-card ct" data-emoji="🗺️">
+          <span class="news-tag tn">Nuevo</span>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.7rem">🗺️</span>
+            <h5 class="font-fredoka mb-0" style="color:#4ECDC4;font-size:1.15rem">Modo Historia</h5>
+          </div>
+          <p class="text-muted small fw-bold mb-0">
+            Mapa de aventuras con lecciones interactivas, sistema de estrellas y recompensas.
+            El profesor desbloquea secciones por salón.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="news-card cs" data-emoji="🎮">
+          <span class="news-tag tn">Nuevo</span>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.7rem">🎮</span>
+            <h5 class="font-fredoka mb-0" style="color:#FF6B6B;font-size:1.15rem">5 Minijuegos Nuevos</h5>
+          </div>
+          <p class="text-muted small fw-bold mb-0">
+            Memoria, Ahorcado, Quiz, Ordenar Letras y Globos se suman al catálogo.
+            Ahora hay <strong>10 juegos</strong> educativos disponibles.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="news-card" data-emoji="🏠">
+          <span class="news-tag tu">Mejorado</span>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.7rem">🏠</span>
+            <h5 class="font-fredoka mb-0" style="color:#6C63FF;font-size:1.15rem">Habitación de Milo</h5>
+          </div>
+          <p class="text-muted small fw-bold mb-0">
+            Los estudiantes gastan sus Huesos para decorar la habitación virtual
+            y desbloquear juegos de entretenimiento exclusivos.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="news-card ct" data-emoji="🐾">
+          <span class="news-tag tu">Mejorado</span>
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span style="font-size:1.7rem">🐾</span>
+            <h5 class="font-fredoka mb-0" style="color:#4ECDC4;font-size:1.15rem">Transiciones de Página</h5>
+          </div>
+          <p class="text-muted small fw-bold mb-0">
+            Huellas de Milo como transición default, estrellas al completar actividades
+            y círculos de colores al iniciar o cerrar sesión.
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- PARA PROFESORES -->
-<section class="py-5">
+
+<!-- ══════════════════════════════════════════════════════════════
+     PARA PROFESORES
+══════════════════════════════════════════════════════════════ -->
+<section class="py-5" style="background:white;position:relative;overflow:hidden">
+  <span class="deco fa" style="--dur:4s;top:15%;left:3%;font-size:1.8rem;color:#6C63FF;opacity:.35"><i class="bi bi-sparkle-fill"></i></span>
+  <span class="deco fb" style="--dur:5s;bottom:15%;right:3%;font-size:2rem;color:#4ECDC4;opacity:.3"><i class="bi bi-stars"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.07);width:220px;height:220px;top:-50px;right:5%"></div>
+  <div class="deco deco-bubble" style="--c:rgba(78,205,196,0.07);width:160px;height:160px;bottom:-40px;left:8%"></div>
+
   <div class="container">
-    <div class="teacher-card">
-      <!-- Decoración de fondo — icono Bootstrap en vez de emoji -->
-      <i class="bi bi-mortarboard-fill teacher-deco"></i>
-      <div class="row align-items-center position-relative" style="z-index:1">
-        <div class="col-md-7">
+    <div class="prof-wrap">
+      <div class="row align-items-center g-4 position-relative" style="z-index:1">
+
+        <div class="col-lg-7">
           <span class="badge rounded-pill px-3 py-2 mb-3 fw-bold"
                 style="background:rgba(255,255,255,0.2);color:white">
             <i class="bi bi-mortarboard-fill me-1"></i> Para docentes
           </span>
-          <h3 class="font-fredoka fs-1 text-white">¿Eres Profesor/a?</h3>
-          <p class="fw-bold text-white fs-5" style="opacity:0.9">
-            Crea tu clase, comparte tu código y haz seguimiento al
-            progreso de tus estudiantes en tiempo real.
-          </p>
-          <div class="d-flex gap-3 flex-wrap mt-3">
-            <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.9)">
-              <i class="bi bi-check-circle-fill" style="color:#FFE66D"></i> Gestiona juegos y vocabulario
-            </div>
-            <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.9)">
-              <i class="bi bi-check-circle-fill" style="color:#FFE66D"></i> Ve el progreso de cada niño
-            </div>
-            <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.9)">
-              <i class="bi bi-check-circle-fill" style="color:#FFE66D"></i> Recibe informes por correo
-            </div>
+          <h3 class="font-fredoka text-white mb-3" style="font-size:2.2rem">
+            ¿Eres Profesor/a? 👩‍🏫
+          </h3>
+          <div class="check-row" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-check-circle-fill" style="color:#FFE66D;font-size:1.1rem"></i>
+            Crea salones y comparte tu código de clase
+          </div>
+          <div class="check-row" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-check-circle-fill" style="color:#FFE66D;font-size:1.1rem"></i>
+            Asigna talleres y minijuegos por período académico
+          </div>
+          <div class="check-row" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-check-circle-fill" style="color:#FFE66D;font-size:1.1rem"></i>
+            Ve notas, progreso y dibujos de cada estudiante
+          </div>
+          <div class="check-row" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-check-circle-fill" style="color:#FFE66D;font-size:1.1rem"></i>
+            Desbloquea secciones del Modo Historia para tu salón
+          </div>
+          <div class="check-row" style="color:rgba(255,255,255,0.95)">
+            <i class="bi bi-check-circle-fill" style="color:#FFE66D;font-size:1.1rem"></i>
+            Recibe informes de progreso por correo electrónico
           </div>
         </div>
-        <div class="col-md-5 text-center mt-4 mt-md-0">
-          <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo"
-               style="width:120px;margin-bottom:1.5rem;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.2))">
+
+        <div class="col-lg-5 text-center">
+          <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo orgulloso"
+               style="width:130px;margin-bottom:1.2rem;
+                      filter:drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+                      animation:floatA 4s ease-in-out infinite">
           <br>
-          <a href="{% url 'accounts:registro' %}"
-             style="background:white;color:var(--primary);border:none;border-radius:50px;
-                    padding:14px 36px;font-family:'Fredoka One',cursive;font-size:1.1rem;
-                    box-shadow:0 8px 25px rgba(0,0,0,0.2);text-decoration:none;display:inline-block;
-                    transition:all 0.3s"
+          {% if user.is_authenticated %}
+          <a href="{% url 'accounts:dashboard' %}"
+             style="background:white;color:var(--p);border-radius:50px;padding:13px 36px;
+                    font-family:'Fredoka One',cursive;font-size:1.05rem;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.2);text-decoration:none;
+                    display:inline-block;transition:all .3s"
              onmouseover="this.style.transform='translateY(-3px)'"
-             onmouseout="this.style.transform='translateY(0)'">
-            Crear mi clase →
+             onmouseout="this.style.transform=''">
+            Ir a mi panel →
           </a>
+          {% else %}
+          <a href="{% url 'accounts:registro' %}"
+             style="background:white;color:var(--p);border-radius:50px;padding:13px 36px;
+                    font-family:'Fredoka One',cursive;font-size:1.05rem;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.2);text-decoration:none;
+                    display:inline-block;transition:all .3s"
+             onmouseover="this.style.transform='translateY(-3px)'"
+             onmouseout="this.style.transform=''">
+            Crear mi clase gratis →
+          </a>
+          {% endif %}
         </div>
+
       </div>
     </div>
   </div>
 </section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER CTA — solo no autenticados
+══════════════════════════════════════════════════════════════ -->
+{% if not user.is_authenticated %}
+<section class="py-5 text-center" style="background:#f8f6ff;position:relative;overflow:hidden">
+  <span class="deco fa" style="--dur:3.5s;top:10%;left:5%;font-size:2.5rem;color:#FFE66D;opacity:.5"><i class="bi bi-star-fill"></i></span>
+  <span class="deco fb" style="--dur:4s;top:15%;right:6%;font-size:2rem;color:#FF6B6B;opacity:.5"><i class="bi bi-stars"></i></span>
+  <span class="deco fc" style="--dur:4.5s;bottom:10%;left:8%;font-size:1.5rem;color:#4ECDC4;opacity:.5"><i class="bi bi-diamond-fill"></i></span>
+  <span class="deco fa" style="--dur:3s;bottom:10%;right:8%;font-size:1.8rem;color:#FFB347;opacity:.5"><i class="bi bi-sparkle-fill"></i></span>
+  <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.08);width:240px;height:240px;top:-50px;left:-50px"></div>
+  <div class="deco deco-bubble" style="--c:rgba(255,107,107,0.07);width:180px;height:180px;bottom:-40px;right:-30px"></div>
+
+  <div class="container position-relative" style="z-index:1">
+    <img src="{% static 'img/milo_fest.png' %}" alt="Milo festejando"
+         style="width:100px;margin-bottom:1rem;
+                filter:drop-shadow(0 10px 20px rgba(108,99,255,0.2));
+                animation:floatA 4s ease-in-out infinite">
+    <h3 class="font-fredoka mb-2" style="font-size:2.4rem;color:var(--p)">
+      ¡Únete a la aventura con Milo! 🚀
+    </h3>
+    <p class="text-muted fw-bold mb-4" style="font-size:1.05rem">
+      Gratis · Sin publicidad · Hecho para niños colombianos 🇨🇴
+    </p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{% url 'accounts:registro' %}" class="btn-main">
+        <i class="bi bi-rocket-takeoff me-2"></i>¡Crear mi cuenta!
+      </a>
+      <a href="{% url 'accounts:login' %}" class="btn-sec">
+        Ya tengo cuenta
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
 
 {% endblock %}

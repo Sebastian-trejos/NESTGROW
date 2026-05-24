@@ -146,6 +146,9 @@
   position:relative;
 }
 .word-card:hover { transform:translateY(-5px) scale(1.03); box-shadow:0 8px 25px rgba(0,0,0,.12); }
+.word-card .wc-emoji {
+  font-size:2rem; line-height:1; margin-bottom:4px;
+}
 .word-card .wc-en {
   font-family:'Fredoka One',cursive;font-size:1.1rem;
   color:#333;margin-bottom:2px;
@@ -330,10 +333,13 @@
              onclick="openWordModal('{{ item.word_en|escapejs }}','{{ item.word_es|escapejs }}',
                                     '{{ item.descripcion_es|escapejs }}','{{ item.pronunciacion_es|escapejs }}',
                                     '{{ cd.categoria.name_en|escapejs }}','{{ cd.categoria.color|escapejs }}',
-                                    {{ item.difficulty }})">
+                                    {{ item.difficulty }},'{{ item.emoji|escapejs }}')">
           <span class="wc-diff diff-{{ item.difficulty }}">
             {% if item.difficulty == 1 %}Fácil{% elif item.difficulty == 2 %}Medio{% else %}Difícil{% endif %}
           </span>
+          {% if item.emoji %}
+            <div class="wc-emoji">{{ item.emoji }}</div>
+          {% endif %}
           <div class="wc-en">{{ item.word_en }}</div>
           <div class="wc-es">{{ item.word_es }}</div>
           {% if item.descripcion_es %}
@@ -369,6 +375,7 @@
 <div class="word-modal-backdrop" id="wordModal" onclick="closeWordModal(event)">
   <div class="word-modal">
     <span class="modal-cat-badge" id="modalCatBadge"></span>
+    <div class="modal-emoji" id="modalEmoji" style="font-size:3.5rem;line-height:1;margin:8px 0 4px"></div>
     <div class="modal-en" id="modalEn"></div>
     <div class="modal-es" id="modalEs"></div>
     <div class="modal-pron" id="modalPron"></div>
@@ -395,9 +402,13 @@ function toggleAccordion(catPk) {
   el.classList.toggle('open');
 }
 
-function openWordModal(en, es, desc, pron, catName, catColor, diff) {
-  document.getElementById('modalEn').textContent  = en;
-  document.getElementById('modalEs').textContent  = es;
+function openWordModal(en, es, desc, pron, catName, catColor, diff, emoji) {
+  document.getElementById('modalEn').textContent = en;
+  document.getElementById('modalEs').textContent = es;
+
+  const emojiEl = document.getElementById('modalEmoji');
+  emojiEl.textContent = emoji || '';
+  emojiEl.style.display = emoji ? '' : 'none';
 
   const pronEl = document.getElementById('modalPron');
   pronEl.textContent = pron ? '🔊 ' + pron : '';

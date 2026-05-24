@@ -24,6 +24,10 @@
       <div class="vocab-card h-100" onclick="speakAndPlay('{{ item.word_en }}', '{% if item.audio %}{{ item.audio.url }}{% endif %}')">
         {% if item.image %}
           <img src="{{ item.image.url }}" alt="{{ item.word_en }}" class="vocab-img" style="width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px">
+        {% elif item.emoji %}
+          <div style="height:80px;background:linear-gradient(135deg,#f0eeff,#ffe9e9);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:10px;line-height:1">
+            {{ item.emoji }}
+          </div>
         {% else %}
           <div style="height:80px;background:linear-gradient(135deg,#f0eeff,#ffe9e9);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:10px">
             {{ category.icon }}
