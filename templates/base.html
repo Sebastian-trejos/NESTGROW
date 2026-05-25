@@ -180,7 +180,6 @@
     <div class="milo-avatar">
       <img src="{% static 'img/milo_rostro.png' %}"
            id="miloImgFloat"
-           style="width:55px;filter:drop-shadow(0 4px 10px rgba(108,99,255,0.3))"
            alt="Milo">
     </div>
   </div>
@@ -371,17 +370,19 @@
     }
   }
 
-  /* Saludo automático al entrar */
+  /* Entrada animada de Milo desde abajo */
   setTimeout(() => {
+    const float  = document.getElementById('miloFloat');
     const bubble = document.getElementById('miloBubble');
     const speech = document.getElementById('miloSpeech');
+    if (float) float.classList.add('visible');
     if (bubble && speech) {
       const saludos = ["¡Hola! 👋", "¡Bienvenid@! 🌟", "¡Qué bueno verte! 😄"];
       speech.textContent = saludos[Math.floor(Math.random() * saludos.length)];
-      bubble.classList.add('show');
-      setTimeout(() => bubble.classList.remove('show'), 3000);
+      setTimeout(() => { bubble.classList.add('show'); }, 400);
+      setTimeout(() => bubble.classList.remove('show'), 3400);
     }
-  }, 1800);
+  }, 900);
   </script>
 
   <!-- ══ TRANSICIÓN DE PÁGINA (círculos) ══ -->
