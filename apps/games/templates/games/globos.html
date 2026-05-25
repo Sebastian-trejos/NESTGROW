@@ -12,7 +12,8 @@
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
   </div>
   {% endif %}
 
@@ -26,15 +27,16 @@
     </div>
 
     <div class="text-center mb-3">
-      <p class="text-muted mb-1">¿Cuál globo tiene la traducción correcta de:</p>
-      <h2 class="font-fredoka" id="targetWord" style="color:var(--primary); font-size:2.8rem;">-</h2>
+      <p class="text-muted fw-bold mb-1" id="targetLabel">¿Cuál globo tiene la traducción correcta de:</p>
+      <div id="targetWordWrap" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-top:6px"></div>
     </div>
 
-    <div id="gameArena" style="position:relative; height:380px; background:linear-gradient(180deg,#e8f4ff,#fff); border-radius:20px; overflow:hidden; border:2px solid #e0e7ff;">
-      <div style="position:absolute; bottom:10px; left:50%; transform:translateX(-50%); font-size:2.5rem;">🐺</div>
+    <div id="gameArena" style="position:relative;height:420px;background:linear-gradient(180deg,#87CEEB 0%,#B8E4F9 40%,#DCEEFF 75%,#FFF0D6 100%);border-radius:20px;overflow:hidden;border:2px solid #c8e6ff;box-shadow:0 8px 32px rgba(100,150,255,.15);">
+      <div id="bgBalloons" style="position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden"></div>
+      <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:2.5rem;z-index:3;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))">🐺</div>
     </div>
 
-    <div class="text-center mt-3 text-muted" id="feedback" style="min-height:28px;font-size:1.1rem;font-weight:600"></div>
+    <div class="text-center mt-3" id="feedback" style="min-height:30px;font-size:1.1rem;font-weight:700"></div>
   </div>
 </div>
 
@@ -57,155 +59,671 @@
 {% block extra_js %}
 <script src="{% static 'games/js/score_utils.js' %}"></script>
 <script>
-const VOCABULARY = {{ vocabulary_json|safe }};
-const GAME_ID = {{ game.id }};
+// ── Constants ──────────────────────────────────────────────────────────────────
+const VOCABULARY    = {{ vocabulary_json|safe }};
+const GAME_ID       = {{ game.id }};
+const DIFFICULTY    = {{ game.difficulty }};
 const POINTS_REWARD = {{ game.points_reward }};
-const PENALTY_AMOUNT = {{ game.penalty_amount }};
-const SAVE_URL = "{% url 'games:save_score' %}";
-const CSRF = "{{ csrf_token }}";
-const BALLOON_COLORS = ['#FF6B6B','#FFB347','#6C63FF','#4CAF50','#26C6DA','#FF69B4'];
+const PENALTY_AMOUNT= {{ game.penalty_amount }};
+const SAVE_URL      = "{% url 'games:save_score' %}";
+const CSRF          = "{{ csrf_token }}";
 
-let questions = [], currentQ = 0, score = 0, lives = 3, balloons = [], animFrame;
-let PTS_PER_Q = POINTS_REWARD;
+const BALLOON_COLORS = ['#FF6B6B','#FFB347','#6C63FF','#4CAF50','#26C6DA','#FF69B4','#FF8C42','#A78BFA'];
+const DECO_COLORS    = ['#FFCDD2','#FFE0B2','#FFF9C4','#C8E6C9','#B3E5FC','#E1BEE7','#FFDCE0','#D7F0FF'];
 
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+// ── Difficulty config ──────────────────────────────────────────────────────────
+const DIFF_CONFIG = {
+  1: { balloons:4, baseSpeed:0.52, dualChance:0,    fakeClones:false },
+  2: { balloons:6, baseSpeed:0.72, dualChance:0.35, fakeClones:false },
+  3: { balloons:6, baseSpeed:0.90, dualChance:0.35, fakeClones:true  },
+};
+const CFG = DIFF_CONFIG[DIFFICULTY] || DIFF_CONFIG[1];
 
+// ── Trajectory pools ──────────────────────────────────────────────────────────
+// Fácil: solo vertical, horizontal y mixto (sin diagonales ni zigzag)
+const EASY_POOL        = ['up', 'horizontal', 'mixed'];
+// Medio / Difícil: todas las trayectorias
+const MEDIUM_HARD_POOL = ['up', 'horizontal', 'diagonal_up', 'diagonal_down', 'zigzag', 'mixed'];
+
+// Deck rotativo: baraja todas las trayectorias del pool y las reparte una a una.
+// Cuando se vacía, se rebaraja. Garantiza que todas aparezcan antes de repetirse.
+let trajDeck = [], lastTrajectory = null;
+
+function pickTrajectory() {
+  const pool = DIFFICULTY === 1 ? EASY_POOL : MEDIUM_HARD_POOL;
+  if (trajDeck.length === 0) trajDeck = shuffle([...pool]);
+  // Evitar repetición consecutiva
+  if (trajDeck[0] === lastTrajectory && trajDeck.length > 1) {
+    const swapIdx = trajDeck.findIndex(t => t !== lastTrajectory);
+    if (swapIdx > 0) trajDeck.unshift(trajDeck.splice(swapIdx, 1)[0]);
+  }
+  const picked = trajDeck.shift();
+  lastTrajectory = picked;
+  return picked;
+}
+
+// ── State ──────────────────────────────────────────────────────────────────────
+let questions=[], currentQ=0, score=0, lives=3;
+let activeBalloons=[], animFrame=null, PTS_PER_Q=1;
+let currentTargets=[], poppedTargets=new Set();
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+// ── Decorative background balloons ────────────────────────────────────────────
+function spawnDecoBalloons() {
+  const c = document.getElementById('bgBalloons');
+  c.innerHTML = '';
+  for (let i = 0; i < 14; i++) {
+    const el   = document.createElement('div');
+    const color = DECO_COLORS[i % DECO_COLORS.length];
+    const size  = 18 + Math.random() * 20;
+    const left  = Math.random() * 92;
+    const delay = (Math.random() * 10).toFixed(2);
+    const dur   = (12 + Math.random() * 10).toFixed(2);
+    el.style.cssText = `
+      position:absolute; left:${left}%; bottom:${-(size+5)}px;
+      width:${size}px; height:${size*1.1}px;
+      background:${color}; border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+      opacity:0.28; animation:decoFloat ${dur}s ${delay}s linear infinite;
+      box-shadow:inset -2px -2px 5px rgba(0,0,0,.08);
+    `;
+    c.appendChild(el);
+  }
+}
+
+// ── Build a round ──────────────────────────────────────────────────────────────
 function buildRound() {
   if (currentQ >= questions.length) { endGame(); return; }
-  const q = questions[currentQ];
-  document.getElementById('targetWord').textContent = q.question;
-  document.getElementById('feedback').textContent = '';
-
+  cancelAnimationFrame(animFrame);
+  animFrame = null;
   const arena = document.getElementById('gameArena');
-  // Remove old balloons
-  arena.querySelectorAll('.balloon-el').forEach(b => b.remove());
-  balloons = [];
+  arena.querySelectorAll('.balloon-el,.particle-burst').forEach(n => n.remove());
+  activeBalloons = [];
+  poppedTargets  = new Set();
 
-  const distractors = shuffle(VOCABULARY.filter(v => v.word_en !== q.answer)).slice(0, 3).map(v => v.word_en);
-  const options = shuffle([q.answer, ...distractors]);
-  const arenaW = arena.offsetWidth;
+  // Dual-target decision
+  const useDual = CFG.dualChance > 0 &&
+                  Math.random() < CFG.dualChance &&
+                  currentQ + 1 < questions.length;
+  const q1 = questions[currentQ];
+  const q2 = useDual ? questions[currentQ + 1] : null;
+  currentTargets = useDual ? [q1.answer, q2.answer] : [q1.answer];
+
+  // UI prompt
+  const label = document.getElementById('targetLabel');
+  const wrap  = document.getElementById('targetWordWrap');
+  if (useDual) {
+    label.textContent = '¡Revienta los 2 globos de:';
+    wrap.innerHTML = `
+      <span class="glob-target-badge">${q1.question}</span>
+      <span style="font-size:1.6rem;align-self:center;font-weight:900;color:#6C63FF">+</span>
+      <span class="glob-target-badge">${q2.question}</span>
+    `;
+  } else {
+    label.textContent = '¿Cuál globo tiene la traducción correcta de:';
+    wrap.innerHTML = `<span class="glob-target-badge">${q1.question}</span>`;
+  }
+  document.getElementById('feedback').innerHTML = '';
+
+  // Build options pool
+  const correctSet   = new Set(currentTargets);
+  const distractors  = shuffle(VOCABULARY.filter(v => !correctSet.has(v.word_en)))
+    .slice(0, CFG.balloons - currentTargets.length);
+
+  let options = [
+    ...currentTargets.map(w => {
+      const v = VOCABULARY.find(x => x.word_en === w) || {};
+      return { word:w, emoji:v.emoji||'', isCorrect:true, isFake:false };
+    }),
+    ...distractors.map(v => ({ word:v.word_en, emoji:v.emoji||'', isCorrect:false, isFake:false }))
+  ];
+
+  // Inject fake clone (Hard, single-target only)
+  if (CFG.fakeClones && currentTargets.length === 1) {
+    const real     = options.find(o => o.isCorrect);
+    const distrIdx = options.findIndex(o => !o.isCorrect);
+    if (real && distrIdx >= 0)
+      options[distrIdx] = { word:real.word, emoji:real.emoji, isCorrect:false, isFake:true };
+  }
+
+  options = shuffle(options);
+
+  // Assign colors — fake clone gets same color as real correct
+  const colorMap = options.map((_, i) => BALLOON_COLORS[i % BALLOON_COLORS.length]);
+  if (CFG.fakeClones) {
+    const realIdx = options.findIndex(o => o.isCorrect && !o.isFake);
+    const fakeIdx = options.findIndex(o => o.isFake);
+    if (realIdx >= 0 && fakeIdx >= 0) colorMap[fakeIdx] = colorMap[realIdx];
+  }
+
+  const bW = 90, bH = 105;
+  const arenaW = arena.offsetWidth  || 600;
+  const arenaH = arena.offsetHeight || 420;
+  const trajectory = pickTrajectory();
+  const spacing = arenaW / (options.length + 1);
+  const s = CFG.baseSpeed;
+  const GAP = 148; // gap between balloons in a file
+
+  // ── Diagonal: normalize direction to arena aspect ratio so balloons
+  //    travel true corner-to-corner regardless of arena proportions.
+  const diagLen = Math.sqrt(arenaW * arenaW + arenaH * arenaH);
+  const diagNX  = arenaW / diagLen; // horizontal component (0..1)
+  const diagNY  = arenaH / diagLen; // vertical component  (0..1)
+  const diagSpd = s * 1.15;        // speed along the diagonal path
+
+  // Pick diagonal direction once per round
+  const diagDirUp   = Math.random() < 0.5 ? 'BR_TL' : 'BL_TR';
+  const diagDirDown = Math.random() < 0.5 ? 'TR_BL' : 'TL_BR';
 
   options.forEach((opt, i) => {
     const el = document.createElement('div');
     el.className = 'balloon-el';
-    const color = BALLOON_COLORS[i % BALLOON_COLORS.length];
-    const x = (arenaW / options.length) * i + (arenaW / options.length / 2) - 45;
-    el.style.cssText = `left:${x}px; bottom:-80px; background:${color};`;
-    el.innerHTML = `<span class="balloon-text">${opt}</span>`;
-    el.addEventListener('click', () => popBalloon(el, opt, q.answer));
+    const color = colorMap[i];
+    let startX, startY, dx=0, dy=0, phase=0;
+    let subTraj=null, fromLeft=false, diagDir=null;
+
+    switch (trajectory) {
+
+      case 'up':
+        startX = spacing * (i+1) - bW/2;
+        startY = arenaH + bH + i * 35;
+        dy = -(s + Math.random()*0.15);
+        break;
+
+      case 'horizontal': {
+        // Alternate: even-index from left, odd-index from right
+        fromLeft = (i % 2 === 0);
+        const hFile = Math.floor(i / 2);
+        startX = fromLeft
+          ? -(bW + hFile * (bW + 18))
+          : arenaW + bW + hFile * (bW + 18);
+        startY = 40 + ((arenaH - 160) / (options.length - 1 || 1)) * i;
+        dx = fromLeft ? s * 1.3 : -(s * 1.3);
+        break;
+      }
+
+      case 'diagonal_up': {
+        // Two groups from BOTTOM, going to opposite top corners.
+        // Group A (even-index): BL → TR  |  Group B (odd-index): BR → TL
+        const halfDU = Math.ceil(options.length / 2);
+        const inADU  = i < halfDU;
+        const gIdxDU = inADU ? i : i - halfDU;
+        diagDir = inADU ? 'BL_TR' : 'BR_TL';
+        if (diagDir === 'BL_TR') {
+          startX = -bW - gIdxDU * GAP * diagNX;
+          startY = arenaH + bH + gIdxDU * GAP * diagNY;
+          dx =  diagSpd * diagNX;  dy = -diagSpd * diagNY;
+        } else {
+          startX = arenaW + bW + gIdxDU * GAP * diagNX;
+          startY = arenaH + bH + gIdxDU * GAP * diagNY;
+          dx = -diagSpd * diagNX;  dy = -diagSpd * diagNY;
+        }
+        break;
+      }
+
+      case 'diagonal_down': {
+        // Two groups from TOP, going to opposite bottom corners.
+        // Group A (even-index): TL → BR  |  Group B (odd-index): TR → BL
+        const halfDD = Math.ceil(options.length / 2);
+        const inADD  = i < halfDD;
+        const gIdxDD = inADD ? i : i - halfDD;
+        diagDir = inADD ? 'TL_BR' : 'TR_BL';
+        if (diagDir === 'TL_BR') {
+          startX = -bW - gIdxDD * GAP * diagNX;
+          startY = -bH  - gIdxDD * GAP * diagNY;
+          dx =  diagSpd * diagNX;  dy =  diagSpd * diagNY;
+        } else {
+          startX = arenaW + bW + gIdxDD * GAP * diagNX;
+          startY = -bH  - gIdxDD * GAP * diagNY;
+          dx = -diagSpd * diagNX;  dy =  diagSpd * diagNY;
+        }
+        break;
+      }
+
+      case 'zigzag': {
+        // Horizontal zigzag: balloons cross the arena sideways while oscillating
+        // up-and-down.  Two groups: even-index from RIGHT, odd-index from LEFT.
+        // Both oscillate vertically in opposite phase → DNA/wave pattern.
+        const isRight = (i % 2 === 0);
+        const zFile   = Math.floor(i / 2);
+        fromLeft = !isRight;
+        startX = isRight
+          ? arenaW + bW + zFile * (bW + 20)
+          : -bW      - zFile * (bW + 20);
+        startY = (arenaH - bH) / 2; // start at vertical center
+        dx    = isRight ? -(s * 0.62) : (s * 0.62);
+        // Staggered timing: each balloon is equally spaced across one full cycle
+        // → no two balloons move up/down simultaneously
+        phase = i * (Math.PI * 2 / options.length);
+        break;
+      }
+
+      case 'mixed': {
+        // First half vertical, second half horizontal
+        const half = Math.ceil(options.length / 2);
+        if (i < half) {
+          subTraj = 'up';
+          const vSpacing = arenaW / (half + 1);
+          startX = vSpacing * (i + 1) - bW / 2;
+          startY = arenaH + bH + i * 32;
+          dy = -(s + Math.random()*0.15);
+        } else {
+          subTraj = 'horizontal';
+          const hi = i - half;
+          fromLeft = (hi % 2 === 0);
+          const hFile = Math.floor(hi / 2);
+          startX = fromLeft
+            ? -(bW + hFile * (bW + 18))
+            : arenaW + bW + hFile * (bW + 18);
+          startY = 55 + ((arenaH - 160) / (options.length - half - 1 || 1)) * hi;
+          dx = fromLeft ? s * 1.3 : -(s * 1.3);
+        }
+        break;
+      }
+    }
+
+    el.style.cssText = `left:${startX}px;top:${startY}px;background:${color};z-index:2;`;
+    el.innerHTML = `
+      ${opt.emoji ? `<div class="balloon-emoji">${opt.emoji}</div>` : ''}
+      <div class="balloon-text">${opt.word}</div>
+    `;
+    el.addEventListener('click', () => handleClick(el, opt));
     arena.appendChild(el);
-    balloons.push({ el, correct: opt === q.answer, popped: false, speed: 0.4 + Math.random() * 0.3 });
+    activeBalloons.push({ el, opt, popped:false, x:startX, y:startY, dx, dy, phase, trajectory, subTraj, fromLeft, diagDir, t:0 });
   });
-  animFrame = requestAnimationFrame(animateBalloons);
+
+  // ── Modo Difícil: globos vacíos caóticos ──────────────────────────────────
+  // Cada decoy elige su propia trayectoria aleatoria independiente del round.
+  if (DIFFICULTY === 3) {
+    const DECOY_COUNT = 8;
+    const ALL_TRAJS   = ['up','horizontal','diagonal_up','diagonal_down','zigzag'];
+    for (let j = 0; j < DECOY_COUNT; j++) {
+      const el    = document.createElement('div');
+      el.className = 'balloon-el';
+      const color = BALLOON_COLORS[j % BALLOON_COLORS.length];
+      const dOpt  = { isDecoy:true, isCorrect:false, isFake:false };
+      const dTraj = ALL_TRAJS[Math.floor(Math.random() * ALL_TRAJS.length)];
+      const dRtl  = Math.random() < 0.5;
+      const ds    = s * (0.75 + Math.random() * 0.5); // velocidad aleatoria
+      let sx, sy, ddx=0, ddy=0, dph=Math.random()*Math.PI*2;
+      let dFromLeft=false, dDiagDir=null;
+
+      switch (dTraj) {
+        case 'up':
+          sx  = Math.random() * (arenaW - bW);
+          sy  = arenaH + bH + j * 28;
+          ddy = -(ds + Math.random()*0.2);
+          break;
+        case 'horizontal':
+          dFromLeft = dRtl;
+          sx  = dFromLeft ? -(bW + j*(bW+10)) : arenaW + bW + j*(bW+10);
+          sy  = 30 + Math.random() * (arenaH - 150);
+          ddx = dFromLeft ? ds*1.2 : -(ds*1.2);
+          break;
+        case 'diagonal_up': {
+          const dirs = ['BR_TL','BL_TR'];
+          dDiagDir = dirs[Math.floor(Math.random()*2)];
+          const di  = j;
+          if (dDiagDir === 'BR_TL') {
+            sx = arenaW+bW+di*GAP*diagNX; sy = arenaH+bH+di*GAP*diagNY;
+            ddx = -ds*diagNX; ddy = -ds*diagNY;
+          } else {
+            sx = -bW-di*GAP*diagNX; sy = arenaH+bH+di*GAP*diagNY;
+            ddx =  ds*diagNX; ddy = -ds*diagNY;
+          }
+          break;
+        }
+        case 'diagonal_down': {
+          const dirs2 = ['TR_BL','TL_BR'];
+          dDiagDir = dirs2[Math.floor(Math.random()*2)];
+          const di2 = j;
+          if (dDiagDir === 'TR_BL') {
+            sx = arenaW+bW+di2*GAP*diagNX; sy = -bH-di2*GAP*diagNY;
+            ddx = -ds*diagNX; ddy =  ds*diagNY;
+          } else {
+            sx = -bW-di2*GAP*diagNX; sy = -bH-di2*GAP*diagNY;
+            ddx =  ds*diagNX; ddy =  ds*diagNY;
+          }
+          break;
+        }
+        case 'zigzag':
+          dFromLeft = dRtl;
+          sx  = dFromLeft ? -(bW + j*(bW+12)) : arenaW+bW+j*(bW+12);
+          sy  = (arenaH-bH)/2;
+          ddx = dFromLeft ? ds*0.65 : -(ds*0.65);
+          break;
+      }
+
+      el.style.cssText = `left:${sx}px;top:${sy}px;background:${color};z-index:2;`;
+      el.innerHTML = '';
+      el.addEventListener('click', () => handleClick(el, dOpt));
+      arena.appendChild(el);
+      activeBalloons.push({ el, opt:dOpt, popped:false, x:sx, y:sy, dx:ddx, dy:ddy, phase:dph, trajectory:dTraj, subTraj:null, fromLeft:dFromLeft, diagDir:dDiagDir, t:0 });
+    }
+  }
+
+  animFrame = requestAnimationFrame(animLoop);
 }
 
-function animateBalloons() {
+// ── Animation loop ─────────────────────────────────────────────────────────────
+function animLoop() {
   const arena = document.getElementById('gameArena');
-  const arenaH = arena.offsetHeight;
-  let anyAlive = false;
-  balloons.forEach(b => {
-    if (b.popped) return;
-    const bottom = parseFloat(b.el.style.bottom) + b.speed;
-    b.el.style.bottom = bottom + 'px';
-    if (bottom > arenaH + 10) {
-      b.el.remove();
+  const arenaW = arena.offsetWidth  || 600;
+  const arenaH = arena.offsetHeight || 420;
+  const bW=90, bH=105;
+  let alive = false;
+
+  for (const b of activeBalloons) {
+    if (b.popped) continue;
+    b.t++;
+
+    if (b.trajectory === 'zigzag') {
+      // Move horizontally; Y oscillates (up-and-down) — two opposite-phase groups
+      b.x += b.dx;
+      const zAmp = (arenaH - bH * 2 - 30) / 2;
+      const zCtr = (arenaH - bH) / 2;
+      b.y = zCtr + Math.sin(b.t * 0.024 + b.phase) * zAmp;
+    } else {
+      b.x += b.dx;
+      b.y += b.dy;
+    }
+    b.el.style.left = b.x + 'px';
+    b.el.style.top  = b.y + 'px';
+
+    if (isEscaped(b, arenaW, arenaH, bW, bH)) {
       b.popped = true;
-      if (b.correct) {
+      b.el.remove();
+      if (b.opt.isCorrect && !b.opt.isFake) {
+        cancelAnimationFrame(animFrame);
+        activeBalloons.forEach(bb => bb.popped = true);
         score = Math.max(0, score - PENALTY_AMOUNT);
         document.getElementById('scoreDisplay').textContent = score;
         showScoreToast(PENALTY_AMOUNT, false);
-        loseLife();
+        showFeedback(`❌ ¡Se escapó! Era: <strong>${currentTargets.join(' + ')}</strong>`, false);
+        loseLife(currentTargets.length);
         return;
       }
-    } else {
-      anyAlive = true;
+      continue;
     }
-  });
-  if (anyAlive) animFrame = requestAnimationFrame(animateBalloons);
+    alive = true;
+  }
+
+  if (alive) animFrame = requestAnimationFrame(animLoop);
 }
 
-function popBalloon(el, chosen, correct) {
-  cancelAnimationFrame(animFrame);
-  balloons.forEach(b => b.popped = true);
-  if (chosen === correct) {
-    el.style.transform = 'scale(1.4)';
-    el.style.opacity = '0';
-    score += PTS_PER_Q;
-    document.getElementById('scoreDisplay').textContent = score;
-    document.getElementById('feedback').innerHTML = '<span style="color:#4CAF50">✅ ¡Correcto! 🎉</span>';
-    showScoreToast(PTS_PER_Q, true);
-    currentQ++;
-    setTimeout(buildRound, 900);
-  } else {
-    el.style.background = '#FF6B6B';
-    document.getElementById('feedback').innerHTML = `<span style="color:#e53935">❌ Era: <strong>${correct}</strong></span>`;
-    score = Math.max(0, score - PENALTY_AMOUNT);
-    document.getElementById('scoreDisplay').textContent = score;
-    showScoreToast(PENALTY_AMOUNT, false);
-    loseLife();
+function isEscaped(b, aW, aH, bW, bH) {
+  const M = 55;
+  const traj = b.subTraj || b.trajectory;
+
+  switch (traj) {
+    case 'up':
+      return b.y < -(bH + M);
+
+    case 'zigzag':
+    case 'horizontal':
+      return b.fromLeft ? b.x > aW + bW + M : b.x < -(bW + M);
+
+    case 'diagonal_up':
+    case 'diagonal_down':
+      return diagEscaped(b, aW, aH, bW, bH, M);
+
+    case 'mixed':
+      // subTraj already resolved above via traj
+      return false;
+
+    default:
+      return b.y < -(bH + M);
   }
 }
 
-function loseLife() {
-  lives--;
-  document.getElementById('livesDisplay').textContent = '❤️'.repeat(Math.max(0, lives)) + '🖤'.repeat(3 - lives);
-  if (lives <= 0) { endGame(); return; }
-  currentQ++;
-  setTimeout(buildRound, 900);
+function diagEscaped(b, aW, aH, bW, bH, M) {
+  switch (b.diagDir) {
+    case 'BR_TL': return b.x < -(bW+M) || b.y < -(bH+M);
+    case 'BL_TR': return b.x > aW+bW+M || b.y < -(bH+M);
+    case 'TR_BL': return b.x < -(bW+M) || b.y > aH+bH+M;
+    case 'TL_BR': return b.x > aW+bW+M || b.y > aH+bH+M;
+    default: return false;
+  }
 }
 
+// ── Click handler ──────────────────────────────────────────────────────────────
+function handleClick(el, opt) {
+  const b = activeBalloons.find(x => x.el === el);
+  if (!b || b.popped) return;
+
+  if (opt.isDecoy) {
+    b.popped = true;
+    el.style.animation = 'shakeBalloon 0.42s ease';
+    playPop(false);
+    showFeedback('🫧 ¡Globo vacío! ¡Sigue buscando!', false);
+    setTimeout(() => el.remove(), 460);
+    return;
+  }
+
+  if (opt.isFake) {
+    b.popped = true;
+    el.innerHTML = '<div style="font-size:2rem;line-height:1">😈</div>';
+    el.style.animation = 'shakeBalloon 0.45s ease';
+    playPop(false);
+    showFeedback('¡Era falso! 😈 ¡Busca el verdadero!', false);
+    setTimeout(() => el.remove(), 520);
+    return;
+  }
+
+  if (opt.isCorrect) {
+    b.popped = true;
+    spawnParticles(el);
+    el.style.transform = 'scale(1.5)';
+    el.style.opacity   = '0';
+    playPop(true);
+    poppedTargets.add(opt.word);
+
+    const allDone = currentTargets.every(t => poppedTargets.has(t));
+    if (allDone) {
+      cancelAnimationFrame(animFrame);
+      activeBalloons.forEach(bb => bb.popped = true);
+      score += PTS_PER_Q;
+      document.getElementById('scoreDisplay').textContent = score;
+      showScoreToast(PTS_PER_Q, true);
+      showFeedback('✅ ¡Correcto! 🎉', true);
+      currentQ += currentTargets.length;
+      setTimeout(buildRound, 900);
+    } else {
+      showFeedback('¡Bien! ¡Ahora el otro globo! 🎈', true);
+    }
+  } else {
+    b.popped = true;
+    cancelAnimationFrame(animFrame);
+    activeBalloons.forEach(bb => bb.popped = true);
+    el.style.background = '#c0392b';
+    el.style.transform  = 'scale(0.8)';
+    playPop(false);
+    score = Math.max(0, score - PENALTY_AMOUNT);
+    document.getElementById('scoreDisplay').textContent = score;
+    showScoreToast(PENALTY_AMOUNT, false);
+    showFeedback(`❌ Incorrecto. Era: <strong>${currentTargets.join(' + ')}</strong>`, false);
+    loseLife(currentTargets.length);
+  }
+}
+
+function loseLife(advance=1) {
+  lives--;
+  document.getElementById('livesDisplay').textContent =
+    '❤️'.repeat(Math.max(0,lives)) + '🖤'.repeat(3-lives);
+  if (lives <= 0) { endGame(); return; }
+  currentQ += advance;
+  setTimeout(buildRound, 950);
+}
+
+function showFeedback(html, ok) {
+  document.getElementById('feedback').innerHTML =
+    `<span style="color:${ok?'#2e7d32':'#c62828'}">${html}</span>`;
+}
+
+// ── Particles ──────────────────────────────────────────────────────────────────
+function spawnParticles(balloonEl) {
+  const arena = document.getElementById('gameArena');
+  const aRect = arena.getBoundingClientRect();
+  const bRect = balloonEl.getBoundingClientRect();
+  const cx = bRect.left - aRect.left + bRect.width/2;
+  const cy = bRect.top  - aRect.top  + bRect.height/2;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'particle-burst';
+  wrap.style.cssText = `position:absolute;left:${cx}px;top:${cy}px;pointer-events:none;z-index:10;`;
+
+  for (let i = 0; i < 12; i++) {
+    const p     = document.createElement('div');
+    const angle = (i/12) * Math.PI*2;
+    const dist  = 28 + Math.random()*38;
+    const tx    = Math.cos(angle)*dist;
+    const ty    = Math.sin(angle)*dist;
+    const clr   = BALLOON_COLORS[Math.floor(Math.random()*BALLOON_COLORS.length)];
+    const sz    = 5 + Math.random()*7;
+    p.style.cssText = `
+      position:absolute;width:${sz}px;height:${sz}px;
+      background:${clr};border-radius:50%;
+      transform:translate(-50%,-50%);
+      animation:particlePop 0.55s ease-out forwards;
+      --tx:${tx}px;--ty:${ty}px;
+    `;
+    wrap.appendChild(p);
+  }
+  arena.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 620);
+}
+
+// ── Sound ──────────────────────────────────────────────────────────────────────
+function playPop(correct) {
+  try {
+    const ac = new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ac.createOscillator(), g=ac.createGain();
+    osc.connect(g); g.connect(ac.destination);
+    if (correct) {
+      osc.frequency.setValueAtTime(700, ac.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1400, ac.currentTime+0.12);
+    } else {
+      osc.frequency.setValueAtTime(300, ac.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80,  ac.currentTime+0.18);
+    }
+    g.gain.setValueAtTime(0.22, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.22);
+    osc.start(); osc.stop(ac.currentTime+0.22);
+  } catch(e){}
+}
+
+// ── End game ───────────────────────────────────────────────────────────────────
 async function endGame() {
   cancelAnimationFrame(animFrame);
   const maxScore = questions.length * PTS_PER_Q;
-  const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
-  document.getElementById('winScore').textContent = score;
+  const pct = Math.round((score / Math.max(maxScore,1)) * 100);
   const $ = id => document.getElementById(id);
-  let tier, stars, miloFile, msg;
-  if (pct >= 80)      { tier='excelente'; stars='⭐⭐⭐'; miloFile='milo_fest.png'; msg='¡Excelente trabajo!'; }
-  else if (pct >= 50) { tier='regular';   stars='⭐⭐';   miloFile='milo_lupa1.png'; msg='¡Bien! Puedes mejorar.'; }
-  else                { tier='mal';        stars='⭐';    miloFile='milo_llorando.png'; msg='¡Sigue intentando!'; }
-  if ($('winMilo')) $('winMilo').src = STATIC_URL + 'img/' + miloFile;
+  $('winScore').textContent = score;
+
+  let tier, stars, milo, msg;
+  if (pct >= 80)      { tier='excelente'; stars='⭐⭐⭐'; milo='milo_fest.png';     msg='¡Excelente trabajo!'; }
+  else if (pct >= 50) { tier='regular';   stars='⭐⭐';   milo='milo_lupa1.png';    msg='¡Bien! Puedes mejorar.'; }
+  else                { tier='mal';       stars='⭐';     milo='milo_llorando.png'; msg='¡Sigue intentando!'; }
+
+  if ($('winMilo'))    $('winMilo').src = STATIC_URL + 'img/' + milo;
   if ($('winMessage')) $('winMessage').textContent = msg;
-  if ($('winStars')) $('winStars').textContent = stars;
+  if ($('winStars'))   $('winStars').textContent   = stars;
   const card = document.querySelector('#winOverlay .win-card');
-  if (card) { card.className = 'win-card'; card.classList.add('win-card--' + tier); }
-  if (tier === 'excelente' && typeof launchConfetti === 'function') launchConfetti();
+  if (card) { card.className='win-card'; card.classList.add('win-card--'+tier); }
+  if (tier==='excelente' && typeof launchConfetti==='function') launchConfetti();
   $('winOverlay').style.display = 'flex';
+
   try {
     const res = await fetch(SAVE_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
-      body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed: true })
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+      body: JSON.stringify({ game_id:GAME_ID, score, max_score:maxScore, time_spent:0, completed:true })
     });
     const data = await res.json();
-    if (data.registro_pk && $('btnVolverPanel')) {
+    if (data.registro_pk && $('btnVolverPanel'))
       $('btnVolverPanel').href = '/talleres/mis-talleres/?revisado=' + data.registro_pk;
-    }
-  } catch(e) {}
+  } catch(e){}
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+function initGame() {
+  spawnDecoBalloons();
+  buildRound();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   if (VOCABULARY.length < 4) {
-    document.getElementById('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ Necesitas al menos 4 palabras para jugar.</div>';
-    document.getElementById('gameSection').style.display = 'block';
+    const gs = document.getElementById('gameSection');
+    gs.innerHTML = '<div class="alert alert-warning text-center">⚠️ Necesitas al menos 4 palabras para jugar.</div>';
+    gs.style.display = 'block';
     return;
   }
-  questions = shuffle(VOCABULARY).slice(0, 10).map(item => {
-    return { question: item.word_es, answer: item.word_en };
-  });
+
+  questions = shuffle(VOCABULARY).slice(0, 10).map(v => ({
+    question: v.word_es,
+    answer:   v.word_en,
+    emoji:    v.emoji || '',
+  }));
   PTS_PER_Q = Math.max(1, Math.round(POINTS_REWARD / questions.length));
-  document.getElementById('gameSection').style.display = 'block';
-  buildRound();
+
+  {% if embedded %}
+  initGame();
+  {% else %}
+  document.getElementById('startGameBtn')?.addEventListener('click', initGame);
+  {% endif %}
 });
 </script>
 <style>
-.balloon-el {
-  position:absolute; width:90px; height:100px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
-  display:flex; align-items:center; justify-content:center; cursor:pointer;
-  transition:transform .2s, opacity .3s; box-shadow:inset -8px -8px 16px rgba(0,0,0,.2);
+/* Arena deco balloons float animation */
+@keyframes decoFloat {
+  0%   { transform:translateY(0) rotate(-4deg) scale(0.9); opacity:0.28; }
+  50%  { opacity:0.18; }
+  100% { transform:translateY(-480px) rotate(6deg) scale(1.05); opacity:0; }
 }
-.balloon-el::after { content:''; position:absolute; bottom:-14px; left:50%; transform:translateX(-50%); width:2px; height:14px; background:rgba(0,0,0,.3); }
-.balloon-el:hover { transform:scale(1.08); }
-.balloon-text { color:white; font-weight:700; font-size:.8rem; text-align:center; padding:4px; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+
+/* Game balloons */
+.balloon-el {
+  position:absolute; width:90px; height:105px;
+  border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; user-select:none; gap:2px;
+  box-shadow:inset -8px -8px 18px rgba(0,0,0,.18), 0 4px 14px rgba(0,0,0,.14);
+  transition:transform .15s, opacity .28s;
+}
+.balloon-el::after {
+  content:''; position:absolute; bottom:-14px; left:50%;
+  transform:translateX(-50%); width:2px; height:14px; background:rgba(0,0,0,.25);
+}
+.balloon-el:hover { transform:scale(1.1) !important; }
+.balloon-emoji { font-size:1.5rem; line-height:1; margin-top:4px; }
+.balloon-text  {
+  color:#fff; font-weight:800; font-size:.76rem; text-align:center;
+  padding:0 5px; text-shadow:0 1px 3px rgba(0,0,0,.45); line-height:1.2;
+}
+
+/* Target word badge */
+.glob-target-badge {
+  display:inline-block;
+  background:linear-gradient(135deg,#7C3AED,#A855F7);
+  color:#fff; font-family:'Fredoka One',cursive;
+  font-size:1.9rem; padding:6px 22px; border-radius:50px;
+  box-shadow:0 4px 16px rgba(124,58,237,.4);
+  letter-spacing:.02em;
+}
+
+/* Particle burst */
+@keyframes particlePop {
+  0%   { transform:translate(-50%,-50%) scale(1); opacity:1; }
+  100% { transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity:0; }
+}
+
+/* Fake balloon shake */
+@keyframes shakeBalloon {
+  0%,100%{ transform:translateX(0); }
+  20%    { transform:translateX(-9px) rotate(-5deg); }
+  40%    { transform:translateX(9px) rotate(5deg); }
+  60%    { transform:translateX(-6px) rotate(-3deg); }
+  80%    { transform:translateX(6px) rotate(3deg); }
+}
 </style>
 {% endblock %}
