@@ -32,6 +32,8 @@ urlpatterns = [
     path('gestionar/<int:pk>/toggle/', views.toggle_juego, name='toggle_juego'),
     path('gestionar/<int:game_pk>/imagen/agregar/', views.api_imagen_agregar, name='api_imagen_agregar'),
     path('gestionar/imagen/<int:item_pk>/eliminar/', views.api_imagen_eliminar, name='api_imagen_eliminar'),
+    path('gestionar/<int:game_pk>/memoria/agregar/', views.api_memoria_card_agregar, name='api_memoria_card_agregar'),
+    path('gestionar/memoria/<int:card_pk>/eliminar/', views.api_memoria_card_eliminar, name='api_memoria_card_eliminar'),
 
     # Profesor — Categorías
     path('categorias/', views.gestionar_categorias, name='gestionar_categorias'),

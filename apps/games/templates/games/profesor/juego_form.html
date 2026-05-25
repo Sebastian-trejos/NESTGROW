@@ -4,7 +4,15 @@
 {% block extra_css %}
 <style>
   #painting-words-section { display:none; margin-top:20px; }
+  #memoria-cards-section { display:none; margin-top:20px; }
   #imagenes-create-section { display:none; }
+  .mem-card-row {
+    display:flex; align-items:center; gap:12px;
+    background:#f0eeff; border:2px solid #d4cfff; border-radius:12px; padding:10px 14px;
+  }
+  .mem-card-row img { width:52px; height:52px; object-fit:cover; border-radius:8px; flex-shrink:0; }
+  .mem-card-row:hover { border-color:var(--primary); }
+  .mem-card-preview-wrap img { height:70px; border-radius:8px; border:2px solid #d4cfff; object-fit:cover; }
   .word-tag {
     background:#f0eeff; border:2px solid var(--primary); border-radius:50px;
     padding:6px 14px; font-weight:700; color:var(--primary);
@@ -40,7 +48,6 @@
     <form method="post" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
       <input type="hidden" name="painting_words" id="paintingWordsInput" value="">
-      <input type="hidden" name="word_search_words" id="wordSearchWordsInput" value="">
 
       <div class="row g-3">
         <div class="col-md-6">
@@ -68,25 +75,87 @@
           <div class="text-muted small mt-1">¿No ves tu categoría? <a href="{% url 'games:crear_categoria' %}">Créala aquí →</a></div>
         </div>
 
-        <!-- Palabras para Sopa de Letras -->
-        <div class="col-12" id="word-search-section" style="display:none">
+        <!-- Tarjetas personalizadas de Memoria -->
+        <div class="col-12" id="memoria-cards-section">
           <div class="nestgrow-card p-4" style="border:2px solid var(--primary);background:#f0eeff">
-            <h5 class="font-fredoka mb-3" style="color:var(--primary)">🔍 Palabras de la Sopa de Letras</h5>
-            <p class="text-muted small fw-bold mb-3">Escribe cada palabra en MAYÚSCULAS y presiona <strong>+ Añadir</strong> o <kbd>Enter</kbd>. El sistema las ubicará automáticamente en la grilla con letras falsas.</p>
-            <div class="d-flex gap-2 mb-3">
-              <input type="text" id="wsNewWordInput" class="form-control text-uppercase fw-bold" placeholder="Ej: HOUSE, CAT, SCHOOL..." style="max-width:260px;letter-spacing:1px">
-              <button type="button" class="btn btn-nestgrow btn-primary-nestgrow" onclick="wsAddWord()">+ Añadir</button>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h5 class="font-fredoka mb-0" style="color:var(--primary)">🃏 Tarjetas del Memorama</h5>
+              <span class="badge rounded-pill" style="background:#e8e4ff;color:var(--primary)" id="mem-card-count-badge">0 tarjetas</span>
             </div>
-            <div id="wsWordsList" class="d-flex flex-wrap gap-2">
-              {% if word_search_words %}
-                {% for wsw in word_search_words %}
-                <span class="word-tag" data-word="{{ wsw.word }}">
-                  {{ wsw.word }}<span class="remove-word" onclick="wsRemoveWord(this)">×</span>
-                </span>
-                {% endfor %}
-              {% endif %}
+            <p class="text-muted small fw-bold mb-3">
+              Añade pares de tarjetas personalizadas. Cada tarjeta tiene un <strong>texto en español</strong> (obligatorio),
+              un <strong>texto en inglés</strong> (opcional) y una <strong>imagen</strong> (opcional).<br>
+              <span style="color:var(--primary)">🎯 Fácil: 4 pares · Medio: 6 pares · Difícil: 8 pares</span> — el juego usará las primeras N tarjetas según la dificultad.
+            </p>
+
+            <!-- Lista de tarjetas existentes (modo edición) -->
+            {% if juego and juego_usa_memoria %}
+            <div id="mem-cards-list" class="d-flex flex-column gap-2 mb-4">
+              {% for card in memoria_cards %}
+              <div class="mem-card-row" id="memcard-{{ card.pk }}">
+                {% if card.image %}
+                <img src="{{ card.image.url }}" alt="{{ card.label_es }}">
+                {% else %}
+                <div style="width:52px;height:52px;border-radius:8px;background:#d4cfff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🃏</div>
+                {% endif %}
+                <div class="flex-grow-1">
+                  <div class="fw-bold" style="color:var(--primary)">{{ card.label_es }}</div>
+                  {% if card.label_en %}<div class="small text-muted">🇬🇧 {{ card.label_en }}</div>{% endif %}
+                </div>
+                <button class="btn btn-sm btn-outline-danger rounded-pill"
+                        onclick="eliminarMemCard({{ card.pk }})">🗑</button>
+              </div>
+              {% empty %}
+              <div class="text-center py-3 text-muted fw-bold" id="mem-card-empty-msg">
+                <div style="font-size:2rem">🃏</div>
+                <div>No hay tarjetas aún. ¡Añade la primera!</div>
+              </div>
+              {% endfor %}
             </div>
-            <div class="text-muted small mt-2 fw-bold" id="wsWordsCount">0 palabras añadidas</div>
+            {% else %}
+            <div id="mem-cards-list" class="d-flex flex-column gap-2 mb-4">
+              <div class="text-center py-3 text-muted fw-bold" id="mem-card-empty-msg">
+                <div style="font-size:2rem">🃏</div>
+                <div>No hay tarjetas aún. ¡Añade la primera!</div>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Formulario para añadir tarjeta -->
+            <div class="p-3 rounded-3" style="background:#fff;border:2px solid #d4cfff">
+              <div class="fw-bold mb-3" style="color:var(--primary)">➕ Nueva tarjeta</div>
+              <div class="row g-2">
+                <div class="col-md-4">
+                  <label class="form-label fw-bold small">Texto ES <span class="text-danger">*</span></label>
+                  <input type="text" id="mem-inp-es" class="form-control" placeholder="Ej: Gato">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold small">Texto EN (opcional)</label>
+                  <input type="text" id="mem-inp-en" class="form-control" placeholder="Ej: Cat">
+                </div>
+                <div class="col-md-4 d-flex flex-column justify-content-end">
+                  <label class="form-label fw-bold small">Imagen (opcional)</label>
+                  <input type="file" id="mem-inp-image" class="form-control" accept="image/*">
+                </div>
+              </div>
+              <div id="mem-card-preview-wrap" class="mt-2 mem-card-preview-wrap" style="display:none">
+                <img id="mem-card-preview" src="" alt="preview">
+              </div>
+              <div class="d-flex align-items-center gap-3 mt-3">
+                <button class="btn btn-nestgrow btn-primary-nestgrow" onclick="agregarMemCard()" id="btn-agregar-memcard">
+                  ➕ Añadir tarjeta
+                </button>
+                <span class="text-muted small fw-bold" id="mem-add-status"></span>
+              </div>
+            </div>
+
+            <!-- MODO CREACIÓN: aviso de que se pueden añadir después -->
+            {% if not juego %}
+            <div class="alert alert-info small mt-3 mb-0 fw-bold" style="border-radius:10px">
+              💡 Guarda el juego primero y luego añade las tarjetas desde la edición.
+            </div>
+            {% endif %}
+
           </div>
         </div>
 
@@ -251,7 +320,7 @@
 <script>
 const GAME_TYPE_SEL   = document.getElementById('id_game_type');
 const PAINTING_SEC    = document.getElementById('painting-words-section');
-const WS_SEC          = document.getElementById('word-search-section');
+const MEMORIA_SEC     = document.getElementById('memoria-cards-section');
 const IMG_CREATE_SEC  = document.getElementById('imagenes-create-section');
 const IMG_TOTAL_ROWS  = document.getElementById('img-total-rows');
 const TIPOS_IMG       = ['puzzle'];
@@ -259,7 +328,7 @@ const TIPOS_IMG       = ['puzzle'];
 function onGameTypeChange() {
   const tipo = GAME_TYPE_SEL.value;
   PAINTING_SEC.style.display = (tipo === 'painting') ? 'block' : 'none';
-  WS_SEC.style.display = (tipo === 'word_search') ? 'block' : 'none';
+  if (MEMORIA_SEC) MEMORIA_SEC.style.display = (tipo === 'memoria') ? 'block' : 'none';
   if (IMG_CREATE_SEC) IMG_CREATE_SEC.style.display = TIPOS_IMG.includes(tipo) ? 'block' : 'none';
 }
 GAME_TYPE_SEL.addEventListener('change', onGameTypeChange);
@@ -291,44 +360,128 @@ function removeImgCreateRow(i) {
   document.getElementById(`img-create-row-${i}`)?.remove();
 }
 
-// ── Word Search words ──────────────────────────────────────────────────────
-const wsWordsInput  = document.getElementById('wordSearchWordsInput');
-const wsWordsList   = document.getElementById('wsWordsList');
-const wsWordsCount  = document.getElementById('wsWordsCount');
-let wsWords = [];
-document.querySelectorAll('#wsWordsList .word-tag').forEach(tag => wsWords.push(tag.dataset.word));
-wsUpdateInput();
+// ── Memoria cards ────────────────────────────────────────────────────────────
+{% if juego and juego_usa_memoria %}
+const MEM_GAME_PK    = {{ juego.pk }};
+const MEM_ADD_URL    = "{% url 'games:api_memoria_card_agregar' juego.pk %}";
+const MEM_DEL_BASE   = "/games/gestionar/memoria/";
+const MEM_CSRF       = "{{ csrf_token }}";
+{% else %}
+const MEM_GAME_PK    = null;
+const MEM_ADD_URL    = null;
+const MEM_DEL_BASE   = "/games/gestionar/memoria/";
+const MEM_CSRF       = "{{ csrf_token }}";
+{% endif %}
 
-function wsAddWord() {
-  const input = document.getElementById('wsNewWordInput');
-  const word = input.value.trim().toUpperCase().replace(/\s+/g, '');
-  if (!word) { input.value = ''; return; }
-  if (wsWords.includes(word)) { input.value = ''; input.focus(); return; }
-  if (wsWords.length >= 20) { alert('⚠️ Máximo 20 palabras por sopa de letras.'); return; }
-  wsWords.push(word);
-  wsRenderWords(); wsUpdateInput();
-  input.value = ''; input.focus();
-}
-document.getElementById('wsNewWordInput')?.addEventListener('keydown', e => {
-  if (e.key === 'Enter') { e.preventDefault(); wsAddWord(); }
+let memCardCount = document.querySelectorAll('#mem-cards-list .mem-card-row').length;
+updateMemBadge();
+
+document.getElementById('mem-inp-image')?.addEventListener('change', function() {
+  const file = this.files[0];
+  const wrap = document.getElementById('mem-card-preview-wrap');
+  const img  = document.getElementById('mem-card-preview');
+  if (file) {
+    img.src = URL.createObjectURL(file);
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+    img.src = '';
+  }
 });
-function wsRemoveWord(el) {
-  wsWords = wsWords.filter(w => w !== el.parentElement.dataset.word);
-  wsRenderWords(); wsUpdateInput();
+
+function updateMemBadge() {
+  const badge = document.getElementById('mem-card-count-badge');
+  if (badge) badge.textContent = memCardCount + ' tarjeta' + (memCardCount !== 1 ? 's' : '');
+  const btn = document.getElementById('btn-agregar-memcard');
+  if (btn) btn.disabled = memCardCount >= 12;
 }
-function wsRenderWords() {
-  wsWordsList.innerHTML = '';
-  wsWords.forEach(word => {
-    const span = document.createElement('span');
-    span.className = 'word-tag'; span.dataset.word = word;
-    span.innerHTML = `${word} <span class="remove-word" onclick="wsRemoveWord(this)">×</span>`;
-    wsWordsList.appendChild(span);
-  });
-  wsWordsCount.textContent = `${wsWords.length} palabra${wsWords.length !== 1 ? 's' : ''} añadida${wsWords.length !== 1 ? 's' : ''}`;
+
+async function agregarMemCard() {
+  if (!MEM_GAME_PK) {
+    alert('💡 Guarda el juego primero para poder añadir tarjetas.');
+    return;
+  }
+  const labelEs = document.getElementById('mem-inp-es').value.trim();
+  const labelEn = document.getElementById('mem-inp-en').value.trim();
+  const imgFile  = document.getElementById('mem-inp-image').files[0];
+  if (!labelEs) {
+    document.getElementById('mem-add-status').textContent = '⚠️ El texto en español es obligatorio.';
+    return;
+  }
+  if (memCardCount >= 12) {
+    document.getElementById('mem-add-status').textContent = '⚠️ Límite de 12 tarjetas.';
+    return;
+  }
+  const fd = new FormData();
+  fd.append('label_es', labelEs);
+  fd.append('label_en', labelEn);
+  if (imgFile) fd.append('image', imgFile);
+  fd.append('csrfmiddlewaretoken', MEM_CSRF);
+
+  const btn = document.getElementById('btn-agregar-memcard');
+  btn.disabled = true;
+  btn.textContent = '⏳ Guardando...';
+  document.getElementById('mem-add-status').textContent = '';
+
+  try {
+    const res = await fetch(MEM_ADD_URL, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.ok) {
+      // Quitar mensaje vacío
+      const emptyMsg = document.getElementById('mem-card-empty-msg');
+      if (emptyMsg) emptyMsg.remove();
+      // Crear fila
+      const row = document.createElement('div');
+      row.className = 'mem-card-row';
+      row.id = 'memcard-' + data.card.pk;
+      row.innerHTML = (data.card.image_url
+        ? `<img src="${data.card.image_url}" alt="${data.card.label_es}">`
+        : `<div style="width:52px;height:52px;border-radius:8px;background:#d4cfff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🃏</div>`) +
+        `<div class="flex-grow-1">
+           <div class="fw-bold" style="color:var(--primary)">${data.card.label_es}</div>
+           ${data.card.label_en ? `<div class="small text-muted">🇬🇧 ${data.card.label_en}</div>` : ''}
+         </div>
+         <button class="btn btn-sm btn-outline-danger rounded-pill"
+                 onclick="eliminarMemCard(${data.card.pk})">🗑</button>`;
+      document.getElementById('mem-cards-list').appendChild(row);
+      memCardCount++;
+      updateMemBadge();
+      // Limpiar inputs
+      document.getElementById('mem-inp-es').value = '';
+      document.getElementById('mem-inp-en').value = '';
+      document.getElementById('mem-inp-image').value = '';
+      document.getElementById('mem-card-preview-wrap').style.display = 'none';
+      document.getElementById('mem-card-preview').src = '';
+      document.getElementById('mem-add-status').textContent = '✅ Tarjeta añadida.';
+      setTimeout(() => { document.getElementById('mem-add-status').textContent = ''; }, 2500);
+    } else {
+      document.getElementById('mem-add-status').textContent = '⚠️ ' + (data.error || 'Error al guardar.');
+    }
+  } catch (e) {
+    document.getElementById('mem-add-status').textContent = '⚠️ Error de red.';
+  }
+  btn.disabled = memCardCount >= 12;
+  btn.textContent = '➕ Añadir tarjeta';
 }
-function wsUpdateInput() {
-  if (wsWordsInput) wsWordsInput.value = JSON.stringify(wsWords);
-  if (wsWordsCount) wsWordsCount.textContent = `${wsWords.length} palabra${wsWords.length !== 1 ? 's' : ''} añadida${wsWords.length !== 1 ? 's' : ''}`;
+
+async function eliminarMemCard(pk) {
+  if (!confirm('¿Eliminar esta tarjeta?')) return;
+  const fd = new FormData();
+  fd.append('csrfmiddlewaretoken', MEM_CSRF);
+  try {
+    const res = await fetch(`${MEM_DEL_BASE}${pk}/eliminar/`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('memcard-' + pk)?.remove();
+      memCardCount = Math.max(0, memCardCount - 1);
+      updateMemBadge();
+      if (memCardCount === 0) {
+        const list = document.getElementById('mem-cards-list');
+        list.innerHTML = `<div class="text-center py-3 text-muted fw-bold" id="mem-card-empty-msg">
+          <div style="font-size:2rem">🃏</div><div>No hay tarjetas aún. ¡Añade la primera!</div></div>`;
+      }
+    }
+  } catch(e) {}
 }
 
 // ── Painting words ─────────────────────────────────────────────────────────

@@ -98,6 +98,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   initMemoria({
     VOCABULARY: {{ vocabulary_json|safe }},
+    CUSTOM_CARDS: {{ memoria_cards_json|safe }},
     DIFFICULTY: {{ game.difficulty }},
     GAME_ID: {{ game.id }},
     POINTS_REWARD: {{ game.points_reward }},
