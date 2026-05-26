@@ -271,11 +271,12 @@
           {% endif %}
 
           {% if item.imagen %}
-            <!-- Item image - replace with your own images -->
             <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
           {% else %}
-            <!-- PLACEHOLDER: Add item image at apps/games/static/games/img/items/{{ item.id }}.png -->
-            <span class="placeholder-icon">{{ item.icono }}</span>
+            <img src="{% get_static_prefix %}img/ob_{{ item.pk }}.png"
+                 alt="{{ item.nombre }}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span class="placeholder-icon" style="display:none">{{ item.icono }}</span>
           {% endif %}
         </div>
 

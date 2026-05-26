@@ -211,6 +211,67 @@
     border-radius: 20px;
   }
 
+  /* ── Drag handle y controles ── */
+  .room-item-drag {
+    position: absolute;
+    cursor: grab;
+    transform-origin: bottom center;
+    transition: box-shadow 0.15s;
+    user-select: none;
+  }
+  .room-item-drag.dragging {
+    cursor: grabbing;
+    z-index: 500;
+    filter: drop-shadow(0 16px 32px rgba(108,99,255,0.5));
+  }
+  .drag-handle {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(108,99,255,0.85);
+    color: white;
+    font-size: 0.75rem;
+    padding: 1px 7px;
+    border-radius: 99px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: grab;
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+  .room-item-drag:hover .drag-handle { opacity: 1; }
+  .item-controls {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .room-item-drag:hover .item-controls { opacity: 1; pointer-events: auto; }
+  .item-ctrl-btn {
+    background: rgba(108,99,255,0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .item-ctrl-btn:hover { background: #5a52d5; transform: scale(1.15); }
+  .item-ctrl-info { background: rgba(78,205,196,0.9); }
+  .item-ctrl-info:hover { background: #38b2ac; }
+
   /* ══════════════════════════════════════
      GAME CARDS (items con minijuego)
   ══════════════════════════════════════ */
@@ -517,15 +578,27 @@
     </div>
 
     {% else %}
-    <!-- Item decorativo -->
-    <div class="room-item"
-         style="left:{{ inv.item.posicion_x }}%;bottom:calc(32% + {{ inv.item.posicion_y }}px)"
-         onclick="verItem('{{ inv.item.nombre }}', '{{ inv.item.descripcion }}', '{{ inv.item.icono }}')">
+    <!-- Item decorativo — arrastrable y redimensionable -->
+    <div class="room-item room-item-drag"
+         data-inv-id="{{ inv.pk }}"
+         data-pos-x="{{ inv.pos_x }}"
+         data-pos-y="{{ inv.pos_y }}"
+         data-escala="{{ inv.escala }}">
+      <div class="drag-handle" title="Arrastrar">⠿</div>
       {% if inv.item.imagen %}
         <img src="{{ inv.item.imagen.url }}" class="item-img-room" alt="{{ inv.item.nombre }}">
       {% else %}
-        <span class="item-emoji-big">{{ inv.item.icono }}</span>
+        <img src="{% get_static_prefix %}img/ob_{{ inv.item.pk }}.png"
+             class="item-img-room"
+             alt="{{ inv.item.nombre }}"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="item-emoji-big" style="display:none">{{ inv.item.icono }}</span>
       {% endif %}
+      <div class="item-controls">
+        <button class="item-ctrl-btn" onclick="cambiarEscala(this.closest('.room-item-drag'), 0.15)" title="Agrandar">＋</button>
+        <button class="item-ctrl-btn" onclick="cambiarEscala(this.closest('.room-item-drag'), -0.15)" title="Encoger">－</button>
+        <button class="item-ctrl-btn item-ctrl-info" onclick="verItemDrag(this)" title="Info">ℹ</button>
+      </div>
       <span class="item-label">{{ inv.item.nombre }}</span>
     </div>
     {% endif %}
@@ -1023,6 +1096,119 @@ function despertarMilo() {
 
   room.style.background =
     "url('{% static 'img/h_dia.png' %}') center center / cover no-repeat";
+}
+
+/* ═══════════════════════════════════════════════════
+   ITEMS ARRASTRABLES + REDIMENSIONABLES
+═══════════════════════════════════════════════════ */
+const SAVE_URL  = "{% url 'games:guardar_posicion_item' %}";
+const CSRF_INV  = document.cookie.match(/csrftoken=([^;]+)/)?.[1] ?? '';
+
+/* Aplica posición y escala desde data-* al cargar */
+document.querySelectorAll('.room-item-drag').forEach(el => {
+  const px     = parseFloat(el.dataset.posX)   || 50;
+  const py     = parseFloat(el.dataset.posY)   || 10;
+  const escala = parseFloat(el.dataset.escala) || 1.0;
+  el.style.position       = 'absolute';
+  el.style.left           = px + '%';
+  el.style.bottom         = 'calc(32% + ' + py + 'px)';
+  el.style.transform      = 'scale(' + escala + ')';
+  el.style.transformOrigin = 'bottom center';
+});
+
+/* Autosave con debounce por ítem */
+const saveTimers = {};
+function scheduleItemSave(el) {
+  const invId = el.dataset.invId;
+  clearTimeout(saveTimers[invId]);
+  saveTimers[invId] = setTimeout(() => {
+    const px     = parseFloat(el.dataset.posX)   || 50;
+    const py     = parseFloat(el.dataset.posY)   || 10;
+    const escala = parseFloat(el.dataset.escala) || 1.0;
+    fetch(SAVE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_INV },
+      body: JSON.stringify({ inv_id: parseInt(invId), pos_x: px, pos_y: py, escala })
+    });
+  }, 600);
+}
+
+/* ── Drag (mouse + touch) ── */
+let dragEl = null, dragStartX = 0, dragStartY = 0, dragOrigLeft = 0, dragOrigBottom = 0;
+
+function getPageXY(e) {
+  return e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
+                   : { x: e.clientX, y: e.clientY };
+}
+
+document.querySelectorAll('.room-item-drag').forEach(el => {
+  function onStart(e) {
+    if (e.target.closest('.item-ctrl-btn')) return;
+    e.preventDefault();
+    dragEl = el;
+    const p = getPageXY(e);
+    dragStartX    = p.x;
+    dragStartY    = p.y;
+    dragOrigLeft  = parseFloat(el.style.left) || parseFloat(el.dataset.posX) || 50;
+    dragOrigBottom = parseFloat(el.dataset.posY) || 10;
+    el.classList.add('dragging');
+  }
+  el.addEventListener('mousedown',  onStart);
+  el.addEventListener('touchstart', onStart, { passive: false });
+});
+
+document.addEventListener('mousemove',  onDragMove);
+document.addEventListener('touchmove',  onDragMove, { passive: false });
+document.addEventListener('mouseup',    onDragEnd);
+document.addEventListener('touchend',   onDragEnd);
+
+function onDragMove(e) {
+  if (!dragEl) return;
+  e.preventDefault();
+  const p      = getPageXY(e);
+  const roomW  = room.offsetWidth;
+  const roomH  = room.offsetHeight;
+  const dx     = p.x - dragStartX;
+  const dy     = p.y - dragStartY;
+  const newPx  = Math.max(0, Math.min(100, dragOrigLeft  + (dx / roomW * 100)));
+  const newPy  = Math.max(-50, dragOrigBottom - (dy));
+  dragEl.style.left   = newPx + '%';
+  dragEl.style.bottom = 'calc(32% + ' + newPy + 'px)';
+  dragEl.dataset.posX = newPx.toFixed(1);
+  dragEl.dataset.posY = newPy.toFixed(1);
+}
+
+function onDragEnd() {
+  if (!dragEl) return;
+  dragEl.classList.remove('dragging');
+  scheduleItemSave(dragEl);
+  dragEl = null;
+}
+
+/* ── Cambio de escala con botones ── */
+function cambiarEscala(el, delta) {
+  const actual  = parseFloat(el.dataset.escala) || 1.0;
+  const nueva   = Math.max(0.3, Math.min(3.0, actual + delta));
+  el.dataset.escala   = nueva.toFixed(2);
+  el.style.transform  = 'scale(' + nueva + ')';
+  scheduleItemSave(el);
+}
+
+/* ── Scroll para redimensionar (hover) ── */
+document.querySelectorAll('.room-item-drag').forEach(el => {
+  el.addEventListener('wheel', e => {
+    e.preventDefault();
+    cambiarEscala(el, e.deltaY < 0 ? 0.08 : -0.08);
+  }, { passive: false });
+});
+
+/* ── Info desde botón ── */
+function verItemDrag(btn) {
+  const el    = btn.closest('.room-item-drag');
+  const img   = el.querySelector('img');
+  const label = el.querySelector('.item-label');
+  const nombre = label ? label.textContent.trim() : '?';
+  verItem(nombre, '', '');
 }
 </script>
 {% endblock %}

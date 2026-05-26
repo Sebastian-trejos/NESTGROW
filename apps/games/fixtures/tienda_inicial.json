@@ -1,15 +1,506 @@
 [
-  {"model": "games.tiendaitem", "pk": 1, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Póster de Animales", "descripcion": "Un colorido póster con animales en inglés para la pared", "categoria": "decoracion", "costo_huesos": 25, "icono": "🖼️", "imagen": null, "posicion_x": 15, "posicion_y": 80, "is_active": true, "order": 1, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 2, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Televisión", "descripcion": "Una TV retro para ver videos en inglés", "categoria": "electronico", "costo_huesos": 45, "icono": "📺", "imagen": null, "posicion_x": 70, "posicion_y": 60, "is_active": true, "order": 2, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 3, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Planta Tropical", "descripcion": "Una planta verde para alegrar la habitación", "categoria": "planta", "costo_huesos": 20, "icono": "🌿", "imagen": null, "posicion_x": 85, "posicion_y": 20, "is_active": true, "order": 3, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 4, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Consola de Juegos", "descripcion": "¡Una mini consola llena de minijuegos en inglés!", "categoria": "electronico", "costo_huesos": 60, "icono": "🎮", "imagen": null, "posicion_x": 55, "posicion_y": 20, "is_active": true, "order": 4, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 5, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Estantería", "descripcion": "Una estantería llena de libros de inglés", "categoria": "mueble", "costo_huesos": 35, "icono": "📚", "imagen": null, "posicion_x": 25, "posicion_y": 70, "is_active": true, "order": 5, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 6, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Cocinita de Juguete", "descripcion": "¡Aprende las frutas y comidas en inglés cocinando!", "categoria": "especial", "costo_huesos": 50, "icono": "🍳", "imagen": null, "posicion_x": 40, "posicion_y": 20, "is_active": true, "order": 6, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 7, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Alfombra Colorida", "descripcion": "Una alfombra con los colores del arcoíris", "categoria": "mueble", "costo_huesos": 30, "icono": "🎨", "imagen": null, "posicion_x": 45, "posicion_y": 5, "is_active": true, "order": 7, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 8, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Globo Terráqueo", "descripcion": "Un globo que muestra todos los países del mundo", "categoria": "especial", "costo_huesos": 80, "icono": "🌍", "imagen": null, "posicion_x": 30, "posicion_y": 70, "is_active": true, "order": 8, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 9, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Mesa de Cartas", "descripcion": "Una mesita especial con baraja de vocabulario. ¡Desbloquea el juego de Memoria!", "categoria": "mueble", "costo_huesos": 40, "icono": "🃏", "imagen": null, "posicion_x": 60, "posicion_y": 75, "is_active": true, "order": 9, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 10, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Pizarrón de Letras", "descripcion": "Un pizarrón mágico donde puedes practicar palabras. ¡Desbloquea Ordenar Letras!", "categoria": "decoracion", "costo_huesos": 35, "icono": "🔤", "imagen": null, "posicion_x": 10, "posicion_y": 55, "is_active": true, "order": 10, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 11, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Hueso de Conocimiento", "descripcion": "Un hueso misterioso con preguntas adentro. ¡Desbloquea el Quiz Rápido!", "categoria": "especial", "costo_huesos": 50, "icono": "🦴", "imagen": null, "posicion_x": 80, "posicion_y": 80, "is_active": true, "order": 11, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 12, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Ramo de Globos", "descripcion": "Globos de colores que flotan en la habitación. ¡Desbloquea el juego de Globos!", "categoria": "decoracion", "costo_huesos": 45, "icono": "🎈", "imagen": null, "posicion_x": 50, "posicion_y": 85, "is_active": true, "order": 12, "juego_desbloqueado": null}},
-  {"model": "games.tiendaitem", "pk": 13, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "Libro del Ahorcado", "descripcion": "Un libro antiguo lleno de palabras secretas. ¡Desbloquea el Ahorcado de Milo!", "categoria": "especial", "costo_huesos": 55, "icono": "📖", "imagen": null, "posicion_x": 20, "posicion_y": 30, "is_active": true, "order": 13, "juego_desbloqueado": null}}
+  {
+    "model": "games.tiendaitem",
+    "pk": 1,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Mesa de Noche",
+      "descripcion": "Una mesita de madera con cajones para tus cosas.",
+      "categoria": "mueble",
+      "costo_huesos": 35,
+      "icono": "🪵",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 15,
+      "posicion_y": 30,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 2,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Librero de Madera",
+      "descripcion": "Un estante para tus libros favoritos.",
+      "categoria": "mueble",
+      "costo_huesos": 40,
+      "icono": "📚",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 75,
+      "posicion_y": 30,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 3,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Lampara de Estrellas",
+      "descripcion": "Ilumina tu cuarto con estrellas azules.",
+      "categoria": "electronico",
+      "costo_huesos": 30,
+      "icono": "⭐",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 60,
+      "posicion_y": 70,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 4,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Cohete Espacial",
+      "descripcion": "Despega hacia las estrellas desde tu habitacion.",
+      "categoria": "decoracion",
+      "costo_huesos": 45,
+      "icono": "🚀",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 50,
+      "posicion_y": 60,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 5,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Cuadro Nube Feliz",
+      "descripcion": "Un cuadro con una nube sonriente para tu pared.",
+      "categoria": "decoracion",
+      "costo_huesos": 20,
+      "icono": "☁️",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 20,
+      "posicion_y": 80,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 6,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Cuadro de Cohete",
+      "descripcion": "Cuadro espacial con un cohete entre estrellas.",
+      "categoria": "decoracion",
+      "costo_huesos": 20,
+      "icono": "🖼️",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 35,
+      "posicion_y": 80,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 7,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Suculenta Dorada",
+      "descripcion": "Una pequena planta suculenta en maceta dorada.",
+      "categoria": "planta",
+      "costo_huesos": 15,
+      "icono": "🌿",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 85,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 8,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Planta Grande",
+      "descripcion": "Una planta frondosa que llena de vida tu cuarto.",
+      "categoria": "planta",
+      "costo_huesos": 25,
+      "icono": "🌱",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 10,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 9,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Suculenta Verde",
+      "descripcion": "Suculenta verde brillante en maceta esmeralda.",
+      "categoria": "planta",
+      "costo_huesos": 20,
+      "icono": "🪴",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 90,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 10,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Caballito de Madera",
+      "descripcion": "Un caballito balancin de madera para tu habitacion.",
+      "categoria": "mueble",
+      "costo_huesos": 55,
+      "icono": "🐴",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 30,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 11,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Carrito de Juguete",
+      "descripcion": "Un carrito verde de juguete listo para rodar.",
+      "categoria": "decoracion",
+      "costo_huesos": 30,
+      "icono": "🚗",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 55,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 12,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Dragon de Peluche",
+      "descripcion": "Un dragon verde de peluche, suave y amigable.",
+      "categoria": "decoracion",
+      "costo_huesos": 40,
+      "icono": "🐲",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 70,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 13,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Tambor de Juguete",
+      "descripcion": "Haz musica con tu propio tambor de colores.",
+      "categoria": "decoracion",
+      "costo_huesos": 35,
+      "icono": "🥁",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 45,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 14,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Xilofono de Colores",
+      "descripcion": "Toca melodias con este xilofono de arcoiris.",
+      "categoria": "decoracion",
+      "costo_huesos": 40,
+      "icono": "🎵",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 25,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 15,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Repisa de Madera",
+      "descripcion": "Repisa flotante de madera natural para tu pared.",
+      "categoria": "mueble",
+      "costo_huesos": 30,
+      "icono": "🪵",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 65,
+      "posicion_y": 80,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 16,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Bloque de Letras",
+      "descripcion": "Bloque educativo con letras y figuras de colores.",
+      "categoria": "decoracion",
+      "costo_huesos": 20,
+      "icono": "🔤",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 40,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 17,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Cojin Estrella",
+      "descripcion": "Cojin con forma de estrella feliz para descansar.",
+      "categoria": "mueble",
+      "costo_huesos": 25,
+      "icono": "⭐",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 50,
+      "posicion_y": 10,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 18,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Pelota de Playa",
+      "descripcion": "Pelota colorida para jugar dentro de casa.",
+      "categoria": "decoracion",
+      "costo_huesos": 20,
+      "icono": "⚽",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 60,
+      "posicion_y": 10,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 19,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Guirnalda de Colores",
+      "descripcion": "Banderines de colores para decorar tu habitacion.",
+      "categoria": "decoracion",
+      "costo_huesos": 25,
+      "icono": "🎏",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 50,
+      "posicion_y": 90,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 20,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Carpa de Juegos",
+      "descripcion": "Una pequena carpa tipi para tus aventuras en casa.",
+      "categoria": "mueble",
+      "costo_huesos": 65,
+      "icono": "⛺",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 20,
+      "posicion_y": 30,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 21,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Tren de Juguete",
+      "descripcion": "Locomotora de madera lista para su viaje.",
+      "categoria": "decoracion",
+      "costo_huesos": 50,
+      "icono": "🚂",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 75,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 22,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Pila de Libros",
+      "descripcion": "Una pila de libros coloridos para aprender mas.",
+      "categoria": "decoracion",
+      "costo_huesos": 30,
+      "icono": "📖",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 80,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 23,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Familia de Munequitos",
+      "descripcion": "Familia de munequitos de madera.",
+      "categoria": "decoracion",
+      "costo_huesos": 35,
+      "icono": "🪆",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 35,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 24,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Caja de Bloques",
+      "descripcion": "Caja morada llena de bloques de construccion.",
+      "categoria": "decoracion",
+      "costo_huesos": 30,
+      "icono": "🧱",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 45,
+      "posicion_y": 10,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 25,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Oso de Peluche",
+      "descripcion": "Un osito de peluche marron con mono rojo.",
+      "categoria": "decoracion",
+      "costo_huesos": 35,
+      "icono": "🧸",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 55,
+      "posicion_y": 20,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 26,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Escritorio de Estudio",
+      "descripcion": "Escritorio con libros y lapices para estudiar.",
+      "categoria": "mueble",
+      "costo_huesos": 70,
+      "icono": "🖥️",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 65,
+      "posicion_y": 40,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 27,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Portalapices",
+      "descripcion": "Portalapices turquesa lleno de crayones de colores.",
+      "categoria": "decoracion",
+      "costo_huesos": 20,
+      "icono": "✏️",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 30,
+      "posicion_y": 60,
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.tiendaitem",
+    "pk": 28,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "Barco Puzzle",
+      "descripcion": "Un barco de juguete con piezas de puzzle para armar.",
+      "categoria": "decoracion",
+      "costo_huesos": 40,
+      "icono": "⛵",
+      "imagen": null,
+      "juego_entretenimiento": "ninguno",
+      "posicion_x": 70,
+      "posicion_y": 10,
+      "is_active": true
+    }
+  }
 ]

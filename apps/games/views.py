@@ -839,3 +839,24 @@ def habitacion_milo(request):
         'huesos': request.user.huesos,
         'logros_nuevos': logros_nuevos,
     })
+
+
+@login_required
+@require_POST
+def guardar_posicion_item(request):
+    """Guarda la posición y escala de un ítem del inventario del estudiante."""
+    try:
+        data   = json.loads(request.body)
+        inv_id = int(data['inv_id'])
+        pos_x  = float(data['pos_x'])
+        pos_y  = float(data['pos_y'])
+        escala = float(data['escala'])
+    except (KeyError, ValueError, TypeError):
+        return JsonResponse({'status': 'error', 'msg': 'Datos inválidos'}, status=400)
+
+    inv = get_object_or_404(InventarioEstudiante, pk=inv_id, user=request.user)
+    inv.pos_x  = max(0.0, min(100.0, pos_x))
+    inv.pos_y  = max(-50.0, pos_y)
+    inv.escala = max(0.3, min(3.0, escala))
+    inv.save(update_fields=['pos_x', 'pos_y', 'escala'])
+    return JsonResponse({'status': 'ok'})

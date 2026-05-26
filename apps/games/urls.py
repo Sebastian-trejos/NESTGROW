@@ -17,6 +17,7 @@ urlpatterns = [
     path('tienda/', views.tienda, name='tienda'),
     path('tienda/comprar/', views.comprar_item, name='comprar_item'),
     path('habitacion/', views.habitacion_milo, name='habitacion_milo'),
+    path('habitacion/guardar-posicion/', views.guardar_posicion_item, name='guardar_posicion_item'),
 
     # Museo Virtual
     path('guardar-obra/', views.guardar_obra, name='guardar_obra'),

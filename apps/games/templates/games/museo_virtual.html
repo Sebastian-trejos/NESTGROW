@@ -1,21 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}🏛️ Museo Virtual - NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
-  /* ══════════════════════════════════════
-   FONDO GENERAL TIPO GALERÍA
-══════════════════════════════════════ */
-body {
-  body {
-  background:
-    radial-gradient(circle at 15% 25%, rgba(108,99,255,0.18), transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(78,205,196,0.18), transparent 35%),
-    radial-gradient(circle at 25% 80%, rgba(255,107,107,0.18), transparent 35%),
-    radial-gradient(circle at 70% 75%, rgba(255,230,109,0.22), transparent 35%), /* amarillo */
-    radial-gradient(circle at 50% 50%, rgba(255,80,80,0.12), transparent 40%), /* rojo suave */
-    linear-gradient(135deg, #f8f7ff, #fffaf7);
-}
 
 /* ══════════════════════════════════════
    HEADER
@@ -224,6 +212,10 @@ body {
 {% endblock %}
 
 {% block content %}
+<!-- Fondo personalizado museo: tapa el bg_nubes del base.html -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:url('{% static 'img/museo_bg.jpeg' %}') center top / cover no-repeat;"></div>
+
 <div class="container py-4">
 
   <!-- Header -->

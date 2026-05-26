@@ -529,149 +529,162 @@ body.nestgrow-body {
 .win-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 5, 40, 0.72);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(8, 4, 32, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
   display: none;
 }
 
-/* Floating stars in the backdrop */
+/* Floating emoji confetti in backdrop */
 .win-overlay::before {
-  content: '✨ ⭐ 💫 ✨ ⭐ 💫 ✨';
+  content: '🌟  ✨  ⭐  💫  🌟  ✨  ⭐';
   position: absolute;
-  top: 10%;
+  top: 6%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.5rem;
-  letter-spacing: 20px;
-  opacity: 0.25;
+  font-size: 1.4rem;
+  letter-spacing: 18px;
+  opacity: 0.18;
   pointer-events: none;
   white-space: nowrap;
+  animation: driftStars 8s linear infinite;
+}
+.win-overlay::after {
+  content: '🎉  💖  🎊  💫  🎉  💖  🎊';
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  letter-spacing: 16px;
+  opacity: 0.14;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: driftStars 10s linear infinite reverse;
+}
+@keyframes driftStars {
+  0%   { transform: translateX(-50%) translateY(0); }
+  50%  { transform: translateX(-50%) translateY(-8px); }
+  100% { transform: translateX(-50%) translateY(0); }
 }
 
+/* ── Card principal ── */
 .win-card {
   background: white;
-  border-radius: 32px;
-  padding: 0 0 2rem 0;
+  border-radius: 28px;
+  padding: 0 0 1.6rem;
   text-align: center;
-  animation: popIn 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-  max-width: 400px;
-  width: 92%;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  max-width: 370px;
+  width: 96%;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 4px rgba(255,255,255,0.15);
+  box-shadow:
+    0 28px 70px rgba(0,0,0,0.45),
+    0 0 0 3px rgba(255,255,255,0.14),
+    0 0 60px rgba(108,99,255,0.15);
 }
 
-/* Colored top header banner per tier */
+/* Banda de color superior — limpia, sin arco raro */
 .win-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 140px;
-  border-radius: 32px 32px 60% 60%;
+  height: 130px;
+  border-radius: 28px 28px 0 0;
   z-index: 0;
 }
-
-.win-card--excelente::before { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.win-card--excelente::before { background: linear-gradient(135deg, #11d85e 0%, #38f9d7 100%); }
 .win-card--bien::before      { background: linear-gradient(135deg, #6C63FF 0%, #a78bfa 100%); }
 .win-card--regular::before   { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); }
 .win-card--mal::before       { background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%); }
 
-/* Sparkle accent dots */
+/* Destellos decorativos en la banda */
 .win-card::after {
   content: '';
   position: absolute;
-  top: 8px; right: 16px;
-  width: 10px; height: 10px;
-  background: rgba(255,255,255,0.5);
+  top: 12px; right: 20px;
+  width: 8px; height: 8px;
+  background: rgba(255,255,255,0.6);
   border-radius: 50%;
-  box-shadow: -20px 10px 0 6px rgba(255,255,255,0.3), -40px 2px 0 3px rgba(255,255,255,0.2);
+  box-shadow:
+    -24px 14px 0 5px rgba(255,255,255,0.35),
+    -46px 4px 0 3px rgba(255,255,255,0.2),
+    12px 30px 0 4px rgba(255,255,255,0.25);
+  z-index: 1;
 }
 
+/* ── Animaciones ── */
 @keyframes popIn {
-  0%   { transform: scale(0.2) rotate(-5deg); opacity: 0; }
-  60%  { transform: scale(1.08) rotate(1deg); opacity: 1; }
+  0%   { transform: scale(0.15) rotate(-6deg); opacity: 0; }
+  55%  { transform: scale(1.06) rotate(1.5deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-
 @keyframes miloBounce {
   0%,100% { transform: translateY(0) scale(1) rotate(0deg); }
-  25%      { transform: translateY(-12px) scale(1.06) rotate(-2deg); }
-  75%      { transform: translateY(-6px) scale(1.03) rotate(2deg); }
+  28%      { transform: translateY(-14px) scale(1.07) rotate(-2.5deg); }
+  70%      { transform: translateY(-6px) scale(1.03) rotate(2deg); }
 }
-
 @keyframes miloCry {
   0%,100% { transform: translateY(0) scale(1); }
-  30%      { transform: translateY(3px) scale(0.97); }
+  30%      { transform: translateY(4px) scale(0.96); }
   60%      { transform: translateY(-3px) scale(1.02); }
 }
-
 @keyframes starPop {
-  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
-  60%  { transform: scale(1.3) rotate(5deg); opacity: 1; }
+  0%   { transform: scale(0) rotate(-25deg); opacity: 0; }
+  55%  { transform: scale(1.35) rotate(4deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-
 @keyframes pulseGlow {
-  0%,100% { box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.4); }
-  50%      { box-shadow: 0 0 0 14px rgba(67, 233, 123, 0); }
+  0%,100% { box-shadow: 0 0 0 0 rgba(17,216,94,0.45), 0 8px 28px rgba(0,0,0,0.2); }
+  50%      { box-shadow: 0 0 0 16px rgba(17,216,94,0),  0 8px 28px rgba(0,0,0,0.2); }
 }
 
-/* Milo image — bigger, centered over the banner */
+/* ── Milo — sin círculo, imagen flotando sobre la banda ── */
 .win-milo-wrap {
-  width: 150px;
-  height: 150px;
-  margin: -12px auto 0.75rem;
-  border-radius: 50%;
+  width: 140px;
+  height: 130px;
+  margin: 0 auto 0.6rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   position: relative;
-  z-index: 2;
-  border: 5px solid white;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+  z-index: 3;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
 }
-
-.win-card--excelente .win-milo-wrap {
-  background: linear-gradient(135deg, #d4fce9, #a7f3d0);
-  animation: miloBounce 1.8s ease-in-out infinite, pulseGlow 2.5s ease-in-out infinite;
-}
-.win-card--bien .win-milo-wrap {
-  background: linear-gradient(135deg, #ede9fe, #c4b5fd);
-  animation: miloBounce 2s ease-in-out infinite;
-}
-.win-card--regular .win-milo-wrap {
-  background: linear-gradient(135deg, #fff7cc, #fde68a);
-  animation: miloBounce 2.4s ease-in-out infinite;
-}
-.win-card--mal .win-milo-wrap {
-  background: linear-gradient(135deg, #ffe4e6, #fecdd3);
-  animation: miloCry 2s ease-in-out infinite;
-}
+.win-card--excelente .win-milo-wrap { animation: miloBounce 1.8s ease-in-out infinite, pulseGlow 2.5s ease-in-out infinite; }
+.win-card--bien      .win-milo-wrap { animation: miloBounce 2s ease-in-out infinite; }
+.win-card--regular   .win-milo-wrap { animation: miloBounce 2.4s ease-in-out infinite; }
+.win-card--mal       .win-milo-wrap { animation: miloCry 2s ease-in-out infinite; }
 
 .win-milo-img {
   width: 118px;
   height: 118px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.15));
-  transition: transform 0.3s;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.22));
+  margin-top: 12px;
 }
 
+/* ── Cuerpo del card ── */
 .win-card-body {
   position: relative;
   z-index: 2;
-  padding: 0 2rem;
+  padding: 0 1.6rem;
 }
 
 .win-title {
   font-family: 'Fredoka One', cursive;
-  font-size: 2.1rem;
+  font-size: 2rem;
   line-height: 1.1;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 .win-card--excelente .win-title { color: #059669; }
 .win-card--bien      .win-title { color: #6C63FF; }
@@ -680,72 +693,109 @@ body.nestgrow-body {
 
 .win-message {
   font-family: 'Fredoka One', cursive;
-  font-size: 1.15rem;
-  color: #64748b;
-  margin-bottom: 0.75rem;
-  min-height: 1.6rem;
+  font-size: 1.05rem;
+  color: #7c8db5;
+  margin-bottom: 0.7rem;
+  min-height: 1.5rem;
 }
 
+/* Estrellas con animación escalonada */
 .win-stars {
-  font-size: 2.4rem;
-  letter-spacing: 8px;
-  margin-bottom: 0.6rem;
+  font-size: 2.2rem;
+  letter-spacing: 10px;
+  margin-bottom: 0.55rem;
   display: block;
-  animation: starPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s both;
+  animation: starPop 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both;
 }
 
+/* Pill de clasificación */
 .win-clasif {
   font-family: 'Fredoka One', cursive;
-  font-size: 1.3rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin-bottom: 0.55rem;
   display: inline-block;
-  padding: 4px 20px;
+  padding: 5px 22px;
   border-radius: 50px;
+  letter-spacing: 0.3px;
 }
-.win-card--excelente .win-clasif { background: #d1fae5; color: #059669; }
-.win-card--bien      .win-clasif { background: #ede9fe; color: #6C63FF; }
-.win-card--regular   .win-clasif { background: #fef3c7; color: #d97706; }
-.win-card--mal       .win-clasif { background: #ffe4e6; color: #e11d48; }
+.win-card--excelente .win-clasif { background: #d1fae5; color: #059669; border: 1.5px solid #6ee7b7; }
+.win-card--bien      .win-clasif { background: #ede9fe; color: #6C63FF; border: 1.5px solid #c4b5fd; }
+.win-card--regular   .win-clasif { background: #fef3c7; color: #d97706; border: 1.5px solid #fcd34d; }
+.win-card--mal       .win-clasif { background: #ffe4e6; color: #e11d48; border: 1.5px solid #fca5a5; }
 
+/* Puntaje */
 .win-score {
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: #94a3b8;
-  margin-bottom: 0.5rem;
+  color: #b0b8d4;
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.2px;
 }
 .win-score span {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: var(--primary);
+  display: inline-block;
+  animation: starPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both;
 }
 
+/* Huesos ganados */
 .win-huesos {
   font-family: 'Fredoka One', cursive;
   font-weight: 700;
   color: #92400e;
-  margin-bottom: 0.75rem;
-  padding: 8px 20px;
-  background: linear-gradient(90deg, #FFF8E1, #fde68a);
+  margin-bottom: 0.9rem;
+  padding: 7px 22px;
+  background: linear-gradient(90deg, #fffbeb, #fde68a);
   border-radius: 50px;
   display: inline-block;
-  font-size: 1.05rem;
+  font-size: 1rem;
   border: 2px solid #fbbf24;
-  box-shadow: 0 3px 10px rgba(251,191,36,0.25);
+  box-shadow: 0 3px 12px rgba(251,191,36,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* Action button inside win card */
+/* Separador entre botones */
+.win-card-body > .btn + .btn,
+.win-card-body > .btn + a,
+.win-card-body > a + a {
+  margin-top: 0.4rem;
+}
+
+/* Botones dentro del card */
 .win-card .btn-nestgrow {
+  display: block;
+  width: 100%;
   margin-top: 0.5rem;
   border-radius: 50px !important;
   font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem;
-  padding: 0.65rem 2rem;
-  transition: transform 0.18s, box-shadow 0.18s;
+  font-size: 1.05rem;
+  padding: 0.7rem 1.8rem;
+  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+  border: none;
 }
 .win-card .btn-nestgrow:hover {
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 8px 20px rgba(108,99,255,0.35);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 24px rgba(108,99,255,0.38);
+}
+.win-card .btn-outline-secondary {
+  display: block;
+  width: 100%;
+  border-radius: 50px !important;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.98rem;
+  padding: 0.6rem 1.8rem;
+  color: #8892b0;
+  border-color: #d1d9f0;
+  background: transparent;
+  transition: all 0.18s;
+  margin-top: 0.4rem;
+}
+.win-card .btn-outline-secondary:hover {
+  background: #f0eeff;
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* --- Footer --- */

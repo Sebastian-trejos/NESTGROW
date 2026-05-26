@@ -5,247 +5,446 @@
 
 {% block extra_css %}
 <style>
-  /* ── Layout ── */
-  .historia-wrap {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 4rem;
-  }
+/* ══ Fondo del mapa ══ */
+.historia-wrap {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 6rem;
+  position: relative;
+}
 
-  /* ── Hero ── */
-  .historia-hero {
-    background: linear-gradient(135deg, #6C63FF, #9c94ff, #4ECDC4);
-    border-radius: 28px;
-    padding: 1.8rem 2rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2rem;
-  }
-  .historia-hero::before {
-    content: '';
-    position: absolute;
-    width: 180px; height: 180px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
-    top: -70px; right: -50px;
-  }
-  .historia-hero::after {
-    content: '';
-    position: absolute;
-    width: 120px; height: 120px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 50%;
-    bottom: -40px; left: 10%;
-  }
-  .estrellas-contador {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    background: rgba(255,255,255,0.2);
-    border-radius: 99px;
-    padding: .3rem .9rem;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-  }
+/* Puntos decorativos flotando en el fondo */
+.historia-wrap::before {
+  content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.07);
+  letter-spacing: 20px;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-  /* ── Timeline ── */
-  .timeline {
-    position: relative;
-    padding-left: 56px;
-  }
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 27px;
-    top: 0; bottom: 0;
-    width: 3px;
-    background: repeating-linear-gradient(
-      180deg,
-      #c5bfff 0px, #c5bfff 8px,
-      transparent 8px, transparent 16px
-    );
-  }
+/* ── Hero ── */
+.historia-hero {
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 50%, #4ECDC4 100%);
+  border-radius: 28px;
+  padding: 1.8rem 2rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 12px 40px rgba(108,99,255,0.35);
+}
+.historia-hero::before {
+  content: '';
+  position: absolute;
+  width: 220px; height: 220px;
+  background: rgba(255,255,255,0.09);
+  border-radius: 50%;
+  top: -90px; right: -60px;
+}
+.historia-hero::after {
+  content: '';
+  position: absolute;
+  width: 140px; height: 140px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+  bottom: -50px; left: 5%;
+}
+.estrellas-contador {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(255,255,255,0.22);
+  border-radius: 99px;
+  padding: .35rem 1rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
 
-  /* ── Sección node ── */
-  .seccion-node {
-    position: relative;
-    margin-bottom: 0;
-  }
-  .seccion-node + .seccion-node {
-    margin-top: 8px;
-  }
+/* ═══════════════════════════════════════
+   ZIG-ZAG PATH — vibrante y colorido
+═══════════════════════════════════════ */
+.duolingo-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
 
-  .node-btn {
-    position: absolute;
-    left: -56px;
-    top: 14px;
-    width: 54px; height: 54px;
-    border-radius: 50%;
-    border: 3px solid white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem;
-    cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    z-index: 2;
-    background: var(--sec-color, #6C63FF);
-    text-decoration: none;
-  }
-  .node-btn:hover {
-    transform: scale(1.12);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
-  .node-btn.locked {
-    background: #ccc !important;
-    cursor: not-allowed;
-    filter: grayscale(0.5);
-  }
-  .node-btn.locked:hover {
-    transform: none;
-  }
-  .node-btn.completa {
-    border-color: #FFE66D;
-    box-shadow: 0 4px 16px rgba(255,230,109,0.5);
-  }
+/* ── Estación ── */
+.path-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+.station-left  { align-items: flex-start; padding-left:  6%; }
+.station-right { align-items: flex-end;   padding-right: 6%; }
 
-  /* ── Sección card ── */
-  .seccion-card {
-    background: white;
-    border-radius: 20px;
-    padding: 1rem 1.2rem;
-    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
-    cursor: pointer;
-    transition: all .2s;
-    border-left: 4px solid var(--sec-color, #6C63FF);
-    margin-bottom: 8px;
-    user-select: none;
-  }
-  .seccion-card:hover:not(.locked-card) {
-    box-shadow: 0 8px 24px rgba(108,99,255,0.15);
-    transform: translateX(4px);
-  }
-  .seccion-card.locked-card {
-    opacity: .6;
-    cursor: not-allowed;
-    border-left-color: #ccc;
-  }
-  .seccion-card .sec-titulo {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.05rem;
-    color: var(--sec-color, #6C63FF);
-    margin-bottom: 2px;
-  }
-  .seccion-card.locked-card .sec-titulo {
-    color: #999;
-  }
+/* ── Burbuja wrap ── */
+.station-bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  position: relative;
+}
 
-  /* ── Progreso bar inside card ── */
-  .prog-bar-wrap {
-    height: 5px;
-    background: #e8e4ff;
-    border-radius: 99px;
-    overflow: hidden;
-    margin-top: 6px;
-  }
-  .prog-bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    background: var(--sec-color, #6C63FF);
-    transition: width .5s ease;
-  }
+/* Glow pulsante bajo el círculo */
+.station-bubble-wrap.desbloqueada::before {
+  content: '';
+  position: absolute;
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: var(--sec-color, #6C63FF);
+  opacity: 0.28;
+  filter: blur(18px);
+  top: 2px;
+  animation: glowPulse 2.8s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: 0.22; transform: scale(1);    }
+  50%      { opacity: 0.42; transform: scale(1.18); }
+}
 
-  /* ── Lecciones expandibles ── */
-  .lecciones-wrap {
-    display: none;
-    padding: .8rem 0 1rem;
-    animation: fadeInUp .3s ease;
-  }
-  .lecciones-wrap.open {
-    display: block;
-  }
-  .lecciones-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .lec-btn {
-    width: 64px; height: 64px;
-    border-radius: 16px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    font-size: 1.4rem;
-    position: relative;
-    border: none;
-    cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
-    text-decoration: none;
-    background: #f0eeff;
-    color: #444;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  .lec-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  }
-  .lec-btn.completada {
-    background: var(--sec-color, #6C63FF);
-    color: white;
-  }
-  .lec-btn.accesible {
-    background: white;
-    border: 2px solid var(--sec-color, #6C63FF);
-  }
-  .lec-btn.bloqueada {
-    opacity: .45;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-  .lec-btn:hover.bloqueada {
-    transform: none;
-  }
-  .estrellas-overlay {
-    position: absolute;
-    bottom: 2px;
-    font-size: .55rem;
-    letter-spacing: -1px;
-    line-height: 1;
-  }
+/* ── Círculo principal ── */
+.station-circle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  background: var(--sec-color, #6C63FF);
+  border: 5px solid white;
+  box-shadow:
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 8px 28px rgba(0,0,0,0.22),
+    0 0 0 8px rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+  animation: floatStation 3.5s ease-in-out infinite;
+}
+/* Cada estación flota con un delay distinto */
+.path-station:nth-child(1) .station-circle { animation-delay: 0s;    }
+.path-station:nth-child(2) .station-circle { animation-delay: 0.4s;  }
+.path-station:nth-child(3) .station-circle { animation-delay: 0.8s;  }
+.path-station:nth-child(4) .station-circle { animation-delay: 1.2s;  }
+.path-station:nth-child(5) .station-circle { animation-delay: 1.6s;  }
+.path-station:nth-child(6) .station-circle { animation-delay: 2.0s;  }
+.path-station:nth-child(7) .station-circle { animation-delay: 2.4s;  }
+.path-station:nth-child(8) .station-circle { animation-delay: 2.8s;  }
+.path-station:nth-child(9) .station-circle { animation-delay: 3.2s;  }
+.path-station:nth-child(10) .station-circle { animation-delay: 3.6s; }
 
-  /* Tooltip */
-  .lec-tooltip {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: white;
-    font-size: .75rem;
-    padding: .3rem .6rem;
-    border-radius: 8px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .15s;
-    z-index: 10;
-  }
-  .lec-btn:hover .lec-tooltip {
-    opacity: 1;
-  }
+@keyframes floatStation {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
 
-  /* ── Continue button ── */
+.station-circle:hover {
+  transform: scale(1.15) translateY(-6px) !important;
+  box-shadow:
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 16px 40px rgba(0,0,0,0.3),
+    0 0 0 10px rgba(255,255,255,0.2),
+    0 0 30px var(--sec-color, #6C63FF);
+  animation: none;
+}
 
-  @keyframes fadeInUp {
-    from { opacity:0; transform:translateY(8px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
+.station-circle.locked {
+  background: #c8c4d8 !important;
+  border-color: rgba(255,255,255,0.6);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+  cursor: not-allowed;
+  filter: grayscale(0.5) brightness(0.95);
+  animation: none;
+}
+.station-circle.locked:hover { transform: none !important; }
+
+/* Trofeo dorado para completas */
+.station-circle.completa {
+  box-shadow:
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 8px 28px rgba(255,220,50,0.45),
+    0 0 0 8px rgba(255,230,109,0.25),
+    0 0 20px rgba(255,220,50,0.4);
+}
+.station-trophy {
+  position: absolute;
+  top: -6px; right: -6px;
+  font-size: 1.2rem;
+  z-index: 3;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+  animation: trophySpin 4s ease-in-out infinite;
+}
+@keyframes trophySpin {
+  0%,85%,100% { transform: rotate(0deg) scale(1); }
+  90%          { transform: rotate(-15deg) scale(1.2); }
+  95%          { transform: rotate(12deg) scale(1.2); }
+}
+
+/* ── Nombre de la sección ── */
+.station-name-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--sec-color, #6C63FF);
+  color: white;
+  border-radius: 99px;
+  padding: 4px 14px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.88rem;
+  box-shadow:
+    0 3px 12px rgba(0,0,0,0.18),
+    0 0 0 2px rgba(255,255,255,0.35);
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.2px;
+}
+.station-name-pill.locked-pill {
+  background: #c8c4d8;
+  box-shadow: none;
+}
+
+/* Progreso */
+.station-progress {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.65);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+/* ══════════════════════════════
+   CONECTORES ZIG-ZAG COLORIDOS
+══════════════════════════════ */
+.path-connector {
+  position: relative;
+}
+
+/* Conector curvo izq→der */
+.path-connector.to-right {
+  width: 130px;
+  height: 56px;
+  border-bottom: 7px solid;
+  border-right:  7px solid;
+  border-top: none;
+  border-left: none;
+  border-radius: 0 0 22px 0;
+  align-self: flex-start;
+  margin-left: calc(50% - 10px);
+  /* color viene por inline style */
+  filter: drop-shadow(0 3px 8px currentColor);
+  opacity: 0.85;
+}
+/* Puntos decorativos sobre el conector */
+.path-connector.to-right::after {
+  content: '●  ●  ●';
+  position: absolute;
+  bottom: -22px;
+  right: -4px;
+  font-size: 0.4rem;
+  color: inherit;
+  letter-spacing: 3px;
+  opacity: 0.6;
+}
+
+/* Conector curvo der→izq */
+.path-connector.to-left {
+  width: 130px;
+  height: 56px;
+  border-bottom: 7px solid;
+  border-left:   7px solid;
+  border-top: none;
+  border-right: none;
+  border-radius: 0 0 0 22px;
+  align-self: flex-end;
+  margin-right: calc(50% - 10px);
+  filter: drop-shadow(0 3px 8px currentColor);
+  opacity: 0.85;
+}
+.path-connector.to-left::after {
+  content: '●  ●  ●';
+  position: absolute;
+  bottom: -22px;
+  left: -4px;
+  font-size: 0.4rem;
+  color: inherit;
+  letter-spacing: 3px;
+  opacity: 0.6;
+}
+
+/* ══════════════════════════
+   PANEL DE LECCIONES
+══════════════════════════ */
+.lecciones-panel {
+  display: none;
+  background: white;
+  border-radius: 22px;
+  padding: 1.1rem 1.3rem;
+  margin-top: 12px;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.18),
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 0 0 5px rgba(255,255,255,0.6);
+  width: 300px;
+  max-width: 88vw;
+  position: relative;
+  z-index: 10;
+}
+.lecciones-panel.open {
+  display: block;
+  animation: popIn .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+  from { opacity:0; transform: scale(0.8) translateY(10px); }
+  to   { opacity:1; transform: scale(1)   translateY(0); }
+}
+
+/* Banda de color en la parte superior del panel */
+.panel-header-band {
+  background: var(--sec-color, #6C63FF);
+  margin: -1.1rem -1.3rem 1rem;
+  border-radius: 20px 20px 0 0;
+  padding: 0.8rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-titulo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: white;
+}
+.panel-close {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  border-radius: 50%;
+  width: 26px; height: 26px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.panel-close:hover { background: rgba(255,255,255,0.45); }
+
+/* Barra de progreso */
+.prog-bar-wrap {
+  height: 8px;
+  background: #ece9ff;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.prog-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--sec-color, #6C63FF), rgba(255,255,255,0.6), var(--sec-color, #6C63FF));
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  transition: width .5s ease;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Grid de lecciones */
+.lecciones-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.lec-btn {
+  width: 60px; height: 60px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+  text-decoration: none;
+  background: #f0eeff;
+  color: #444;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.lec-btn:hover { transform: scale(1.12); box-shadow: 0 6px 18px rgba(0,0,0,0.16); }
+.lec-btn.completada {
+  background: var(--sec-color, #6C63FF);
+  color: white;
+  box-shadow: 0 4px 14px rgba(108,99,255,0.35);
+}
+.lec-btn.accesible {
+  background: white;
+  border: 2.5px solid var(--sec-color, #6C63FF);
+  box-shadow: 0 4px 14px rgba(108,99,255,0.15);
+}
+.lec-btn.bloqueada {
+  opacity: .4;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.5);
+}
+.estrellas-overlay {
+  position: absolute;
+  bottom: 2px;
+  font-size: .48rem;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.lec-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  font-size: .72rem;
+  padding: .25rem .55rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  z-index: 20;
+}
+.lec-btn:hover .lec-tooltip { opacity: 1; }
+
+/* ── Estado vacío ── */
+.historia-locked-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: white;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Fondo personalizado historia: tapa el bg_nubes del base.html -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:url('{% static 'img/histo_bg.jpeg' %}') center top / cover no-repeat;"></div>
+
 <div class="historia-wrap">
 
-  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <!-- Hero -->
   <div class="historia-hero mb-4">
     <div class="position-relative" style="z-index:1">
       <div class="d-flex align-items-center gap-3 flex-wrap">
@@ -256,81 +455,73 @@
           </p>
         </div>
         <div class="ms-auto">
-          <div class="estrellas-contador">
-            ⭐ {{ total_estrellas }} estrella{{ total_estrellas|pluralize:"s" }}
-          </div>
+          <div class="estrellas-contador">⭐ {{ total_estrellas }}</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── Timeline de secciones ─────────────────────────────────────────── -->
-  <div class="timeline">
+  <!-- Path zig-zag -->
+  <div class="duolingo-path">
+
+    {% if not secciones_data %}
+    <div class="historia-locked-state">
+      <div style="font-size:4rem">🔒</div>
+      <h5 class="font-fredoka mt-3">Aún no tienes secciones disponibles</h5>
+      <p style="opacity:.6;font-weight:700;font-size:.9rem">
+        Tu profesor desbloqueará las secciones cuando estés listo.
+      </p>
+    </div>
+    {% endif %}
+
     {% for item in secciones_data %}
     {% with sec=item.seccion %}
+    {% cycle 'station-left' 'station-right' as pos silent %}
 
-    <div class="seccion-node"
-         style="--sec-color:{{ sec.color_hex }}">
+    <!-- Estación {{ forloop.counter }}: {{ sec.titulo }} -->
+    <div class="path-station {{ pos }}" style="--sec-color:{{ sec.color_hex }}">
+      <div class="station-bubble-wrap {% if item.desbloqueada %}desbloqueada{% endif %}">
 
-      <!-- Nodo circular -->
-      {% if item.desbloqueada %}
-      <button class="node-btn {% if item.completa %}completa{% endif %}"
-              onclick="toggleSeccion('sec{{ sec.pk }}')"
-              title="{{ sec.titulo }}"
-              aria-label="Sección {{ sec.titulo }}">
-        {{ sec.icono_emoji }}
-      </button>
-      {% else %}
-      <div class="node-btn locked" title="Sección bloqueada">🔒</div>
-      {% endif %}
-
-      <!-- Card de la sección -->
-      <div class="seccion-card {% if not item.desbloqueada %}locked-card{% endif %}"
-           {% if item.desbloqueada %}onclick="toggleSeccion('sec{{ sec.pk }}')"{% endif %}>
-
-        <div class="d-flex align-items-center justify-content-between gap-2">
-          <div>
-            <div class="sec-titulo">
-              {{ sec.icono_emoji }} {{ sec.titulo }}
-            </div>
-            <div class="text-muted small fw-bold">
-              {% if item.desbloqueada %}
-                {{ item.completadas }}/{{ item.total }} lecciones
-                · {{ item.estrellas }}/{{ item.max_estrellas }} ⭐
-              {% else %}
-                🔒 Bloqueada — pide a tu profesor que la desbloquee
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="d-flex align-items-center gap-2 flex-shrink-0">
-            {% if item.completa %}
-              <span style="font-size:1.4rem">🏆</span>
-            {% elif item.desbloqueada %}
-              <i class="bi bi-chevron-down text-muted"></i>
-            {% endif %}
-          </div>
-        </div>
-
-        {% if item.desbloqueada and item.total > 0 %}
-        <div class="prog-bar-wrap">
-          <div class="prog-bar-fill"
-               style="width:{% widthratio item.completadas item.total 100 %}%">
-          </div>
-        </div>
+        <!-- Círculo -->
+        {% if item.desbloqueada %}
+        <button class="station-circle {% if item.completa %}completa{% endif %}"
+                onclick="togglePanel('panel{{ sec.pk }}')"
+                aria-label="{{ sec.titulo }}">
+          {{ sec.icono_emoji }}
+          {% if item.completa %}<span class="station-trophy">🏆</span>{% endif %}
+        </button>
+        {% else %}
+        <div class="station-circle locked">🔒</div>
         {% endif %}
 
-        <!-- Lecciones expandibles -->
+        <!-- Nombre en pill de color -->
+        <div class="station-name-pill {% if not item.desbloqueada %}locked-pill{% endif %}">
+          {{ sec.titulo }}
+        </div>
         {% if item.desbloqueada %}
-        <div class="lecciones-wrap" id="sec{{ sec.pk }}">
-          <div class="lecciones-grid pt-2">
-            {% for lec_item in item.lecciones %}
-            {% with lec=lec_item.leccion %}
+        <div class="station-progress">{{ item.completadas }}/{{ item.total }} lec · {{ item.estrellas }}⭐</div>
+        {% endif %}
+
+        <!-- Panel de lecciones -->
+        {% if item.desbloqueada %}
+        <div class="lecciones-panel" id="panel{{ sec.pk }}" style="--sec-color:{{ sec.color_hex }}">
+          <div class="panel-header-band">
+            <span class="panel-titulo">{{ sec.icono_emoji }} {{ sec.titulo }}</span>
+            <button class="panel-close" onclick="togglePanel('panel{{ sec.pk }}')">✕</button>
+          </div>
+
+          {% if item.total > 0 %}
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-fill" style="width:{% widthratio item.completadas item.total 100 %}%"></div>
+          </div>
+          {% endif %}
+
+          <div class="lecciones-grid">
+            {% for lec_item in item.lecciones %}{% with lec=lec_item.leccion %}
             <div style="position:relative;display:inline-block">
               {% if lec_item.accesible %}
                 <a href="{% url 'historia:ver_leccion' pk=lec.pk %}"
-                   class="lec-btn {% if lec_item.completada %}completada{% elif lec_item.accesible %}accesible{% else %}bloqueada{% endif %}"
-                   title="{{ lec.titulo }}">
+                   class="lec-btn {% if lec_item.completada %}completada{% else %}accesible{% endif %}">
                   {{ lec.icono_emoji }}
                   {% if lec_item.completada %}
                   <span class="estrellas-overlay">
@@ -340,105 +531,72 @@
                   <span class="lec-tooltip">{{ lec.titulo }}</span>
                 </a>
               {% else %}
-                <div class="lec-btn bloqueada" title="Completa la lección anterior primero">
-                  🔒
-                  <span class="lec-tooltip">{{ lec.titulo }}</span>
-                </div>
+                <div class="lec-btn bloqueada">🔒<span class="lec-tooltip">{{ lec.titulo }}</span></div>
               {% endif %}
             </div>
-            {% endwith %}
-            {% endfor %}
+            {% endwith %}{% endfor %}
           </div>
         </div>
         {% endif %}
 
-      </div><!-- /card -->
-    </div><!-- /node -->
+      </div><!-- /bubble-wrap -->
+    </div><!-- /station -->
+
+    <!-- Conector colorido hacia la siguiente estación -->
+    {% if not forloop.last %}
+      {% if pos == 'station-left' %}
+      <div class="path-connector to-right" style="border-color:{{ sec.color_hex }};color:{{ sec.color_hex }}"></div>
+      {% else %}
+      <div class="path-connector to-left"  style="border-color:{{ sec.color_hex }};color:{{ sec.color_hex }}"></div>
+      {% endif %}
+    {% endif %}
 
     {% endwith %}
     {% endfor %}
-  </div><!-- /timeline -->
 
-  <!-- Mensaje si todo está bloqueado -->
-  {% with desbloqueadas=secciones_data|length %}
-  {% if desbloqueadas == 0 %}
-  <div class="nestgrow-card p-5 text-center mt-3">
-    <div style="font-size:4rem">🔒</div>
-    <h5 class="font-fredoka mt-3" style="color:var(--primary)">
-      Aún no tienes secciones disponibles
-    </h5>
-    <p class="text-muted fw-bold small">
-      Tu profesor desbloqueará las secciones cuando estés listo.
-    </p>
-  </div>
-  {% endif %}
-  {% endwith %}
-
-</div><!-- /wrap -->
-
-
+  </div><!-- /duolingo-path -->
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function toggleSeccion(id) {
-  const wrap = document.getElementById(id);
-  if (!wrap) return;
-  const card = wrap.closest('.seccion-card');
-  const icon = card.querySelector('.bi-chevron-down, .bi-chevron-up');
-
-  if (wrap.classList.contains('open')) {
-    wrap.classList.remove('open');
-    if (icon) { icon.classList.remove('bi-chevron-up'); icon.classList.add('bi-chevron-down'); }
-  } else {
-    // Close all others first
-    document.querySelectorAll('.lecciones-wrap.open').forEach(el => {
-      el.classList.remove('open');
-      const ic = el.closest('.seccion-card').querySelector('.bi-chevron-down, .bi-chevron-up');
-      if (ic) { ic.classList.remove('bi-chevron-up'); ic.classList.add('bi-chevron-down'); }
-    });
-    wrap.classList.add('open');
-    if (icon) { icon.classList.remove('bi-chevron-down'); icon.classList.add('bi-chevron-up'); }
-  }
+function togglePanel(id) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.lecciones-panel.open').forEach(p => p.classList.remove('open'));
+  if (!isOpen) panel.classList.add('open');
 }
 
-// Auto-open the first unlocked section that has pending lessons
+document.addEventListener('click', e => {
+  if (!e.target.closest('.station-bubble-wrap'))
+    document.querySelectorAll('.lecciones-panel.open').forEach(p => p.classList.remove('open'));
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   {% if primera_incompleta %}
-  // Find which section contains the first incomplete lesson and open it
-  document.querySelectorAll('.lecciones-wrap').forEach(wrap => {
-    const link = wrap.querySelector('a.accesible');
-    if (link && link.href.includes('/{{ primera_incompleta.1 }}/')) {
-      wrap.classList.add('open');
-    }
+  document.querySelectorAll('.lecciones-panel').forEach(panel => {
+    const link = panel.querySelector('a.accesible');
+    if (link && link.href.includes('/{{ primera_incompleta.1 }}/'))
+      panel.classList.add('open');
   });
   {% endif %}
 
-  // WebSocket: listen for seccion_desbloqueada events
-  const wsUrl = `ws://${window.location.host}/ws/notificaciones/`;
-  let ws;
   try {
-    ws = new WebSocket(wsUrl);
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.tipo === 'seccion_desbloqueada') {
-        showMiloMessage(
-          `🎉 ¡Nueva sección desbloqueada! ${data.seccion_emoji} ${data.seccion_titulo}`
-        );
-        setTimeout(() => location.reload(), 2500);
+    const ws = new WebSocket(`ws://${window.location.host}/ws/notificaciones/`);
+    ws.onmessage = e => {
+      const d = JSON.parse(e.data);
+      if (d.tipo === 'seccion_desbloqueada') {
+        const sp = document.getElementById('miloSpeech');
+        const bb = document.getElementById('miloBubble');
+        if (sp && bb) {
+          sp.textContent = `🎉 Nueva sección: ${d.seccion_emoji} ${d.seccion_titulo}`;
+          bb.classList.add('show');
+        }
+        setTimeout(() => location.reload(), 2800);
       }
     };
   } catch(e) {}
 });
-
-function showMiloMessage(msg) {
-  // Uses global Milo message from main.js if available
-  const bubble = document.querySelector('.milo-bubble');
-  if (bubble) {
-    bubble.textContent = msg;
-    bubble.style.display = 'block';
-    setTimeout(() => { bubble.style.display = 'none'; }, 4000);
-  }
-}
 </script>
 {% endblock %}
