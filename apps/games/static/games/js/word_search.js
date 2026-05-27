@@ -1,20 +1,15 @@
 // ============================================================
 // NESTGROW - Word Search Game
-// Grid size varies by difficulty: easy=8, medium=11, hard=14
+// Grid size varies by difficulty: easy=8x8, medium=12x12, hard=16x16
+// Words come automatically from the game's vocabulary category
 // ============================================================
 
-function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty, penaltyAmount, customWords) {
-  const GRID_SIZE = difficulty === 3 ? 14 : difficulty === 2 ? 11 : 8;
-  const MAX_WORDS = difficulty === 3 ? 10 : difficulty === 2 ? 7 : 5;
+function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty, penaltyAmount) {
+  const GRID_SIZE = difficulty === 3 ? 16 : difficulty === 2 ? 12 : 8;
+  const MAX_WORDS = difficulty === 3 ? 12 : difficulty === 2 ? 8 : 5;
   const COLORS = ['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e91e63','#ff5722'];
 
-  // Use custom words defined by professor if available, otherwise fall back to vocabulary
-  let words;
-  if (customWords && customWords.length > 0) {
-    words = customWords.map(w => w.toUpperCase().replace(/\s/g, '')).filter(w => w.length >= 2 && w.length <= GRID_SIZE).slice(0, MAX_WORDS);
-  } else {
-    words = vocabulary.map(v => v.word_en.toUpperCase().replace(/\s/g, '')).filter(w => w.length >= 2 && w.length <= GRID_SIZE).slice(0, MAX_WORDS);
-  }
+  const words = vocabulary.map(v => v.word_en.toUpperCase().replace(/\s/g, '')).filter(w => w.length >= 2 && w.length <= GRID_SIZE).slice(0, MAX_WORDS);
   const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   let grid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(''));
@@ -50,12 +45,12 @@ function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty,
     for (let c = 0; c < GRID_SIZE; c++)
       if (!grid[r][c]) grid[r][c] = ALPHABET[Math.floor(Math.random() * 26)];
 
-  const cellSize = GRID_SIZE <= 8 ? 42 : GRID_SIZE <= 11 ? 34 : 28;
+  const cellSize = GRID_SIZE <= 8 ? 42 : GRID_SIZE <= 12 ? 34 : 26;
   const gridEl = document.getElementById('wsGrid');
   gridEl.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
 
   const styleEl = document.createElement('style');
-  styleEl.textContent = `.ws-cell { width:${cellSize}px !important; height:${cellSize}px !important; font-size:${cellSize <= 28 ? '0.8' : cellSize <= 34 ? '0.9' : '1.1'}rem !important; }`;
+  styleEl.textContent = `.ws-cell { width:${cellSize}px !important; height:${cellSize}px !important; font-size:${cellSize <= 26 ? '0.75' : cellSize <= 34 ? '0.9' : '1.1'}rem !important; }`;
   document.head.appendChild(styleEl);
 
   grid.forEach((row, r) => {
