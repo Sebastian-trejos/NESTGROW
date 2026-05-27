@@ -4,148 +4,432 @@
 
 {% block extra_css %}
 <style>
-  @keyframes floatBounce {
-    0%,100% { transform: translateY(0) scale(1); }
-    50%      { transform: translateY(-12px) scale(1.04); }
-  }
-  .game-card {
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 8px 28px rgba(108,99,255,0.10);
-    transition: all 0.3s;
-    border: 3px solid var(--primary);
-    text-decoration: none;
-    display: block;
-  }
-  .game-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 18px 45px rgba(108,99,255,0.22);
-  }
-  .game-card.drag  { border-color: #6C63FF; }
-  .game-card.search{ border-color: #FF6B6B; }
-  .game-card.puzzle{ border-color: #4ECDC4; }
-  .game-card.paint { border-color: #FFB347; }
-  .game-card.audio { border-color: #9c94ff; }
-  .game-card.mem   { border-color: #e056fd; }
-  .game-card.hang  { border-color: #ff9f43; }
-  .game-card.quiz  { border-color: #54a0ff; }
-  .game-card.order { border-color: #5f27cd; }
-  .game-card.glob  { border-color: #00d2d3; }
 
-  .game-icon-wrap {
-    height: 140px;
-    overflow: hidden;
-  }
-  .diff-badge {
-    font-family: 'Fredoka One', cursive;
-    font-size: 0.82rem;
-    padding: 5px 12px;
-    border-radius: 50px;
-  }
-  .diff-easy   { background: #e6faf8; color: #4ECDC4; }
-  .diff-medium { background: #fff8eb; color: #FFB347; }
-  .diff-hard   { background: #ffeaea; color: #FF6B6B; }
+/* ══ Hero banner ══ */
+.act-hero {
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 55%, #4ECDC4 100%);
+  border-radius: 28px;
+  padding: 1.6rem 2rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 12px 40px rgba(108,99,255,0.32);
+}
+.act-hero::before {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 50%;
+  top: -70px; right: -50px;
+}
+.act-hero::after {
+  content: '';
+  position: absolute;
+  width: 110px; height: 110px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  bottom: -35px; left: 10%;
+}
+.act-hero-milo {
+  width: 70px;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.2));
+  animation: miloFloat 3s ease-in-out infinite;
+}
+@keyframes miloFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-10px) scale(1.05); }
+}
+.act-hero-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+.act-hero-sub {
+  font-size: 0.9rem;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-top: 4px;
+}
 
+/* ══ Periodo card ══ */
+.periodo-card {
+  background: linear-gradient(135deg, #fffbeb 0%, #f0eeff 100%);
+  border-radius: 22px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.8rem;
+  border: 2px solid #e8e4ff;
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  box-shadow: 0 6px 22px rgba(108,99,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.periodo-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, #6C63FF, #4ECDC4);
+  border-radius: 22px 0 0 22px;
+}
+.periodo-icon-wrap {
+  width: 52px; height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #6C63FF, #9c94ff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(108,99,255,0.3);
+  color: white;
+}
+.periodo-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+.periodo-sub {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* ══ Sección title ══ */
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 3px;
+  background: linear-gradient(90deg, #e8e4ff, transparent);
+  border-radius: 99px;
+}
+
+/* ══ Taller card ══ */
+.taller-card {
+  background: white;
+  border-radius: 22px;
+  padding: 1.3rem 1.4rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 28px rgba(108,99,255,0.09);
+  border: 2px solid #f0eeff;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.taller-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(108,99,255,0.18);
+}
+.taller-card .color-strip {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  border-radius: 22px 0 0 22px;
+}
+.taller-card.estado-nuevo    .color-strip { background: linear-gradient(180deg, #6C63FF, #9c94ff); }
+.taller-card.estado-progreso  .color-strip { background: linear-gradient(180deg, #FFB347, #ffd200); }
+.taller-card.estado-listo     .color-strip { background: linear-gradient(180deg, #43e97b, #38f9d7); }
+.taller-card-inner { padding-left: 0.6rem; }
+
+.taller-badge {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.78rem;
+  padding: 4px 12px;
+  border-radius: 50px;
+  display: inline-block;
+  margin-bottom: 0.6rem;
+}
+.taller-badge.nuevo    { background: #ede9fe; color: #6C63FF; }
+.taller-badge.progreso { background: #fff3e0; color: #e67e22; }
+.taller-badge.listo    { background: #d1fae5; color: #059669; }
+
+.taller-meta-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Barra de progreso */
+.prog-wrap {
+  background: #ece9ff;
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+  margin: 0.5rem 0 1rem;
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6C63FF, #4ECDC4);
+  transition: width 0.8s ease;
+}
+
+/* ══ Minijuego card ══ */
+.mini-card {
+  background: white;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(108,99,255,0.10);
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 2.5px solid transparent;
+}
+.mini-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 18px 45px rgba(108,99,255,0.22);
+}
+/* Borde de color por tipo */
+.mini-card.t-drag   { border-color: #6C63FF; }
+.mini-card.t-search { border-color: #FF6B6B; }
+.mini-card.t-puzzle { border-color: #4ECDC4; }
+.mini-card.t-paint  { border-color: #FFB347; }
+.mini-card.t-audio  { border-color: #9c94ff; }
+.mini-card.t-mem    { border-color: #e056fd; }
+.mini-card.t-hang   { border-color: #ff9f43; }
+.mini-card.t-quiz   { border-color: #54a0ff; }
+.mini-card.t-order  { border-color: #5f27cd; }
+.mini-card.t-glob   { border-color: #00d2d3; }
+
+.mini-img-wrap {
+  height: 130px;
+  overflow: hidden;
+  position: relative;
+}
+.mini-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.mini-card:hover .mini-img-wrap img { transform: scale(1.08); }
+
+/* Tipo badge flotante */
+.mini-type-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: rgba(0,0,0,0.45);
+  color: white;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+/* Badge completado */
+.mini-done-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 50px;
+  background: rgba(20,180,110,0.92);
+  color: white;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.mini-body { padding: 0.9rem 1rem 1rem; flex: 1; display: flex; flex-direction: column; }
+.mini-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.05rem;
+  color: var(--primary);
+  margin-bottom: 3px;
+}
+.mini-desc {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8892b0;
+  line-height: 1.4;
+  flex: 1;
+}
+.mini-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.7rem;
+  gap: 6px;
+}
+.mini-pts {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.95rem;
+  color: #FFB347;
+}
+
+/* ══ Empty / Done states ══ */
+.empty-card {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 28px;
+  border: 3px dashed #e8e4ff;
+  box-shadow: 0 6px 24px rgba(108,99,255,0.07);
+}
+.done-card {
+  text-align: center;
+  padding: 3.5rem 2rem;
+  background: linear-gradient(135deg, #f0fff8, #f0eeff);
+  border-radius: 28px;
+  border: 3px solid #a7f3d0;
+  box-shadow: 0 6px 24px rgba(67,233,123,0.12);
+}
+
+/* ══ Btn jugar animado ══ */
+.btn-jugar {
+  background: linear-gradient(135deg, #6C63FF, #9c94ff);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  padding: 7px 18px;
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-jugar:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(108,99,255,0.38);
+  color: white;
+}
+.btn-listo {
+  background: linear-gradient(135deg, #4ECDC4, #7ee8e2);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  padding: 7px 16px;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-listo:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 0 6px 16px rgba(78,205,196,0.4);
+  color: white;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container py-4">
 
-  <div class="milo-banner mb-4">
-    <div class="milo-banner-owl"><img src="{% static 'img/milo_asombrado.png' %}" style="height:60px;"></div>
-    <div>
-      <div class="milo-banner-text">¡Hola, {{ user.first_name }}! Aquí están tus actividades y minijuegos. 🎓</div>
-      <div class="text-muted fw-bold small">Completa talleres y minijuegos asignados por tu profesor para ganar XP y Huesos de Milo.</div>
+  <!-- Hero -->
+  <div class="act-hero mb-4">
+    <div class="d-flex align-items-center gap-3 flex-wrap position-relative" style="z-index:1">
+      <img src="{% static 'img/milo_asombrado.png' %}" class="act-hero-milo" alt="Milo">
+      <div>
+        <div class="act-hero-name">¡Hola, {{ user.first_name|default:user.username }}! 🎓</div>
+        <div class="act-hero-sub">Aquí están tus actividades y minijuegos del período.</div>
+      </div>
+      <div class="ms-auto d-flex gap-2 flex-wrap">
+        <div class="vocab-stat-pill" style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.3);font-family:'Fredoka One',cursive;padding:6px 16px;border-radius:50px;font-size:.88rem">
+          🦴 {{ user.huesos }} Huesos
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="font-fredoka mb-0" style="color:var(--primary)"><i class="bi bi-journal-text"></i> Mis actividades</h4>
   </div>
 
   {% if periodo_activo %}
 
-  <!-- Encabezado del período activo -->
-  <div class="nestgrow-card p-3 mb-4 d-flex align-items-center gap-3 flex-wrap"
-       style="background:linear-gradient(135deg,#f0ebff,#e8f4ff);border-left:5px solid var(--primary)">
-    <div style="font-size:2rem"><i class="bi bi-calendar-date"></i></div>
+  <!-- Período activo -->
+  <div class="periodo-card mb-4">
+    <div class="periodo-icon-wrap">📅</div>
     <div class="flex-grow-1">
-      <div class="fw-bold font-fredoka" style="color:var(--primary);font-size:1.1rem">{{ periodo_activo.titulo }}</div>
-      <div class="text-muted small">
+      <div class="periodo-title">{{ periodo_activo.titulo }}</div>
+      <div class="periodo-sub">
         Fecha límite: <strong>{{ periodo_activo.fecha_fin|date:"d \d\e F \d\e Y" }}</strong>
         &nbsp;·&nbsp; {{ periodo_activo.salon }}
       </div>
     </div>
     {% if periodo_activo.meta_historia > 0 %}
-    <div class="badge rounded-pill px-3 py-2" style="background:#fff9c4;color:#f57f17;font-size:.85rem">
-      ⭐ Meta historia: {{ periodo_activo.meta_historia }} estrellas
+    <div class="taller-meta-badge" style="background:#fff9c4;color:#f57f17">
+      ⭐ Meta: {{ periodo_activo.meta_historia }} estrellas
     </div>
     {% endif %}
   </div>
 
   {% if talleres_pendientes or minijuegos_pendientes %}
 
-    <!-- Talleres -->
+    <!-- ── Talleres ── -->
     {% if talleres_pendientes %}
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎓 Talleres</h5>
-    <div class="row g-4 mb-4">
+    <div class="section-title">🎓 Talleres</div>
+    <div class="row g-3 mb-4">
       {% for item in talleres_pendientes %}
       {% with t=item.taller s=item.sesion %}
       <div class="col-md-6">
-        <div class="nestgrow-card p-4 h-100 d-flex flex-column"
-             style="border-left:5px solid {% if item.completado %}var(--accent){% elif item.en_progreso %}var(--orange){% else %}var(--primary){% endif %}">
+        <div class="taller-card {% if item.completado %}estado-listo{% elif item.en_progreso %}estado-progreso{% else %}estado-nuevo{% endif %}">
+          <div class="color-strip"></div>
+          <div class="taller-card-inner d-flex flex-column h-100">
 
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <div>
-              <h5 class="font-fredoka mb-1" style="color:var(--primary)">{{ t.titulo }}</h5>
-              {% if t.descripcion %}
-              <p class="text-muted small fw-bold mb-0">{{ t.descripcion|truncatechars:80 }}</p>
+            <div class="taller-badge {% if item.completado %}listo{% elif item.en_progreso %}progreso{% else %}nuevo{% endif %}">
+              {% if item.completado %}✅ Ver resultado
+              {% elif item.en_progreso %}⏳ En progreso
+              {% else %}🆕 Nuevo{% endif %}
+            </div>
+
+            <h5 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.15rem">{{ t.titulo }}</h5>
+            {% if t.descripcion %}
+            <p class="text-muted small fw-bold mb-2" style="line-height:1.4">{{ t.descripcion|truncatechars:80 }}</p>
+            {% endif %}
+
+            <div class="d-flex gap-2 flex-wrap mb-2">
+              <span class="taller-meta-badge" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} bloques</span>
+              <span class="taller-meta-badge" style="background:#f0f8ff;color:#4a90d9">⭐ {{ t.puntos_xp }} XP</span>
+              <span class="taller-meta-badge" style="background:#fff3e0;color:#8B4513">🦴 {{ t.huesos_recompensa }}</span>
+            </div>
+
+            {% if s and not item.completado %}
+            <div class="mb-2">
+              <div class="d-flex justify-content-between" style="font-size:.78rem;font-weight:800;color:#999;margin-bottom:4px">
+                <span>Progreso</span>
+                <span>{{ s.bloque_actual }}/{{ t.total_bloques }}</span>
+              </div>
+              <div class="prog-wrap">
+                <div class="prog-fill" style="width:{% widthratio s.bloque_actual t.total_bloques 100 %}%;max-width:100%"></div>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="mt-auto pt-2">
+              {% if item.completado %}
+              <a href="{% url 'talleres:resultado_sesion' pk=s.pk %}"
+                 class="btn btn-outline-warning rounded-pill w-100 fw-bold" style="font-family:'Fredoka One',cursive">
+                📊 Ver resultado →
+              </a>
+              {% elif item.en_progreso %}
+              <a href="{% url 'talleres:resolver' pk=t.pk %}"
+                 class="btn rounded-pill w-100 fw-bold"
+                 style="background:linear-gradient(135deg,#FFB347,#ffd200);color:white;border:none;font-family:'Fredoka One',cursive">
+                ▶ Continuar →
+              </a>
+              {% else %}
+              <a href="{% url 'talleres:resolver' pk=t.pk %}"
+                 class="btn rounded-pill w-100 fw-bold btn-jugar">
+                🚀 Iniciar →
+              </a>
               {% endif %}
             </div>
-            {% if item.completado %}
-            <span class="badge rounded-pill" style="background:#fff3cd;color:#856404;white-space:nowrap">⏳ Ver resultado</span>
-            {% elif item.en_progreso %}
-            <span class="badge rounded-pill" style="background:#fff3cd;color:#856404;white-space:nowrap">⏳ En progreso</span>
-            {% else %}
-            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary);white-space:nowrap">🆕 Nuevo</span>
-            {% endif %}
-          </div>
-
-          <div class="d-flex gap-2 flex-wrap mb-3">
-            <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} bloques</span>
-            <span class="badge rounded-pill" style="background:#f0f8ff;color:#4a90d9">⭐ {{ t.puntos_xp }} XP</span>
-            <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ t.huesos_recompensa }} Huesos</span>
-          </div>
-
-          {% if s and not item.completado %}
-          <div class="mb-3">
-            <div class="d-flex justify-content-between text-muted small fw-bold mb-1">
-              <span>Progreso</span>
-              <span>{{ s.bloque_actual }} / {{ t.total_bloques }}</span>
-            </div>
-            <div class="progress-bar-nestgrow">
-              <div class="progress-fill" style="width:{% widthratio s.bloque_actual t.total_bloques 100 %}%;max-width:100%"></div>
-            </div>
-          </div>
-          {% endif %}
-
-          <div class="mt-auto">
-            {% if item.completado %}
-            <a href="{% url 'talleres:resultado_sesion' pk=s.pk %}" class="btn btn-outline-warning rounded-pill w-100 fw-bold">
-              📊 Ver resultado →
-            </a>
-            {% elif item.en_progreso %}
-            <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow rounded-pill w-100 fw-bold"
-               style="background:var(--orange);color:white">
-              ▶ Continuar →
-            </a>
-            {% else %}
-            <a href="{% url 'talleres:resolver' pk=t.pk %}" class="btn btn-nestgrow btn-primary-nestgrow rounded-pill w-100 fw-bold">
-              🚀 Iniciar →
-            </a>
-            {% endif %}
           </div>
         </div>
       </div>
@@ -154,79 +438,85 @@
     </div>
     {% endif %}
 
-    <!-- Minijuegos del período — tarjetas visuales con imagen -->
+    <!-- ── Minijuegos ── -->
     {% if minijuegos_pendientes %}
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">🎮 Minijuegos asignados</h5>
-    <div class="row g-4 mb-4">
+    <div class="section-title">🎮 Minijuegos asignados</div>
+    <div class="row g-3 mb-4">
       {% for item in minijuegos_pendientes %}
       {% with g=item.game r=item.registro %}
       <div class="col-sm-6 col-lg-4">
-        <div class="game-card {% if g.game_type == 'drag_and_drop' %}drag{% elif g.game_type == 'word_search' %}search{% elif g.game_type == 'puzzle' %}puzzle{% elif g.game_type == 'painting' %}paint{% elif g.game_type == 'audio_matching' %}audio{% elif g.game_type == 'memoria' %}mem{% elif g.game_type == 'ahorcado' %}hang{% elif g.game_type == 'quiz' %}quiz{% elif g.game_type == 'ordenar_letras' %}order{% elif g.game_type == 'globos' %}glob{% else %}drag{% endif %}"
-             style="position:relative">
+        <div class="mini-card
+          {% if g.game_type == 'drag_and_drop' %}t-drag
+          {% elif g.game_type == 'word_search' %}t-search
+          {% elif g.game_type == 'puzzle' %}t-puzzle
+          {% elif g.game_type == 'painting' %}t-paint
+          {% elif g.game_type == 'audio_matching' %}t-audio
+          {% elif g.game_type == 'memoria' %}t-mem
+          {% elif g.game_type == 'ahorcado' %}t-hang
+          {% elif g.game_type == 'quiz' %}t-quiz
+          {% elif g.game_type == 'ordenar_letras' %}t-order
+          {% elif g.game_type == 'globos' %}t-glob
+          {% else %}t-drag{% endif %}">
 
-          {% if item.completado %}
-          <div style="position:absolute;top:10px;right:10px;z-index:2">
-            <span class="badge rounded-pill px-3 py-2 fw-bold"
-                  style="background:#d4edda;color:#155724;font-size:0.82rem;box-shadow:0 2px 8px rgba(0,0,0,0.15)">
-              ✅ Completado
-            </span>
+          <div class="mini-img-wrap">
+            {% if g.game_type == 'painting' %}
+              <img src="{% static 'img/games (2).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🎨 Pintura</span>
+            {% elif g.game_type == 'drag_and_drop' %}
+              <img src="{% static 'img/games (1).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🖱️ Arrastrar</span>
+            {% elif g.game_type == 'word_search' %}
+              <img src="{% static 'img/games (3).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🔍 Sopa letras</span>
+            {% elif g.game_type == 'memoria' %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🧠 Memoria</span>
+            {% elif g.game_type == 'quiz' %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">❓ Quiz</span>
+            {% elif g.game_type == 'ahorcado' %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🔤 Ahorcado</span>
+            {% elif g.game_type == 'ordenar_letras' %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🔀 Ordenar</span>
+            {% elif g.game_type == 'globos' %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🎈 Globos</span>
+            {% elif g.game_type == 'puzzle' %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🧩 Puzzle</span>
+            {% else %}
+              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
+              <span class="mini-type-badge">🎮 Juego</span>
+            {% endif %}
+            {% if item.completado %}<span class="mini-done-badge">✅ Completado</span>{% endif %}
           </div>
-          {% endif %}
 
-          <!-- Imagen según tipo -->
-          {% if g.game_type == 'painting' %}
-          <div class="game-icon-wrap">
-            <img src="{% static 'img/games (2).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-          </div>
-          {% elif g.game_type == 'drag_and_drop' %}
-          <div class="game-icon-wrap">
-            <img src="{% static 'img/games (1).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-          </div>
-          {% elif g.game_type == 'word_search' %}
-          <div class="game-icon-wrap">
-            <img src="{% static 'img/games (3).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-          </div>
-          {% else %}
-          <div class="game-icon-wrap">
-            <img src="{% static 'img/games(4).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-          </div>
-          {% endif %}
-
-          <!-- Info -->
-          <div class="p-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="badge rounded-pill fw-bold px-3 py-2"
-                    style="background:{{ g.category.color }}25;color:{{ g.category.color }};font-size:0.82rem">
+          <div class="mini-body">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="taller-meta-badge"
+                    style="background:{{ g.category.color }}22;color:{{ g.category.color }};font-size:.75rem">
                 {{ g.category.icon|safe }} {{ g.category.name }}
               </span>
-              <span class="diff-badge {% if g.difficulty == 1 %}diff-easy{% elif g.difficulty == 2 %}diff-medium{% else %}diff-hard{% endif %}">
-                {% if g.difficulty == 1 %}<i class="bi bi-star-fill"></i> Fácil
-                {% elif g.difficulty == 2 %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Medio
-                {% else %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Difícil{% endif %}
+              <span class="taller-meta-badge" style="background:#f8f9fa;color:#888;font-size:.72rem">
+                {% if g.difficulty == 1 %}⭐ Fácil
+                {% elif g.difficulty == 2 %}⭐⭐ Medio
+                {% else %}⭐⭐⭐ Difícil{% endif %}
               </span>
             </div>
-            <h5 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.15rem">{{ g.title }}</h5>
+            <div class="mini-title">{{ g.title }}</div>
             {% if r and r.completado and r.max_score > 0 %}
-            <p class="text-muted small fw-bold mb-2">Puntaje: {{ r.score }}/{{ r.max_score }} ({{ r.porcentaje }}%)</p>
+            <div class="mini-desc">Puntaje: {{ r.score }}/{{ r.max_score }} ({{ r.porcentaje }}%)</div>
             {% else %}
-            <p class="text-muted small fw-bold mb-2" style="line-height:1.4">{{ g.description|truncatewords:7 }}</p>
+            <div class="mini-desc">{{ g.description|truncatewords:8 }}</div>
             {% endif %}
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold" style="color:#FFB347;font-size:1rem">
-                <i class="bi bi-star-fill me-1"></i>+{{ g.points_reward }} pts
-              </span>
+            <div class="mini-footer">
+              <span class="mini-pts">⭐ +{{ g.points_reward }} pts</span>
               {% if item.completado %}
-              <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}"
-                 class="btn fw-bold px-3 py-2"
-                 style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;border-radius:50px;font-family:'Fredoka One',cursive;font-size:0.9rem;border:none">
-                ✔️ Entendido
-              </a>
+              <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}" class="btn-listo">✔️ Entendido</a>
               {% else %}
-              <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1"
-                 class="btn fw-bold px-4 py-2"
-                 style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;border-radius:50px;font-family:'Fredoka One',cursive;font-size:0.95rem;border:none">
-                <i class="bi bi-play-fill me-1"></i>¡Jugar!
-              </a>
+              <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1" class="btn-jugar">▶ ¡Jugar!</a>
               {% endif %}
             </div>
           </div>
@@ -238,17 +528,17 @@
     {% endif %}
 
   {% else %}
-  <!-- Período activo pero todo completado/revisado -->
-  <div class="nestgrow-card p-5 text-center mb-4">
-    <div style="font-size:4rem">🎉</div>
-    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Todo listo!</h4>
-    <p class="text-muted fw-bold">Completaste todas las actividades de este período. ¡Excelente trabajo!</p>
+  <!-- Todo completado -->
+  <div class="done-card mb-4">
+    <div style="font-size:4.5rem">🎉</div>
+    <h4 class="font-fredoka mt-3" style="color:#059669">¡Todo listo!</h4>
+    <p class="fw-bold" style="color:#64748b">Completaste todas las actividades de este período. ¡Eres increíble!</p>
   </div>
   {% endif %}
 
   {% else %}
-  <!-- Sin período activo -->
-  <div class="nestgrow-card p-5 text-center mb-4">
+  <!-- Sin período -->
+  <div class="empty-card mb-4">
     <div style="font-size:5rem">📋</div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">
       {% if request.user.estudiante_profile.salon %}
@@ -265,13 +555,10 @@
       {% endif %}
     </p>
     {% if not request.user.estudiante_profile.salon %}
-    <a href="{% url 'accounts:unirse_clase' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
-      Unirme a una clase →
-    </a>
+    <a href="{% url 'accounts:unirse_clase' %}" class="btn-jugar mt-3">Unirme a una clase →</a>
     {% endif %}
   </div>
   {% endif %}
-
 
 </div>
 {% endblock %}

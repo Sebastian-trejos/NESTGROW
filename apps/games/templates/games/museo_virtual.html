@@ -4,209 +4,149 @@
 
 {% block extra_css %}
 <style>
-
-/* ══════════════════════════════════════
-   HEADER
-══════════════════════════════════════ */
+/* ══ Hero museo ══ */
 .museo-header {
-  background: linear-gradient(135deg, #f0eeff, #ffe9f0);
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 50%, #4ECDC4 100%);
   border-radius: 28px;
-  padding: 40px;
+  padding: 2.2rem 2.5rem;
+  color: white;
   text-align: center;
-  margin-bottom: 36px;
-  box-shadow: 0 10px 40px rgba(108,99,255,0.15);
+  margin-bottom: 2rem;
+  box-shadow: 0 14px 44px rgba(108,99,255,0.38);
   position: relative;
   overflow: hidden;
-
 }
-
-.museo-header::before,
-.museo-header::after,
-.museo-header .paint-blob {
+.museo-header::before {
   content: '';
   position: absolute;
+  width: 260px; height: 260px;
+  background: rgba(255,255,255,0.07);
   border-radius: 50%;
-  filter: blur(50px);
-  opacity: 0.5;
+  top: -90px; right: -70px;
 }
-
-/* morado */
-.museo-header::before {
-  width: 220px;
-  height: 220px;
-  background: #6C63FF;
-  top: -80px;
-  left: -60px;
-}
-
-/* turquesa */
 .museo-header::after {
-  width: 200px;
-  height: 200px;
-  background: #4ECDC4;
-  bottom: -80px;
-  right: -60px;
+  content: '';
+  position: absolute;
+  width: 150px; height: 150px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  bottom: -50px; left: 8%;
 }
-
-/* amarillo */
-.museo-header .paint-blob.yellow {
-  width: 160px;
-  height: 160px;
-  background: #FFE66D;
-  top: 10px;
-  right: 20%;
+.museo-header .paint-blob { display: none; }
+.museo-header-icon {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.2));
+  animation: floatIcon 3.5s ease-in-out infinite;
+  display: block;
+  margin-bottom: 0.5rem;
 }
-
-/* rojo */
-.museo-header .paint-blob.red {
-  width: 140px;
-  height: 140px;
-  background: #FF6B6B;
-  bottom: 20px;
-  left: 25%;
+@keyframes floatIcon {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
 }
+.museo-header h1 { color: white !important; text-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+.museo-header p  { color: rgba(255,255,255,0.9) !important; }
 
-/* ══════════════════════════════════════
-   TARJETAS DE ARTE
-══════════════════════════════════════ */
+/* ══ Cuadros de galería — marco elegante ══ */
 .artwork-card {
   background: white;
-  border-radius: 22px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(108,99,255,0.12);
-  transition: all 0.35s cubic-bezier(.22,1,.36,1);
+  border-radius: 18px;
+  box-shadow: 0 10px 34px rgba(108,99,255,0.13);
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1), box-shadow 0.35s;
   position: relative;
+  overflow: hidden;
+  border: 3px solid #e8e4ff;
 }
-
 .artwork-card:hover {
-  transform: translateY(-10px) scale(1.04) rotate(-0.5deg);
-  box-shadow: 0 20px 50px rgba(108,99,255,0.25);
+  transform: translateY(-10px) scale(1.03) rotate(-0.4deg);
+  box-shadow: 0 22px 55px rgba(108,99,255,0.26);
+  border-color: var(--primary);
 }
 
-/* brillo suave */
+/* Spotlight suave en hover */
 .artwork-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  background: linear-gradient(160deg, rgba(255,255,255,0.35) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.3s;
+  pointer-events: none;
 }
+.artwork-card:hover::after { opacity: 1; }
 
-.artwork-card:hover::after {
-  opacity: 1;
-}
-
-/* ══════════════════════════════════════
-   MARCO DE LA OBRA
-══════════════════════════════════════ */
+/* Área de la imagen — fondo tipo lienzo */
 .artwork-frame {
-  background: linear-gradient(135deg, #f8f6ff, #fff5f0);
-  padding: 14px;
-  border-bottom: 2px solid #f0eeff;
+  background: linear-gradient(145deg, #f8f6ff 0%, #fff9f0 100%);
+  padding: 12px 12px 0;
 }
-
 .artwork-frame img {
   width: 100%;
-  height: 200px;
+  height: 185px;
   object-fit: contain;
-  border-radius: 14px;
+  border-radius: 10px;
   background: white;
-  transition: transform 0.3s;
+  display: block;
+  transition: transform 0.35s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
+.artwork-card:hover .artwork-frame img { transform: scale(1.04); }
 
-.artwork-card:hover img {
-  transform: scale(1.05);
-}
-
-/* ══════════════════════════════════════
-   INFO
-══════════════════════════════════════ */
+/* Etiqueta inferior */
 .artwork-info {
-  padding: 16px;
+  padding: 10px 14px 13px;
+  background: white;
 }
-
 .artwork-word {
   font-family: 'Fredoka One', cursive;
-  font-size: 1.15rem;
+  font-size: 1rem;
   color: var(--primary);
 }
-
 .artwork-author {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-light);
-}
-
-.artwork-date {
   font-size: 0.78rem;
+  font-weight: 800;
+  color: #8892b0;
+  margin-top: 2px;
+}
+.artwork-date {
+  font-size: 0.7rem;
   color: #bbb;
-  font-weight: 600;
+  font-weight: 700;
+  margin-top: 2px;
 }
 
-/* ══════════════════════════════════════
-   FILTRO
-══════════════════════════════════════ */
+/* ══ Filtro ══ */
 .filter-bar {
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(14px);
   border-radius: 18px;
-  padding: 18px 22px;
-  box-shadow: 0 6px 20px rgba(108,99,255,0.12);
-  margin-bottom: 28px;
+  padding: 14px 20px;
+  box-shadow: 0 6px 22px rgba(108,99,255,0.12);
+  margin-bottom: 1.8rem;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
+  border: 1.5px solid #e8e4ff;
 }
 
-/* ══════════════════════════════════════
-   EMPTY STATE (CUANDO NO HAY OBRAS)
-══════════════════════════════════════ */
+/* ══ Empty state ══ */
 .empty-museo {
   text-align: center;
-  padding: 90px 20px;
+  padding: 5rem 2rem;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  border: 3px dashed #e8e4ff;
   position: relative;
 }
-
-/* manchas detrás de Milo */
-.empty-museo::before,
-.empty-museo::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(50px);
-  opacity: 0.25;
-  z-index: 0;
-}
-
-.empty-museo::before {
-  width: 220px;
-  height: 220px;
-  background: #6C63FF;
-  left: 30%;
-  top: 20%;
-}
-
-.empty-museo::after {
-  width: 180px;
-  height: 180px;
-  background: #FF6B6B;
-  right: 30%;
-  bottom: 10%;
-}
-
-/* Milo arriba de las manchas */
 .empty-museo img {
-  position: relative;
-  z-index: 2;
   animation: floatMilo 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 20px rgba(108,99,255,0.2));
 }
-
-/* animación flotante */
 @keyframes floatMilo {
   0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  50%      { transform: translateY(-14px); }
 }
 </style>
 {% endblock %}
@@ -220,28 +160,25 @@
 
   <!-- Header -->
   <div class="museo-header">
-    <div class="paint-blob yellow"></div>
-    <div class="paint-blob red"></div>
-    <div style="font-size:4rem"><i class="bi bi-bank2"></i>
-    <h1 class="font-fredoka mt-2" style="color:var(--primary)">Museo Virtual NestGrow</h1>
-    <p class="fw-bold text-muted fs-5 mb-0">
-      {% if user.role == 'profesor' %}
-        Las obras de arte de todos tus estudiantes
-      {% else %}
-        Tus obras de arte
-      {% endif %}
-    </p>
-    <div class="mt-3 d-flex justify-content-center gap-3 flex-wrap">
-      <span class="badge rounded-pill px-4 py-2 fs-6" style="background:var(--primary);color:white">
-        <i class="bi bi-palette-fill"></i> {{ artworks.count }} obra{{ artworks.count|pluralize:"s" }}
-      </span>
-      {% if user.role == 'estudiante' %}
-      <a href="{% url 'games:museo_global' %}"
-         class="btn fw-bold rounded-pill px-4 py-2"
-         style="background:linear-gradient(135deg,#4ECDC4,#7ee8e2);color:white;font-family:'Fredoka One',cursive;font-size:1rem;border:none;box-shadow:0 4px 15px rgba(78,205,196,0.35)">
-        <i class="bi bi-globe-americas"></i> Ver museo global
-      </a>
-      {% endif %}
+    <div class="position-relative" style="z-index:1">
+      <span class="museo-header-icon">🏛️</span>
+      <h1 class="font-fredoka mt-1 mb-1" style="font-size:2.2rem">Museo Virtual NestGrow</h1>
+      <p class="fw-bold mb-3" style="opacity:.9;font-size:.95rem">
+        {% if user.role == 'profesor' %}Las obras de arte de todos tus estudiantes
+        {% else %}Tu galería personal de obras de arte{% endif %}
+      </p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <span class="vocab-stat-pill" style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.3);font-family:'Fredoka One',cursive;padding:6px 18px;border-radius:50px">
+          🎨 {{ artworks.count }} obra{{ artworks.count|pluralize:"s" }}
+        </span>
+        {% if user.role == 'estudiante' %}
+        <a href="{% url 'games:museo_global' %}"
+           class="btn fw-bold rounded-pill px-4 py-2"
+           style="background:rgba(255,255,255,0.2);color:white;font-family:'Fredoka One',cursive;font-size:.95rem;border:1.5px solid rgba(255,255,255,0.35)">
+          🌍 Ver museo global
+        </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 

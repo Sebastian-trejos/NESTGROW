@@ -4,108 +4,152 @@
 
 {% block extra_css %}
 <style>
-  @keyframes floatStar {
-    0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
-    50%      { transform: translateY(-8px) rotate(10deg); opacity:1; }
-  }
+@keyframes floatStar {
+  0%,100% { transform: translateY(0) rotate(0deg); opacity:.7; }
+  50%      { transform: translateY(-10px) rotate(12deg); opacity:1; }
+}
+@keyframes floatMilo {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-12px) scale(1.05); }
+}
 
-  .museo-global-hero {
-    background: linear-gradient(135deg, #4ECDC4 0%, #7ee8e2 50%, #6C63FF 100%);
-    border-radius: 28px;
-    padding: 2.5rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2rem;
-  }
-  .museo-global-hero::before {
-    content:'';
-    position:absolute;
-    width:250px;height:250px;
-    background:rgba(255,255,255,0.07);
-    border-radius:50%;
-    top:-80px;right:-60px;
-  }
-  .museo-global-hero::after {
-    content:'';
-    position:absolute;
-    width:160px;height:160px;
-    background:rgba(255,255,255,0.05);
-    border-radius:50%;
-    bottom:-50px;left:10%;
-  }
+/* ══ Hero ══ */
+.museo-global-hero {
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 45%, #4ECDC4 100%);
+  border-radius: 28px;
+  padding: 2.2rem 2.5rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 14px 44px rgba(108,99,255,0.38);
+}
+.museo-global-hero::before {
+  content:''; position:absolute;
+  width:260px; height:260px;
+  background:rgba(255,255,255,0.07);
+  border-radius:50%; top:-90px; right:-70px;
+}
+.museo-global-hero::after {
+  content:''; position:absolute;
+  width:140px; height:140px;
+  background:rgba(255,255,255,0.05);
+  border-radius:50%; bottom:-45px; left:8%;
+}
 
-  .autor-section {
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 8px 28px rgba(108,99,255,0.10);
-    margin-bottom: 2rem;
-    border-top: 5px solid var(--primary);
-    transition: box-shadow 0.3s;
-  }
-  .autor-section:hover {
-    box-shadow: 0 14px 40px rgba(108,99,255,0.18);
-  }
-  .autor-section:nth-child(2n)   { border-top-color: #4ECDC4; }
-  .autor-section:nth-child(3n)   { border-top-color: #FF6B6B; }
-  .autor-section:nth-child(4n)   { border-top-color: #FFB347; }
-  .autor-section:nth-child(5n)   { border-top-color: #e056fd; }
+/* ══ Sección de autor ══ */
+.autor-section {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 32px rgba(108,99,255,0.12);
+  margin-bottom: 2.2rem;
+  border: 2px solid #e8e4ff;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.autor-section:hover { box-shadow: 0 18px 48px rgba(108,99,255,0.2); }
+/* Tira de color superior por posición */
+.autor-section:nth-child(5n+1) { border-top: 5px solid #6C63FF; }
+.autor-section:nth-child(5n+2) { border-top: 5px solid #4ECDC4; }
+.autor-section:nth-child(5n+3) { border-top: 5px solid #FF6B6B; }
+.autor-section:nth-child(5n+4) { border-top: 5px solid #FFB347; }
+.autor-section:nth-child(5n+0) { border-top: 5px solid #e056fd; }
 
-  .autor-header {
-    padding: 1rem 1.4rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border-bottom: 2px solid #f0eeff;
-    background: #fafaff;
-  }
-  .autor-avatar {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(108,99,255,0.2);
-  }
+.autor-header {
+  padding: 1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 2px solid #f0eeff;
+  background: linear-gradient(90deg, #fafaff, #f8f6ff);
+}
+.autor-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(108,99,255,0.25);
+  border: 3px solid white;
+}
+.autor-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+.autor-sub {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #8892b0;
+  margin-top: 1px;
+}
 
-  .artwork-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 6px 20px rgba(108,99,255,0.10);
-    transition: all 0.3s;
-    border: 2px solid #f0eeff;
-  }
-  .artwork-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 14px 35px rgba(108,99,255,0.20);
-    border-color: var(--primary);
-  }
-  .artwork-frame {
-    background: linear-gradient(135deg, #f8f6ff, #fff5f0);
-    padding: 10px;
-    border-bottom: 2px solid #f0eeff;
-  }
-  .artwork-frame img {
-    width: 100%;
-    height: 160px;
-    object-fit: contain;
-    border-radius: 10px;
-    background: white;
-  }
-  .artwork-info {
-    padding: 10px 12px;
-  }
+/* ══ Cuadros de galería ══ */
+.artwork-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 22px rgba(108,99,255,0.10);
+  transition: transform 0.32s cubic-bezier(.22,1,.36,1), box-shadow 0.32s;
+  position: relative;
+  overflow: hidden;
+  border: 2.5px solid #e8e4ff;
+}
+.artwork-card:hover {
+  transform: translateY(-8px) scale(1.03) rotate(-0.4deg);
+  box-shadow: 0 18px 44px rgba(108,99,255,0.22);
+  border-color: var(--primary);
+}
+.artwork-card::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,0.3) 0%, transparent 55%);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.artwork-card:hover::after { opacity: 1; }
 
-  .empty-global {
-    text-align: center;
-    padding: 5rem 2rem;
-    background: white;
-    border-radius: 28px;
-    box-shadow: 0 8px 28px rgba(108,99,255,0.08);
-    border: 3px dashed #e8e4ff;
-  }
+.artwork-frame {
+  background: linear-gradient(145deg, #f8f6ff, #fff9f0);
+  padding: 8px 8px 0;
+}
+.artwork-frame img {
+  width: 100%; height: 145px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: white;
+  display: block;
+  transition: transform 0.32s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.artwork-card:hover .artwork-frame img { transform: scale(1.05); }
+
+.artwork-info {
+  padding: 8px 10px 10px;
+  background: white;
+}
+.artwork-word-text {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.88rem;
+  color: var(--primary);
+}
+.artwork-date-text {
+  font-size: 0.67rem;
+  color: #bbb;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+/* ══ Empty ══ */
+.empty-global {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  box-shadow: 0 8px 28px rgba(108,99,255,0.08);
+  border: 3px dashed #e8e4ff;
+}
 </style>
 {% endblock %}
 
@@ -164,7 +208,7 @@
       <div class="autor-header">
         {% if autor_data.user.estudiante_profile.avatar_kitchen_url %}
         <img src="{{ autor_data.user.estudiante_profile.avatar_kitchen_url }}"
-             class="autor-avatar" style="object-fit:cover;font-size:inherit"
+             class="autor-avatar" style="object-fit:cover"
              alt="{{ autor_data.user.get_full_name }}">
         {% else %}
         <div class="autor-avatar" style="background:linear-gradient(135deg,#6C63FF,#9c94ff)">
@@ -172,12 +216,14 @@
         </div>
         {% endif %}
         <div>
-          <div class="fw-bold font-fredoka" style="color:var(--primary);font-size:1.1rem">
-            {{ autor_data.user.get_full_name|default:autor_data.user.username }}
-          </div>
-          <div class="text-muted small fw-bold">
-            🎨 {{ autor_data.obras|length }} obra{{ autor_data.obras|length|pluralize:"s" }}
-          </div>
+          <div class="autor-name">{{ autor_data.user.get_full_name|default:autor_data.user.username }}</div>
+          <div class="autor-sub">🎨 {{ autor_data.obras|length }} obra{{ autor_data.obras|length|pluralize:"s" }} en exposición</div>
+        </div>
+        <div class="ms-auto">
+          <span class="badge rounded-pill px-3 py-2 fw-bold"
+                style="background:linear-gradient(135deg,#f0eeff,#ffe9f0);color:var(--primary);font-family:'Fredoka One',cursive">
+            🖼️ Artista
+          </span>
         </div>
       </div>
 
@@ -191,17 +237,10 @@
                 <img src="{{ obra.canvas_data }}" alt="{{ obra.title }}">
               </div>
               <div class="artwork-info">
-                <div class="fw-bold" style="font-family:'Fredoka One',cursive;color:var(--primary);font-size:0.95rem">
-                  {% if obra.vocabulary_item %}
-                    🎨 {{ obra.vocabulary_item.word_en }}
-                    <span class="text-muted" style="font-size:0.8rem">/ {{ obra.vocabulary_item.word_es }}</span>
-                  {% else %}
-                    🎨 {{ obra.title|default:"Sin título" }}
-                  {% endif %}
+                <div class="artwork-word-text">
+                  🎨 {% if obra.vocabulary_item %}{{ obra.vocabulary_item.word_en }}{% else %}{{ obra.title|default:"Sin título" }}{% endif %}
                 </div>
-                <div class="text-muted" style="font-size:0.75rem;font-weight:600;margin-top:2px">
-                  📅 {{ obra.created_at|date:"d M Y" }}
-                </div>
+                <div class="artwork-date-text">📅 {{ obra.created_at|date:"d M Y" }}</div>
               </div>
             </div>
           </div>

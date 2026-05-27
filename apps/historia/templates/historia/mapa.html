@@ -5,42 +5,51 @@
 
 {% block extra_css %}
 <style>
-/* ══ Fondo del mapa ══ */
+/* ══ Contenedor del mapa — más ancho para más drama ══ */
 .historia-wrap {
-  max-width: 540px;
+  max-width: 620px;
   margin: 0 auto;
-  padding: 1.5rem 1rem 6rem;
+  padding: 1.5rem 0.5rem 6rem;
   position: relative;
 }
 
-/* Puntos decorativos flotando en el fondo */
+/* Partículas decorativas fijas */
 .historia-wrap::before {
-  content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+  content: '🌟  ✨  ⭐  💫  🌟  ✨  ⭐  💫';
   position: fixed;
-  top: 0; left: 0; right: 0;
-  font-size: 1.1rem;
-  color: rgba(255,255,255,0.07);
-  letter-spacing: 20px;
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  letter-spacing: 28px;
+  opacity: 0.12;
   pointer-events: none;
   white-space: nowrap;
-  overflow: hidden;
+  animation: driftParticles 12s linear infinite;
+}
+@keyframes driftParticles {
+  0%   { transform: translateX(-50%) translateY(0); }
+  50%  { transform: translateX(-50%) translateY(-10px); }
+  100% { transform: translateX(-50%) translateY(0); }
 }
 
 /* ── Hero ── */
 .historia-hero {
-  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 50%, #4ECDC4 100%);
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 50%, #FF6B6B 100%);
   border-radius: 28px;
   padding: 1.8rem 2rem;
   color: white;
   position: relative;
   overflow: hidden;
   margin-bottom: 2.5rem;
-  box-shadow: 0 12px 40px rgba(108,99,255,0.35);
+  box-shadow:
+    0 14px 44px rgba(108,99,255,0.4),
+    0 0 0 3px rgba(255,255,255,0.12);
 }
 .historia-hero::before {
   content: '';
   position: absolute;
-  width: 220px; height: 220px;
+  width: 240px; height: 240px;
   background: rgba(255,255,255,0.09);
   border-radius: 50%;
   top: -90px; right: -60px;
@@ -48,21 +57,33 @@
 .historia-hero::after {
   content: '';
   position: absolute;
-  width: 140px; height: 140px;
+  width: 150px; height: 150px;
   background: rgba(255,255,255,0.06);
   border-radius: 50%;
-  bottom: -50px; left: 5%;
+  bottom: -55px; left: 5%;
 }
+/* Estrella decorativa en hero */
+.historia-hero .hero-star {
+  position: absolute;
+  font-size: 1.2rem;
+  opacity: 0.3;
+  animation: floatStation 4s ease-in-out infinite;
+}
+.historia-hero .hero-star:nth-child(1) { top: 15%; right: 22%; animation-delay: 0s; }
+.historia-hero .hero-star:nth-child(2) { bottom: 20%; right: 35%; animation-delay: 1.2s; }
+.historia-hero .hero-star:nth-child(3) { top: 60%; left: 12%; animation-delay: 0.6s; }
+
 .estrellas-contador {
   display: inline-flex;
   align-items: center;
-  gap: .4rem;
+  gap: .5rem;
   background: rgba(255,255,255,0.22);
   border-radius: 99px;
-  padding: .35rem 1rem;
+  padding: .4rem 1.2rem;
   font-family: 'Fredoka One', cursive;
-  font-size: 1.15rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  font-size: 1.2rem;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3);
+  border: 1.5px solid rgba(255,255,255,0.3);
 }
 
 /* ═══════════════════════════════════════
@@ -84,15 +105,16 @@
   width: 100%;
   position: relative;
 }
-.station-left  { align-items: flex-start; padding-left:  6%; }
-.station-right { align-items: flex-end;   padding-right: 6%; }
+/* Más spread para que el zig-zag sea más dramático */
+.station-left  { align-items: flex-start; padding-left:  2%; }
+.station-right { align-items: flex-end;   padding-right: 2%; }
 
 /* ── Burbuja wrap ── */
 .station-bubble-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   position: relative;
 }
 
@@ -100,101 +122,101 @@
 .station-bubble-wrap.desbloqueada::before {
   content: '';
   position: absolute;
-  width: 96px; height: 96px;
+  width: 118px; height: 118px;
   border-radius: 50%;
   background: var(--sec-color, #6C63FF);
-  opacity: 0.28;
-  filter: blur(18px);
-  top: 2px;
+  opacity: 0.3;
+  filter: blur(22px);
+  top: 4px;
   animation: glowPulse 2.8s ease-in-out infinite;
 }
 @keyframes glowPulse {
   0%,100% { opacity: 0.22; transform: scale(1);    }
-  50%      { opacity: 0.42; transform: scale(1.18); }
+  50%      { opacity: 0.48; transform: scale(1.22); }
 }
 
-/* ── Círculo principal ── */
+/* ── Círculo principal — MÁS GRANDE ── */
 .station-circle {
-  width: 88px;
-  height: 88px;
+  width: 114px;
+  height: 114px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.4rem;
+  font-size: 3rem;
   background: var(--sec-color, #6C63FF);
-  border: 5px solid white;
+  border: 7px solid white;
   box-shadow:
     0 0 0 3px var(--sec-color, #6C63FF),
-    0 8px 28px rgba(0,0,0,0.22),
-    0 0 0 8px rgba(255,255,255,0.12);
+    0 12px 36px rgba(0,0,0,0.3),
+    0 0 0 10px rgba(255,255,255,0.15),
+    0 0 50px rgba(0,0,0,0.08);
   cursor: pointer;
-  transition: transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  transition: transform .32s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
   position: relative;
   z-index: 2;
   text-decoration: none;
   animation: floatStation 3.5s ease-in-out infinite;
 }
-/* Cada estación flota con un delay distinto */
-.path-station:nth-child(1) .station-circle { animation-delay: 0s;    }
-.path-station:nth-child(2) .station-circle { animation-delay: 0.4s;  }
-.path-station:nth-child(3) .station-circle { animation-delay: 0.8s;  }
-.path-station:nth-child(4) .station-circle { animation-delay: 1.2s;  }
-.path-station:nth-child(5) .station-circle { animation-delay: 1.6s;  }
-.path-station:nth-child(6) .station-circle { animation-delay: 2.0s;  }
-.path-station:nth-child(7) .station-circle { animation-delay: 2.4s;  }
-.path-station:nth-child(8) .station-circle { animation-delay: 2.8s;  }
-.path-station:nth-child(9) .station-circle { animation-delay: 3.2s;  }
+.path-station:nth-child(1)  .station-circle { animation-delay: 0s;   }
+.path-station:nth-child(2)  .station-circle { animation-delay: 0.4s; }
+.path-station:nth-child(3)  .station-circle { animation-delay: 0.8s; }
+.path-station:nth-child(4)  .station-circle { animation-delay: 1.2s; }
+.path-station:nth-child(5)  .station-circle { animation-delay: 1.6s; }
+.path-station:nth-child(6)  .station-circle { animation-delay: 2.0s; }
+.path-station:nth-child(7)  .station-circle { animation-delay: 2.4s; }
+.path-station:nth-child(8)  .station-circle { animation-delay: 2.8s; }
+.path-station:nth-child(9)  .station-circle { animation-delay: 3.2s; }
 .path-station:nth-child(10) .station-circle { animation-delay: 3.6s; }
 
 @keyframes floatStation {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-9px) scale(1.03); }
 }
 
 .station-circle:hover {
-  transform: scale(1.15) translateY(-6px) !important;
+  transform: scale(1.2) translateY(-10px) !important;
   box-shadow:
     0 0 0 3px var(--sec-color, #6C63FF),
-    0 16px 40px rgba(0,0,0,0.3),
-    0 0 0 10px rgba(255,255,255,0.2),
-    0 0 30px var(--sec-color, #6C63FF);
+    0 22px 55px rgba(0,0,0,0.38),
+    0 0 0 14px rgba(255,255,255,0.24),
+    0 0 50px var(--sec-color, #6C63FF),
+    0 0 80px rgba(108,99,255,0.2);
   animation: none;
 }
 
 .station-circle.locked {
   background: #c8c4d8 !important;
   border-color: rgba(255,255,255,0.6);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
   cursor: not-allowed;
   filter: grayscale(0.5) brightness(0.95);
   animation: none;
 }
 .station-circle.locked:hover { transform: none !important; }
 
-/* Trofeo dorado para completas */
 .station-circle.completa {
   box-shadow:
     0 0 0 3px var(--sec-color, #6C63FF),
-    0 8px 28px rgba(255,220,50,0.45),
-    0 0 0 8px rgba(255,230,109,0.25),
-    0 0 20px rgba(255,220,50,0.4);
+    0 10px 32px rgba(255,220,50,0.5),
+    0 0 0 9px rgba(255,230,109,0.28),
+    0 0 26px rgba(255,220,50,0.45);
 }
 .station-trophy {
   position: absolute;
-  top: -6px; right: -6px;
-  font-size: 1.2rem;
+  top: -7px; right: -7px;
+  font-size: 1.3rem;
   z-index: 3;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
   animation: trophySpin 4s ease-in-out infinite;
 }
 @keyframes trophySpin {
   0%,85%,100% { transform: rotate(0deg) scale(1); }
-  90%          { transform: rotate(-15deg) scale(1.2); }
-  95%          { transform: rotate(12deg) scale(1.2); }
+  90%          { transform: rotate(-15deg) scale(1.25); }
+  95%          { transform: rotate(12deg) scale(1.25); }
 }
 
-/* ── Nombre de la sección ── */
+/* ── Nombre de la sección — pill más grande ── */
 .station-name-pill {
   display: inline-flex;
   align-items: center;
@@ -202,88 +224,57 @@
   background: var(--sec-color, #6C63FF);
   color: white;
   border-radius: 99px;
-  padding: 4px 14px;
+  padding: 6px 18px;
   font-family: 'Fredoka One', cursive;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   box-shadow:
-    0 3px 12px rgba(0,0,0,0.18),
-    0 0 0 2px rgba(255,255,255,0.35);
+    0 4px 16px rgba(0,0,0,0.2),
+    0 0 0 2.5px rgba(255,255,255,0.4);
   white-space: nowrap;
-  max-width: 200px;
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 .station-name-pill.locked-pill {
   background: #c8c4d8;
   box-shadow: none;
 }
 
-/* Progreso */
 .station-progress {
-  font-size: 0.72rem;
-  color: rgba(255,255,255,0.65);
+  font-size: 0.74rem;
+  color: rgba(255,255,255,0.7);
   font-weight: 800;
   letter-spacing: 0.3px;
 }
 
-/* ══════════════════════════════
-   CONECTORES ZIG-ZAG COLORIDOS
-══════════════════════════════ */
-.path-connector {
-  position: relative;
+/* ═══════════════════════════════════════════
+   CONECTORES — SVG curva S orgánica
+═══════════════════════════════════════════ */
+.path-connector-svg {
+  width: 100%;
+  height: 90px;
+  display: block;
+  overflow: visible;
 }
-
-/* Conector curvo izq→der */
-.path-connector.to-right {
-  width: 130px;
-  height: 56px;
-  border-bottom: 7px solid;
-  border-right:  7px solid;
-  border-top: none;
-  border-left: none;
-  border-radius: 0 0 22px 0;
-  align-self: flex-start;
-  margin-left: calc(50% - 10px);
-  /* color viene por inline style */
-  filter: drop-shadow(0 3px 8px currentColor);
-  opacity: 0.85;
+/* Animación de flujo de guiones a lo largo de la curva */
+.connector-dash {
+  stroke-dasharray: 10 18;
+  stroke-dashoffset: 0;
+  animation: dashFlow 1.8s linear infinite;
 }
-/* Puntos decorativos sobre el conector */
-.path-connector.to-right::after {
-  content: '●  ●  ●';
-  position: absolute;
-  bottom: -22px;
-  right: -4px;
-  font-size: 0.4rem;
-  color: inherit;
-  letter-spacing: 3px;
-  opacity: 0.6;
+@keyframes dashFlow {
+  to { stroke-dashoffset: -28; }
 }
-
-/* Conector curvo der→izq */
-.path-connector.to-left {
-  width: 130px;
-  height: 56px;
-  border-bottom: 7px solid;
-  border-left:   7px solid;
-  border-top: none;
-  border-right: none;
-  border-radius: 0 0 0 22px;
-  align-self: flex-end;
-  margin-right: calc(50% - 10px);
-  filter: drop-shadow(0 3px 8px currentColor);
-  opacity: 0.85;
+/* Puntos decorativos en el conector */
+.connector-dot {
+  animation: dotPop 2.2s ease-in-out infinite;
 }
-.path-connector.to-left::after {
-  content: '●  ●  ●';
-  position: absolute;
-  bottom: -22px;
-  left: -4px;
-  font-size: 0.4rem;
-  color: inherit;
-  letter-spacing: 3px;
-  opacity: 0.6;
+.connector-dot:nth-child(2) { animation-delay: 0.7s; }
+.connector-dot:nth-child(3) { animation-delay: 1.4s; }
+@keyframes dotPop {
+  0%,100% { r: 4; opacity: 0.55; }
+  50%      { r: 6; opacity: 1;    }
 }
 
 /* ══════════════════════════
@@ -370,38 +361,41 @@
   justify-content: center;
 }
 .lec-btn {
-  width: 60px; height: 60px;
-  border-radius: 14px;
+  width: 68px; height: 68px;
+  border-radius: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   position: relative;
   border: none;
   cursor: pointer;
-  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
   text-decoration: none;
   background: #f0eeff;
   color: #444;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
 }
-.lec-btn:hover { transform: scale(1.12); box-shadow: 0 6px 18px rgba(0,0,0,0.16); }
+.lec-btn:hover {
+  transform: scale(1.18) translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+}
 .lec-btn.completada {
   background: var(--sec-color, #6C63FF);
   color: white;
-  box-shadow: 0 4px 14px rgba(108,99,255,0.35);
+  box-shadow: 0 6px 18px rgba(108,99,255,0.4);
 }
 .lec-btn.accesible {
   background: white;
-  border: 2.5px solid var(--sec-color, #6C63FF);
-  box-shadow: 0 4px 14px rgba(108,99,255,0.15);
+  border: 3px solid var(--sec-color, #6C63FF);
+  box-shadow: 0 5px 18px rgba(108,99,255,0.2);
 }
 .lec-btn.bloqueada {
-  opacity: .4;
+  opacity: .35;
   cursor: not-allowed;
   pointer-events: none;
-  filter: grayscale(0.5);
+  filter: grayscale(0.6);
 }
 .estrellas-overlay {
   position: absolute;
@@ -446,6 +440,9 @@
 
   <!-- Hero -->
   <div class="historia-hero mb-4">
+    <span class="hero-star">⭐</span>
+    <span class="hero-star">✨</span>
+    <span class="hero-star">🌟</span>
     <div class="position-relative" style="z-index:1">
       <div class="d-flex align-items-center gap-3 flex-wrap">
         <div>
@@ -542,12 +539,49 @@
       </div><!-- /bubble-wrap -->
     </div><!-- /station -->
 
-    <!-- Conector colorido hacia la siguiente estación -->
+    <!-- Conector SVG — curva S orgánica hacia la siguiente estación -->
     {% if not forloop.last %}
       {% if pos == 'station-left' %}
-      <div class="path-connector to-right" style="border-color:{{ sec.color_hex }};color:{{ sec.color_hex }}"></div>
+      {# izq → der: empieza arriba-izquierda, termina abajo-derecha #}
+      <svg class="path-connector-svg" viewBox="0 0 500 90" preserveAspectRatio="none">
+        {# Brillo de fondo #}
+        <path d="M 62 5 C 62 85, 438 5, 438 85"
+              stroke="{{ sec.color_hex }}" stroke-width="20" fill="none"
+              stroke-linecap="round" opacity="0.12"/>
+        {# Línea principal sólida #}
+        <path d="M 62 5 C 62 85, 438 5, 438 85"
+              stroke="{{ sec.color_hex }}" stroke-width="8" fill="none"
+              stroke-linecap="round" opacity="0.9"/>
+        {# Guiones animados encima #}
+        <path class="connector-dash" d="M 62 5 C 62 85, 438 5, 438 85"
+              stroke="white" stroke-width="4" fill="none"
+              stroke-linecap="round" opacity="0.5"/>
+        {# Puntos decorativos a lo largo de la curva #}
+        <circle class="connector-dot" cx="186" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
+        <circle class="connector-dot" cx="250" cy="45" r="4" fill="{{ sec.color_hex }}" opacity="0.6"/>
+        <circle class="connector-dot" cx="314" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
+        {# Estrellas en los extremos #}
+        <text x="45" y="14" font-size="14" text-anchor="middle" opacity="0.7">✨</text>
+        <text x="455" y="82" font-size="14" text-anchor="middle" opacity="0.7">⭐</text>
+      </svg>
       {% else %}
-      <div class="path-connector to-left"  style="border-color:{{ sec.color_hex }};color:{{ sec.color_hex }}"></div>
+      {# der → izq: empieza arriba-derecha, termina abajo-izquierda #}
+      <svg class="path-connector-svg" viewBox="0 0 500 90" preserveAspectRatio="none">
+        <path d="M 438 5 C 438 85, 62 5, 62 85"
+              stroke="{{ sec.color_hex }}" stroke-width="20" fill="none"
+              stroke-linecap="round" opacity="0.12"/>
+        <path d="M 438 5 C 438 85, 62 5, 62 85"
+              stroke="{{ sec.color_hex }}" stroke-width="8" fill="none"
+              stroke-linecap="round" opacity="0.9"/>
+        <path class="connector-dash" d="M 438 5 C 438 85, 62 5, 62 85"
+              stroke="white" stroke-width="4" fill="none"
+              stroke-linecap="round" opacity="0.5"/>
+        <circle class="connector-dot" cx="314" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
+        <circle class="connector-dot" cx="250" cy="45" r="4" fill="{{ sec.color_hex }}" opacity="0.6"/>
+        <circle class="connector-dot" cx="186" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
+        <text x="455" y="14" font-size="14" text-anchor="middle" opacity="0.7">✨</text>
+        <text x="45" y="82" font-size="14" text-anchor="middle" opacity="0.7">⭐</text>
+      </svg>
       {% endif %}
     {% endif %}
 
