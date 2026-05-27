@@ -21,6 +21,7 @@ def vocabulary_payload_for_game(game, vocabulary):
             'id': v.id,
             'word_en': v.word_en,
             'word_es': v.word_es,
+            'emoji': v.emoji or '',
             'image': v.image.url if v.image else None,
             'audio': v.audio.url if v.audio else None,
             'orden': getattr(v, 'orden', 0),

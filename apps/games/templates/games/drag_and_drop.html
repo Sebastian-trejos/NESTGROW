@@ -8,67 +8,110 @@
 
 {% block content %}
 <div class="container py-4">
-  <div class="d-flex align-items-center gap-3 mb-4">
-    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% endif %}
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🖱️ {{ game.title }}</h3>
+
+  <!-- Header -->
+  <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+    {% if user.role == 'profesor' %}
+    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    {% else %}
+    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    {% endif %}
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)">🔗 {{ game.title }}</h3>
+    <span class="badge rounded-pill fw-bold px-3 py-2
+      {% if game.difficulty == 1 %}bg-success
+      {% elif game.difficulty == 2 %}bg-warning text-dark
+      {% else %}bg-danger{% endif %}">
+      {{ game.get_difficulty_display }}
+    </span>
   </div>
 
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
   </div>
   {% endif %}
 
-  <!-- Vocabulary Preview Tab -->
   {% include 'games/includes/vocabulary_tab.html' %}
 
-  <!-- Game Section (hidden until vocab is dismissed) -->
+  <!-- Game section (hidden until vocab dismissed) -->
   <div id="gameSection" style="display:none">
 
-    <!-- Score Bar -->
+    <!-- Score bar -->
     <div class="game-score-bar">
-      <span>🎮 {{ game.title }}</span>
+      <span>🔗 {{ game.title }}</span>
       <span>Score: <strong id="scoreDisplay">0</strong> / <strong id="maxScore">0</strong></span>
       {% if game.time_limit > 0 %}
       <span>⏱ <span id="timerDisplay">--:--</span></span>
       {% endif %}
     </div>
 
-    <!-- Milo hint -->
-    <div class="milo-banner mb-4">
+    <!-- Milo banner -->
+    <div class="milo-banner mb-3">
       <div class="milo-banner-owl">🐺</div>
-      <div class="milo-banner-text">
-        Drag each word to the correct image! / ¡Arrastra cada palabra a la imagen correcta!
+      <div class="milo-banner-text" id="miloInstruction">
+        ¡Haz clic en un emoji y luego en su palabra para conectarlos!
       </div>
     </div>
 
-    <!-- Game Board -->
-    <div class="game-area">
-      <div class="row" id="gameBoard">
-        <!-- Images (drop targets) -->
-        <div class="col-md-7">
-          <h6 class="fw-bold text-muted mb-3">🖼️ Images — Drop the word here!</h6>
-          <div class="row g-3" id="dropZones"></div>
+    <!-- Combo badge (medium / hard) -->
+    <div id="comboBadge" class="text-center mb-2" style="display:none">
+      <span class="badge rounded-pill px-3 py-2 fw-bold fs-6 connect-combo-badge">
+        🔥 COMBO <span id="comboCount">0</span>x
+      </span>
+    </div>
+
+    <!-- Memory countdown (hard) -->
+    <div id="memoryCountdown" class="text-center mb-3" style="display:none">
+      <div class="alert py-2 px-4 d-inline-block fw-bold mb-0"
+           style="background:linear-gradient(135deg,#fff9c4,#ffe0b2);border:2px solid #FFB347;border-radius:14px;color:#8B4513">
+        👁️ ¡Memoriza los emojis! Se ocultarán en <span id="countdownSecs">4</span>s…
+      </div>
+    </div>
+
+    <!-- Game board -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 connect-board-shell">
+      <div class="row g-2 mb-2">
+        <div class="col-5 text-center">
+          <span class="badge bg-light text-muted fw-bold" style="font-size:0.75rem">🖼️ Imágenes</span>
         </div>
-        <!-- Words (draggables) -->
-        <div class="col-md-5">
-          <h6 class="fw-bold text-muted mb-3">🔤 Words — Drag me!</h6>
-          <div id="draggables" class="d-flex flex-column gap-2"></div>
+        <div class="col-2"></div>
+        <div class="col-5 text-center">
+          <span class="badge bg-light text-muted fw-bold" style="font-size:0.75rem">🔤 Palabras</span>
+        </div>
+      </div>
+
+      <div id="connectGame" style="position:relative">
+        <!-- SVG cable overlay -->
+        <svg id="connectSvg"
+             style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:10">
+        </svg>
+
+        <div class="row g-2" id="gameBoard">
+          <!-- Emoji column -->
+          <div class="col-5" id="emojiNodes"></div>
+          <!-- Center spacer -->
+          <div class="col-2 d-flex align-items-center justify-content-center">
+            <div class="connect-center-line"></div>
+          </div>
+          <!-- Word column -->
+          <div class="col-5" id="wordNodes"></div>
         </div>
       </div>
     </div>
 
+    <!-- Verify button -->
     <div class="text-center mt-4">
-      <button class="btn btn-nestgrow btn-success-nestgrow" id="checkBtn" style="display:none">
-        ✅ Check Answers! / ¡Verificar!
+      <button class="btn btn-nestgrow btn-success-nestgrow px-5 py-2" id="checkBtn" style="display:none">
+        ✅ ¡Verificar conexiones!
       </button>
     </div>
-  </div>
 
+  </div><!-- /gameSection -->
 </div>
 
-<!-- Win Overlay -->
+<!-- Win overlay -->
 <div class="win-overlay" id="winOverlay">
   <div class="win-card">
     <div class="win-owl">🐺</div>
@@ -89,18 +132,18 @@
     {% endif %}
   </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'games/js/score_utils.js' %}"></script>
 <script src="{% static 'games/js/drag_and_drop.js' %}"></script>
 <script>
-const VOCABULARY = {{ vocabulary_json|safe }};
-const GAME_ID = {{ game.id }};
-const TIME_LIMIT = {{ game.time_limit }};
-const POINTS_REWARD = {{ game.points_reward }};
-const PENALTY_AMOUNT = {{ game.penalty_amount }};
-initDragAndDrop(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, PENALTY_AMOUNT);
+  const VOCABULARY    = {{ vocabulary_json|safe }};
+  const GAME_ID       = {{ game.id }};
+  const TIME_LIMIT    = {{ game.time_limit }};
+  const POINTS_REWARD = {{ game.points_reward }};
+  const PENALTY_AMOUNT = {{ game.penalty_amount }};
+  const DIFFICULTY    = {{ game.difficulty }};
+  initConnectGame(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, PENALTY_AMOUNT, DIFFICULTY);
 </script>
 {% endblock %}
