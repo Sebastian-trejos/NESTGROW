@@ -6,7 +6,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.contrib import messages
 import json
 
-from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, PuzzleImage, TiendaItem, InventarioEstudiante, MemoriaCard
+from .models import Game, UserProgress, Score, Logro, LogroUsuario, HuesoTransaccion, clasificar_puntaje, Artwork, PaintingWord, PuzzleImage, TiendaItem, InventarioEstudiante
 from .forms import GameForm, CategoryForm, VocabularyItemForm
 from apps.content.models import VocabularyItem, Category
 from apps.accounts.decorators import profesor_required, estudiante_required
@@ -156,20 +156,7 @@ def game_detail(request, pk):
             for pi in game.puzzle_images.all()
         ])
 
-    # Get memoria custom cards if memoria game
     memoria_cards_json = '[]'
-    if game.game_type == 'memoria':
-        cards = game.memoria_cards.all()
-        if cards.exists():
-            memoria_cards_json = json.dumps([
-                {
-                    'id': c.pk,
-                    'label_es': c.label_es,
-                    'label_en': c.label_en or c.label_es,
-                    'image': c.image.url if c.image else '',
-                }
-                for c in cards
-            ])
 
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
@@ -228,18 +215,6 @@ def game_embed(request, pk):
         ])
 
     memoria_cards_json = '[]'
-    if game.game_type == 'memoria':
-        cards = game.memoria_cards.all()
-        if cards.exists():
-            memoria_cards_json = json.dumps([
-                {
-                    'id': c.pk,
-                    'label_es': c.label_es,
-                    'label_en': c.label_en or c.label_es,
-                    'image': c.image.url if c.image else '',
-                }
-                for c in cards
-            ])
 
     vocabulary_json = vocabulary_json_for_game(game, vocabulary)
 
@@ -602,14 +577,11 @@ def editar_juego(request, pk):
         PuzzleImage.objects.filter(game=juego)
         if juego.game_type == 'puzzle' else []
     )
-    memoria_cards = MemoriaCard.objects.filter(game=juego) if juego.game_type == 'memoria' else []
     return render(request, 'games/profesor/juego_form.html', {
         'form': form, 'titulo': f'Editar: {juego.title}', 'accion': 'Guardar',
         'juego': juego, 'painting_words': painting_words,
         'puzzle_imagenes': puzzle_imagenes,
-        'juego_usa_imagenes': juego.game_type == 'puzzle',
-        'memoria_cards': memoria_cards,
-        'juego_usa_memoria': juego.game_type == 'memoria'})
+        'juego_usa_imagenes': juego.game_type == 'puzzle'})
 
 
 @login_required
@@ -671,46 +643,6 @@ def api_imagen_eliminar(request, item_pk):
     """Elimina una PuzzleImage."""
     item = get_object_or_404(PuzzleImage, pk=item_pk)
     item.delete()
-    return JsonResponse({'ok': True})
-
-
-# ── MemoriaCard API ───────────────────────────────────────────────────────────
-
-@login_required
-@profesor_required
-@require_POST
-def api_memoria_card_agregar(request, game_pk):
-    """Añade una MemoriaCard al memorama (máximo 12)."""
-    game = get_object_or_404(Game, pk=game_pk)
-    if MemoriaCard.objects.filter(game=game).count() >= 12:
-        return JsonResponse({'ok': False, 'error': 'Máximo 12 tarjetas por memorama.'})
-    label_es = request.POST.get('label_es', '').strip()
-    label_en = request.POST.get('label_en', '').strip()
-    if not label_es:
-        return JsonResponse({'ok': False, 'error': 'El texto en español es requerido.'})
-    order = MemoriaCard.objects.filter(game=game).count()
-    card = MemoriaCard.objects.create(
-        game=game,
-        label_es=label_es,
-        label_en=label_en,
-        image=request.FILES.get('image'),
-        order=order,
-    )
-    return JsonResponse({'ok': True, 'card': {
-        'pk': card.pk,
-        'label_es': card.label_es,
-        'label_en': card.label_en,
-        'image_url': card.image.url if card.image else '',
-    }})
-
-
-@login_required
-@profesor_required
-@require_POST
-def api_memoria_card_eliminar(request, card_pk):
-    """Elimina una MemoriaCard."""
-    card = get_object_or_404(MemoriaCard, pk=card_pk)
-    card.delete()
     return JsonResponse({'ok': True})
 
 
