@@ -218,7 +218,7 @@
     <div class="shop-header-content">
       <!-- TEXTO — izquierda -->
       <div class="shop-header-text">
-        <div class="shop-title"><i class="bi bi-cart4"></i> Tienda de Milo</div>
+        <div class="shop-title"><i class="bi bi-cart4"></i> Milo's store</div>
         <p class="shop-subtitle">
           ¡Compra objetos únicos y<br>decora la Habitación de Milo!
         </p>
@@ -228,7 +228,7 @@
           <span id="bonesCounter" style="font-size:2rem">{{ huesos }}</span>
           <div style="text-align:left">
             <div style="font-size:0.8rem;opacity:0.75;font-weight:600">Tienes</div>
-            <div style="font-size:0.9rem;opacity:0.9;font-weight:700">Huesos de Milo</div>
+            <div style="font-size:0.9rem;opacity:0.9;font-weight:700">Milo's bones</div>
           </div>
         </div>
       </div>
@@ -242,12 +242,11 @@
 
   <!-- Category Filter -->
   <div class="d-flex gap-2 flex-wrap mb-4 category-filter">
-    <button class="btn rounded-pill fw-bold active" onclick="filterCategory('all', this)">Todos</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('mueble', this)"><i class="bi bi-house-door-fill"></i> Muebles</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('decoracion', this)"><i class="bi bi-camera-fill"></i> Decoración</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('electronico', this)"><i class="bi bi-tv-fill"></i> Electrónicos</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('planta', this)"><i class="bi bi-bug-fill"></i> Naturaleza</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('especial', this)"><i class="bi bi-stars"></i> Especiales</button>
+    <button class="btn rounded-pill fw-bold active" onclick="filterCategory('all', this)">All</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('mueble', this)"><i class="bi bi-house-door-fill"></i> Furniture</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('decoracion', this)"><i class="bi bi-camera-fill"></i> Decoration</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('electronico', this)"><i class="bi bi-tv-fill"></i> Electronics</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('planta', this)"><i class="bi bi-bug-fill"></i> Nature</button>
   </div>
 
   <!-- Info banner -->
@@ -267,7 +266,7 @@
 
         <div class="item-icon-bg">
           {% if item.id in inventario_ids %}
-          <span class="owned-badge">✅ Tuyo</span>
+          <span class="owned-badge">✅ Yours</span>
           {% endif %}
 
           {% if item.imagen %}
@@ -296,7 +295,7 @@
 
           {% if item.id in inventario_ids %}
             <button class="buy-btn" style="background:#e8f5e9;color:#4CAF50" disabled>
-              ✅ Ya lo tienes
+              ✅ Alredy have it
             </button>
           {% else %}
             <button class="buy-btn"
@@ -325,7 +324,7 @@
 
   <div class="text-center mt-4">
     <a href="{% url 'games:habitacion_milo' %}" class="btn btn-nestgrow btn-primary-nestgrow me-2">
-      <i class="bi bi-house-heart-fill"></i> Ver mi Habitación
+      <i class="bi bi-house-heart-fill"></i> See
     </a>
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
       <i class="bi bi-controller"></i> Ir a jugar
