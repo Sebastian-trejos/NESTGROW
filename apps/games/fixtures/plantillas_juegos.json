@@ -61,26 +61,6 @@
     {"texto_principal": "parrot",    "texto_secundario": "pájaro que repite palabras"},
     {"texto_principal": "hedgehog",  "texto_secundario": "animal pequeño con espinas"}
   ],
-  "quiz": [
-    {"texto_principal": "cat",    "texto_secundario": "gato"},
-    {"texto_principal": "dog",    "texto_secundario": "perro"},
-    {"texto_principal": "house",  "texto_secundario": "casa"},
-    {"texto_principal": "water",  "texto_secundario": "agua"},
-    {"texto_principal": "book",   "texto_secundario": "libro"},
-    {"texto_principal": "school", "texto_secundario": "escuela"},
-    {"texto_principal": "tree",   "texto_secundario": "árbol"},
-    {"texto_principal": "sun",    "texto_secundario": "sol"}
-  ],
-  "ordenar_letras": [
-    {"texto_principal": "cat",  "texto_secundario": "gato"},
-    {"texto_principal": "dog",  "texto_secundario": "perro"},
-    {"texto_principal": "fish", "texto_secundario": "pez"},
-    {"texto_principal": "bird", "texto_secundario": "pájaro"},
-    {"texto_principal": "lion", "texto_secundario": "león"},
-    {"texto_principal": "bear", "texto_secundario": "oso"},
-    {"texto_principal": "frog", "texto_secundario": "rana"},
-    {"texto_principal": "duck", "texto_secundario": "pato"}
-  ],
   "globos": [
     {"texto_principal": "cat",   "texto_secundario": "gato"},
     {"texto_principal": "dog",   "texto_secundario": "perro"},
