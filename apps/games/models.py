@@ -51,7 +51,7 @@ def pct_to_nota_minijuego(pct):
 
 class Game(TimeStampedModel, ActiveModel):
     GAME_TYPES = [
-        ('drag_and_drop', '🖱️ Arrastra y Suelta'),
+        ('drag_and_drop', '🔗 Conectar imágenes con palabras'),
         ('word_search', '🔍 Sopa de Letras'),
         ('puzzle', '🧩 Rompecabezas'),
         ('audio_matching', '🎵 Juego de Audio'),
@@ -100,6 +100,9 @@ class Game(TimeStampedModel, ActiveModel):
 
     @property
     def time_limit(self):
+        if self.game_type == 'drag_and_drop':
+            # Easy: no timer, Medium: 90s, Hard: 75s
+            return {1: 0, 2: 90, 3: 75}.get(self.difficulty, 90)
         return self.TIEMPO_POR_TIPO.get(self.game_type, 0)
 
     @property

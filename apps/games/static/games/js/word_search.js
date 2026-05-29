@@ -1,12 +1,13 @@
 // ============================================================
 // NESTGROW - Word Search Game
-// Grid size varies by difficulty: easy=8, medium=11, hard=14
+// Grid size varies by difficulty: easy=8x8, medium=12x12, hard=16x16
+// Words come automatically from the game's vocabulary category
 // ============================================================
 
 function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty, penaltyAmount, customWords) {
   const GRID_SIZE = difficulty === 3 ? 14 : difficulty === 2 ? 11 : 8;
   const MAX_WORDS = difficulty === 3 ? 10 : difficulty === 2 ? 7 : 5;
-  const COLORS = ['#f4a261','#2ec4b6','#e63946','#6a4c93','#f9c74f','#43aa8b','#e76f51','#4cc9f0'];
+  const COLORS = ['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e91e63','#ff5722'];
 
   let words;
   if (customWords && customWords.length > 0) {
