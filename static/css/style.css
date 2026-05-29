@@ -472,32 +472,45 @@ body.nestgrow-body {
 /* Word Search */
 .word-search-grid {
   display: inline-grid;
-  gap: 4px;
-  background: #f8f6ff;
-  padding: 20px;
-  border-radius: var(--radius-sm);
-  border: 3px solid #e8e4ff;
+  gap: 2px;
+  background: transparent;   /* transparente: los pills del overlay se ven a través */
+  padding: 16px;
+  position: relative;
+  z-index: 2;                /* sobre el overlay (z-index:1) para recibir eventos */
 }
 
 .ws-cell {
   width: 38px;
   height: 38px;
-  background: white;
-  border: 2px solid #e8e4ff;
-  border-radius: 8px;
+  /* fondo mínimamente visible para garantizar hit-testing en todos los browsers */
+  background: rgba(255,255,255,0.01);
+  border: none;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Fredoka One', cursive;
   font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
   cursor: pointer;
-  transition: var(--transition);
   user-select: none;
+  position: relative;
+  z-index: 2;
+  transition: background 0.08s;
 }
 
-.ws-cell:hover { background: #f0eeff; border-color: var(--primary); }
-.ws-cell.selected { background: var(--primary); color: white; border-color: var(--primary); }
-.ws-cell.found { background: var(--accent); color: white; border-color: var(--accent); }
+/* Hover sutil */
+.ws-cell:hover { background: rgba(108,99,255,0.10); border-radius: 50%; }
+
+/* Highlight durante la selección — anillo visible encima del pill de preview */
+.ws-cell.selecting {
+  background: rgba(108,99,255,0.18) !important;
+  border-radius: 50% !important;
+}
+
+.ws-cell.found  { background: rgba(255,255,255,0.01); color: #222; }
+.ws-cell.selected { background: rgba(108,99,255,0.18); }
 
 /* Progress / Level badges */
 .level-badge {

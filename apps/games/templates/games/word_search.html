@@ -48,8 +48,7 @@
   }
   .ws-word-chip.found {
     text-decoration: line-through;
-    opacity: 0.45;
-    border-style: dashed;
+    opacity: 0.85;
   }
   #wordList { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 </style>
@@ -92,7 +91,10 @@
     <div class="row g-4">
       <div class="col-md-8">
         <div class="game-area p-3 text-center">
-          <div class="word-search-grid" id="wsGrid"></div>
+          <div id="wsGridWrapper" style="position:relative;display:inline-block;background:white;border-radius:20px;border:2px solid #e8e4ff;box-shadow:0 4px 20px rgba(108,99,255,0.10);overflow:hidden;">
+            <div id="wsOverlays" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></div>
+            <div class="word-search-grid" id="wsGrid"></div>
+          </div>
         </div>
       </div>
       <div class="col-md-4">

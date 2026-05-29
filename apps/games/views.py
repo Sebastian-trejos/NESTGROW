@@ -136,8 +136,6 @@ def game_detail(request, pk):
         'painting': 'games/painting.html',
         'memoria': 'games/memoria.html',
         'ahorcado': 'games/ahorcado.html',
-        'quiz': 'games/quiz.html',
-        'ordenar_letras': 'games/ordenar_letras.html',
         'globos': 'games/globos.html',
         'comparacion': 'games/comparacion.html',
     }
@@ -217,8 +215,6 @@ def game_embed(request, pk):
         'painting': 'games/painting.html',
         'memoria': 'games/memoria.html',
         'ahorcado': 'games/ahorcado.html',
-        'quiz': 'games/quiz.html',
-        'ordenar_letras': 'games/ordenar_letras.html',
         'globos': 'games/globos.html',
         'comparacion': 'games/comparacion.html',
     }

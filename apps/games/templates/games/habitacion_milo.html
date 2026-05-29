@@ -142,10 +142,7 @@
     border: 6px solid transparent;
     border-top-color: white;
   }
-  .milo-lector:hover .milo-bubble {
-    opacity: 1;
-    transform: translateX(-30%) translateY(0);
-  }
+  /* hover no muestra el bubble — lo controla JS */
 
   /* ══════════════════════════════════════
      INDICADOR DE ESTADO — humor de Milo
@@ -692,58 +689,11 @@
 /* ══════════════════════════════════════════════════════
    MILO — FRASES Y MOOD
 ══════════════════════════════════════════════════════════ */
-const MILO_IMGS = [
-  "{% static 'img/milo_saludando.png' %}",
-  "{% static 'img/milo_fest.png' %}",
-  "{% static 'img/milo_asombrado.png' %}",
-  "{% static 'img/milo_hablando.png' %}",
+const MILO_DEFAULT_IMG = "{% static 'img/milo_saludando.png' %}";
+const MILO_CLICK_IMG   = "{% static 'img/milo_asombrado2.png' %}";
+const MILO_HAB_MSG     = '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!';
 
-];
-const MILO_FRASES = [
-  "¡Me alegra verte! 🎉",
-  "¿Quieres jugar hoy? 🎮",
-  "¡Mi habitación es genial! ✨",
-  "¡Sigue ganando huesos! 🦴",
-  "¿Ya fuiste a la tienda? 🛒",
-  "¡Tú eres el mejor! 🏆",
-  "¡Aprender es súper! 📚",
-  "¡Milo te quiere mucho! ❤️",
-];
-
-function miloHabla() {
-  // Cambiar imagen de Milo
-  miloIdx = (miloIdx + 1) % MILO_IMGS.length;
-  const img = document.getElementById('miloImg');
-  if (img) { img.style.opacity = 0; setTimeout(() => { img.src = MILO_IMGS[miloIdx]; img.style.opacity = 1; img.style.transition = 'opacity 0.35s'; }, 200); }
-
-  // Cambiar frase
-  miloPhraseIdx = (miloPhraseIdx + 1) % MILO_FRASES.length;
-  const txt = document.getElementById('miloBubbleText');
-  if (txt) txt.textContent = MILO_FRASES[miloPhraseIdx];
-
-  // Cambiar mood badge
-  const badge = document.getElementById('miloBadge');
-  if (badge) badge.textContent = MILO_MOODS[Math.floor(Math.random() * MILO_MOODS.length)];
-
-  // Mostrar bubble
-  const bubble = document.getElementById('miloBubble');
-  if (bubble) { bubble.style.opacity = '1'; setTimeout(() => bubble.style.opacity = '', 2400); }
-}
-
-// Milo saluda al entrar después de 1.5 segundos
-setTimeout(() => {
-  const bubble = document.getElementById('miloBubble');
-  if (bubble) { bubble.style.opacity = '1'; setTimeout(() => bubble.style.opacity = '', 3000); }
-}, 1500);
-
-// Cambio automático de expresión cada 8 segundos
-setInterval(() => {
-  miloIdx = (miloIdx + 1) % MILO_IMGS.length;
-  const img = document.getElementById('miloImg');
-  if (img) { img.style.opacity = '0'; setTimeout(() => { img.src = MILO_IMGS[miloIdx]; img.style.transition = 'opacity 0.4s'; img.style.opacity = '1'; }, 300); }
-  const badge = document.getElementById('miloBadge');
-  if (badge) badge.textContent = MILO_MOODS[Math.floor(Math.random() * MILO_MOODS.length)];
-}, 8000);
+let miloIdx = 0, miloPhraseIdx = 0; // declaradas para evitar ReferenceError
 
 
 /* ══════════════════════════════════════════════════════
@@ -1010,18 +960,60 @@ function initSnake() {
 }
 
 /* ─────────────────────────────
-   DRAG & DROP MILO + DORMIR
+   DRAG & DROP MILO + DORMIR + CLICK
 ───────────────────────────── */
 const milo = document.getElementById("miloLector");
 const room = document.getElementById("roomPage");
 
-let dragging = false;
-let offsetX = 0;
-let offsetY = 0;
-let estaDormido = false; // 👈 NUEVO
+let dragging      = false;
+let offsetX       = 0;
+let offsetY       = 0;
+let estaDormido   = false;
+let miloMouseStartX = 0, miloMouseStartY = 0;
+let miloMoved     = false;
+const DRAG_THRESHOLD = 6; // px — menos de esto se considera click
+
+let miloBubbleTimer = null;
+
+function mostrarMiloBubble() {
+  const bubble = document.getElementById('miloBubble');
+  const txt    = document.getElementById('miloBubbleText');
+  const img    = document.getElementById('miloImg');
+  if (txt)    txt.textContent = MILO_HAB_MSG;
+  if (bubble) {
+    bubble.style.opacity = '1';
+    bubble.style.transform = 'translateX(-30%) translateY(0)';
+  }
+  if (img) {
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = MILO_CLICK_IMG;
+      img.style.transition = 'opacity 0.3s';
+      img.style.opacity = '1';
+    }, 150);
+  }
+  clearTimeout(miloBubbleTimer);
+  miloBubbleTimer = setTimeout(() => {
+    if (bubble) {
+      bubble.style.opacity = '';
+      bubble.style.transform = '';
+    }
+    if (img && !estaDormido) {
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = MILO_DEFAULT_IMG;
+        img.style.transition = 'opacity 0.3s';
+        img.style.opacity = '1';
+      }, 150);
+    }
+  }, 3500);
+}
 
 milo.addEventListener("mousedown", (e) => {
   dragging = true;
+  miloMoved = false;
+  miloMouseStartX = e.clientX;
+  miloMouseStartY = e.clientY;
   offsetX = e.clientX - milo.offsetLeft;
   offsetY = e.clientY - milo.offsetTop;
   milo.style.transition = "none";
@@ -1029,9 +1021,13 @@ milo.addEventListener("mousedown", (e) => {
 
 document.addEventListener("mousemove", (e) => {
   if (!dragging) return;
+  const dx = Math.abs(e.clientX - miloMouseStartX);
+  const dy = Math.abs(e.clientY - miloMouseStartY);
+  if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) miloMoved = true;
+  if (!miloMoved) return;
 
-  milo.style.left = (e.clientX - offsetX) + "px";
-  milo.style.top = (e.clientY - offsetY) + "px";
+  milo.style.left   = (e.clientX - offsetX) + "px";
+  milo.style.top    = (e.clientY - offsetY) + "px";
   milo.style.bottom = "auto";
 });
 
@@ -1039,7 +1035,12 @@ document.addEventListener("mouseup", () => {
   if (!dragging) return;
   dragging = false;
 
-  checkBed(); // 👈 revisa al soltar
+  if (!miloMoved) {
+    mostrarMiloBubble();
+  } else {
+    checkBed();
+  }
+  miloMoved = false;
 });
 
 /* ─────────────────────────────

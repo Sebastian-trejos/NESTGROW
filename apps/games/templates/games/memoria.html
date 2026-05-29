@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container py-4 memoria-page">
   <div class="d-flex align-items-center gap-3 mb-4">
-    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>{% endif %}
+    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🃏 {{ game.title }}</h3>
   </div>
 
@@ -80,7 +80,6 @@
     <div class="win-milo-wrap">
       <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
-    <div class="win-card-body">
     <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
     <div class="win-title">¡Memorama increíble!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
@@ -88,7 +87,6 @@
     <div class="win-score"><span id="winScore">0</span> pts · <span id="winTime">0</span>s</div>
     <div class="win-huesos" id="winHuesos"></div>
     <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
-    </div>
   </div>
 </div>
 {% endblock %}
@@ -100,7 +98,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   initMemoria({
     VOCABULARY: {{ vocabulary_json|safe }},
-    CUSTOM_CARDS: {{ memoria_cards_json|safe }},
     DIFFICULTY: {{ game.difficulty }},
     GAME_ID: {{ game.id }},
     POINTS_REWARD: {{ game.points_reward }},

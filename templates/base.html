@@ -67,7 +67,7 @@
   {% endif %}
 {% if user.role == 'estudiante' %}
 <li class="nav-item">
-  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:category_list' %}"
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:mi_vocabulario' %}"
      style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,107,107,0.25)';this.style.background='#ffd9d9'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff0f0'">
@@ -117,20 +117,37 @@
   </a>
 </li>
 {% elif user.role == 'profesor' %}
-<li class="nav-item dropdown">
-  <a class="nav-link fw-bold rounded-pill px-3 py-1 dropdown-toggle" href="#" data-bs-toggle="dropdown"
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'talleres:lista_periodos' %}"
      style="background:#e8f4fd;color:#1e88e5;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,136,229,0.25)';this.style.background='#c8e6fb'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#e8f4fd'">
-    <i class="bi bi-gear-fill me-1"></i> Gestión
+    <i class="bi bi-calendar2-week-fill me-1"></i> Gestión
   </a>
-  <ul class="dropdown-menu dropdown-menu-end">
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'talleres:lista_periodos' %}"><i class="bi bi-calendar2-week-fill me-2"></i>Gestión</a></li>
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'historia:panel_historia_profesor' %}"><i class="bi bi-map-fill me-2"></i>Modo Historia</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:gestionar_categorias' %}"><i class="bi bi-book-fill me-2"></i>Categorías</a></li>
-    <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:museo_virtual' %}"><i class="bi bi-palette-fill me-2"></i>Museo Virtual</a></li>
-  </ul>
+</li>
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'historia:panel_historia_profesor' %}"
+     style="background:#f0eeff;color:#6C63FF;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(108,99,255,0.25)';this.style.background='#ddd8ff'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0eeff'">
+    <i class="bi bi-map-fill me-1"></i> Historia
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:gestionar_categorias' %}"
+     style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,107,107,0.25)';this.style.background='#ffd9d9'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff0f0'">
+    <i class="bi bi-book-fill me-1"></i> Categorías
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'games:museo_virtual' %}"
+     style="background:#f0fffe;color:#4ECDC4;transition:all 0.3s"
+     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(78,205,196,0.25)';this.style.background='#d9f7f5'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0fffe'">
+    <i class="bi bi-palette-fill me-1"></i> Museo
+  </a>
 </li>
 {% endif %}
 <li class="nav-item">
@@ -178,7 +195,7 @@
   {% endif %}{# /embedded nav #}
 
   <!-- Milo Floating Character -->
-  {% if not embedded %}
+  {% if not embedded and not request.resolver_match.app_name == 'asistente' and not request.resolver_match.url_name == 'habitacion_milo' %}
   <div class="milo-float" id="miloFloat">
     <div class="milo-bubble" id="miloBubble">
       <div class="milo-speech" id="miloSpeech"></div>
@@ -308,28 +325,43 @@
 
     const PAGE_MSGS = {
       profesor: {
-        dashboard:    { msg: '¡Hola profe! 👋 ¿Planeas una clase hoy? Te cuento un secreto: el Asistente IA puede prepararte toda la lección.', img: IMG.susurrando },
-        talleres:     { msg: '📋 Aquí diseñas talleres con preguntas y minijuegos. ¡Piensa en qué aprenderán tus estudiantes hoy!', img: IMG.pensando },
-        juegos:       { msg: '🔍 Explora los minijuegos disponibles y asígnalos a los períodos de tu salón.', img: IMG.buscando },
-        historia:     { msg: '🗺️ ¡El Modo Historia es increíble! Desbloquea secciones para que tus estudiantes avancen con Milo.', img: IMG.asombrado },
-        contenido:    { msg: '📚 Aquí encuentras todo el vocabulario disponible. ¡Úsalo como base para tus talleres!', img: IMG.curioso },
-        habitacion:   { msg: '🏠 Esta es la habitación virtual de tus estudiantes. ¡Ellos la decoran con Huesos ganados jugando!', img: IMG.orgulloso },
-        login:        { msg: '¡Hola profe! 👋 Inicia sesión para gestionar tus clases, períodos y estudiantes.', img: IMG.saludando },
-        registro:     { msg: '¡Bienvenido a NestGrow! 🎓 Regístrate y empieza a crear talleres para tus estudiantes.', img: IMG.saludando },
-        default:      { msg: '¡Estoy aquí para ayudarte, profe! 🤖 Usa el Asistente IA para planear tus clases.', img: IMG.idle },
+        dashboard:      { msg: '¡Hola profe! 👋 ¿Planeas una clase hoy? Te cuento un secreto: el Asistente IA puede prepararte toda la lección.', img: IMG.susurrando },
+        talleres:       { msg: '📋 Aquí diseñas talleres con preguntas y minijuegos. ¡Piensa en qué aprenderán tus estudiantes hoy!', img: IMG.pensando },
+        periodos:       { msg: '📅 Gestiona los períodos de tu salón. Asigna talleres y minijuegos con fecha límite para mantener a tus estudiantes activos.', img: IMG.pensando },
+        resultados:     { msg: '📊 Aquí ves el desempeño de tus estudiantes. Revisa notas, minijuegos completados y estrellas de historia.', img: IMG.buscando },
+        juegos:         { msg: '🔍 Explora los minijuegos disponibles y asígnalos a los períodos de tu salón.', img: IMG.buscando },
+        minijuego:      { msg: '🎮 Estás viendo un minijuego como lo verían tus estudiantes. ¡Pruébalo antes de asignarlo!', img: IMG.curioso },
+        historia:       { msg: '🗺️ ¡El Modo Historia es increíble! Desbloquea secciones para que tus estudiantes avancen con Milo.', img: IMG.asombrado },
+        leccion:        { msg: '📖 Estás revisando una lección. Así la ven tus estudiantes cuando avanzan en la historia.', img: IMG.leyendo },
+        contenido:      { msg: '📚 Aquí encuentras todo el vocabulario disponible. ¡Úsalo como base para tus talleres!', img: IMG.curioso },
+        mi_vocabulario: { msg: '📚 Aquí encuentras todo el vocabulario disponible. ¡Úsalo como base para tus talleres!', img: IMG.curioso },
+        habitacion:     { msg: '🏠 Esta es la habitación virtual de tus estudiantes. ¡Ellos la decoran con Huesos ganados jugando!', img: IMG.orgulloso },
+        museo:          { msg: '🎨 Este es el museo donde los estudiantes exhiben sus obras de Milo Pintor. ¡Cada cuadro representa su esfuerzo!', img: IMG.asombrado },
+        logros:         { msg: '🏅 Aquí se muestran todos los logros desbloqueables. ¡Son un gran motivador para los estudiantes!', img: IMG.orgulloso },
+        perfil:         { msg: '👤 Esta es la página de perfil. Aquí puedes actualizar tu información y foto de avatar.', img: IMG.idle },
+        salones:        { msg: '🏫 Gestiona tus salones aquí. Agrega estudiantes con código o revisa quiénes están inscritos.', img: IMG.pensando },
+        login:          { msg: '¡Hola profe! 👋 Inicia sesión para gestionar tus clases, períodos y estudiantes.', img: IMG.saludando },
+        registro:       { msg: '¡Bienvenido a NestGrow! 🎓 Regístrate y empieza a crear talleres para tus estudiantes.', img: IMG.saludando },
+        default:        { msg: '¡Estoy aquí para ayudarte, profe! 🤖 Usa el Asistente IA para planear tus clases.', img: IMG.idle },
       },
       estudiante: {
-        dashboard:    { msg: '¡Bienvenido de vuelta! 🎉 ¿Listo para aprender inglés hoy con Milo?', img: IMG.saludando },
-        mis_talleres: { msg: '📋 Aquí están tus actividades del período. ¡Completa todas para ganar puntos y subir de nivel!', img: IMG.preocupado },
-        juegos:       { msg: '🔍 ¡Explora los minijuegos y elige el que más te guste para aprender inglés!', img: IMG.buscando },
-        historia:     { msg: '🗺️ ¡Increíble! ¡Avanza en la historia con Milo y desbloquea nuevas aventuras!', img: IMG.asombrado },
-        contenido:    { msg: '📚 ¡Qué curioso! ¿Sabes todas estas palabras en inglés? Cada categoría tiene imágenes y audio.', img: IMG.curioso },
-        habitacion:   { msg: '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!', img: IMG.orgulloso },
-        tienda:       { msg: '🛍️ ¡Mira todo lo que puedes conseguir! Gasta tus Huesos y desbloquea nuevos juegos.', img: IMG.celebrando },
-        ranking:      { msg: '🏆 ¡Tú puedes llegar al primer lugar! Juega más para ganar puntos y escalar en el ranking.', img: IMG.pulgar },
-        login:        { msg: '¡Hola! 👋 Inicia sesión para continuar tu aventura en NestGrow.', img: IMG.saludando },
-        registro:     { msg: '¡Hola! 🐾 Soy Milo. Regístrate y únete a tu salón para empezar a aprender inglés.', img: IMG.timido },
-        default:      { msg: '¡Hola! Soy Milo 🐾 ¡Estoy aquí para ayudarte a aprender inglés!', img: IMG.idle },
+        dashboard:      { msg: '¡Bienvenido de vuelta! 🎉 ¿Listo para aprender inglés hoy con Milo?', img: IMG.saludando },
+        mis_talleres:   { msg: '📋 Aquí están tus actividades del período. ¡Completa todas para ganar puntos y subir de nivel!', img: IMG.preocupado },
+        juegos:         { msg: '🔍 ¡Explora los minijuegos y elige el que más te guste para aprender inglés!', img: IMG.buscando },
+        minijuego:      { msg: '🎮 ¡Concéntrate! Cada respuesta correcta te da puntos y huesos para la tienda. ¡Tú puedes!', img: IMG.emociontotal },
+        historia:       { msg: '🗺️ ¡Increíble! ¡Avanza en la historia con Milo y desbloquea nuevas aventuras!', img: IMG.asombrado },
+        leccion:        { msg: '📖 ¡Atención! Lee bien cada actividad. Completar la lección con 3 estrellas te da recompensas especiales.', img: IMG.leyendo },
+        contenido:      { msg: '📚 ¡Qué curioso! ¿Sabes todas estas palabras en inglés? Cada categoría tiene imágenes y audio.', img: IMG.curioso },
+        mi_vocabulario: { msg: '⭐ ¡Tu vocabulario crece con cada actividad! Completa talleres y minijuegos para desbloquear más palabras.', img: IMG.celebrando },
+        habitacion:     { msg: '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!', img: IMG.orgulloso },
+        museo:          { msg: '🎨 ¡Este es tu museo personal! Aquí viven todas las obras que pintaste con Milo Pintor.', img: IMG.asombrado },
+        logros:         { msg: '🏅 ¡Mira todos los logros que puedes desbloquear! Cada uno tiene un reto diferente. ¿Cuántos tienes?', img: IMG.orgulloso },
+        tienda:         { msg: '🛍️ ¡Mira todo lo que puedes conseguir! Gasta tus Huesos y desbloquea nuevos juegos.', img: IMG.celebrando },
+        ranking:        { msg: '🏆 ¡Tú puedes llegar al primer lugar! Juega más para ganar puntos y escalar en el ranking.', img: IMG.pulgar },
+        perfil:         { msg: '👤 Aquí puedes cambiar tu avatar y ver tus estadísticas. ¡Personaliza tu perfil de Milo!', img: IMG.idle },
+        login:          { msg: '¡Hola! 👋 Inicia sesión para continuar tu aventura en NestGrow.', img: IMG.saludando },
+        registro:       { msg: '¡Hola! 🐾 Soy Milo. Regístrate y únete a tu salón para empezar a aprender inglés.', img: IMG.timido },
+        default:        { msg: '¡Hola! Soy Milo 🐾 ¡Estoy aquí para ayudarte a aprender inglés!', img: IMG.idle },
       },
       none: {
         login:    { msg: '¡Hola! 👋 Soy Milo, tu guía en NestGrow. Inicia sesión para continuar tu aventura.', img: IMG.saludando },
@@ -341,17 +373,31 @@
 
     function getPageCtx() {
       const p = window.location.pathname;
-      if (p.startsWith('/juegos/habitacion')) return 'habitacion';
-      if (p.startsWith('/juegos/tienda'))     return 'tienda';
-      if (p.startsWith('/juegos/ranking'))    return 'ranking';
-      if (p.startsWith('/juegos'))            return 'juegos';
-      if (p.startsWith('/talleres/mis'))      return 'mis_talleres';
-      if (p.startsWith('/talleres'))          return 'talleres';
-      if (p.startsWith('/historia'))          return 'historia';
-      if (p.startsWith('/contenido'))         return 'contenido';
-      if (p.startsWith('/accounts/login'))    return 'login';
-      if (p.startsWith('/accounts/registro')) return 'registro';
-      if (p.startsWith('/accounts') || p === '/') return 'dashboard';
+      // Juegos — orden de más específico a menos
+      if (p.startsWith('/juegos/habitacion'))          return 'habitacion';
+      if (p.startsWith('/juegos/tienda'))               return 'tienda';
+      if (p.startsWith('/juegos/ranking'))              return 'ranking';
+      if (p.startsWith('/juegos/logros'))               return 'logros';
+      if (p.startsWith('/juegos/museo'))                return 'museo';
+      if (/^\/juegos\/\d+\//.test(p) || /^\/juegos\/\d+$/.test(p)) return 'minijuego';
+      if (p.startsWith('/juegos'))                      return 'juegos';
+      // Talleres
+      if (p.startsWith('/talleres/mis'))                return 'mis_talleres';
+      if (p.match(/\/talleres\/periodos\/\d+\/resultados/)) return 'resultados';
+      if (p.startsWith('/talleres/periodos'))           return 'periodos';
+      if (p.startsWith('/talleres'))                    return 'talleres';
+      // Historia
+      if (p.match(/\/historia\/leccion\//))             return 'leccion';
+      if (p.startsWith('/historia'))                    return 'historia';
+      // Contenido
+      if (p.startsWith('/contenido/mi-vocabulario'))    return 'mi_vocabulario';
+      if (p.startsWith('/contenido'))                   return 'contenido';
+      // Accounts
+      if (p.startsWith('/accounts/login'))              return 'login';
+      if (p.startsWith('/accounts/registro'))           return 'registro';
+      if (p.startsWith('/accounts/perfil'))             return 'perfil';
+      if (p.startsWith('/accounts/salones'))            return 'salones';
+      if (p.startsWith('/accounts') || p === '/')       return 'dashboard';
       return 'default';
     }
 

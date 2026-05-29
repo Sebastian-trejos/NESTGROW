@@ -104,8 +104,6 @@
   .game-card.audio  { border-color: #9c94ff; }
   .game-card.mem    { border-color: #a78bfa; }
   .game-card.hang   { border-color: #FF6B6B; }
-  .game-card.quiz   { border-color: #4ECDC4; }
-  .game-card.order  { border-color: #FFB347; }
   .game-card.glob   { border-color: #4ECDC4; }
 
   /* ── Banner ── */
@@ -128,8 +126,6 @@
   .gb-audio  { background: linear-gradient(145deg, #5a52d5, #7c6fff, #4ECDC4); }
   .gb-mem    { background: linear-gradient(145deg, #8c7be8, #a78bfa, #FF6B6B); }
   .gb-hang   { background: linear-gradient(145deg, #e85555, #FF6B6B, #FFB347); }
-  .gb-quiz   { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #a78bfa); }
-  .gb-order  { background: linear-gradient(145deg, #e6982a, #FFB347, #6C63FF); }
   .gb-glob   { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #FF6B6B); }
 
   /* Brillo dinámico que cruza el banner */
@@ -302,8 +298,6 @@
         {% elif game.game_type == 'audio_matching' %}audio
         {% elif game.game_type == 'memoria' %}mem
         {% elif game.game_type == 'ahorcado' %}hang
-        {% elif game.game_type == 'quiz' %}quiz
-        {% elif game.game_type == 'ordenar_letras' %}order
         {% elif game.game_type == 'globos' %}glob
         {% else %}drag{% endif %}">
 
@@ -316,8 +310,6 @@
           {% elif game.game_type == 'audio_matching' %}gb-audio
           {% elif game.game_type == 'memoria' %}gb-mem
           {% elif game.game_type == 'ahorcado' %}gb-hang
-          {% elif game.game_type == 'quiz' %}gb-quiz
-          {% elif game.game_type == 'ordenar_letras' %}gb-order
           {% elif game.game_type == 'globos' %}gb-glob
           {% else %}gb-drag{% endif %}">
 
@@ -330,8 +322,6 @@
             {% elif game.game_type == 'audio_matching' %}bi-headphones
             {% elif game.game_type == 'memoria' %}bi-grid-3x3-gap-fill
             {% elif game.game_type == 'ahorcado' %}bi-alphabet
-            {% elif game.game_type == 'quiz' %}bi-patch-question-fill
-            {% elif game.game_type == 'ordenar_letras' %}bi-sort-alpha-down
             {% elif game.game_type == 'globos' %}bi-balloon-fill
             {% else %}bi-controller{% endif %}"></i>
 
@@ -344,8 +334,6 @@
             {% elif game.game_type == 'audio_matching' %}Audio
             {% elif game.game_type == 'memoria' %}Memoria
             {% elif game.game_type == 'ahorcado' %}Ahorcado
-            {% elif game.game_type == 'quiz' %}Quiz
-            {% elif game.game_type == 'ordenar_letras' %}Ordenar letras
             {% elif game.game_type == 'globos' %}Globos
             {% else %}Minijuego{% endif %}
           </span>

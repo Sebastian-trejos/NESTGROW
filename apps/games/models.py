@@ -58,8 +58,6 @@ class Game(TimeStampedModel, ActiveModel):
         ('painting', '🎨 Juego de Pintar'),
         ('memoria', '🃏 Memoria'),
         ('ahorcado', '🦴 Ahorcado de Milo'),
-        ('quiz', '❓ Quiz Rápido'),
-        ('ordenar_letras', '🔤 Ordenar Letras'),
         ('globos', '🎈 Globos'),
         ('comparacion', '🖼️ Comparación'),
     ]
@@ -83,8 +81,6 @@ class Game(TimeStampedModel, ActiveModel):
         'painting':         0,
         'memoria':         90,
         'ahorcado':         0,
-        'quiz':            60,
-        'ordenar_letras':  60,
         'globos':          60,
         'comparacion':     90,
     }

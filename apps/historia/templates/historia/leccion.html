@@ -709,7 +709,25 @@ let _activeMinijuegoDatos = null;
 
 function pickVariante(d) {
   if (!d.variantes || !d.variantes.length) return d;
-  const v = d.variantes[Math.floor(Math.random() * d.variantes.length)];
+  const n = d.variantes.length;
+
+  // Tracking con localStorage: evita mostrar la misma variante dos veces seguidas.
+  // Clave por lección: 'hist_v_<pk>'
+  const storKey = 'hist_v_' + LECCION_PK;
+  const lastIdx = parseInt(localStorage.getItem(storKey) ?? '-1');
+
+  let idx;
+  if (n === 1) {
+    idx = 0;
+  } else {
+    // Intentar hasta obtener un índice distinto al último mostrado
+    do {
+      idx = Math.floor(Math.random() * n);
+    } while (idx === lastIdx);
+  }
+
+  try { localStorage.setItem(storKey, String(idx)); } catch (_) { /* modo privado */ }
+  const v = d.variantes[idx];
   return Object.assign({}, d, v);
 }
 
@@ -796,7 +814,9 @@ function memoClick(card) {
 let vfState = { preguntas:[], idx:0, respondidas:0 };
 
 function renderVerdaderoFalso(d) {
-  vfState = { preguntas: d.preguntas||[], idx:0, respondidas:0 };
+  // Barajar el orden de las preguntas en cada intento para reducir repetitividad
+  const preguntas = [...(d.preguntas||[])].sort(() => Math.random() - .5);
+  vfState = { preguntas, idx:0, respondidas:0 };
   return `
     <p class="act-title">🤔 ${d.titulo||'¿Verdadero o Falso?'}</p>
     <p class="act-instruccion">${d.instruccion||'Lee cada frase y elige si es verdadera o falsa.'}</p>
@@ -850,7 +870,8 @@ function vfResponder(respuesta) {
 
 // ── Rellenar el espacio ───────────────────────────────────────────────────────
 function renderRellenar(d) {
-  const oraciones = d.oraciones || [];
+  // Barajar el orden de las oraciones en cada intento para reducir repetitividad
+  const oraciones = [...(d.oraciones || [])].sort(() => Math.random() - .5);
   const filas = oraciones.map((o, i) => {
     const partes = o.texto.split('___');
     let contenido = '';

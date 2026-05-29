@@ -1,5 +1,5 @@
 import random
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Category, VocabularyItem, VocabularioDesbloqueado
 from .utils import desbloquear_palabras_iniciales, get_proximo_hito
@@ -7,6 +7,9 @@ from .utils import desbloquear_palabras_iniciales, get_proximo_hito
 
 @login_required
 def category_list(request):
+    # Los estudiantes van directamente a su vocabulario progresivo
+    if request.user.role == 'estudiante':
+        return redirect('content:mi_vocabulario')
     categories = Category.active.exclude(name='Pintura Libre')
     return render(request, 'content/category_list.html', {'categories': categories})
 
