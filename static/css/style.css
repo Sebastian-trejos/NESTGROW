@@ -83,7 +83,7 @@ body.nestgrow-body {
 /* --- Milo Floating Mascot --- */
 .milo-float {
   position: fixed;
-  bottom: -120px;
+  bottom: -320px;        /* empieza completamente oculto bajo el borde */
   right: 20px;
   z-index: 9999;
   cursor: pointer;
@@ -92,24 +92,25 @@ body.nestgrow-body {
   align-items: flex-end;
   gap: 8px;
   user-select: none;
-  transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Cintura para arriba: ~120px de la imagen quedan bajo el borde */
 .milo-float.visible {
-  bottom: 20px;
+  bottom: -120px;
 }
 
 .milo-avatar {
-  width: 100px;
+  width: 240px;
   transition: transform 0.2s ease;
   animation: miloFloat 3s ease-in-out infinite;
-  filter: drop-shadow(0 -4px 18px rgba(108,99,255,0.45));
+  filter: drop-shadow(0 -8px 28px rgba(108,99,255,0.50));
 }
 
-.milo-avatar:hover { transform: scale(1.1); }
+.milo-avatar:hover { transform: scale(1.06); }
 
 #miloImgFloat {
-  width: 100px;
+  width: 240px;
   transition: opacity 0.18s ease;
   display: block;
 }
@@ -863,10 +864,10 @@ body.nestgrow-body {
 /* Responsive */
 @media (max-width: 768px) {
   .auth-card { padding: 30px 24px; }
-  .milo-float { bottom: -120px; right: 10px; }
-  .milo-float.visible { bottom: 12px; }
-  .milo-avatar { width: 80px; }
-  #miloImgFloat { width: 80px; }
+  .milo-float { bottom: -220px; right: 8px; }
+  .milo-float.visible { bottom: -80px; }
+  .milo-avatar { width: 160px; }
+  #miloImgFloat { width: 160px; }
   .ws-cell { width: 28px; height: 28px; font-size: 0.85rem; }
 }
 
