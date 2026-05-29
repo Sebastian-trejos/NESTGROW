@@ -23,6 +23,7 @@ def vocabulary_payload_for_game(game, vocabulary):
             'word_es': v.word_es,
             'image': v.image.url if v.image else None,
             'audio': v.audio.url if v.audio else None,
+            'emoji': v.emoji or '',
             'orden': getattr(v, 'orden', 0),
             'item_difficulty': v.difficulty,
         }
