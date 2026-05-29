@@ -148,6 +148,7 @@ const GAME_ID = {{ game.id }};
 const TIME_LIMIT = {{ game.time_limit }};
 const POINTS_REWARD = {{ game.points_reward }};
 const PENALTY_AMOUNT = {{ game.penalty_amount }};
-initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, {{ game.difficulty }}, PENALTY_AMOUNT);
+const CUSTOM_WORDS = {{ word_search_words_json|safe }};
+initWordSearch(VOCABULARY, GAME_ID, TIME_LIMIT, POINTS_REWARD, {{ game.difficulty }}, PENALTY_AMOUNT, CUSTOM_WORDS);
 </script>
 {% endblock %}

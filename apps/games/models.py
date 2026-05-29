@@ -270,6 +270,21 @@ class PaintingWord(TimeStampedModel):
         return f"{self.game.title}: {self.word}"
 
 
+class MemoriaCard(TimeStampedModel):
+    """Par de tarjetas personalizadas que el profesor define para el memorama."""
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='memoria_cards')
+    label_es = models.CharField(max_length=100, help_text='Texto en español de la tarjeta')
+    label_en = models.CharField(max_length=100, blank=True, help_text='Texto en inglés (opcional)')
+    image = models.ImageField(upload_to='games/memoria/', null=True, blank=True, help_text='Imagen de la tarjeta (opcional)')
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f"{self.game.title}: {self.label_es}"
+
+
 class PuzzleImage(TimeStampedModel):
     """Imagen que el profesor define para un juego de rompecabezas jigsaw."""
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='puzzle_images')
@@ -348,3 +363,16 @@ class InventarioEstudiante(TimeStampedModel):
 
     def __str__(self):
         return f"{self.user.username} → {self.item.nombre}"
+class WordSearchWord(models.Model):
+    word = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.word
+
+
+class MemoriaCard(models.Model):
+    palabra = models.CharField(max_length=100)
+    imagen = models.ImageField(upload_to='memoria_cards/')
+
+    def __str__(self):
+        return self.palabra

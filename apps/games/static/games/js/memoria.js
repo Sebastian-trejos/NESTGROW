@@ -321,6 +321,7 @@
   function initMemoria(opts) {
     const {
       VOCABULARY,
+      CUSTOM_CARDS = [],
       DIFFICULTY,
       GAME_ID,
       POINTS_REWARD,
@@ -354,9 +355,13 @@
     let activeWords = [];
 
     const pairGoal = PAIRS_BY_DIFF[DIFFICULTY] || 6;
-    const shuffleEveryMs = 15000; // modo fácil
+    const shuffleEveryMs = DIFFICULTY === 1 ? 18000 : 15000;
     const usePhaseOrder = false; // mecánica de subcategorías eliminada
     const useBlackout = DIFFICULTY === 3;
+    // Dificultad: Fácil=asociación básica, Medio=atención+discriminación, Difícil=velocidad+precisión
+    const FLIP_TIMEOUT_MS = DIFFICULTY === 1 ? 1200 : DIFFICULTY === 2 ? 800 : 550;
+    const PENALTY_STREAK  = DIFFICULTY === 1 ? 4 : DIFFICULTY === 2 ? 3 : 2;
+    const HINT_PREVIEW_MS = DIFFICULTY === 1 ? 1800 : 0; // Fácil: las cartas se muestran brevemente al inicio
 
     const bannerEl = document.getElementById('memBannerText');
     const phaseEl = document.getElementById('memPhaseHint');
@@ -410,6 +415,11 @@
     function buildCard(word, pairIndex, type) {
       const emoji = emojiForWord(word.word_en, word.word_es, CATEGORY_ICON);
       const text = type === 'en' ? word.word_en : word.word_es;
+      const hasCustomImg = word.image && word.image.length > 0;
+      // En modo "imagen" mostramos la imagen; en modo "texto" mostramos el texto
+      const revealContent = hasCustomImg && type === 'en'
+        ? `<img src="${word.image}" alt="${text}" style="max-width:80px;max-height:64px;border-radius:8px;object-fit:cover">`
+        : `<span class="memory-emoji">${emoji}</span><span class="memory-lang">${text}</span>`;
       const wrap = document.createElement('div');
       wrap.className = 'memory-slot';
       wrap.innerHTML =
@@ -421,8 +431,7 @@
         `<img class="memory-milo-thumb" src="${MILO_CARD_BACK_URL}" alt="" width="64" height="64" draggable="false">` +
         '</div>' +
         `<div class="memory-face memory-reveal">` +
-        `<span class="memory-emoji">${emoji}</span>` +
-        `<span class="memory-lang">${text}</span>` +
+        revealContent +
         '</div></div></div>';
       wrap.querySelector('.memory-card').addEventListener('click', () => {
         flipCard(wrap.querySelector('.memory-card'));
@@ -511,9 +520,21 @@
     }
 
     function init() {
-      const pool = shuffle(VOCABULARY.filter((v) => v.word_en && v.word_es));
+      // Usar tarjetas personalizadas del profesor si existen, sino vocabulario de categoría
+      let pool;
+      if (CUSTOM_CARDS && CUSTOM_CARDS.length > 0) {
+        pool = shuffle(CUSTOM_CARDS.map((c, idx) => ({
+          id: c.id || idx,
+          word_en: c.label_en || c.label_es,
+          word_es: c.label_es,
+          image: c.image || '',
+          orden: idx,
+        })));
+      } else {
+        pool = shuffle(VOCABULARY.filter((v) => v.word_en && v.word_es));
+      }
       if (pool.length < pairGoal) {
-        showToast('¡Necesitamos más palabras en esta categoría!');
+        showToast('¡Necesitamos más tarjetas para este nivel!');
       }
       activeWords = pool.slice(0, Math.min(pairGoal, pool.length));
       const totalPairs = activeWords.length;
@@ -553,7 +574,25 @@
       // Programar revueltas según dificultad
       if (DIFFICULTY === 1) {
         scheduleShuffle();
+        // Fácil: mostrar brevemente todas las cartas al inicio para memorización
+        if (HINT_PREVIEW_MS > 0) {
+          canFlip = false;
+          grid.querySelectorAll('.memory-card').forEach(card => {
+            const inner = card.querySelector('.memory-inner');
+            if (inner) inner.classList.add('flipped');
+          });
+          setTimeout(() => {
+            grid.querySelectorAll('.memory-card').forEach(card => {
+              const inner = card.querySelector('.memory-inner');
+              if (inner) inner.classList.remove('flipped');
+            });
+            canFlip = true;
+          }, HINT_PREVIEW_MS);
+        }
+      } else if (DIFFICULTY === 2) {
+        scheduleRandomShuffle();
       } else {
+        // Difícil: shuffle más frecuente
         scheduleRandomShuffle();
       }
 
@@ -573,7 +612,7 @@
      */
     function handleWrongPair() {
       wrongStreak++;
-      if (wrongStreak >= 3) {
+      if (wrongStreak >= PENALTY_STREAK) {
         wrongStreak = 0;
         score = Math.max(0, score - PENALTY_AMOUNT);
         const sd = document.getElementById('scoreDisplay');
@@ -649,7 +688,7 @@
             });
             flipped = [];
             canFlip = true;
-          }, 950);
+          }, FLIP_TIMEOUT_MS);
         }
       }
     }
