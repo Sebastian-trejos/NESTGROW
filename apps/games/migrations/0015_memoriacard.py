@@ -5,7 +5,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('games', '0013_wordsearchword'),
+        ('games', '0014_wordsearchword'),
     ]
 
     operations = [

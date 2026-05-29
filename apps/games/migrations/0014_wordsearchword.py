@@ -5,7 +5,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('games', '0012_add_comparacion_game_type'),
+        ('games', '0013_add_pos_escala_inventario'),
     ]
 
     operations = [
