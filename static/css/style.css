@@ -95,9 +95,9 @@ body.nestgrow-body {
   transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Cintura para arriba: ~120px de la imagen quedan bajo el borde */
+/* Sin pies: ~70px de la imagen quedan bajo el borde */
 .milo-float.visible {
-  bottom: -120px;
+  bottom: -70px;
 }
 
 .milo-avatar {
@@ -865,7 +865,7 @@ body.nestgrow-body {
 @media (max-width: 768px) {
   .auth-card { padding: 30px 24px; }
   .milo-float { bottom: -220px; right: 8px; }
-  .milo-float.visible { bottom: -80px; }
+  .milo-float.visible { bottom: -45px; }
   .milo-avatar { width: 160px; }
   #miloImgFloat { width: 160px; }
   .ws-cell { width: 28px; height: 28px; font-size: 0.85rem; }
