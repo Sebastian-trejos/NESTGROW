@@ -337,6 +337,10 @@ class InventarioEstudiante(TimeStampedModel):
                               related_name='inventario')
     item = models.ForeignKey(TiendaItem, on_delete=models.CASCADE, related_name='propietarios')
     colocado_en_habitacion = models.BooleanField(default=True)
+    # Posición y tamaño personalizados por estudiante en su habitación
+    pos_x = models.FloatField(default=50.0, help_text='Posición X en % del ancho del cuarto')
+    pos_y = models.FloatField(default=10.0, help_text='Posición Y en px sobre el piso')
+    escala = models.FloatField(default=1.0, help_text='Escala del objeto (1.0 = normal)')
 
     class Meta:
         unique_together = ('user', 'item')

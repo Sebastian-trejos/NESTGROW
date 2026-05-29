@@ -1,68 +1,346 @@
 {% extends 'base.html' %}
-{% block title %}{{ category.name_en }} - Vocabulario NestGrow{% endblock %}
+{% load static %}
+{% block title %}{{ category.name_en }} — Vocabulario NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ══ Hero ══ */
+.vocab-hero {
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 55%, #4ECDC4 100%);
+  border-radius: 28px;
+  padding: 2rem 2.5rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 12px 40px rgba(108,99,255,0.35);
+}
+.vocab-hero::before {
+  content: '';
+  position: absolute;
+  width: 240px; height: 240px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  top: -90px; right: -60px;
+}
+.vocab-hero::after {
+  content: '';
+  position: absolute;
+  width: 130px; height: 130px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  bottom: -45px; left: 8%;
+}
+.vocab-hero-emoji {
+  font-size: 3.2rem;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.25));
+  animation: floatEmoji 3.5s ease-in-out infinite;
+}
+@keyframes floatEmoji {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-10px) scale(1.08); }
+}
+.vocab-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.92rem;
+  border: 1.5px solid rgba(255,255,255,0.3);
+}
+.vocab-hint-bar {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 10px 18px;
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+
+/* ══ Flip Card ══ */
+.flip-wrap {
+  perspective: 1000px;
+  height: 240px;
+  cursor: pointer;
+  animation: cardIn 0.45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.flip-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+  border-radius: 22px;
+}
+.flip-wrap:hover .flip-inner,
+.flip-wrap.flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+.flip-front, .flip-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px;
+}
+.flip-front {
+  background: white;
+  border: 3px solid #e8e4ff;
+  box-shadow: 0 8px 28px rgba(108,99,255,0.13);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.flip-front:hover {
+  border-color: var(--primary);
+  box-shadow: 0 12px 36px rgba(108,99,255,0.22);
+}
+.flip-back {
+  background: linear-gradient(145deg, #6C63FF 0%, #9c94ff 60%, #4ECDC4 100%);
+  color: white;
+  transform: rotateY(180deg);
+  box-shadow: 0 8px 28px rgba(108,99,255,0.25);
+}
+
+.flip-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.flip-placeholder {
+  height: 100px;
+  width: 100%;
+  background: linear-gradient(135deg, #f0eeff, #ffe9f0);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+.flip-word-en {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  color: var(--primary);
+  line-height: 1.2;
+  text-align: center;
+}
+.flip-word-es {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #aaa;
+  margin-top: 2px;
+  text-align: center;
+}
+.flip-tap-hint {
+  position: absolute;
+  bottom: 8px; right: 10px;
+  font-size: 0.65rem;
+  color: #c4b5fd;
+  font-weight: 700;
+}
+
+.flip-back-icon {
+  font-size: 2rem;
+  margin-bottom: 6px;
+  animation: pulseIcon 2s ease-in-out infinite;
+}
+@keyframes pulseIcon {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+.flip-back-en {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.flip-back-es {
+  font-size: 1rem;
+  font-weight: 800;
+  opacity: 0.88;
+  margin-top: 4px;
+}
+.flip-back-hint {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 6px;
+  font-style: italic;
+  line-height: 1.3;
+  text-align: center;
+  padding: 0 8px;
+}
+.flip-back-diff {
+  margin-top: 10px;
+}
+.flip-back-diff span {
+  background: rgba(255,255,255,0.22);
+  border-radius: 50px;
+  padding: 3px 14px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+/* ══ Barra de palabras ══ */
+.vocab-progress-wrap {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 18px rgba(108,99,255,0.1);
+  border: 1.5px solid #e8e4ff;
+}
+.vocab-prog-bar {
+  flex: 1;
+  height: 10px;
+  background: #e8e4ff;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.vocab-prog-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6C63FF, #4ECDC4);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s linear infinite;
+  width: 100%;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ══ Empty state ══ */
+.vocab-empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: white;
+  border-radius: 28px;
+  border: 3px dashed #e8e4ff;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
-  <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'content:category_list' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
-    <div>
-      <h3 class="font-fredoka mb-0" style="color:var(--primary)">{{ category.icon }} {{ category.name_en }}</h3>
-      <div class="text-muted fw-bold small">{{ category.name }}</div>
+
+  <!-- Hero -->
+  <div class="vocab-hero mb-4">
+    <a href="{% url 'content:category_list' %}"
+       class="btn rounded-pill fw-bold mb-3"
+       style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.35);font-size:0.88rem;padding:5px 16px">
+      <i class="bi bi-caret-left-fill"></i> Volver
+    </a>
+    <div class="d-flex align-items-center gap-4 flex-wrap position-relative" style="z-index:1">
+      <div class="vocab-hero-emoji">{{ category.icon }}</div>
+      <div class="flex-grow-1">
+        <h2 class="font-fredoka mb-1" style="font-size:2.2rem;line-height:1">{{ category.name_en }}</h2>
+        <p class="mb-2 fw-bold" style="opacity:.85;font-size:.95rem">{{ category.name_es }}</p>
+        <div class="d-flex gap-2 flex-wrap">
+          <span class="vocab-stat-pill">📚 {{ vocabulary|length }} palabra{{ vocabulary|length|pluralize:"s" }}</span>
+          <span class="vocab-stat-pill">🔊 Haz clic para escuchar</span>
+        </div>
+      </div>
+    </div>
+    <div class="vocab-hint-bar mt-3">
+      <span>🖱️</span>
+      <span>Pasa el mouse por cada tarjeta para ver la traducción. ¡Haz clic para escuchar la pronunciación!</span>
     </div>
   </div>
 
-  <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
-    <div class="milo-banner-text">
-      🎵 Click on any word card to hear how it's pronounced! / ¡Haz clic en la tarjeta para escuchar la pronunciación!
+  {% if vocabulary %}
+  <div class="vocab-progress-wrap mb-4">
+    <span class="fw-bold font-fredoka" style="color:var(--primary);white-space:nowrap">
+      {{ category.icon }} {{ vocabulary|length }} palabras
+    </span>
+    <div class="vocab-prog-bar">
+      <div class="vocab-prog-fill"></div>
     </div>
+    <span class="fw-bold" style="color:#4ECDC4;font-family:'Fredoka One',cursive;white-space:nowrap">¡Explóralas todas! 🌟</span>
   </div>
 
   <div class="row g-3">
     {% for item in vocabulary %}
     <div class="col-6 col-md-4 col-lg-3">
-      <div class="vocab-card h-100" onclick="speakAndPlay('{{ item.word_en }}', '{% if item.audio %}{{ item.audio.url }}{% endif %}')">
-        {% if item.image %}
-          <img src="{{ item.image.url }}" alt="{{ item.word_en }}" class="vocab-img" style="width:100%;height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px">
-        {% elif item.emoji %}
-          <div style="height:80px;background:linear-gradient(135deg,#f0eeff,#ffe9e9);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:10px;line-height:1">
-            {{ item.emoji }}
+      <div class="flip-wrap" onclick="speakAndPlay('{{ item.word_en }}', '{% if item.audio %}{{ item.audio.url }}{% endif %}')">
+        <div class="flip-inner">
+
+          <!-- FRENTE -->
+          <div class="flip-front">
+            {% if item.image %}
+              <img src="{{ item.image.url }}" alt="{{ item.word_en }}" class="flip-img">
+            {% else %}
+              <div class="flip-placeholder">{{ category.icon }}</div>
+            {% endif %}
+            <div class="flip-word-en">{{ item.word_en }}</div>
+            <div class="flip-word-es">{{ item.word_es }}</div>
+            <span class="flip-tap-hint">🔊 clic</span>
           </div>
-        {% else %}
-          <div style="height:80px;background:linear-gradient(135deg,#f0eeff,#ffe9e9);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:10px">
-            {{ category.icon }}
+
+          <!-- REVERSO -->
+          <div class="flip-back">
+            <div class="flip-back-icon">🔊</div>
+            <div class="flip-back-en">{{ item.word_en }}</div>
+            <div class="flip-back-es">{{ item.word_es }}</div>
+            {% if item.hint %}
+            <div class="flip-back-hint">💡 {{ item.hint }}</div>
+            {% endif %}
+            <div class="flip-back-diff">
+              <span>{% if item.difficulty == 1 %}⭐ Fácil{% elif item.difficulty == 2 %}⭐⭐ Medio{% else %}⭐⭐⭐ Difícil{% endif %}</span>
+            </div>
           </div>
-        {% endif %}
-        <div class="vocab-word-en fs-5">{{ item.word_en }}</div>
-        <div class="vocab-word-es">{{ item.word_es }}</div>
-        {% if item.hint %}
-          <div class="text-muted mt-1" style="font-size:0.75rem;font-style:italic">💡 <em>{{ item.hint }}</em></div>
-        {% endif %}
-        <div class="mt-2">
-          <span class="badge badge-difficulty-{{ item.difficulty }} rounded-pill" style="font-size:0.7rem">
-            {% if item.difficulty == 1 %}⭐ Fácil{% elif item.difficulty == 2 %}⭐⭐ Medio{% else %}⭐⭐⭐ Difícil{% endif %}
-          </span>
+
         </div>
       </div>
     </div>
-    {% empty %}
-    <div class="col-12 text-center py-5">
-      <div style="font-size:4rem">🐺</div>
-      <p class="fw-bold text-muted">No hay palabras en esta categoría todavía.</p>
-    </div>
     {% endfor %}
   </div>
+
+  {% else %}
+  <div class="vocab-empty">
+    <div style="font-size:5rem">🐺</div>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡No hay palabras aún!</h4>
+    <p class="text-muted fw-bold">Esta categoría no tiene palabras todavía.</p>
+  </div>
+  {% endif %}
+
 </div>
 
 <script>
 function speakAndPlay(word, audioUrl) {
   if (audioUrl) {
-    new Audio(audioUrl).play();
+    new Audio(audioUrl).play().catch(() => {});
   } else if ('speechSynthesis' in window) {
     const u = new SpeechSynthesisUtterance(word);
     u.lang = 'en-US'; u.rate = 0.75;
     window.speechSynthesis.speak(u);
   }
 }
+document.querySelectorAll('.flip-wrap').forEach((el, i) => {
+  el.style.animationDelay = (i * 60) + 'ms';
+});
 </script>
 {% endblock %}

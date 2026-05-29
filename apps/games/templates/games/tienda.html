@@ -5,44 +5,44 @@
 {% block extra_css %}
 <style>
   .shop-header {
-    background: linear-gradient(135deg, #2d1b69 0%, #6C63FF 50%, #4ECDC4 100%);
+    background: linear-gradient(135deg, #2d1b69 0%, #6C63FF 55%, #4ECDC4 100%);
     border-radius: 28px;
-    padding: 2.5rem 2rem;
-    text-align: center;
+    padding: 0 0 0 2.8rem;
     color: white;
     margin-bottom: 32px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(108,99,255,0.4);
+    box-shadow: 0 20px 60px rgba(108,99,255,0.45);
+    min-height: 200px;
+    display: flex;
+    align-items: stretch;
   }
-  /* Círculos decorativos de fondo */
   .shop-header::before {
     content: '';
     position: absolute;
-    width: 280px; height: 280px;
+    width: 340px; height: 340px;
     border-radius: 50%;
     background: rgba(255,255,255,0.07);
-    top: -80px; right: -60px;
+    top: -100px; left: -80px;
     pointer-events: none;
   }
   .shop-header::after {
     content: '';
     position: absolute;
-    width: 180px; height: 180px;
+    width: 200px; height: 200px;
     border-radius: 50%;
     background: rgba(255,255,255,0.05);
-    bottom: -60px; left: 5%;
+    bottom: -70px; left: 35%;
     pointer-events: none;
   }
   .shop-header-deco {
     position: absolute;
-    width: 120px; height: 120px;
+    width: 140px; height: 140px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    bottom: 10px; right: 20%;
+    background: rgba(255,255,255,0.04);
+    top: 10px; left: 40%;
     pointer-events: none;
   }
-  /* Estrellas flotantes */
   @keyframes shopStar {
     0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
     50%      { transform: translateY(-10px) rotate(20deg); opacity: 1; }
@@ -53,11 +53,52 @@
     pointer-events: none;
   }
   @keyframes miloBounce {
-    0%,100% { transform: translateY(0) rotate(-3deg); }
-    50%      { transform: translateY(-12px) rotate(3deg); }
+    0%,100% { transform: translateY(0) rotate(-2deg) scale(1); }
+    50%      { transform: translateY(-14px) rotate(2deg) scale(1.03); }
   }
-  .shop-milo { animation: miloBounce 3s ease-in-out infinite; display: inline-block; }
-  .shop-title { font-family: 'Fredoka One', cursive; font-size: 2.5rem; margin: 0; }
+  .shop-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .shop-header-text {
+    flex: 1;
+    text-align: left;
+    padding: 2.2rem 0;
+  }
+.shop-milo-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+  position: relative; /* ⬅️ IMPORTANTE */
+  right: 100px;        /* ⬅️ mueve hacia la izquierda */
+}
+.shop-milo {
+  animation: miloBounce 3s ease-in-out infinite;
+  display: block;
+  height: 270px;
+  filter: drop-shadow(-11px 0 28px rgba(0,0,0,0.35));
+  transform: translateX(0); /* ⬅️ QUITA el movimiento contrario */
+  transform-origin: bottom center;
+}
+  .shop-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.6rem;
+    margin: 0 0 6px;
+    line-height: 1.05;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.2);
+  }
+  .shop-subtitle {
+    font-weight: 700;
+    font-size: 1.2rem;
+    opacity: 0.92;
+    margin: 0 0 20px;
+    line-height: 1.4;
+  }
   .bones-display {
     background: rgba(255,255,255,0.2);
     border-radius: 50px;
@@ -174,46 +215,45 @@
     <span class="shop-star" style="bottom:18%;left:12%;font-size:1rem;animation-delay:1.2s"><i class="bi bi-star-fill" style="color:rgba(255,255,255,0.35)"></i></span>
     <span class="shop-star" style="bottom:25%;right:5%;font-size:1.3rem;animation-delay:0.3s"><i class="bi bi-sparkle-fill" style="color:rgba(255,255,255,0.4)"></i></span>
 
-    <div style="position:relative;z-index:1">
-      <!-- Milo imagen -->
-      <div class="mb-2">
-        <img src="{% static 'img/milo_orgulloso.png' %}" alt="Milo"
-             class="shop-milo"
-             style="height:100px;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.25))">
+    <div class="shop-header-content">
+      <!-- TEXTO — izquierda -->
+      <div class="shop-header-text">
+        <div class="shop-title"><i class="bi bi-cart4"></i> Milo's store</div>
+        <p class="shop-subtitle">
+          ¡Compra objetos únicos y<br>decora la Habitación de Milo!
+        </p>
+        <!-- Huesos counter -->
+        <div class="bones-display">
+          <span style="font-size:1.6rem">🦴</span>
+          <span id="bonesCounter" style="font-size:2rem">{{ huesos }}</span>
+          <div style="text-align:left">
+            <div style="font-size:0.8rem;opacity:0.75;font-weight:600">Tienes</div>
+            <div style="font-size:0.9rem;opacity:0.9;font-weight:700">Milo's bones</div>
+          </div>
+        </div>
       </div>
 
-      <div class="shop-title">🛒 Tienda de Milo</div>
-      <p style="opacity:0.9;font-weight:700;margin:8px 0 16px;font-size:1.05rem">
-        ¡Compra objetos únicos y decora la Habitación de Milo!
-      </p>
-
-      <!-- Huesos counter mejorado -->
-      <div class="bones-display">
-        <span style="font-size:1.5rem">🦴</span>
-        <span id="bonesCounter" style="font-size:1.8rem">{{ huesos }}</span>
-        <div style="text-align:left">
-          <div style="font-size:0.75rem;opacity:0.75;font-weight:600">Tienes</div>
-          <div style="font-size:0.85rem;opacity:0.9;font-weight:700">Huesos de Milo</div>
-        </div>
+      <!-- MILO — derecha, grande -->
+      <div class="shop-milo-wrap">
+        <img src="{% static 'img/milo_hueso.png' %}" alt="Milo" class="shop-milo">
       </div>
     </div>
   </div>
 
   <!-- Category Filter -->
   <div class="d-flex gap-2 flex-wrap mb-4 category-filter">
-    <button class="btn rounded-pill fw-bold active" onclick="filterCategory('all', this)">Todos</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('mueble', this)">🛋️ Muebles</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('decoracion', this)">🖼️ Decoración</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('electronico', this)">📺 Electrónicos</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('planta', this)">🌿 Naturaleza</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('especial', this)">✨ Especiales</button>
+    <button class="btn rounded-pill fw-bold active" onclick="filterCategory('all', this)">All</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('mueble', this)"><i class="bi bi-house-door-fill"></i> Furniture</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('decoracion', this)"><i class="bi bi-camera-fill"></i> Decoration</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('electronico', this)"><i class="bi bi-tv-fill"></i> Electronics</button>
+    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('planta', this)"><i class="bi bi-bug-fill"></i> Nature</button>
   </div>
 
   <!-- Info banner -->
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl"><img src="{% static 'img/milo_hablando.png' %}" alt="Milo" style="width:50px;height:50px;object-fit:contain"></div>
     <div class="milo-banner-text">
-      ¡Cada objeto que compres aparecerá en mi habitación! Y algunos desbloquean minijuegos especiales 🎮
+      ¡Cada objeto que compres aparecerá en mi habitación! Y algunos desbloquean minijuegos especiales <i class="bi bi-controller"></i>
     </div>
   </div>
 
@@ -226,15 +266,16 @@
 
         <div class="item-icon-bg">
           {% if item.id in inventario_ids %}
-          <span class="owned-badge">✅ Tuyo</span>
+          <span class="owned-badge">✅ Yours</span>
           {% endif %}
 
           {% if item.imagen %}
-            <!-- Item image - replace with your own images -->
             <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
           {% else %}
-            <!-- PLACEHOLDER: Add item image at apps/games/static/games/img/items/{{ item.id }}.png -->
-            <span class="placeholder-icon">{{ item.icono }}</span>
+            <img src="{% get_static_prefix %}img/ob_{{ item.pk }}.png"
+                 alt="{{ item.nombre }}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span class="placeholder-icon" style="display:none">{{ item.icono }}</span>
           {% endif %}
         </div>
 
@@ -254,7 +295,7 @@
 
           {% if item.id in inventario_ids %}
             <button class="buy-btn" style="background:#e8f5e9;color:#4CAF50" disabled>
-              ✅ Ya lo tienes
+              ✅ Alredy have it
             </button>
           {% else %}
             <button class="buy-btn"
@@ -275,7 +316,7 @@
   </div>
   {% else %}
   <div class="text-center py-5">
-    <div style="font-size:5rem">🛒</div>
+    <div style="font-size:5rem"><i class="bi bi-shop"></i></div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡La tienda está vacía!</h4>
     <p class="text-muted fw-bold">El profesor añadirá objetos pronto.</p>
   </div>
@@ -283,10 +324,10 @@
 
   <div class="text-center mt-4">
     <a href="{% url 'games:habitacion_milo' %}" class="btn btn-nestgrow btn-primary-nestgrow me-2">
-      🏠 Ver mi Habitación
+      <i class="bi bi-house-heart-fill"></i> See
     </a>
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
-      🎮 Ir a jugar
+      <i class="bi bi-controller"></i> Ir a jugar
     </a>
   </div>
 </div>

@@ -83,7 +83,7 @@ body.nestgrow-body {
 /* --- Milo Floating Mascot --- */
 .milo-float {
   position: fixed;
-  bottom: -100px;
+  bottom: -120px;
   right: 20px;
   z-index: 9999;
   cursor: pointer;
@@ -92,19 +92,24 @@ body.nestgrow-body {
   align-items: flex-end;
   gap: 8px;
   user-select: none;
+  transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.milo-float.visible {
+  bottom: 20px;
 }
 
 .milo-avatar {
-  width: 280px;
+  width: 70px;
   transition: transform 0.2s ease;
   animation: miloFloat 3s ease-in-out infinite;
-  filter: drop-shadow(0 -4px 28px rgba(108,99,255,0.45));
+  filter: drop-shadow(0 -4px 18px rgba(108,99,255,0.45));
 }
 
-.milo-avatar:hover { transform: scale(1.06); }
+.milo-avatar:hover { transform: scale(1.1); }
 
 #miloImgFloat {
-  width: 280px;
+  width: 70px;
   transition: opacity 0.18s ease;
   display: block;
 }
@@ -524,119 +529,273 @@ body.nestgrow-body {
 .win-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(8, 4, 32, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
   display: none;
 }
 
+/* Floating emoji confetti in backdrop */
+.win-overlay::before {
+  content: '🌟  ✨  ⭐  💫  🌟  ✨  ⭐';
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  letter-spacing: 18px;
+  opacity: 0.18;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: driftStars 8s linear infinite;
+}
+.win-overlay::after {
+  content: '🎉  💖  🎊  💫  🎉  💖  🎊';
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  letter-spacing: 16px;
+  opacity: 0.14;
+  pointer-events: none;
+  white-space: nowrap;
+  animation: driftStars 10s linear infinite reverse;
+}
+@keyframes driftStars {
+  0%   { transform: translateX(-50%) translateY(0); }
+  50%  { transform: translateX(-50%) translateY(-8px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Card principal ── */
 .win-card {
   background: white;
   border-radius: 28px;
-  padding: 2rem 2.5rem;
+  padding: 0 0 1.6rem;
   text-align: center;
-  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  max-width: 380px;
-  width: 90%;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  max-width: 370px;
+  width: 96%;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+  box-shadow:
+    0 28px 70px rgba(0,0,0,0.45),
+    0 0 0 3px rgba(255,255,255,0.14),
+    0 0 60px rgba(108,99,255,0.15);
 }
 
+/* Banda de color superior — limpia, sin arco raro */
 .win-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
+  top: 0; left: 0; right: 0;
+  height: 130px;
   border-radius: 28px 28px 0 0;
+  z-index: 0;
 }
+.win-card--excelente::before { background: linear-gradient(135deg, #11d85e 0%, #38f9d7 100%); }
+.win-card--bien::before      { background: linear-gradient(135deg, #6C63FF 0%, #a78bfa 100%); }
+.win-card--regular::before   { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); }
+.win-card--mal::before       { background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%); }
 
-.win-card--excelente::before { background: linear-gradient(90deg, #4CAF50, #81C784); }
-.win-card--bien::before      { background: linear-gradient(90deg, #6C63FF, #9c94ff); }
-.win-card--regular::before   { background: linear-gradient(90deg, #FFB347, #FFCC80); }
-.win-card--mal::before       { background: linear-gradient(90deg, #FF6B6B, #FF8E8E); }
-
-@keyframes popIn {
-  from { transform: scale(0.3); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes miloBounce {
-  0%,100% { transform: translateY(0) scale(1); }
-  50%      { transform: translateY(-8px) scale(1.05); }
-}
-
-.win-milo-wrap {
-  width: 90px;
-  height: 90px;
-  margin: 0 auto 0.5rem;
+/* Destellos decorativos en la banda */
+.win-card::after {
+  content: '';
+  position: absolute;
+  top: 12px; right: 20px;
+  width: 8px; height: 8px;
+  background: rgba(255,255,255,0.6);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: miloBounce 2s ease-in-out infinite;
+  box-shadow:
+    -24px 14px 0 5px rgba(255,255,255,0.35),
+    -46px 4px 0 3px rgba(255,255,255,0.2),
+    12px 30px 0 4px rgba(255,255,255,0.25);
+  z-index: 1;
 }
 
-.win-card--excelente .win-milo-wrap { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
-.win-card--bien      .win-milo-wrap { background: linear-gradient(135deg, #EDE7F6, #D1C4E9); }
-.win-card--regular   .win-milo-wrap { background: linear-gradient(135deg, #FFF8E1, #FFECB3); }
-.win-card--mal       .win-milo-wrap { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+/* ── Animaciones ── */
+@keyframes popIn {
+  0%   { transform: scale(0.15) rotate(-6deg); opacity: 0; }
+  55%  { transform: scale(1.06) rotate(1.5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes miloBounce {
+  0%,100% { transform: translateY(0) scale(1) rotate(0deg); }
+  28%      { transform: translateY(-14px) scale(1.07) rotate(-2.5deg); }
+  70%      { transform: translateY(-6px) scale(1.03) rotate(2deg); }
+}
+@keyframes miloCry {
+  0%,100% { transform: translateY(0) scale(1); }
+  30%      { transform: translateY(4px) scale(0.96); }
+  60%      { transform: translateY(-3px) scale(1.02); }
+}
+@keyframes starPop {
+  0%   { transform: scale(0) rotate(-25deg); opacity: 0; }
+  55%  { transform: scale(1.35) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(17,216,94,0.45), 0 8px 28px rgba(0,0,0,0.2); }
+  50%      { box-shadow: 0 0 0 16px rgba(17,216,94,0),  0 8px 28px rgba(0,0,0,0.2); }
+}
+
+/* ── Milo — sin círculo, imagen flotando sobre la banda ── */
+.win-milo-wrap {
+  width: 140px;
+  height: 130px;
+  margin: 0 auto 0.6rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.win-card--excelente .win-milo-wrap { animation: miloBounce 1.8s ease-in-out infinite, pulseGlow 2.5s ease-in-out infinite; }
+.win-card--bien      .win-milo-wrap { animation: miloBounce 2s ease-in-out infinite; }
+.win-card--regular   .win-milo-wrap { animation: miloBounce 2.4s ease-in-out infinite; }
+.win-card--mal       .win-milo-wrap { animation: miloCry 2s ease-in-out infinite; }
 
 .win-milo-img {
-  width: 72px;
-  height: 72px;
+  width: 118px;
+  height: 118px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.22));
+  margin-top: 12px;
 }
 
-.win-message {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.3rem;
-  color: #555;
-  margin-bottom: 0.25rem;
-  min-height: 2rem;
+/* ── Cuerpo del card ── */
+.win-card-body {
+  position: relative;
+  z-index: 2;
+  padding: 0 1.6rem;
 }
 
 .win-title {
   font-family: 'Fredoka One', cursive;
-  font-size: 1.8rem;
-  color: var(--primary);
-  margin-bottom: 0.25rem;
-}
-
-.win-stars {
   font-size: 2rem;
-  letter-spacing: 6px;
-  margin-bottom: 0.5rem;
+  line-height: 1.1;
+  margin-bottom: 0.15rem;
+}
+.win-card--excelente .win-title { color: #059669; }
+.win-card--bien      .win-title { color: #6C63FF; }
+.win-card--regular   .win-title { color: #d97706; }
+.win-card--mal       .win-title { color: #e11d48; }
+
+.win-message {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.05rem;
+  color: #7c8db5;
+  margin-bottom: 0.7rem;
+  min-height: 1.5rem;
 }
 
+/* Estrellas con animación escalonada */
+.win-stars {
+  font-size: 2.2rem;
+  letter-spacing: 10px;
+  margin-bottom: 0.55rem;
+  display: block;
+  animation: starPop 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both;
+}
+
+/* Pill de clasificación */
 .win-clasif {
-  font-size: 1.4rem;
-  font-weight: 800;
-  margin-bottom: 0.25rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin-bottom: 0.55rem;
+  display: inline-block;
+  padding: 5px 22px;
+  border-radius: 50px;
+  letter-spacing: 0.3px;
 }
+.win-card--excelente .win-clasif { background: #d1fae5; color: #059669; border: 1.5px solid #6ee7b7; }
+.win-card--bien      .win-clasif { background: #ede9fe; color: #6C63FF; border: 1.5px solid #c4b5fd; }
+.win-card--regular   .win-clasif { background: #fef3c7; color: #d97706; border: 1.5px solid #fcd34d; }
+.win-card--mal       .win-clasif { background: #ffe4e6; color: #e11d48; border: 1.5px solid #fca5a5; }
 
+/* Puntaje */
 .win-score {
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: #888;
-  margin-bottom: 0.5rem;
+  color: #b0b8d4;
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.2px;
+}
+.win-score span {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--primary);
+  display: inline-block;
+  animation: starPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both;
 }
 
-.win-score span { color: var(--primary); }
-
+/* Huesos ganados */
 .win-huesos {
+  font-family: 'Fredoka One', cursive;
   font-weight: 700;
-  color: #8B4513;
-  margin-bottom: 0.5rem;
-  padding: 6px 14px;
-  background: #FFF8E1;
+  color: #92400e;
+  margin-bottom: 0.9rem;
+  padding: 7px 22px;
+  background: linear-gradient(90deg, #fffbeb, #fde68a);
   border-radius: 50px;
   display: inline-block;
+  font-size: 1rem;
+  border: 2px solid #fbbf24;
+  box-shadow: 0 3px 12px rgba(251,191,36,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+/* Separador entre botones */
+.win-card-body > .btn + .btn,
+.win-card-body > .btn + a,
+.win-card-body > a + a {
+  margin-top: 0.4rem;
+}
+
+/* Botones dentro del card */
+.win-card .btn-nestgrow {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  border-radius: 50px !important;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.05rem;
+  padding: 0.7rem 1.8rem;
+  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s;
+  border: none;
+}
+.win-card .btn-nestgrow:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 24px rgba(108,99,255,0.38);
+}
+.win-card .btn-outline-secondary {
+  display: block;
+  width: 100%;
+  border-radius: 50px !important;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.98rem;
+  padding: 0.6rem 1.8rem;
+  color: #8892b0;
+  border-color: #d1d9f0;
+  background: transparent;
+  transition: all 0.18s;
+  margin-top: 0.4rem;
+}
+.win-card .btn-outline-secondary:hover {
+  background: #f0eeff;
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* --- Footer --- */
@@ -704,9 +863,10 @@ body.nestgrow-body {
 /* Responsive */
 @media (max-width: 768px) {
   .auth-card { padding: 30px 24px; }
-  .milo-float { bottom: -60px; right: 10px; }
-  .milo-avatar { width: 180px; }
-  #miloImgFloat { width: 180px; }
+  .milo-float { bottom: -120px; right: 10px; }
+  .milo-float.visible { bottom: 12px; }
+  .milo-avatar { width: 60px; }
+  #miloImgFloat { width: 60px; }
   .ws-cell { width: 28px; height: 28px; font-size: 0.85rem; }
 }
 

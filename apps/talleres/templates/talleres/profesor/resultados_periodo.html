@@ -1,127 +1,210 @@
 {% extends 'base.html' %}
 {% block title %}Resultados — {{ periodo.titulo }}{% endblock %}
 
-{% block content %}
-<div class="container-fluid py-4 px-3 px-md-4">
+{% block extra_css %}
+<style>
+.nota-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  padding: 5px 10px;
+  min-width: 58px;
+  line-height: 1;
+}
+.nota-chip .nota-val { font-size: 1.1rem; font-weight: 900; }
+.nota-chip .nota-lbl { font-size: 0.6rem; font-weight: 800; margin-top: 2px; }
+.nota-excelente { background: linear-gradient(135deg,#d4edda,#b8f0c8); color: #1a7a3b; }
+.nota-alto      { background: linear-gradient(135deg,#d4edda,#c3e6cb); color: #155724; }
+.nota-basico    { background: linear-gradient(135deg,#fff3cd,#ffeaa0); color: #856404; }
+.nota-proceso   { background: linear-gradient(135deg,#fff3cd,#ffe5b4); color: #e67e22; }
+.nota-reforzar  { background: linear-gradient(135deg,#f8d7da,#f5c6cb); color: #721c24; }
 
-  <!-- Encabezado -->
-  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-    <div>
-      <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill btn-sm mb-2">← Períodos</a>
-      <h3 class="font-fredoka mb-1" style="color:var(--primary)">📊 {{ periodo.titulo }}</h3>
-      <div class="text-muted small">
-        <i class="bi bi-building me-1"></i>{{ periodo.salon }} &nbsp;·&nbsp;
-        <i class="bi bi-calendar-range me-1"></i>{{ periodo.fecha_inicio|date:"d/m/Y" }} → {{ periodo.fecha_fin|date:"d/m/Y" }}
-      </div>
-    </div>
-    <div class="d-flex gap-2 flex-wrap align-items-center">
-      <a href="{% url 'talleres:insights_periodo' periodo.pk %}"
-         class="btn btn-sm fw-bold rounded-pill px-3"
-         style="background:linear-gradient(135deg,#6C63FF,#a78bfa);color:#fff;border:none;box-shadow:0 4px 14px rgba(108,99,255,.30)">
-        🧠 Análisis IA
-      </a>
-      <a href="{% url 'talleres:enviar_informe_periodo' periodo.pk %}"
-         class="btn btn-sm fw-bold rounded-pill px-3"
-         style="background:linear-gradient(135deg,#4ECDC4,#44b89d);color:#fff;border:none;box-shadow:0 4px 14px rgba(78,205,196,.35)"
-         onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
-        <i class="bi bi-send-fill me-1"></i> Enviar informe
-      </a>
-      {% if not periodo.cerrado %}
-        {% if periodo.fecha_fin < hoy %}
-        <div class="alert alert-warning py-1 px-3 mb-0 rounded-pill small fw-bold">
-          ⚠️ Período vencido — ciérralo para congelar resultados.
+.cell-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #28a745;
+  padding: 3px 8px;
+  background: #d4edda;
+  border-radius: 50px;
+}
+.cell-prog {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #e67e22;
+  padding: 3px 8px;
+  background: #fff3e0;
+  border-radius: 50px;
+}
+.th-taller { font-size: 0.75rem; font-weight: 800; }
+.th-game   { font-size: 0.75rem; font-weight: 800; }
+.results-hero {
+  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 60%, #4ECDC4 100%);
+  border-radius: 24px;
+  padding: 1.4rem 1.8rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 32px rgba(108,99,255,0.3);
+}
+.results-hero::before {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 50%;
+  top: -70px; right: -50px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3 px-md-4" style="max-width:1200px">
+
+  <!-- ── Hero encabezado ── -->
+  <div class="results-hero">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div class="position-relative" style="z-index:1">
+        <a href="{% url 'talleres:lista_periodos' %}"
+           class="btn btn-sm rounded-pill fw-bold mb-2"
+           style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.35)">
+          <i class="bi bi-caret-left-fill me-1"></i>Períodos
+        </a>
+        <h3 class="font-fredoka mb-1" style="font-size:1.6rem">
+          <i class="bi bi-bar-chart-fill me-2"></i>{{ periodo.titulo }}
+        </h3>
+        <div style="opacity:.88;font-size:.88rem;font-weight:700">
+          <i class="bi bi-building me-1"></i>{{ periodo.salon }}
+          &nbsp;·&nbsp;
+          <i class="bi bi-calendar-range me-1"></i>{{ periodo.fecha_inicio|date:"d/m/Y" }} → {{ periodo.fecha_fin|date:"d/m/Y" }}
         </div>
+      </div>
+      <div class="d-flex gap-2 flex-wrap align-items-center position-relative" style="z-index:1">
+        <a href="{% url 'talleres:insights_periodo' periodo.pk %}"
+           class="btn btn-sm fw-bold rounded-pill"
+           style="background:rgba(255,255,255,0.22);color:white;border:1.5px solid rgba(255,255,255,0.4)">
+          🧠 Análisis IA
+        </a>
+        <a href="{% url 'talleres:enviar_informe_periodo' periodo.pk %}"
+           class="btn btn-sm fw-bold rounded-pill"
+           style="background:rgba(255,255,255,0.22);color:white;border:1.5px solid rgba(255,255,255,0.4)"
+           onclick="return confirm('¿Enviar informe de este período a todos los padres del salón?')">
+          <i class="bi bi-send-fill me-1"></i>Enviar informe
+        </a>
+        {% if not periodo.cerrado %}
+          {% if periodo.fecha_fin < hoy %}
+          <span class="badge rounded-pill fw-bold"
+                style="background:rgba(255,200,0,0.3);color:white;border:1.5px solid rgba(255,220,0,0.5);padding:6px 14px">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>Período vencido — ciérralo
+          </span>
+          {% endif %}
+          <form method="post" action="{% url 'talleres:cerrar_periodo' periodo.pk %}"
+                onsubmit="return confirm('¿Cerrar este período? Los resultados quedarán congelados.')">
+            {% csrf_token %}
+            <button class="btn btn-sm fw-bold rounded-pill"
+                    style="background:rgba(255,107,107,0.25);color:white;border:1.5px solid rgba(255,107,107,0.5)">
+              <i class="bi bi-lock-fill me-1"></i>Cerrar período
+            </button>
+          </form>
+        {% else %}
+          <span class="badge rounded-pill fw-bold"
+                style="background:rgba(0,0,0,0.25);color:white;padding:6px 14px">
+            <i class="bi bi-lock-fill me-1"></i>Período cerrado
+          </span>
         {% endif %}
-        <form method="post" action="{% url 'talleres:cerrar_periodo' periodo.pk %}"
-              onsubmit="return confirm('¿Cerrar este período? Los resultados quedarán congelados.')">
-          {% csrf_token %}
-          <button class="btn btn-sm btn-outline-danger rounded-pill fw-bold">🔒 Cerrar período</button>
-        </form>
-      {% else %}
-        <span class="badge bg-secondary px-3 py-2 rounded-pill">⚫ Período cerrado</span>
-      {% endif %}
+      </div>
     </div>
   </div>
 
   {% if filas %}
 
-  <!-- Tabla principal -->
-  <div class="nestgrow-card p-0 overflow-hidden mb-3" style="box-shadow:0 8px 32px rgba(108,99,255,.10)">
+  <!-- ── Tabla de resultados ── -->
+  <div class="nestgrow-card p-0 overflow-hidden mb-3">
     <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0" style="min-width:750px">
+      <table class="table table-hover align-middle mb-0" style="font-size:0.85rem">
         <thead>
           <tr style="background:linear-gradient(135deg,#6C63FF 0%,#8b7fff 100%)">
-            <th class="ps-3 py-3 text-white fw-bold" style="min-width:170px">
+            <th class="ps-3 py-3 text-white" style="min-width:160px;font-weight:800">
               <i class="bi bi-person-fill me-1"></i>Estudiante
             </th>
-            <th class="text-center py-3 text-white fw-bold" style="min-width:130px">
-              🏆 Nota Final
+            <th class="text-center py-3 text-white" style="min-width:100px;font-weight:800">
+              <i class="bi bi-award-fill me-1"></i>Nota Final
             </th>
             {% for asig in talleres_asig %}
-            <th class="text-center py-3 text-white fw-bold" style="min-width:110px;opacity:.9">
-              🎓 <a href="{% url 'talleres:resultados' asig.taller.pk %}"
-                    title="Ver detalle: {{ asig.taller.titulo }}"
-                    class="text-white text-decoration-none"
-                    style="font-size:.8rem;border-bottom:1px dashed rgba(255,255,255,.5)">
-                {{ asig.taller.titulo|truncatechars:16 }}
+            <th class="text-center py-3 text-white th-taller" style="min-width:95px;opacity:.92">
+              <div><i class="bi bi-clipboard-fill me-1" style="font-size:.7rem"></i>Taller</div>
+              <a href="{% url 'talleres:resultados' asig.taller.pk %}"
+                 class="text-white text-decoration-none"
+                 style="border-bottom:1px dashed rgba(255,255,255,.45);font-size:.72rem">
+                {{ asig.taller.titulo|truncatechars:14 }}
               </a>
             </th>
             {% endfor %}
             {% for asig in minijuegos_asig %}
-            <th class="text-center py-3 text-white fw-bold" style="min-width:105px;opacity:.9">
-              🎮 <span title="{{ asig.game.title }}" style="font-size:.8rem">{{ asig.game.title|truncatechars:14 }}</span>
+            <th class="text-center py-3 text-white th-game" style="min-width:90px;opacity:.92">
+              <div><i class="bi bi-controller me-1" style="font-size:.7rem"></i>Juego</div>
+              <span style="font-size:.72rem">{{ asig.game.title|truncatechars:13 }}</span>
             </th>
             {% endfor %}
             {% if periodo.meta_historia > 0 %}
-            <th class="text-center py-3 text-white fw-bold" style="min-width:95px;opacity:.9">⭐ Historia</th>
+            <th class="text-center py-3 text-white" style="min-width:85px;opacity:.92;font-weight:800">
+              <i class="bi bi-map-fill me-1"></i>Historia
+            </th>
             {% endif %}
           </tr>
         </thead>
         <tbody>
           {% for fila in filas %}
-          <tr style="transition:background .15s" onmouseover="this.style.background='#f8f6ff'" onmouseout="this.style.background=''">
-
-            <!-- Estudiante -->
+          <tr>
             <td class="ps-3">
-              <div class="fw-bold" style="color:#333">{{ fila.estudiante.get_full_name|default:fila.estudiante.username }}</div>
+              <div class="fw-bold" style="color:#333;font-size:.88rem">
+                {{ fila.estudiante.get_full_name|default:fila.estudiante.username }}
+              </div>
               {% with profile=fila.estudiante.estudiante_profile %}
               {% if profile.numero_lista %}
-              <div class="text-muted" style="font-size:.72rem">N° {{ profile.numero_lista }}</div>
+              <div class="text-muted" style="font-size:.68rem">N° {{ profile.numero_lista }}</div>
               {% endif %}
               {% endwith %}
             </td>
 
-            <!-- Nota Final — columna estrella -->
-            <td class="text-center">
+            <!-- Nota final -->
+            <td class="text-center py-2">
               {% if fila.nota_final %}
                 {% if fila.nota_final >= 4.5 %}
-                  <div style="background:linear-gradient(135deg,#d4edda,#b8f0c8);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
-                    <div class="fw-bold" style="font-size:1.25rem;color:#1a7a3b;line-height:1">{{ fila.nota_final }}</div>
-                    <div style="font-size:.65rem;color:#1a7a3b">🏆 Excelente</div>
+                  <div class="nota-chip nota-excelente">
+                    <span class="nota-val">{{ fila.nota_final }}</span>
+                    <span class="nota-lbl"><i class="bi bi-trophy-fill me-1"></i>Excelente</span>
                   </div>
                 {% elif fila.nota_final >= 4.0 %}
-                  <div style="background:linear-gradient(135deg,#d4edda,#c3e6cb);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
-                    <div class="fw-bold" style="font-size:1.25rem;color:#155724;line-height:1">{{ fila.nota_final }}</div>
-                    <div style="font-size:.65rem;color:#155724">⭐ Alto</div>
+                  <div class="nota-chip nota-alto">
+                    <span class="nota-val">{{ fila.nota_final }}</span>
+                    <span class="nota-lbl"><i class="bi bi-star-fill me-1"></i>Alto</span>
                   </div>
                 {% elif fila.nota_final >= 3.5 %}
-                  <div style="background:linear-gradient(135deg,#fff3cd,#ffeaa0);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
-                    <div class="fw-bold" style="font-size:1.25rem;color:#856404;line-height:1">{{ fila.nota_final }}</div>
-                    <div style="font-size:.65rem;color:#856404">👍 Básico</div>
+                  <div class="nota-chip nota-basico">
+                    <span class="nota-val">{{ fila.nota_final }}</span>
+                    <span class="nota-lbl"><i class="bi bi-check-circle me-1"></i>Básico</span>
                   </div>
                 {% elif fila.nota_final >= 3.0 %}
-                  <div style="background:linear-gradient(135deg,#fff3cd,#ffe5b4);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
-                    <div class="fw-bold" style="font-size:1.25rem;color:#e67e22;line-height:1">{{ fila.nota_final }}</div>
-                    <div style="font-size:.65rem;color:#e67e22">📖 En proceso</div>
+                  <div class="nota-chip nota-proceso">
+                    <span class="nota-val">{{ fila.nota_final }}</span>
+                    <span class="nota-lbl"><i class="bi bi-arrow-up-circle me-1"></i>En proceso</span>
                   </div>
                 {% else %}
-                  <div style="background:linear-gradient(135deg,#f8d7da,#f5c6cb);border-radius:12px;padding:6px 10px;display:inline-block;min-width:64px">
-                    <div class="fw-bold" style="font-size:1.25rem;color:#721c24;line-height:1">{{ fila.nota_final }}</div>
-                    <div style="font-size:.65rem;color:#721c24">💪 Reforzar</div>
+                  <div class="nota-chip nota-reforzar">
+                    <span class="nota-val">{{ fila.nota_final }}</span>
+                    <span class="nota-lbl"><i class="bi bi-exclamation-circle me-1"></i>Reforzar</span>
                   </div>
                 {% endif %}
               {% else %}
-                <span class="text-muted small">Sin datos</span>
+                <span class="text-muted" style="font-size:.75rem">Sin datos</span>
               {% endif %}
             </td>
 
@@ -130,17 +213,17 @@
             <td class="text-center">
               {% if t.sesion and t.sesion.completada %}
                 {% if t.nota %}
-                  <span class="fw-bold" style="color:{% if t.nota >= 4.0 %}#28a745{% elif t.nota >= 3.0 %}#e67e22{% else %}#e53935{% endif %}">
+                  <div class="fw-bold" style="font-size:.95rem;color:{% if t.nota >= 4.0 %}#28a745{% elif t.nota >= 3.0 %}#e67e22{% else %}#e53935{% endif %}">
                     {{ t.nota }}
-                  </span>
-                  <div class="text-muted" style="font-size:.68rem">{{ t.pct }}%</div>
+                  </div>
+                  <div class="text-muted" style="font-size:.65rem">{{ t.pct }}%</div>
                 {% else %}
-                  <span class="text-success">✅</span>
+                  <span class="cell-done"><i class="bi bi-check-lg"></i>Listo</span>
                 {% endif %}
               {% elif t.sesion and t.sesion.bloque_actual > 0 %}
-                <span title="En progreso">⏳</span>
+                <span class="cell-prog"><i class="bi bi-hourglass-split"></i>En curso</span>
               {% else %}
-                <span class="text-muted">—</span>
+                <span class="text-muted" style="font-size:.8rem">—</span>
               {% endif %}
             </td>
             {% endfor %}
@@ -150,15 +233,15 @@
             <td class="text-center">
               {% if m.registro and m.registro.completado %}
                 {% if m.nota %}
-                  <span class="fw-bold" style="color:{% if m.nota >= 4.0 %}#28a745{% elif m.nota >= 3.5 %}#e67e22{% else %}#e53935{% endif %}">
+                  <div class="fw-bold" style="font-size:.95rem;color:{% if m.nota >= 4.0 %}#28a745{% elif m.nota >= 3.5 %}#e67e22{% else %}#e53935{% endif %}">
                     {{ m.nota }}
-                  </span>
-                  <div class="text-muted" style="font-size:.68rem">{{ m.registro.porcentaje }}%</div>
+                  </div>
+                  <div class="text-muted" style="font-size:.65rem">{{ m.registro.porcentaje }}%</div>
                 {% else %}
-                  <span class="text-success">✅</span>
+                  <span class="cell-done"><i class="bi bi-check-lg"></i>Listo</span>
                 {% endif %}
               {% else %}
-                <span class="text-muted">—</span>
+                <span class="text-muted" style="font-size:.8rem">—</span>
               {% endif %}
             </td>
             {% endfor %}
@@ -166,11 +249,14 @@
             <!-- Historia -->
             {% if periodo.meta_historia > 0 %}
             <td class="text-center">
-              <span class="fw-bold {% if fila.estrellas_historia >= periodo.meta_historia %}text-success{% else %}text-muted{% endif %}">
-                {{ fila.estrellas_historia }}<span class="text-muted fw-normal">/{{ periodo.meta_historia }}</span>
-              </span>
+              <div class="fw-bold {% if fila.estrellas_historia >= periodo.meta_historia %}text-success{% else %}text-muted{% endif %}"
+                   style="font-size:.95rem">
+                <i class="bi bi-star-fill me-1" style="font-size:.7rem;color:#f0a500"></i>{{ fila.estrellas_historia }}/{{ periodo.meta_historia }}
+              </div>
               {% if fila.estrellas_historia >= periodo.meta_historia %}
-              <div style="font-size:.65rem;color:#28a745">✅ Meta</div>
+              <div style="font-size:.62rem;color:#28a745;font-weight:800">
+                <i class="bi bi-check-circle-fill me-1"></i>Meta cumplida
+              </div>
               {% endif %}
             </td>
             {% endif %}
@@ -183,19 +269,24 @@
   </div>
 
   <!-- Leyenda -->
-  <div class="d-flex gap-3 flex-wrap text-muted small px-1">
-    <span>🏆 Nota final = promedio de todas las actividades completadas</span>
+  <div class="d-flex gap-3 flex-wrap align-items-center px-1" style="font-size:.78rem;color:#888;font-weight:700">
+    <span><i class="bi bi-award-fill me-1" style="color:var(--primary)"></i>Nota final = promedio de actividades completadas</span>
     <span>·</span>
-    <span>⏳ En progreso &nbsp; — Sin iniciar</span>
+    <span><i class="bi bi-hourglass-split me-1" style="color:#e67e22"></i>En curso</span>
+    <span>·</span>
+    <span><span style="color:#555">—</span> Sin iniciar</span>
     <span>·</span>
     <span>Escala colombiana 1.0 – 5.0</span>
   </div>
 
   {% else %}
   <div class="nestgrow-card p-5 text-center">
-    <div style="font-size:3.5rem">👩‍🎓</div>
-    <h5 class="font-fredoka mt-3" style="color:var(--primary)">Este salón no tiene estudiantes aún</h5>
-    <p class="text-muted">Agrega estudiantes al salón desde el panel de cuentas.</p>
+    <div style="width:80px;height:80px;border-radius:50%;background:#f0eeff;
+                display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+      <i class="bi bi-person-fill" style="font-size:2.2rem;color:var(--primary)"></i>
+    </div>
+    <h5 class="font-fredoka mt-2" style="color:var(--primary)">Este salón no tiene estudiantes aún</h5>
+    <p class="text-muted fw-bold small">Agrega estudiantes al salón desde el panel de cuentas.</p>
   </div>
   {% endif %}
 

@@ -280,7 +280,7 @@
            onmouseover="this.style.borderColor='#9b59b6'"
            onmouseout="this.style.borderColor='transparent'">
           <div class="quick-icon-prof" style="background:#f5f0ff">
-            <span style="font-size:1.4rem;">🤖</span>
+            <i class="bi bi-robot" style="color:#9b59b6;font-size:1.4rem"></i>
           </div>
           <div class="fw-bold small" style="color:#9b59b6">Asistente IA</div>
         </a>
@@ -292,8 +292,8 @@
   <div class="nestgrow-card p-0 mb-4 overflow-hidden"
        style="background:linear-gradient(135deg,#6C63FF 0%,#9b59b6 50%,#3498db 100%);border-radius:20px;">
     <div class="row g-0 align-items-center">
-      <div class="col-auto px-4 py-3" style="font-size:3.5rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))">
-        🤖
+      <div class="col-auto px-4 py-3 d-flex align-items-center">
+        <i class="bi bi-robot" style="font-size:3.2rem;color:white;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))"></i>
       </div>
       <div class="col py-3 pe-3">
         <h5 class="mb-1 text-white fw-900" style="font-family:'Fredoka One',sans-serif;">
@@ -306,12 +306,12 @@
           <a href="{% url 'asistente:index' %}" target="_blank"
              class="btn btn-sm btn-light fw-800 rounded-pill"
              style="font-family:'Nunito',sans-serif;color:#6C63FF;">
-            ✏️ Planear clase
+            <i class="bi bi-pencil-fill me-1"></i>Planear clase
           </a>
           <a href="{% url 'asistente:index' %}?tab=analizar" target="_blank"
              class="btn btn-sm fw-800 rounded-pill"
              style="background:rgba(255,255,255,0.2);color:white;border:2px solid rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;">
-            📊 Analizar mi salón
+            <i class="bi bi-bar-chart-fill me-1"></i>Analizar mi salón
           </a>
         </div>
       </div>
@@ -390,7 +390,7 @@
               <th><i class="bi bi-person-fill me-1"></i>Estudiante</th>
               <th class="text-center"><i class="bi bi-list-ol me-1"></i>N° Lista</th>
               <th class="text-center"><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
-              <th class="text-center">⭐ Historia</th>
+              <th class="text-center"><i class="bi bi-star-fill" style="color:#f0a500"></i> Historia</th>
               <th><i class="bi bi-envelope-fill me-1"></i>Correo Padre</th>
             </tr>
           </thead>
@@ -412,7 +412,9 @@
               </td>
               <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
               <td class="text-center">
-                <span class="fw-bold" style="color:#f0a500">⭐ {{ est.total_estrellas_historia }}</span>
+                <span class="fw-bold" style="color:#f0a500">
+                  <i class="bi bi-star-fill me-1"></i>{{ est.total_estrellas_historia }}
+                </span>
               </td>
               <td>
                 {% if est.correo_padre %}

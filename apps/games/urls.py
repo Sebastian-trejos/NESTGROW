@@ -17,10 +17,13 @@ urlpatterns = [
     path('tienda/', views.tienda, name='tienda'),
     path('tienda/comprar/', views.comprar_item, name='comprar_item'),
     path('habitacion/', views.habitacion_milo, name='habitacion_milo'),
+    path('habitacion/guardar-posicion/', views.guardar_posicion_item, name='guardar_posicion_item'),
 
     # Museo Virtual
     path('guardar-obra/', views.guardar_obra, name='guardar_obra'),
+    path('guardar-obra-libre/', views.guardar_obra_libre, name='guardar_obra_libre'),
     path('museo/', views.museo_virtual, name='museo_virtual'),
+    path('museo/pintar-libre/', views.pintar_libre, name='pintar_libre'),
     path('museo/global/', views.museo_global, name='museo_global'),
     path('museo/estudiante/<int:user_pk>/', views.museo_estudiante, name='museo_estudiante'),
 

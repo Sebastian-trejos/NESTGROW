@@ -23,7 +23,6 @@ def vocabulary_payload_for_game(game, vocabulary):
             'word_es': v.word_es,
             'image': v.image.url if v.image else None,
             'audio': v.audio.url if v.audio else None,
-            'emoji': v.emoji or '',
             'orden': getattr(v, 'orden', 0),
             'item_difficulty': v.difficulty,
         }
@@ -675,6 +674,77 @@ def guardar_obra(request):
 
 
 @login_required
+@estudiante_required
+def pintar_libre(request):
+    """Canvas libre para el estudiante — crea una obra sin que el profe la haya asignado."""
+    # Busca o crea un Game especial "Pintura Libre" para que Artwork.game no sea null
+    from apps.content.models import Category
+    categoria, _ = Category.objects.get_or_create(
+        name='Pintura Libre',
+        defaults={
+            'name_en': 'Free Painting',
+            'description': 'Obras creadas libremente por los estudiantes desde el museo.',
+            'icon': '🖌️',
+            'color': '#6C63FF',
+        }
+    )
+    game, _ = Game.objects.get_or_create(
+        title='Pintura Libre',
+        game_type='painting',
+        defaults={
+            'title_en': 'Free Painting',
+            'description': 'Canvas libre desde el museo virtual.',
+            'category': categoria,
+            'difficulty': 1,
+        }
+    )
+    return render(request, 'games/painting_libre.html', {'game': game})
+
+
+@require_POST
+@login_required
+@estudiante_required
+def guardar_obra_libre(request):
+    """Guarda una obra de pintura libre (sin palabra asignada)."""
+    try:
+        data = json.loads(request.body)
+        canvas_data = data.get('canvas_data', '')
+        title = (data.get('title') or '').strip() or 'Sin título'
+
+        from apps.content.models import Category
+        categoria, _ = Category.objects.get_or_create(
+            name='Pintura Libre',
+            defaults={
+                'name_en': 'Free Painting',
+                'description': 'Obras creadas libremente por los estudiantes desde el museo.',
+                'icon': '🖌️',
+                'color': '#6C63FF',
+            }
+        )
+        game, _ = Game.objects.get_or_create(
+            title='Pintura Libre',
+            game_type='painting',
+            defaults={
+                'title_en': 'Free Painting',
+                'description': 'Canvas libre desde el museo virtual.',
+                'category': categoria,
+                'difficulty': 1,
+            }
+        )
+
+        Artwork.objects.create(
+            user=request.user,
+            game=game,
+            vocabulary_item=None,
+            canvas_data=canvas_data,
+            title=title,
+        )
+        return JsonResponse({'status': 'ok'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+@login_required
 def museo_virtual(request):
     """Museo virtual: estudiante ve sus obras, profesor ve las de sus estudiantes."""
     if request.user.role == 'profesor':
@@ -820,6 +890,27 @@ def comprar_item(request):
 
 
 # ── Habitación de Milo ────────────────────────────────────────────────────────
+
+@require_POST
+@login_required
+def guardar_posicion_item(request):
+    """Guarda pos_x (left%), pos_y (top%) y escala de un item en el inventario del estudiante."""
+    try:
+        data   = json.loads(request.body)
+        inv_id = int(data['inv_id'])
+        pos_x  = float(data['pos_x'])
+        pos_y  = float(data['pos_y'])
+        escala = float(data['escala'])
+    except (KeyError, ValueError, TypeError):
+        return JsonResponse({'status': 'error', 'msg': 'Datos inválidos'}, status=400)
+
+    inv = get_object_or_404(InventarioEstudiante, pk=inv_id, user=request.user)
+    inv.pos_x  = max(0.0, min(100.0, pos_x))
+    inv.pos_y  = max(0.0, min(100.0, pos_y))
+    inv.escala = max(0.3, min(3.0, escala))
+    inv.save(update_fields=['pos_x', 'pos_y', 'escala'])
+    return JsonResponse({'status': 'ok'})
+
 
 @login_required
 def habitacion_milo(request):

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Gestionar Categorías - NestGrow{% endblock %}
 
 {% block content %}
@@ -6,23 +7,26 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-      <h3 class="font-fredoka mb-0" style="color:var(--primary)">📚 Categorías de Vocabulario</h3>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">
+        <i class="bi bi-book-fill me-2"></i>Categorías de Vocabulario
+      </h3>
       <div class="text-muted fw-bold small">Organiza el vocabulario por temas para tus juegos</div>
     </div>
     <div class="d-flex gap-2">
       <a href="{% url 'games:crear_categoria' %}" class="btn btn-nestgrow btn-primary-nestgrow">
-        ➕ Nueva Categoría
+        <i class="bi bi-plus-circle-fill me-1"></i>Nueva Categoría
       </a>
       <a href="{% url 'games:gestionar_juegos' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
-        ← Juegos
+        <i class="bi bi-caret-left-fill me-1"></i>Juegos
       </a>
     </div>
   </div>
 
   <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
+    <img src="{% static 'img/milo_hablando.png' %}" style="height:55px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15))">
     <div class="milo-banner-text">
-      Cada categoría agrupa vocabulario por tema (Animals, Colors, Numbers...). Después de crear la categoría, añade palabras con sus imágenes y audios.
+      Cada categoría agrupa vocabulario por tema (Animals, Colors, Numbers…).
+      <span class="fw-bold" style="color:var(--primary)">Primero crea la categoría, luego añade las palabras.</span>
     </div>
   </div>
 
@@ -31,51 +35,68 @@
     {% for cat in categorias %}
     <div class="col-md-6 col-lg-4">
       <div class="nestgrow-card p-4 h-100">
+
+        <!-- Cabecera con icono de la categoría (elegido por el profesor) -->
         <div class="d-flex align-items-center gap-3 mb-3">
           <div style="font-size:2.5rem">{{ cat.icon }}</div>
-          <div>
+          <div class="flex-grow-1 min-width-0">
             <div class="font-fredoka fs-5" style="color:{{ cat.color }}">{{ cat.name_en }}</div>
             <div class="text-muted fw-bold small">{{ cat.name }}</div>
           </div>
-          <div class="ms-auto">
+          <div>
             {% if cat.is_active %}
-              <span class="badge rounded-pill" style="background:#d4edda;color:#155724">✅ Activa</span>
+              <span class="badge rounded-pill" style="background:#d4edda;color:#155724">
+                <i class="bi bi-check-circle-fill me-1"></i>Activa
+              </span>
             {% else %}
-              <span class="badge rounded-pill" style="background:#f8d7da;color:#721c24">⏸ Inactiva</span>
+              <span class="badge rounded-pill" style="background:#f8d7da;color:#721c24">
+                <i class="bi bi-pause-circle-fill me-1"></i>Inactiva
+              </span>
             {% endif %}
           </div>
         </div>
 
         <div class="d-flex gap-2 mb-3">
           <span class="badge rounded-pill fw-bold" style="background:{{ cat.color }}20;color:{{ cat.color }}">
-            📝 {{ cat.vocabulary.count }} palabras
+            <i class="bi bi-type me-1"></i>{{ cat.vocabulary.count }} palabras
           </span>
           <span class="badge rounded-pill fw-bold" style="background:#f0eeff;color:var(--primary)">
-            🎮 {{ cat.games.count }} juegos
+            <i class="bi bi-controller me-1"></i>{{ cat.games.count }} juegos
           </span>
         </div>
 
         <div class="d-flex gap-2 flex-wrap">
           <a href="{% url 'games:gestionar_vocabulario' cat.pk %}"
              class="btn btn-sm btn-nestgrow btn-primary-nestgrow">
-            📝 Vocabulario
+            <i class="bi bi-list-ul me-1"></i>Vocabulario
           </a>
           <a href="{% url 'games:editar_categoria' cat.pk %}"
-             class="btn btn-sm btn-outline-warning rounded-pill fw-bold">✏️ Editar</a>
+             class="btn btn-sm btn-outline-warning rounded-pill fw-bold
+                    d-inline-flex align-items-center justify-content-center gap-1">
+            <i class="bi bi-pencil-fill"></i>Editar
+          </a>
           <a href="{% url 'games:eliminar_categoria' cat.pk %}"
-             class="btn btn-sm btn-outline-danger rounded-pill fw-bold">🗑️</a>
+             class="btn btn-sm btn-outline-danger rounded-pill fw-bold
+                    d-inline-flex align-items-center justify-content-center"
+             style="width:34px;height:34px;padding:0">
+            <i class="bi bi-trash-fill"></i>
+          </a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
+
   {% else %}
-  <div class="text-center py-5">
-    <div style="font-size:5rem">📚</div>
-    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Sin categorías todavía!</h4>
+  <div class="nestgrow-card p-5 text-center">
+    <div style="width:90px;height:90px;border-radius:50%;background:#f0eeff;
+                display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+      <i class="bi bi-book-fill" style="font-size:2.5rem;color:var(--primary)"></i>
+    </div>
+    <h4 class="font-fredoka mt-2" style="color:var(--primary)">¡Sin categorías todavía!</h4>
     <p class="text-muted fw-bold">Crea tu primera categoría para empezar a organizar el vocabulario.</p>
     <a href="{% url 'games:crear_categoria' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
-      ➕ Crear primera categoría
+      <i class="bi bi-plus-circle-fill me-1"></i>Crear primera categoría
     </a>
   </div>
   {% endif %}

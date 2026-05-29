@@ -1,18 +1,25 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Mis Talleres{% endblock %}
 
 {% block content %}
 <div class="container py-4">
 
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)">📋 Mis Talleres</h3>
-    <a href="{% url 'talleres:crear' %}" class="btn btn-nestgrow btn-primary-nestgrow">
-      ➕ Nuevo Taller
+    <div>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">
+        <i class="bi bi-clipboard-fill me-2"></i>Mis Talleres
+      </h3>
+      <div class="text-muted fw-bold small">Combina preguntas y minijuegos en un taller</div>
+    </div>
+    <a href="{% url 'talleres:crear' %}" class="btn fw-bold rounded-pill"
+       style="background:#FF6B6B;color:white;border:none;font-family:'Fredoka One',cursive">
+      <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Taller
     </a>
   </div>
 
   <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
+    <img src="{% static 'img/milo_hablando.png' %}" style="height:55px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15))">
     <div>
       <div class="milo-banner-text">¡Crea talleres combinando preguntas y minijuegos!</div>
       <div class="text-muted fw-bold small">Los talleres se asignan desde los períodos. Los estudiantes los resuelven bloque a bloque y ganan XP y Huesos al completarlos.</div>
@@ -25,12 +32,14 @@
       <table class="table table-hover align-middle mb-0">
         <thead style="background:#f8f6ff">
           <tr>
-            <th class="ps-4">Taller</th>
-            <th class="text-center">Bloques</th>
-            <th class="text-center">XP</th>
-            <th class="text-center">🦴</th>
-            <th class="text-center">Estado</th>
-            <th class="text-center">Acciones</th>
+            <th class="ps-4" style="color:var(--primary)">Taller</th>
+            <th class="text-center" style="color:var(--primary)">Bloques</th>
+            <th class="text-center" style="color:var(--primary)">XP</th>
+            <th class="text-center" style="color:var(--primary)">
+              <i class="bi bi-heart-fill" style="color:#8B4513"></i>
+            </th>
+            <th class="text-center" style="color:var(--primary)">Estado</th>
+            <th class="text-center" style="color:var(--primary)">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -46,25 +55,42 @@
               <span class="fw-bold" style="color:var(--primary)">{{ taller.total_bloques }}</span>
             </td>
             <td class="text-center">
-              <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">⭐ {{ taller.puntos_xp }}</span>
+              <span class="badge rounded-pill" style="background:#f0eeff;color:var(--primary)">
+                <i class="bi bi-star-fill me-1"></i>{{ taller.puntos_xp }}
+              </span>
             </td>
             <td class="text-center">
-              <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">🦴 {{ taller.huesos_recompensa }}</span>
+              <span class="badge rounded-pill" style="background:#fff3e0;color:#8B4513">
+                🦴 {{ taller.huesos_recompensa }}
+              </span>
             </td>
             <td class="text-center">
               <form method="post" action="{% url 'talleres:toggle' pk=taller.pk %}" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" class="badge rounded-pill border-0"
-                        style="background:{% if taller.is_active %}#d4edda;color:#155724{% else %}#f8d7da;color:#721c24{% endif %};cursor:pointer">
-                  {% if taller.is_active %}✅ Publicado{% else %}🔒 Borrador{% endif %}
+                        style="{% if taller.is_active %}background:#d4edda;color:#155724{% else %}background:#f8d7da;color:#721c24{% endif %};cursor:pointer">
+                  {% if taller.is_active %}
+                    <i class="bi bi-check-circle-fill me-1"></i>Publicado
+                  {% else %}
+                    <i class="bi bi-pencil-square me-1"></i>Borrador
+                  {% endif %}
                 </button>
               </form>
             </td>
             <td class="text-center">
               <div class="d-flex gap-1 justify-content-center">
-                <a href="{% url 'talleres:editar' pk=taller.pk %}" class="btn btn-sm btn-outline-primary rounded-pill" title="Editar">✏️</a>
-                <a href="{% url 'talleres:preview' pk=taller.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill" title="Vista previa" target="_blank">👁️</a>
-                <a href="{% url 'talleres:eliminar' pk=taller.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">🗑️</a>
+                <a href="{% url 'talleres:editar' pk=taller.pk %}"
+                   class="btn btn-sm btn-outline-primary rounded-pill" title="Editar">
+                  <i class="bi bi-pencil-fill"></i>
+                </a>
+                <a href="{% url 'talleres:preview' pk=taller.pk %}"
+                   class="btn btn-sm btn-outline-secondary rounded-pill" title="Vista previa" target="_blank">
+                  <i class="bi bi-eye-fill"></i>
+                </a>
+                <a href="{% url 'talleres:eliminar' pk=taller.pk %}"
+                   class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">
+                  <i class="bi bi-trash-fill"></i>
+                </a>
               </div>
             </td>
           </tr>
@@ -76,11 +102,14 @@
 
   {% else %}
   <div class="nestgrow-card p-5 text-center">
-    <div style="font-size:5rem">📋</div>
-    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Aún no tienes talleres!</h4>
+    <div style="width:90px;height:90px;border-radius:50%;background:#f0eeff;
+                display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+      <i class="bi bi-clipboard-fill" style="font-size:2.5rem;color:var(--primary)"></i>
+    </div>
+    <h4 class="font-fredoka mt-2" style="color:var(--primary)">¡Aún no tienes talleres!</h4>
     <p class="text-muted fw-bold">Crea tu primer taller combinando preguntas y minijuegos.</p>
     <a href="{% url 'talleres:crear' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
-      ➕ Crear mi primer taller
+      <i class="bi bi-plus-circle-fill me-1"></i>Crear mi primer taller
     </a>
   </div>
   {% endif %}

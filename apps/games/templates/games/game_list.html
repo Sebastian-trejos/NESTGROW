@@ -82,30 +82,127 @@
   .filter-chip.paint { border-color: #FFB347; color: #FFB347; }
   .filter-chip.audio { border-color: #9c94ff; color: #9c94ff; }
 
-  /* TARJETAS */
+  /* ══ TARJETAS ══ */
   .game-card {
     background: white;
-    border-radius: 28px;
+    border-radius: 26px;
     overflow: hidden;
-    box-shadow: 0 10px 35px rgba(108,99,255,0.12);
-    transition: all 0.3s;
-    border: 4px solid var(--primary);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    transition: transform 0.32s cubic-bezier(.22,1,.36,1), box-shadow 0.32s;
+    border: 4px solid transparent;
     text-decoration: none;
     display: block;
   }
   .game-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 50px rgba(108,99,255,0.25);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 28px 60px rgba(0,0,0,0.18);
   }
-  .game-card.drag { border-color: #6C63FF; }
+  .game-card.drag   { border-color: #6C63FF; }
   .game-card.search { border-color: #FF6B6B; }
   .game-card.puzzle { border-color: #4ECDC4; }
-  .game-card.paint { border-color: #FFB347; }
-  .game-card.audio { border-color: #9c94ff; }
+  .game-card.paint  { border-color: #FFB347; }
+  .game-card.audio  { border-color: #9c94ff; }
+  .game-card.mem    { border-color: #a78bfa; }
+  .game-card.hang   { border-color: #FF6B6B; }
+  .game-card.quiz   { border-color: #4ECDC4; }
+  .game-card.order  { border-color: #FFB347; }
+  .game-card.glob   { border-color: #4ECDC4; }
 
-  .game-icon-wrap {
-    height: 150px;
+  /* ── Banner ── */
+  .game-banner {
+    height: 172px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+  /* Colores por tipo */
+  .gb-drag   { background: linear-gradient(145deg, #5a52d5, #6C63FF, #9c94ff); }
+  .gb-search { background: linear-gradient(145deg, #e85555, #FF6B6B, #ff9f9f); }
+  .gb-puzzle { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #7ee8e2); }
+  .gb-paint  { background: linear-gradient(145deg, #e6982a, #FFB347, #FFE66D); }
+  .gb-audio  { background: linear-gradient(145deg, #5a52d5, #7c6fff, #4ECDC4); }
+  .gb-mem    { background: linear-gradient(145deg, #8c7be8, #a78bfa, #FF6B6B); }
+  .gb-hang   { background: linear-gradient(145deg, #e85555, #FF6B6B, #FFB347); }
+  .gb-quiz   { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #a78bfa); }
+  .gb-order  { background: linear-gradient(145deg, #e6982a, #FFB347, #6C63FF); }
+  .gb-glob   { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #FF6B6B); }
+
+  /* Brillo dinámico que cruza el banner */
+  .game-banner::before {
+    content: '';
+    position: absolute;
+    top: -60%; left: -80%;
+    width: 60%; height: 200%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.18), transparent);
+    transform: skewX(-15deg);
+    animation: bannerShine 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes bannerShine {
+    0%, 100% { left: -80%; }
+    50%       { left: 140%; }
+  }
+  /* Puntos decorativos */
+  .game-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle 2.5px at 12% 18%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 88% 14%, rgba(255,255,255,0.28) 0%, transparent 100%),
+      radial-gradient(circle 2px   at 80% 82%, rgba(255,255,255,0.28) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 18% 80%, rgba(255,255,255,0.22) 0%, transparent 100%),
+      radial-gradient(circle 1px   at 50% 10%, rgba(255,255,255,0.2)  0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Ícono principal — grande y flotante */
+  .gb-main-icon {
+    font-size: 4rem;
+    color: white;
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.28));
+    position: relative;
+    z-index: 2;
+    animation: gbIconFloat 3.2s ease-in-out infinite;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), filter 0.3s;
+    line-height: 1;
+  }
+  @keyframes gbIconFloat {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-7px) scale(1.08); }
+  }
+  /* Delay distinto por posición en grid */
+  .col-sm-6:nth-child(2) .gb-main-icon { animation-delay: 0.5s; }
+  .col-sm-6:nth-child(3) .gb-main-icon { animation-delay: 1s; }
+  .col-sm-6:nth-child(4) .gb-main-icon { animation-delay: 1.5s; }
+  .col-sm-6:nth-child(5) .gb-main-icon { animation-delay: 2s; }
+  .col-sm-6:nth-child(6) .gb-main-icon { animation-delay: 0.8s; }
+
+  .game-card:hover .gb-main-icon {
+    transform: translateY(-10px) scale(1.22) !important;
+    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35));
+    animation: none;
+  }
+
+  /* Nombre del tipo de juego — visible en el banner */
+  .gb-type-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.95);
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 2;
+    background: rgba(0,0,0,0.18);
+    padding: 3px 14px;
+    border-radius: 50px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.25);
   }
 
   /* Badge dificultad */
@@ -197,35 +294,68 @@
   <div class="row g-4">
     {% for game in games %}
     <div class="col-sm-6 col-lg-4">
-      <a href="{{ game.get_absolute_url }}" class="game-card {% if game.game_type == 'drag_and_drop' %}drag{% elif game.game_type == 'word_search' %}search{% elif game.game_type == 'puzzle' %}puzzle{% elif game.game_type == 'painting' %}paint{% else %}audio{% endif %}">
+      <a href="{{ game.get_absolute_url }}" class="game-card
+        {% if game.game_type == 'drag_and_drop' %}drag
+        {% elif game.game_type == 'word_search' %}search
+        {% elif game.game_type == 'puzzle' %}puzzle
+        {% elif game.game_type == 'painting' %}paint
+        {% elif game.game_type == 'audio_matching' %}audio
+        {% elif game.game_type == 'memoria' %}mem
+        {% elif game.game_type == 'ahorcado' %}hang
+        {% elif game.game_type == 'quiz' %}quiz
+        {% elif game.game_type == 'ordenar_letras' %}order
+        {% elif game.game_type == 'globos' %}glob
+        {% else %}drag{% endif %}">
 
-        <!-- Imagen según tipo de juego -->
-        {% if game.game_type == 'painting' %}
-        <div class="game-icon-wrap">
-          <img src="{% static 'img/games (2).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-        </div>
+        <!-- Banner visual por tipo de juego — ícono flotante + nombre -->
+        <div class="game-banner
+          {% if game.game_type == 'drag_and_drop' %}gb-drag
+          {% elif game.game_type == 'word_search' %}gb-search
+          {% elif game.game_type == 'puzzle' %}gb-puzzle
+          {% elif game.game_type == 'painting' %}gb-paint
+          {% elif game.game_type == 'audio_matching' %}gb-audio
+          {% elif game.game_type == 'memoria' %}gb-mem
+          {% elif game.game_type == 'ahorcado' %}gb-hang
+          {% elif game.game_type == 'quiz' %}gb-quiz
+          {% elif game.game_type == 'ordenar_letras' %}gb-order
+          {% elif game.game_type == 'globos' %}gb-glob
+          {% else %}gb-drag{% endif %}">
 
-        {% elif game.game_type == 'drag_and_drop' %}
-        <div class="game-icon-wrap">
-          <img src="{% static 'img/games (1).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-        </div>
+          {# Ícono grande flotante — el protagonista visual #}
+          <i class="bi gb-main-icon
+            {% if game.game_type == 'drag_and_drop' %}bi-hand-index-thumb-fill
+            {% elif game.game_type == 'word_search' %}bi-search
+            {% elif game.game_type == 'puzzle' %}bi-puzzle-fill
+            {% elif game.game_type == 'painting' %}bi-brush-fill
+            {% elif game.game_type == 'audio_matching' %}bi-headphones
+            {% elif game.game_type == 'memoria' %}bi-grid-3x3-gap-fill
+            {% elif game.game_type == 'ahorcado' %}bi-alphabet
+            {% elif game.game_type == 'quiz' %}bi-patch-question-fill
+            {% elif game.game_type == 'ordenar_letras' %}bi-sort-alpha-down
+            {% elif game.game_type == 'globos' %}bi-balloon-fill
+            {% else %}bi-controller{% endif %}"></i>
 
-        {% elif game.game_type == 'word_search' %}
-        <div class="game-icon-wrap">
-          <img src="{% static 'img/games (3).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
+          {# Nombre del tipo bien visible #}
+          <span class="gb-type-name">
+            {% if game.game_type == 'drag_and_drop' %}Arrastrar
+            {% elif game.game_type == 'word_search' %}Sopa de letras
+            {% elif game.game_type == 'puzzle' %}Puzzle
+            {% elif game.game_type == 'painting' %}Pintura libre
+            {% elif game.game_type == 'audio_matching' %}Audio
+            {% elif game.game_type == 'memoria' %}Memoria
+            {% elif game.game_type == 'ahorcado' %}Ahorcado
+            {% elif game.game_type == 'quiz' %}Quiz
+            {% elif game.game_type == 'ordenar_letras' %}Ordenar letras
+            {% elif game.game_type == 'globos' %}Globos
+            {% else %}Minijuego{% endif %}
+          </span>
         </div>
-
-{% else %}
-        <div class="game-icon-wrap">
-          <img src="{% static 'img/games(4).jpeg' %}" style="width:100%;height:100%;object-fit:cover">
-        </div>
-        {% endif %}
 
         <!-- Info del juego -->
         <div class="p-3">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge rounded-pill fw-bold px-3 py-2"
-                  style="background:{{ game.category.color }}25;color:{{ game.category.color }};font-size:0.85rem">
+            <span class="badge rounded-pill fw-bold px-3 py-1"
+                  style="background:{{ game.category.color }}20;color:{{ game.category.color }};font-size:0.8rem">
               {{ game.category.icon|safe }} {{ game.category.name }}
             </span>
             <span class="diff-badge {% if game.difficulty == 1 %}diff-easy{% elif game.difficulty == 2 %}diff-medium{% else %}diff-hard{% endif %}">
@@ -234,8 +364,8 @@
               {% else %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Difícil{% endif %}
             </span>
           </div>
-          <h4 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.25rem">{{ game.title }}</h4>
-          <p class="text-muted small fw-bold mb-2" style="font-size:0.9rem;line-height:1.4">
+          <h4 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.2rem;line-height:1.2">{{ game.title }}</h4>
+          <p class="text-muted fw-bold mb-2" style="font-size:0.82rem;line-height:1.4">
             {{ game.description|truncatewords:8 }}
           </p>
           <div class="d-flex justify-content-between align-items-center">
@@ -262,7 +392,7 @@
        class="btn fw-bold mt-2"
        style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;
               padding:12px 32px;font-family:'Fredoka One',cursive;border-radius:50px">
-      <i class="bi bi-arrow-left me-2"></i>Ver todos los juegos
+      <i class="bi bi-caret-left-fill me-2"></i>Ver todos los juegos
     </a>
   </div>
   {% endif %}

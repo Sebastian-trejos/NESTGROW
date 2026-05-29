@@ -118,7 +118,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="edit-page">
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:url('{% static 'img/bg_nubes.png' %}') center center / cover no-repeat;"></div>
+<div class="edit-page" style="background:transparent">
   <div class="container" style="max-width:620px">
 
     <!-- Botón volver -->
@@ -130,7 +132,7 @@
                 transition:all 0.3s;font-size:0.9rem"
          onmouseover="this.style.borderColor='var(--primary)'"
          onmouseout="this.style.borderColor='#e8e4ff'">
-        <i class="bi bi-arrow-left"></i> Volver al panel
+        <i class="bi bi-caret-left-fill"></i> Volver al panel
       </a>
     </div>
 

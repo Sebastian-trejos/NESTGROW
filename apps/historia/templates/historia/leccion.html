@@ -5,8 +5,6 @@
 
 {% block extra_css %}
 <style>
-  body { background: linear-gradient(160deg, #F0EDFF 0%, #E8F5FF 100%); min-height:100vh; }
-
   /* ── Shell ── */
   .leccion-shell {
     max-width: 700px;
@@ -14,68 +12,113 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 0 1rem 2.5rem;
+    padding: 0 0.75rem 2.5rem;
   }
 
-  /* ── Top bar ── */
+  /* ── Top bar — banner redondeado con cristal ── */
   .top-bar {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 0 .6rem;
     position: sticky;
     top: 0;
-    background: linear-gradient(160deg, #F0EDFF 0%, #E8F5FF 100%);
     z-index: 10;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 0 0 24px 24px;
+    margin: 0 -0.75rem;
+    padding: 0.85rem 1.2rem 1rem;
+    box-shadow: 0 4px 24px rgba(108,99,255,0.18);
+    border-bottom: 1.5px solid rgba(255,255,255,0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
   }
+
+  /* Fila superior: botón + nombre de sección/lección + contador */
+  .top-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
   .back-btn {
-    width: 42px; height: 42px;
+    width: 38px; height: 38px;
     border-radius: 50%;
     border: none;
-    background: white;
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
     display: flex; align-items: center; justify-content: center;
-    color: var(--primary);
+    color: white;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
     flex-shrink: 0;
-    box-shadow: 0 3px 10px rgba(108,99,255,0.18);
+    box-shadow: 0 3px 10px rgba(108,99,255,0.35);
     transition: transform .15s, box-shadow .15s;
   }
-  .back-btn:hover { transform:scale(1.08); box-shadow:0 5px 14px rgba(108,99,255,0.28); color:var(--primary); }
-  .prog-outer {
+  .back-btn:hover { transform:scale(1.1); box-shadow:0 5px 14px rgba(108,99,255,0.45); color:white; }
+
+  .top-bar-info {
     flex: 1;
-    height: 14px;
+    min-width: 0;
+  }
+  .top-bar-seccion {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #a78bfa;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .top-bar-titulo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: var(--primary);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .prog-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    color: var(--primary);
+    flex-shrink: 0;
+    background: #f0eeff;
+    padding: 3px 10px;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+
+  /* Barra de progreso */
+  .prog-outer {
+    width: 100%;
+    height: 10px;
     background: rgba(108,99,255,0.12);
     border-radius: 99px;
     overflow: hidden;
   }
   .prog-inner {
     height: 100%;
-    background: linear-gradient(90deg, #6C63FF, #FF6B9D);
+    background: linear-gradient(90deg, #6C63FF, #4ECDC4);
     border-radius: 99px;
     transition: width .4s cubic-bezier(.34,1.56,.64,1);
-  }
-  .prog-label {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    color: var(--primary);
-    flex-shrink: 0;
-    min-width: 40px;
-    text-align: right;
   }
 
   /* ── Activity card ── */
   .activity-card {
-    background: white;
-    border-radius: 32px;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 28px;
     padding: 2.2rem 2rem;
-    box-shadow: 0 10px 40px rgba(108,99,255,0.12);
+    box-shadow: 0 12px 44px rgba(108,99,255,0.18);
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 1.8rem;
     animation: fadeIn .35s cubic-bezier(.22,1,.36,1);
     margin-top: .8rem;
+    border: 1.5px solid rgba(255,255,255,0.7);
   }
   @keyframes fadeIn {
     from { opacity:0; transform:translateY(16px) scale(.98); }
@@ -406,15 +449,29 @@
 {% endblock %}
 
 {% block content %}
+<!-- Fondo bg_avent — mismo que el mapa historia -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:url('{% static 'img/bg_avent.png' %}') center center / cover no-repeat;"></div>
+
 <div class="leccion-shell">
 
-  <!-- Top bar -->
+  <!-- Top bar redondeado -->
   <div class="top-bar">
-    <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Volver al mapa">⬅</a>
+    <div class="top-bar-row">
+      <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Volver al mapa">
+        <i class="bi bi-caret-left-fill"></i>
+      </a>
+      <div class="top-bar-info">
+        <div class="top-bar-seccion">
+          <i class="bi bi-map-fill me-1"></i>{{ leccion.seccion.titulo }}
+        </div>
+        <div class="top-bar-titulo">{{ leccion.icono_emoji }} {{ leccion.titulo }}</div>
+      </div>
+      <div class="prog-label" id="progLabel">0/{{ total_actividades }}</div>
+    </div>
     <div class="prog-outer">
       <div class="prog-inner" id="progBar" style="width:0%"></div>
     </div>
-    <div class="prog-label" id="progLabel">0/{{ total_actividades }}</div>
   </div>
 
   <!-- Activity area -->

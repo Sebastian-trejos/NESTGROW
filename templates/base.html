@@ -12,11 +12,41 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   {% block extra_css %}{% endblock %}
-  <!-- ── Bloqueo inmediato para evitar flash de la transición de huellas ─────── -->
-  <script>(function(){if(sessionStorage.getItem('ngTransition')==='1'){document.documentElement.dataset.ngPawsEntry='1';}})();</script>
-  <style>html[data-ng-paws-entry] body{visibility:hidden!important}</style>
+
+  <style>
+    /* Nubes que se desplazan de izquierda a derecha y viceversa */
+    @keyframes cloudDrift1 {
+      0%   { transform: translateX(0px); }
+      50%  { transform: translateX(38px); }
+      100% { transform: translateX(0px); }
+    }
+    @keyframes cloudDrift2 {
+      0%   { transform: translateX(0px); }
+      50%  { transform: translateX(-38px); }
+      100% { transform: translateX(0px); }
+    }
+    @keyframes sunPulse {
+      0%,100% { transform: scale(1);   opacity: 1; }
+      50%      { transform: scale(1.12); opacity: 0.85; }
+    }
+    /* Mantener starFloat para el dashboard si algún elemento lo usa todavía */
+    @keyframes starFloat {
+      0%,100% { transform: translateY(0) rotate(0deg); opacity:0.7; }
+      50%      { transform: translateY(-8px) rotate(15deg); opacity:1; }
+    }
+  </style>
 </head>
 <body class="nestgrow-body">
+  <!-- Fondo: bg_profe para profesores, bg_nubes para el resto -->
+  {% if user.is_authenticated and user.role == 'profesor' %}
+  <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+              background:url(&quot;{% static 'img/bg_profe.png' %}&quot;) center center / cover no-repeat;">
+  </div>
+  {% else %}
+  <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+              background:url(&quot;{% static 'img/bg_nubes.png' %}&quot;) center -20% / cover no-repeat;">
+  </div>
+  {% endif %}
 
   <!-- Top Nav -->
   {% if not embedded %}
@@ -37,7 +67,7 @@
   {% endif %}
 {% if user.role == 'estudiante' %}
 <li class="nav-item">
-  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:mi_vocabulario' %}"
+  <a class="nav-link fw-bold rounded-pill px-3 py-1" href="{% url 'content:category_list' %}"
      style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,107,107,0.25)';this.style.background='#ffd9d9'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff0f0'">
@@ -130,7 +160,7 @@
                 {% endif %}
                 <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}" data-ng-trans="circles"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
               </ul>
             </li>
           {% else %}
@@ -147,15 +177,16 @@
   </nav>
   {% endif %}{# /embedded nav #}
 
-  <!-- Milo Floating Character -->
-  {% if not embedded %}
-  <div class="milo-float" id="miloFloat">
+  <!-- Milo Floating Mascot -->
+  {% if user.is_authenticated and not embedded %}
+  <div class="milo-float" id="miloFloat" onclick="miloFloatClick()">
     <div class="milo-bubble" id="miloBubble">
-      <div class="milo-speech" id="miloSpeech"></div>
-      <div id="miloBubbleExtra"></div>
+      <div class="milo-speech" id="miloSpeech">¡Hola! 👋</div>
     </div>
     <div class="milo-avatar">
-      <img src="{% static 'img/milo_saludando.png' %}" id="miloImgFloat" alt="Milo">
+      <img src="{% static 'img/milo_rostro.png' %}"
+           id="miloImgFloat"
+           alt="Milo">
     </div>
   </div>
   {% endif %}
@@ -227,6 +258,49 @@
   </script>
   {% endif %}
 
+  <!-- Botón flotante Asistente Milo (solo profesores) -->
+  {% if user.is_authenticated and user.role == 'profesor' and not embedded %}
+  <a href="{% url 'asistente:index' %}" target="_blank"
+     class="asistente-fab"
+     title="Asistente Milo IA">
+    🤖
+    <span class="asistente-fab-label">Asistente Milo</span>
+  </a>
+  <style>
+    .asistente-fab {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      z-index: 1050;
+      background: linear-gradient(135deg, #6C63FF, #9b59b6);
+      color: white;
+      border-radius: 50px;
+      padding: 0.6rem 1rem;
+      font-size: 1.3rem;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(108,99,255,0.45);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+    .asistente-fab:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 10px 30px rgba(108,99,255,0.55);
+      color: white;
+    }
+    .asistente-fab-label {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 576px) {
+      .asistente-fab-label { display: none; }
+      .asistente-fab { padding: 0.65rem; border-radius: 50%; }
+    }
+  </style>
+  {% endif %}
 
   <!-- Footer -->
   {% if not embedded %}
@@ -252,300 +326,74 @@
   {% block extra_js %}{% endblock %}
 
   <script>
-  // ── Widget Milo ──────────────────────────────────────────────────────────────
-  (function () {
-    const ROLE   = '{{ user.role|default:"" }}';
-    const IS_AUTH = {% if user.is_authenticated %}true{% else %}false{% endif %};
+  /* ── Milo flotante: frases cortas y click ── */
+  const MILO_FLOAT_FRASES = [
+    "¡Hola! 👋", "¡Tú puedes! 💪", "¡Milo te quiere! ❤️",
+    "¡Sigue así! 🌟", "¡Eres genial! 🤩", "¡Aprendamos juntos! 📚",
+    "¡Wooo! 🎉", "¡Increíble! ✨", "¡Campeón! 🏆",
+    "¡Vamos! 🚀", "¡Qué bueno verte! 😄", "¡Eres el mejor! ⭐",
+  ];
+  const MILO_FLOAT_IMGS = [
+    "{% static 'img/milo_rostro.png' %}",
+    "{% static 'img/milo_fest.png' %}",
+    "{% static 'img/milo_orgulloso.png' %}",
+    "{% static 'img/milo_asombrado.png' %}",
+    "{% static 'img/milo_saludando.png' %}",
+    "{% static 'img/milo_bai.png' %}",
+  ];
+  let miloFIdx = 0, miloFClicks = 0, miloFTimeout = null;
 
-    const IMG = {
-      idle:         "{% static 'img/milo_saludando.png' %}",
-      saludando:    "{% static 'img/milo_fest.png' %}",
-      orgulloso:    "{% static 'img/milo_orgulloso.png' %}",
-      preocupado:   "{% static 'img/milo_preocupado.png' %}",
-      celebrando:   "{% static 'img/milo_fest.png' %}",
-      timido:       "{% static 'img/milo_timido.png' %}",
-      pulgar:       "{% static 'img/milo_pulgar.png' %}",
-      curioso:      "{% static 'img/milo_curioso.png' %}",
-      susurrando:   "{% static 'img/milo_susurrando.png' %}",
-      asombrado:    "{% static 'img/milo_asombrado.png' %}",
-      pensando:     "{% static 'img/milo_duda1.png' %}",
-      buscando:     "{% static 'img/milo_lupa2.png' %}",
-      aplaudiendo:  "{% static 'img/milo_aplaudiendo.png' %}",
-      apuntes:      "{% static 'img/milo_apuntes.png' %}",
-      leyendo:      "{% static 'img/milo_leyendo1.png' %}",
-      emociontotal: "{% static 'img/milo_emociontotal.png' %}",
-    };
+  function miloFloatClick() {
+    miloFClicks++;
+    const bubble  = document.getElementById('miloBubble');
+    const speech  = document.getElementById('miloSpeech');
+    const img     = document.getElementById('miloImgFloat');
+    if (!bubble) return;
 
-    const PAGE_MSGS = {
-      profesor: {
-        dashboard:    { msg: '¡Hola profe! 👋 ¿Planeas una clase hoy? Te cuento un secreto: el Asistente IA puede prepararte toda la lección.', img: IMG.susurrando },
-        talleres:     { msg: '📋 Aquí diseñas talleres con preguntas y minijuegos. ¡Piensa en qué aprenderán tus estudiantes hoy!', img: IMG.pensando },
-        juegos:       { msg: '🔍 Explora los minijuegos disponibles y asígnalos a los períodos de tu salón.', img: IMG.buscando },
-        historia:     { msg: '🗺️ ¡El Modo Historia es increíble! Desbloquea secciones para que tus estudiantes avancen con Milo.', img: IMG.asombrado },
-        contenido:    { msg: '📚 Aquí encuentras todo el vocabulario disponible. ¡Úsalo como base para tus talleres!', img: IMG.curioso },
-        habitacion:   { msg: '🏠 Esta es la habitación virtual de tus estudiantes. ¡Ellos la decoran con Huesos ganados jugando!', img: IMG.orgulloso },
-        login:        { msg: '¡Hola profe! 👋 Inicia sesión para gestionar tus clases, períodos y estudiantes.', img: IMG.saludando },
-        registro:     { msg: '¡Bienvenido a NestGrow! 🎓 Regístrate y empieza a crear talleres para tus estudiantes.', img: IMG.saludando },
-        default:      { msg: '¡Estoy aquí para ayudarte, profe! 🤖 Usa el Asistente IA para planear tus clases.', img: IMG.idle },
-      },
-      estudiante: {
-        dashboard:    { msg: '¡Bienvenido de vuelta! 🎉 ¿Listo para aprender inglés hoy con Milo?', img: IMG.saludando },
-        mis_talleres: { msg: '📋 Aquí están tus actividades del período. ¡Completa todas para ganar puntos y subir de nivel!', img: IMG.preocupado },
-        juegos:       { msg: '🔍 ¡Explora los minijuegos y elige el que más te guste para aprender inglés!', img: IMG.buscando },
-        historia:     { msg: '🗺️ ¡Increíble! ¡Avanza en la historia con Milo y desbloquea nuevas aventuras!', img: IMG.asombrado },
-        contenido:    { msg: '📚 ¡Qué curioso! ¿Sabes todas estas palabras en inglés? Cada categoría tiene imágenes y audio.', img: IMG.curioso },
-        habitacion:   { msg: '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!', img: IMG.orgulloso },
-        tienda:       { msg: '🛍️ ¡Mira todo lo que puedes conseguir! Gasta tus Huesos y desbloquea nuevos juegos.', img: IMG.celebrando },
-        ranking:      { msg: '🏆 ¡Tú puedes llegar al primer lugar! Juega más para ganar puntos y escalar en el ranking.', img: IMG.pulgar },
-        login:        { msg: '¡Hola! 👋 Inicia sesión para continuar tu aventura en NestGrow.', img: IMG.saludando },
-        registro:     { msg: '¡Hola! 🐾 Soy Milo. Regístrate y únete a tu salón para empezar a aprender inglés.', img: IMG.timido },
-        default:      { msg: '¡Hola! Soy Milo 🐾 ¡Estoy aquí para ayudarte a aprender inglés!', img: IMG.idle },
-      },
-      none: {
-        login:    { msg: '¡Hola! 👋 Soy Milo, tu guía en NestGrow. Inicia sesión para continuar tu aventura.', img: IMG.saludando },
-        registro: { msg: '¡Qué emocionante! 🎉 ¡Un nuevo amigo en NestGrow! Crea tu cuenta y empieza a aprender inglés.', img: IMG.asombrado },
-        dashboard: { msg: '¡Hola! 🌟 Soy Milo. En NestGrow aprendes inglés jugando con minijuegos y aventuras. ¡Regístrate gratis!', img: IMG.idle },
-        default:  { msg: '¡Bienvenido a NestGrow! 🐾 Aprende inglés jugando con Milo. ¡Es completamente gratis!', img: IMG.saludando },
-      },
-    };
+    /* Cambiar frase aleatoria corta */
+    const frase = MILO_FLOAT_FRASES[Math.floor(Math.random() * MILO_FLOAT_FRASES.length)];
+    if (speech) speech.textContent = frase;
 
-    function getPageCtx() {
-      const p = window.location.pathname;
-      if (p.startsWith('/juegos/habitacion')) return 'habitacion';
-      if (p.startsWith('/juegos/tienda'))     return 'tienda';
-      if (p.startsWith('/juegos/ranking'))    return 'ranking';
-      if (p.startsWith('/juegos'))            return 'juegos';
-      if (p.startsWith('/talleres/mis'))      return 'mis_talleres';
-      if (p.startsWith('/talleres'))          return 'talleres';
-      if (p.startsWith('/historia'))          return 'historia';
-      if (p.startsWith('/contenido'))         return 'contenido';
-      if (p.startsWith('/accounts/login'))    return 'login';
-      if (p.startsWith('/accounts/registro')) return 'registro';
-      if (p.startsWith('/accounts') || p === '/') return 'dashboard';
-      return 'default';
+    /* Mostrar burbuja */
+    bubble.classList.add('show');
+    clearTimeout(miloFTimeout);
+    miloFTimeout = setTimeout(() => bubble.classList.remove('show'), 2800);
+
+    /* Cambiar imagen cada click */
+    miloFIdx = (miloFIdx + 1) % MILO_FLOAT_IMGS.length;
+    if (img) {
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = MILO_FLOAT_IMGS[miloFIdx];
+        img.style.transition = 'opacity 0.3s';
+        img.style.opacity = '1';
+      }, 150);
     }
 
+    /* Confetti cada 3 clicks */
+    if (miloFClicks % 3 === 0) {
+      if (typeof lanzarConfetiFuerte === 'function') lanzarConfetiFuerte();
+    }
+  }
+
+  /* Entrada animada de Milo desde abajo */
+  setTimeout(() => {
     const float  = document.getElementById('miloFloat');
     const bubble = document.getElementById('miloBubble');
     const speech = document.getElementById('miloSpeech');
-    const extra  = document.getElementById('miloBubbleExtra');
-    const img    = document.getElementById('miloImgFloat');
-    if (!float) return;
-
-    let isOpen = false, pendientesCache = null, autoCloseTimer = null, comentaristaActivo = false;
-
-    function getCsrfToken() {
-      const m = document.cookie.match(/(?:^|; )csrftoken=([^;]*)/);
-      return m ? decodeURIComponent(m[1]) : '';
+    if (float) float.classList.add('visible');
+    if (bubble && speech) {
+      const saludos = ["¡Hola! 👋", "¡Bienvenid@! 🌟", "¡Qué bueno verte! 😄"];
+      speech.textContent = saludos[Math.floor(Math.random() * saludos.length)];
+      setTimeout(() => { bubble.classList.add('show'); }, 400);
+      setTimeout(() => bubble.classList.remove('show'), 3400);
     }
-
-    function setImg(src) {
-      img.style.opacity = '0';
-      setTimeout(() => {
-        img.src = src;
-        img.style.opacity = '1';
-        // milo_fest.png tiene más espacio interno — se escala para igualar visualmente
-        img.style.transform = (src === IMG.saludando || src === IMG.celebrando) ? 'scale(1.2)' : 'scale(1)';
-      }, 180);
-    }
-
-    float.addEventListener('mouseenter', () => { if (!isOpen) setImg(IMG.saludando); });
-    float.addEventListener('mouseleave', () => { if (!isOpen) setImg(IMG.idle); });
-
-    float.addEventListener('click', function (e) {
-      e.stopPropagation();
-      isOpen ? closeBubble() : openBubble();
-    });
-
-    function closeBubble() {
-      clearTimeout(autoCloseTimer);
-      comentaristaActivo = false;
-      bubble.classList.remove('show');
-      isOpen = false;
-      setImg(IMG.idle);
-    }
-
-    function openBubble() {
-      if (comentaristaActivo) return;
-      isOpen = true;
-      const pageCtx = getPageCtx();
-      const role    = IS_AUTH ? (ROLE || 'none') : 'none';
-      const ctxMap  = PAGE_MSGS[role] || PAGE_MSGS.none;
-      const ctx     = ctxMap[pageCtx] || ctxMap.default;
-
-      speech.textContent = ctx.msg;
-      extra.innerHTML = '';
-      setImg(ctx.img || IMG.idle);
-
-      // Páginas donde estudiantes ven sus pendientes vía AJAX
-      const AJAX_CTX = new Set(['dashboard', 'default']);
-
-      if (ROLE === 'profesor' && IS_AUTH && pageCtx !== 'habitacion') {
-        const footer = document.createElement('div');
-        footer.className = 'milo-bubble-footer';
-        const btnIA = document.createElement('a');
-        btnIA.href = "{% url 'asistente:index' %}";
-        btnIA.target = '_blank';
-        btnIA.className = 'milo-btn milo-btn-primary';
-        btnIA.textContent = '🤖 Asistente Milo IA';
-        footer.appendChild(btnIA);
-        extra.appendChild(footer);
-
-      } else if (ROLE === 'estudiante' && IS_AUTH && AJAX_CTX.has(pageCtx)) {
-        if (pendientesCache) {
-          renderPendientes(pendientesCache, pageCtx);
-        } else {
-          fetch("{% url 'talleres:milo_pendientes' %}", {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-          })
-          .then(r => r.json())
-          .then(data => { pendientesCache = data; renderPendientes(data, pageCtx); })
-          .catch(() => {});
-        }
-      }
-
-      bubble.classList.add('show');
-
-      // Auto-cierre a los 10 segundos
-      clearTimeout(autoCloseTimer);
-      autoCloseTimer = setTimeout(closeBubble, 10000);
-    }
-
-    function renderPendientes(data, pageCtx) {
-      extra.innerHTML = '';
-      const total = (data.talleres || 0) + (data.minijuegos || 0);
-
-      if (!data.periodo) {
-        speech.textContent = '😊 No hay un período activo en este momento. ¡Sigue practicando!';
-        setImg(IMG.idle);
-      } else if (total === 0) {
-        speech.textContent = '🎉 ¡Todo al día! No tienes actividades pendientes. ¡Excelente trabajo!';
-        setImg(IMG.celebrando);
-      } else {
-        speech.textContent = '📅 ' + data.periodo + ' · vence ' + data.fecha_fin;
-        setImg(IMG.preocupado);
-        const list = document.createElement('ul');
-        list.className = 'milo-pendientes-list';
-        (data.nombres_talleres || []).forEach(n => {
-          const li = document.createElement('li'); li.textContent = '📋 ' + n; list.appendChild(li);
-        });
-        (data.nombres_minijuegos || []).forEach(n => {
-          const li = document.createElement('li'); li.textContent = '🎮 ' + n; list.appendChild(li);
-        });
-        extra.appendChild(list);
-      }
-
-      const footer = document.createElement('div');
-      footer.className = 'milo-bubble-footer';
-      const btnAct = document.createElement('a');
-      btnAct.href = "{% url 'talleres:mis_talleres' %}";
-      btnAct.className = 'milo-btn milo-btn-primary';
-      btnAct.textContent = '📋 Mis Actividades';
-      footer.appendChild(btnAct);
-      extra.appendChild(footer);
-    }
-
-    // Apertura automática al cargar la página
-    // Si venimos de una transición (huellas), esperamos 1800ms; si no (ej. login), 900ms
-    const _miloDelay = sessionStorage.getItem('ngTransition') === '1' ? 1800 : 900;
-    setTimeout(openBubble, _miloDelay);
-
-    // ── Comentarista Milo: para talleres y modo historia ─────────────────────
-    // tipo: 'correcto' | 'incorrecto' | 'neutro'
-    // datos: { msg?, pregunta?, respuesta_correcta?, respuesta_dada?, contexto? }
-    // onContinuar: callback que se llama cuando el estudiante acepta o se auto-cierra
-    window.miloComentarista = function(tipo, datos, onContinuar) {
-      if (!float) { if (onContinuar) onContinuar(); return; }
-      clearTimeout(autoCloseTimer);
-      comentaristaActivo = true;
-
-      const d = datos || {};
-
-      function _done(cb) {
-        comentaristaActivo = false;
-        if (cb) cb();
-      }
-
-      if (tipo === 'correcto') {
-        speech.innerHTML = d.msg || '¡Excelente! ¡Respuesta correcta! 🎉';
-        extra.innerHTML = '';
-        setImg(IMG.aplaudiendo);
-        bubble.classList.add('show');
-        isOpen = true;
-        autoCloseTimer = setTimeout(function() {
-          bubble.classList.remove('show');
-          isOpen = false;
-          setImg(IMG.idle);
-          _done(onContinuar);
-        }, 2000);
-
-      } else if (tipo === 'incorrecto') {
-        speech.textContent = '🔍 Revisando tu respuesta…';
-        extra.innerHTML = '';
-        setImg(IMG.apuntes);
-        bubble.classList.add('show');
-        isOpen = true;
-
-        fetch("{% url 'asistente:milo_correccion' %}", {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
-          body: JSON.stringify({
-            pregunta:           d.pregunta || '',
-            respuesta_correcta: d.respuesta_correcta || '',
-            respuesta_dada:     d.respuesta_dada || '',
-            contexto:           d.contexto || '',
-          }),
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          speech.textContent = data.correccion || '¡Sigue practicando! 💪';
-          setImg(IMG.leyendo);
-          _mostrarBotonContinuar(function() { _done(onContinuar); });
-        })
-        .catch(function() {
-          speech.textContent = '¡No te rindas! La práctica lleva a la perfección. 💪';
-          setImg(IMG.pulgar);
-          _mostrarBotonContinuar(function() { _done(onContinuar); });
-        });
-
-      } else {
-        speech.textContent = d.msg || '¡Muy bien! ✨';
-        extra.innerHTML = '';
-        setImg(IMG.pulgar);
-        bubble.classList.add('show');
-        isOpen = true;
-        autoCloseTimer = setTimeout(function() {
-          bubble.classList.remove('show');
-          isOpen = false;
-          setImg(IMG.idle);
-          _done(onContinuar);
-        }, 1400);
-      }
-    };
-
-    function _mostrarBotonContinuar(onContinuar) {
-      extra.innerHTML = '';
-      const footer = document.createElement('div');
-      footer.className = 'milo-bubble-footer';
-      const btn = document.createElement('button');
-      btn.className = 'milo-btn milo-btn-primary';
-      btn.textContent = 'Entendido, continuar →';
-      btn.onclick = function() {
-        bubble.classList.remove('show');
-        isOpen = false;
-        setImg(IMG.idle);
-        if (onContinuar) onContinuar();
-      };
-      footer.appendChild(btn);
-      extra.appendChild(footer);
-    }
-  })();
+  }, 900);
   </script>
 
-  <!-- ══ TRANSICIÓN ORIGINAL (círculos) — disponible para uso futuro ══
-       Para activarla en un destino: sessionStorage.setItem('ngCircles', '1') -->
+  <!-- ══ TRANSICIÓN DE PÁGINA (círculos) ══ -->
   <div id="pg-trans" aria-hidden="true" style="
-    position:fixed;inset:0;z-index:99997;
+    position:fixed;inset:0;z-index:99999;
     pointer-events:none;overflow:hidden;">
     <div class="pg-c" style="background:#6C63FF"></div>
     <div class="pg-c" style="background:#4ECDC4"></div>
@@ -571,6 +419,7 @@
       c.style.height = sizes[i] + 'vmax';
     });
 
+    /* Cubre la pantalla con los círculos, luego llama doneCb */
     function cubrir(doneCb) {
       circles.forEach((c, i) => {
         setTimeout(() => {
@@ -581,6 +430,7 @@
       if (doneCb) setTimeout(doneCb, 60 * (circles.length - 1) + 360);
     }
 
+    /* Descubre la pantalla (los círculos ya están cubiertos) */
     function descubrir() {
       [...circles].reverse().forEach((c, i) => {
         setTimeout(() => {
@@ -590,343 +440,21 @@
       });
     }
 
-    /* Disparador manual + flag dedicado (no interfiere con la transición default) */
-    window.ngCircles = { cubrir, descubrir };
+    /* ── Página destino: animación completa (cubrir → descubrir) ── */
+    if (sessionStorage.getItem('ngTransition') === '1') {
+      sessionStorage.removeItem('ngTransition');
 
-    if (sessionStorage.getItem('ngCircles') === '1') {
-      sessionStorage.removeItem('ngCircles');
+      /* Empieza con los círculos cubriendo la pantalla (sin animación) */
       circles.forEach(c => {
         c.style.transition = 'none';
         c.style.transform  = 'translate(-50%,-50%) scale(1)';
       });
+
+      /* Primero muestra la pantalla cubierta un instante,
+         luego descubre de pequeño a grande                */
       setTimeout(descubrir, 120);
     }
   })();
-  </script>
-
-  <!-- ══ TRANSICIÓN DE PÁGINA: 🐾 Huellas de Milo ══
-       El emoji se pre-renderiza a canvas UNA SOLA VEZ al cargar la página.
-       Los elementos reutilizan la textura PNG ya decodificada → 0 rasterización
-       por elemento durante la animación. Sin DOM en reposo = 0 capas GPU extra. -->
-  <div id="pg-paws" aria-hidden="true" style="
-    position:fixed;inset:0;z-index:99999;
-    pointer-events:none;overflow:hidden;opacity:0;
-    background:linear-gradient(135deg,#6C63FF 0%,#8b80f9 35%,#a89dff 60%,#7ec8e3 100%);
-    will-change:opacity;transform:translateZ(0);">
-  </div>
-  <style>
-  .pg-paw-s {
-    position: absolute;
-    user-select: none;
-    opacity: 0;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  </style>
-  <script>
-  (function () {
-    const wrap = document.getElementById('pg-paws');
-    const COLS = 4, ROWS = 4, N = COLS * ROWS;
-
-    /* ── Paso 1: Pre-renderizar 🐾 a canvas → PNG data URL ────────────────
-       Ocurre una sola vez, sincrónicamente, cuando el script se evalúa
-       (el parser ya terminó, el usuario todavía no puede hacer clic).
-       Coste: ~5-15 ms de CPU, inapreciable al cargar.
-       Beneficio: todos los elementos compartirán la misma textura ya
-       decodificada; el navegador no rasteriza el glifo emoji en cada spawn. */
-    let pawSrc = null;
-    try {
-      const cv  = document.createElement('canvas');
-      cv.width  = cv.height = 320;
-      const ctx = cv.getContext('2d');
-      ctx.font          = '260px serif';
-      ctx.textAlign     = 'center';
-      ctx.textBaseline  = 'middle';
-      ctx.fillText('🐾', 160, 170);
-      pawSrc = cv.toDataURL('image/png');
-    } catch (e) { /* fallback: usa texto */ }
-
-    /* ── Paso 2: Datos de layout por zona (sin DOM) ── */
-    const configs = [];
-    for (let i = 0; i < N; i++) {
-      const col = i % COLS, row = Math.floor(i / COLS);
-      const zoneW = 100 / COLS, zoneH = 100 / ROWS, pad = 0.2;
-      configs.push({
-        size: (50 + Math.random() * 15).toFixed(1),
-        rot:  (-40 + Math.random() * 80).toFixed(1),
-        left: (col * zoneW + zoneW * (pad + Math.random() * (1 - 2 * pad))).toFixed(2),
-        top:  (row * zoneH + zoneH * (pad + Math.random() * (1 - 2 * pad))).toFixed(2),
-      });
-    }
-
-    const order = configs.map((_, i) => i).sort(() => Math.random() - 0.5);
-    const elems = new Array(N).fill(null);
-
-    /* ── Paso 3: Spawn perezoso — 1 elemento por slot de tiempo ──
-       Si pawSrc está listo usa background-image (textura cacheada, barata).
-       Si no, cae a textContent emoji (nunca debería pasar en producción). */
-    function spawnPaw(cfgIdx, visible) {
-      const c = configs[cfgIdx];
-      const p = document.createElement('span');
-      p.className = 'pg-paw-s';
-      const sz = c.size + 'vmax';
-      if (pawSrc) {
-        p.style.width           = sz;
-        p.style.height          = sz;
-        p.style.backgroundImage = 'url(' + pawSrc + ')';
-      } else {
-        p.textContent  = '🐾';
-        p.style.fontSize = sz;
-        p.style.lineHeight = '1';
-      }
-      p.style.left      = c.left + '%';
-      p.style.top       = c.top  + '%';
-      p.style.opacity   = visible ? '1' : '0';
-      p.style.transform = `translate(-50%,-50%) scale(${visible ? 1 : 0}) rotate(${c.rot}deg)`;
-      wrap.appendChild(p);
-      elems[cfgIdx] = p;
-      return p;
-    }
-
-    function showTf(i) { return `translate(-50%,-50%) scale(1) rotate(${configs[i].rot}deg)`; }
-    function hideTf(i) {
-      return `translate(-50%,-50%) scale(0.08) rotate(${parseFloat(configs[i].rot) + 65}deg)`;
-    }
-
-    function clearElems() {
-      elems.forEach((p, i) => { if (p) { p.remove(); elems[i] = null; } });
-    }
-
-    /* cubrir: un spawn cada 35 ms → el navegador solo procesa 1 elemento por frame */
-    function cubrir(doneCb) {
-      clearElems();
-      wrap.style.opacity = '1';
-      order.forEach((cfgIdx, seq) => {
-        setTimeout(() => {
-          const p = spawnPaw(cfgIdx, false);
-          void p.offsetWidth;
-          p.style.transition = 'transform 0.55s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s';
-          p.style.opacity    = '1';
-          p.style.transform  = showTf(cfgIdx);
-        }, seq * 35);
-      });
-      if (doneCb) setTimeout(doneCb, order.length * 35 + 600);
-    }
-
-    function descubrir() {
-      [...order].reverse().forEach((cfgIdx, seq) => {
-        setTimeout(() => {
-          const p = elems[cfgIdx];
-          if (!p) return;
-          p.style.transition = 'transform 0.50s cubic-bezier(0.55,0,1,0.45), opacity 0.40s';
-          p.style.opacity    = '0';
-          p.style.transform  = hideTf(cfgIdx);
-        }, seq * 30);
-      });
-      const cleanAt = order.length * 30 + 500;
-      setTimeout(() => {
-        wrap.style.transition = 'opacity 0.28s';
-        wrap.style.opacity    = '0';
-      }, cleanAt);
-      setTimeout(() => {
-        wrap.style.transition = '';
-        clearElems();
-      }, cleanAt + 320);
-    }
-
-    /* Entrada: body oculto por CSS en <head>; crea todos visible y descubre */
-    if (sessionStorage.getItem('ngTransition') === '1') {
-      sessionStorage.removeItem('ngTransition');
-      wrap.style.opacity = '1';
-      order.forEach(cfgIdx => spawnPaw(cfgIdx, true));
-      document.documentElement.removeAttribute('data-ng-paws-entry');
-      void wrap.offsetWidth;
-      setTimeout(descubrir, 350);
-    } else {
-      document.documentElement.removeAttribute('data-ng-paws-entry');
-    }
-
-    window.ngTransicion = { cubrir, descubrir };
-  })();
-  </script>
-
-  <!-- ══ TRANSICIÓN ESPECIAL: ⭐ Estrellas que explotan ══ -->
-  <div id="pg-stars" aria-hidden="true" style="
-    position:fixed;inset:0;z-index:99998;
-    pointer-events:none;overflow:hidden;opacity:0;">
-    <div id="pg-stars-bg"></div>
-    <div id="pg-star-core">⭐</div>
-    <!-- 14 estrellitas se generan dinámicamente -->
-  </div>
-  <style>
-  #pg-stars-bg {
-    position:absolute; inset:0;
-    background: radial-gradient(circle at center,
-                rgba(255,230,109,0.95) 0%,
-                rgba(255,179,71,0.90) 35%,
-                rgba(108,99,255,0.85) 75%,
-                rgba(78,205,196,0.80) 100%);
-    opacity: 0;
-    will-change: opacity;
-  }
-  #pg-star-core {
-    position: absolute;
-    top: 50%; left: 50%;
-    font-size: 6vmax;
-    transform: translate(-50%,-50%) scale(0) rotate(0deg);
-    text-shadow: 0 0 30px rgba(255,230,109,0.9);
-    will-change: transform;
-  }
-  .pg-mini-star {
-    position: absolute;
-    top: 50%; left: 50%;
-    font-size: 2.4vmax;
-    transform: translate(-50%,-50%) scale(0) rotate(0deg);
-    text-shadow: 0 0 12px rgba(255,255,255,0.7);
-    will-change: transform, opacity;
-    opacity: 0;
-  }
-  </style>
-  <script>
-  (function () {
-    const wrap  = document.getElementById('pg-stars');
-    const bg    = document.getElementById('pg-stars-bg');
-    const core  = document.getElementById('pg-star-core');
-    const N     = 14;
-    const stars = [];
-
-    /* Generar mini-estrellas */
-    for (let i = 0; i < N; i++) {
-      const s = document.createElement('div');
-      s.className = 'pg-mini-star';
-      s.textContent = ['⭐','✨','🌟'][i % 3];
-      wrap.appendChild(s);
-      stars.push(s);
-    }
-
-    function explotar() {
-      wrap.style.opacity = '1';
-      bg.style.transition = 'opacity 0.25s ease';
-      bg.style.opacity = '1';
-
-      /* Estrella central crece */
-      core.style.transition = 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)';
-      core.style.transform = 'translate(-50%,-50%) scale(1.6) rotate(20deg)';
-
-      /* Explosión: las mini estrellas vuelan radialmente */
-      setTimeout(() => {
-        core.style.transition = 'transform 0.5s ease-out, opacity 0.4s';
-        core.style.opacity = '0';
-        core.style.transform = 'translate(-50%,-50%) scale(3.5) rotate(180deg)';
-
-        stars.forEach((s, i) => {
-          const angle = (i / N) * Math.PI * 2;
-          const dist  = 60 + Math.random() * 20; /* vmax */
-          const dx = Math.cos(angle) * dist;
-          const dy = Math.sin(angle) * dist;
-          const rot = 360 + Math.random() * 360;
-          s.style.transition = 'transform 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.7s';
-          s.style.opacity = '1';
-          s.style.transform =
-            `translate(calc(-50% + ${dx}vmax), calc(-50% + ${dy}vmax)) scale(${0.8 + Math.random()*0.7}) rotate(${rot}deg)`;
-        });
-      }, 220);
-    }
-
-    function implotar() {
-      /* Las estrellas regresan al centro y desaparecen */
-      stars.forEach((s, i) => {
-        s.style.transition = 'transform 0.55s cubic-bezier(0.55,0,1,0.45), opacity 0.55s';
-        s.style.transform = 'translate(-50%,-50%) scale(0) rotate(0deg)';
-        s.style.opacity = '0';
-      });
-      setTimeout(() => {
-        bg.style.transition = 'opacity 0.45s ease';
-        bg.style.opacity = '0';
-      }, 200);
-      setTimeout(() => {
-        wrap.style.opacity = '0';
-        core.style.transition = 'none';
-        core.style.transform = 'translate(-50%,-50%) scale(0) rotate(0deg)';
-        core.style.opacity = '';
-        stars.forEach(s => { s.style.transition = 'none'; s.style.transform = 'translate(-50%,-50%) scale(0)'; s.style.opacity = '0'; });
-      }, 800);
-    }
-
-    /* Disparador manual: window.ngStars.explotar() */
-    window.ngStars = { explotar, implotar };
-
-    /* ── Página destino: si el flag está activo, descubre con explosión ── */
-    if (sessionStorage.getItem('ngStars') === '1') {
-      sessionStorage.removeItem('ngStars');
-      /* Empieza con bg cubriendo + estrella central visible */
-      wrap.style.opacity = '1';
-      bg.style.transition = 'none';
-      bg.style.opacity = '1';
-      core.style.transition = 'none';
-      core.style.transform = 'translate(-50%,-50%) scale(2.2) rotate(15deg)';
-      stars.forEach((s, i) => {
-        const angle = (i / N) * Math.PI * 2;
-        const dist  = 18;
-        const dx = Math.cos(angle) * dist;
-        const dy = Math.sin(angle) * dist;
-        s.style.transition = 'none';
-        s.style.opacity = '1';
-        s.style.transform = `translate(calc(-50% + ${dx}vmax), calc(-50% + ${dy}vmax)) scale(1) rotate(0deg)`;
-      });
-      void bg.offsetWidth;
-      /* Después de un instante, explota hacia afuera revelando la página */
-      setTimeout(() => {
-        stars.forEach((s, i) => {
-          const angle = (i / N) * Math.PI * 2;
-          const dist  = 70 + Math.random() * 20;
-          const dx = Math.cos(angle) * dist;
-          const dy = Math.sin(angle) * dist;
-          const rot = 360 + Math.random() * 360;
-          s.style.transition = 'transform 0.75s cubic-bezier(0.22,1,0.36,1), opacity 0.75s';
-          s.style.transform =
-            `translate(calc(-50% + ${dx}vmax), calc(-50% + ${dy}vmax)) scale(${0.6 + Math.random()*0.6}) rotate(${rot}deg)`;
-          s.style.opacity = '0';
-        });
-        core.style.transition = 'transform 0.5s ease-out, opacity 0.5s';
-        core.style.transform = 'translate(-50%,-50%) scale(5) rotate(180deg)';
-        core.style.opacity = '0';
-        bg.style.transition = 'opacity 0.6s ease';
-        bg.style.opacity = '0';
-        setTimeout(() => { wrap.style.opacity = '0'; }, 750);
-      }, 220);
-    }
-  })();
-  </script>
-
-  <!-- ══ LISTENERS GLOBALES DE TRANSICIONES ══
-       Lógica unificada en un único delegado para evitar conflictos de orden de eventos.
-       Prioridad: data-ng-trans > #btnVolverPanel > catch-all interno → huellas default -->
-  <script>
-  document.addEventListener('click', function (e) {
-    const a = e.target.closest('a[href]');
-    if (!a) return;
-    const href = a.getAttribute('href') || '';
-    /* Ignorar anchors puros, javascript: y externos */
-    if (!href || href.startsWith('#') || href.startsWith('javascript')) return;
-    const isInternal = !href.startsWith('http') || a.href.startsWith(location.origin);
-    if (!isInternal) return;
-
-    /* 1. Atributo explícito: data-ng-trans="stars|circles|paws" */
-    const explicit = a.dataset.ngTrans;
-    if (explicit === 'stars')   { sessionStorage.setItem('ngStars',    '1'); return; }
-    if (explicit === 'circles') { sessionStorage.setItem('ngCircles',  '1'); return; }
-    if (explicit === 'paws')    { sessionStorage.setItem('ngTransition','1'); return; }
-
-    /* 2. Botón "Volver al panel" de los minijuegos → estrellas */
-    if (a.id === 'btnVolverPanel' || a.closest('#btnVolverPanel')) {
-      sessionStorage.setItem('ngStars', '1'); return;
-    }
-
-    /* 3. Catch-all: cualquier otra navegación interna → huellas de Milo */
-    sessionStorage.setItem('ngTransition', '1');
-  });
   </script>
 
 </body>

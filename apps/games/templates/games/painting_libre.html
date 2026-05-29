@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}🎨 Pintura Libre — NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+  .paint-wrapper { display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; }
+  .toolbar { background:white; border-radius:20px; box-shadow:0 8px 30px rgba(108,99,255,0.12); padding:16px 12px; display:flex; flex-direction:column; gap:12px; align-items:center; min-width:70px; }
+  .tool-btn { width:44px; height:44px; border-radius:12px; border:2px solid #e8e4ff; background:#f8f6ff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.3rem; transition:all 0.2s; }
+  .tool-btn:hover, .tool-btn.active { background:var(--primary); border-color:var(--primary); transform:scale(1.1); }
+  .tool-btn.active { box-shadow:0 4px 12px rgba(108,99,255,0.4); }
+  .color-swatch { width:30px; height:30px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition:all 0.2s; }
+  .color-swatch:hover, .color-swatch.active { border-color:#333; transform:scale(1.2); }
+  .canvas-container { position:relative; border-radius:20px; overflow:hidden; box-shadow:0 8px 30px rgba(108,99,255,0.15); background:white; }
+  #paintCanvas { cursor:crosshair; display:block; background:white; }
+  .brush-size-slider { -webkit-appearance:none; width:100%; height:6px; border-radius:3px; background:#e8e4ff; outline:none; }
+  .brush-size-slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--primary); cursor:pointer; }
+  .action-btn { border:none; border-radius:50px; padding:10px 22px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; transition:all 0.2s; }
+  .action-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.15); }
+
+  /* Banner libre */
+  .libre-banner {
+    background: linear-gradient(135deg, #6C63FF 0%, #9c55ff 40%, #4ECDC4 100%);
+    border-radius: 22px;
+    padding: 1rem 1.8rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 8px 28px rgba(108,99,255,0.28);
+    position: relative;
+    overflow: hidden;
+    flex-wrap: wrap;
+  }
+  .libre-banner::before {
+    content:'';
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(45deg,rgba(255,255,255,0.04) 0,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 14px);
+  }
+  .libre-milo {
+    height: 80px;
+    flex-shrink: 0;
+    animation: miloFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+    position: relative; z-index: 1;
+  }
+  @keyframes miloFloat {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-8px) rotate(2deg); }
+  }
+  .libre-banner-text { flex:1; min-width:200px; position:relative; z-index:1; }
+
+  /* Input del título */
+  .title-input-wrap {
+    background: white;
+    border-radius: 18px;
+    padding: 14px 20px;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.10);
+    border: 2.5px solid #e0d8ff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.2rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .title-input-wrap:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 6px 24px rgba(108,99,255,0.20);
+  }
+  .title-input-wrap label {
+    font-family: 'Fredoka One', cursive;
+    color: var(--primary);
+    font-size: 1rem;
+    white-space: nowrap;
+    margin: 0;
+  }
+  #obraTitle {
+    border: none;
+    outline: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: #444;
+    flex: 1;
+    background: transparent;
+  }
+  #obraTitle::placeholder { color: #ccc; font-weight: 600; font-family:'Nunito',sans-serif; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+
+  <!-- Banner superior -->
+  <div class="libre-banner">
+    <img src="{% static 'img/milo_apuntes.png' %}" class="libre-milo" alt="Milo pintando">
+    <div class="libre-banner-text">
+      <h2 class="font-fredoka mb-0" style="color:white;font-size:1.9rem;text-shadow:0 2px 8px rgba(0,0,0,0.15)">
+        🎨 ¡Pintura Libre!
+      </h2>
+      <p class="fw-bold mb-0" style="color:rgba(255,255,255,0.9);font-size:0.95rem">
+        Dibuja lo que quieras y guárdalo en tu museo 🏛️
+      </p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap" style="position:relative;z-index:1">
+      <a href="{% url 'games:museo_virtual' %}"
+         class="action-btn fw-bold"
+         style="background:rgba(255,255,255,0.9);color:#6C63FF;font-size:0.9rem;padding:8px 18px; text-decoration:none">
+        <i class="bi bi-caret-left-fill"></i> Mi Museo
+      </a>
+    </div>
+  </div>
+
+  <!-- Campo de título -->
+  <div class="title-input-wrap">
+    <label for="obraTitle">🖼️ Título:</label>
+    <input type="text" id="obraTitle" maxlength="80" placeholder="¿Qué estás dibujando? (ej: Mi perro, Un arcoíris...)">
+  </div>
+
+  <div class="paint-wrapper justify-content-center">
+
+    <!-- Toolbar izquierda -->
+    <div class="toolbar">
+      <div style="font-size:0.7rem;font-weight:700;color:#aaa;text-transform:uppercase">Tool</div>
+      <button class="tool-btn active" id="tool-brush"   onclick="setTool('brush')"   title="Pincel">🖌️</button>
+      <button class="tool-btn"        id="tool-pencil"  onclick="setTool('pencil')"  title="Lápiz">✏️</button>
+      <button class="tool-btn"        id="tool-marker"  onclick="setTool('marker')"  title="Marcador">🖊️</button>
+      <button class="tool-btn"        id="tool-fill"    onclick="setTool('fill')"    title="Relleno">🪣</button>
+      <button class="tool-btn"        id="tool-eraser"  onclick="setTool('eraser')"  title="Borrador">🧹</button>
+      <hr style="width:100%;border-color:#e8e4ff">
+      <div style="font-size:0.7rem;font-weight:700;color:#aaa;text-transform:uppercase">Tamaño</div>
+      <input type="range" class="brush-size-slider" min="1" max="40" value="8" id="brushSize"
+             oninput="updateSize(this.value)"
+             style="writing-mode:vertical-lr;direction:rtl;width:6px;height:80px">
+      <div id="sizeDisplay" style="font-size:0.75rem;font-weight:700;color:var(--primary)">8px</div>
+    </div>
+
+    <!-- Canvas -->
+    <div>
+      <div class="canvas-container" style="width:520px;height:480px">
+        <canvas id="paintCanvas" width="520" height="480"></canvas>
+      </div>
+      <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+        <button class="action-btn" style="background:#fff3cd;color:#856404" onclick="undoAction()">↩️ Deshacer</button>
+        <button class="action-btn" style="background:#f8d7da;color:#721c24" onclick="clearCanvas()">🗑️ Limpiar</button>
+        <button class="action-btn"
+                style="background:linear-gradient(135deg,var(--primary),#9c94ff);color:white"
+                onclick="guardarObra()">
+          💾 Guardar en mi Museo
+        </button>
+      </div>
+    </div>
+
+    <!-- Toolbar derecha: colores -->
+    <div class="toolbar" style="min-width:80px">
+      <div style="font-size:0.7rem;font-weight:700;color:#aaa;text-transform:uppercase">Color</div>
+      <div id="currentColorDisplay" style="width:40px;height:40px;border-radius:50%;background:#e74c3c;border:3px solid #333;margin-bottom:4px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div class="color-swatch active" style="background:#e74c3c" onclick="setColor('#e74c3c',this)"></div>
+        <div class="color-swatch" style="background:#e67e22" onclick="setColor('#e67e22',this)"></div>
+        <div class="color-swatch" style="background:#f1c40f" onclick="setColor('#f1c40f',this)"></div>
+        <div class="color-swatch" style="background:#2ecc71" onclick="setColor('#2ecc71',this)"></div>
+        <div class="color-swatch" style="background:#3498db" onclick="setColor('#3498db',this)"></div>
+        <div class="color-swatch" style="background:#9b59b6" onclick="setColor('#9b59b6',this)"></div>
+        <div class="color-swatch" style="background:#1abc9c" onclick="setColor('#1abc9c',this)"></div>
+        <div class="color-swatch" style="background:#e91e63" onclick="setColor('#e91e63',this)"></div>
+        <div class="color-swatch" style="background:#ff5722" onclick="setColor('#ff5722',this)"></div>
+        <div class="color-swatch" style="background:#795548" onclick="setColor('#795548',this)"></div>
+        <div class="color-swatch" style="background:#607d8b" onclick="setColor('#607d8b',this)"></div>
+        <div class="color-swatch" style="background:#ff80ab" onclick="setColor('#ff80ab',this)"></div>
+        <div class="color-swatch" style="background:#69f0ae" onclick="setColor('#69f0ae',this)"></div>
+        <div class="color-swatch" style="background:#40c4ff" onclick="setColor('#40c4ff',this)"></div>
+        <div class="color-swatch" style="background:#333333" onclick="setColor('#333333',this)"></div>
+        <div class="color-swatch" style="background:#ffffff;border:2px solid #ccc" onclick="setColor('#ffffff',this)"></div>
+      </div>
+      <div style="font-size:0.7rem;font-weight:700;color:#aaa;margin-top:8px">Custom</div>
+      <input type="color" id="customColor" value="#e74c3c"
+             onchange="setColor(this.value,null)"
+             style="width:40px;height:30px;border:none;border-radius:8px;cursor:pointer">
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal guardado -->
+<div class="modal fade" id="savedModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:28px;border:none;overflow:hidden">
+      <div class="modal-body text-center p-5"
+           style="background:linear-gradient(135deg,#f8f6ff,#fff8f0)">
+        <img src="{% static 'img/milo_aplaudiendo.png' %}"
+             style="height:130px;animation:miloFloat 3s ease-in-out infinite">
+        <h3 class="font-fredoka mt-3" style="color:var(--primary)">¡Obra guardada! 🎉</h3>
+        <p class="fw-bold text-muted" id="savedMsg"></p>
+        <div class="d-flex gap-3 justify-content-center mt-3 flex-wrap">
+          <a href="{% url 'games:museo_virtual' %}"
+             class="btn btn-nestgrow btn-primary-nestgrow">
+            🏛️ Ver mi Museo
+          </a>
+          <button class="btn fw-bold rounded-pill px-4"
+                  style="background:#f0eeff;color:var(--primary);border:2px solid #e0d8ff"
+                  onclick="nuevaObra()">
+            🎨 Pintar otra
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal error -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:24px;border:none">
+      <div class="modal-body text-center p-4">
+        <img src="{% static 'img/milo_preocupado.png' %}" style="height:100px">
+        <h4 class="font-fredoka mt-2" style="color:#FF6B6B">¡Ups! Algo salió mal</h4>
+        <p class="fw-bold text-muted" id="errorMsg"></p>
+        <button class="btn btn-nestgrow btn-primary-nestgrow mt-2"
+                data-bs-dismiss="modal">Intentar de nuevo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const canvas = document.getElementById('paintCanvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+let lastX = 0, lastY = 0;
+let currentTool = 'brush';
+let currentColor = '#e74c3c';
+let brushSize = 8;
+let history = [];
+
+// Inicializa fondo blanco
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+function setTool(tool) {
+  currentTool = tool;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tool-' + tool).classList.add('active');
+}
+
+function setColor(color, el) {
+  currentColor = color;
+  document.getElementById('currentColorDisplay').style.background = color;
+  document.getElementById('customColor').value = color;
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (currentTool === 'eraser') setTool('brush');
+}
+
+function updateSize(val) {
+  brushSize = parseInt(val);
+  document.getElementById('sizeDisplay').textContent = val + 'px';
+}
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  if (e.touches) return { x:(e.touches[0].clientX-rect.left)*scaleX, y:(e.touches[0].clientY-rect.top)*scaleY };
+  return { x:(e.clientX-rect.left)*scaleX, y:(e.clientY-rect.top)*scaleY };
+}
+
+function saveHistory() { if (history.length > 30) history.shift(); history.push(canvas.toDataURL()); }
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDraw);
+canvas.addEventListener('mouseleave', stopDraw);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(e); }, {passive:false});
+canvas.addEventListener('touchmove',  e => { e.preventDefault(); draw(e); },      {passive:false});
+canvas.addEventListener('touchend', stopDraw);
+
+function startDraw(e) {
+  if (currentTool === 'fill') { const pos=getPos(e); floodFill(Math.round(pos.x),Math.round(pos.y),currentColor); return; }
+  saveHistory(); isDrawing = true;
+  const pos = getPos(e); lastX=pos.x; lastY=pos.y;
+  ctx.beginPath(); ctx.arc(lastX,lastY,getBrushRadius(),0,Math.PI*2);
+  ctx.fillStyle = currentTool==='eraser' ? '#ffffff' : currentColor; ctx.fill();
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  const pos = getPos(e); applyTool(lastX,lastY,pos.x,pos.y); lastX=pos.x; lastY=pos.y;
+}
+
+function stopDraw() { isDrawing = false; }
+
+function getBrushRadius() {
+  if (currentTool==='pencil') return brushSize*0.4;
+  if (currentTool==='marker') return brushSize*1.8;
+  return brushSize*0.8;
+}
+
+function applyTool(x1,y1,x2,y2) {
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+  if      (currentTool==='eraser') { ctx.strokeStyle='#ffffff';     ctx.lineWidth=brushSize*2;   ctx.lineCap='round';  ctx.lineJoin='round'; ctx.globalAlpha=1;   }
+  else if (currentTool==='pencil') { ctx.strokeStyle=currentColor;  ctx.lineWidth=Math.max(1,brushSize*0.5); ctx.lineCap='round'; ctx.lineJoin='round'; ctx.globalAlpha=0.85; }
+  else if (currentTool==='marker') { ctx.strokeStyle=currentColor;  ctx.lineWidth=brushSize*2.5; ctx.lineCap='square'; ctx.lineJoin='miter'; ctx.globalAlpha=0.6; }
+  else                             { ctx.strokeStyle=currentColor;  ctx.lineWidth=brushSize*1.2; ctx.lineCap='round';  ctx.lineJoin='round'; ctx.globalAlpha=1;   }
+  ctx.stroke(); ctx.globalAlpha=1;
+}
+
+function hexToRgb(hex) { return [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16),255]; }
+function colorsMatch(a,b,tol=30) { return Math.abs(a[0]-b[0])<tol&&Math.abs(a[1]-b[1])<tol&&Math.abs(a[2]-b[2])<tol; }
+
+function floodFill(startX,startY,fillColor) {
+  saveHistory();
+  const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+  const data=imageData.data; const w=canvas.width,h=canvas.height;
+  const idx=(startY*w+startX)*4;
+  const target=[data[idx],data[idx+1],data[idx+2],data[idx+3]];
+  const fill=hexToRgb(fillColor);
+  if (colorsMatch(target,fill,5)) return;
+  const stack=[[startX,startY]]; const visited=new Uint8Array(w*h);
+  while(stack.length) {
+    const [cx,cy]=stack.pop();
+    if(cx<0||cx>=w||cy<0||cy>=h) continue;
+    const i=cy*w+cx; if(visited[i]) continue; visited[i]=1;
+    const pi=i*4;
+    if(!colorsMatch([data[pi],data[pi+1],data[pi+2],data[pi+3]],target)) continue;
+    data[pi]=fill[0];data[pi+1]=fill[1];data[pi+2]=fill[2];data[pi+3]=255;
+    stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
+  }
+  ctx.putImageData(imageData,0,0);
+}
+
+function undoAction() {
+  if (!history.length) return;
+  const img=new Image(); img.src=history.pop();
+  img.onload=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); };
+}
+
+function clearCanvas() {
+  saveHistory(); ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function guardarObra() {
+  const title = document.getElementById('obraTitle').value.trim() || 'Sin título';
+  const canvasData = canvas.toDataURL('image/png');
+
+  fetch("{% url 'games:guardar_obra_libre' %}", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify({ canvas_data: canvasData, title: title })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.status === 'ok') {
+      document.getElementById('savedMsg').textContent = `"${title}" ya está en tu museo. 🎨`;
+      new bootstrap.Modal(document.getElementById('savedModal')).show();
+    } else {
+      document.getElementById('errorMsg').textContent = data.message || 'Error desconocido.';
+      new bootstrap.Modal(document.getElementById('errorModal')).show();
+    }
+  })
+  .catch(() => {
+    document.getElementById('errorMsg').textContent = 'No se pudo conectar. Intenta de nuevo.';
+    new bootstrap.Modal(document.getElementById('errorModal')).show();
+  });
+}
+
+function nuevaObra() {
+  bootstrap.Modal.getInstance(document.getElementById('savedModal'))?.hide();
+  document.getElementById('obraTitle').value = '';
+  clearCanvas();
+  history = [];
+}
+</script>
+{% endblock %}

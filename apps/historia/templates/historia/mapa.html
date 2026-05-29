@@ -5,440 +5,773 @@
 
 {% block extra_css %}
 <style>
-  /* ── Layout ── */
-  .historia-wrap {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 4rem;
-  }
+/* ══ Contenedor del mapa ══ */
+.historia-wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 1.5rem 0.5rem 6rem;
+  position: relative;
+}
 
-  /* ── Hero ── */
-  .historia-hero {
-    background: linear-gradient(135deg, #6C63FF, #9c94ff, #4ECDC4);
-    border-radius: 28px;
-    padding: 1.8rem 2rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2rem;
-  }
-  .historia-hero::before {
-    content: '';
-    position: absolute;
-    width: 180px; height: 180px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
-    top: -70px; right: -50px;
-  }
-  .historia-hero::after {
-    content: '';
-    position: absolute;
-    width: 120px; height: 120px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 50%;
-    bottom: -40px; left: 10%;
-  }
-  .estrellas-contador {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    background: rgba(255,255,255,0.2);
-    border-radius: 99px;
-    padding: .3rem .9rem;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-  }
+/* ══ Fondo aventura — cielo nocturno con montañas ══ */
+.histo-adv-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* Cielo degradado: profundo índigo → violeta → crepúsculo */
+  background: linear-gradient(180deg,
+    #0c0824 0%,
+    #1a0e4a 18%,
+    #2d1b6e 38%,
+    #4a2d8f 56%,
+    #6b3fa5 72%,
+    #8a5ab8 86%,
+    #a470c8 100%
+  );
+  overflow: hidden;
+}
 
-  /* ── Timeline ── */
-  .timeline {
-    position: relative;
-    padding-left: 56px;
-  }
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 27px;
-    top: 0; bottom: 0;
-    width: 3px;
-    background: repeating-linear-gradient(
-      180deg,
-      #c5bfff 0px, #c5bfff 8px,
-      transparent 8px, transparent 16px
-    );
-  }
+/* Campo de estrellas — puntos CSS sin emojis */
+.histo-adv-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle 1.5px at  7% 6%,  rgba(255,255,255,.9) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 14% 3%,  rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px  at 21% 11%, rgba(255,255,255,.85) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 29% 4%,  rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 37% 9%, rgba(255,255,255,.9) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 45% 2%,  rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px  at 52% 14%, rgba(255,255,255,.8) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 60% 7%,  rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 68% 3%, rgba(255,255,255,.85) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 75% 12%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px  at 83% 5%,  rgba(255,255,255,.9) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 91% 9%,  rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 97% 4%,  rgba(255,255,255,.55) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 11% 22%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 33% 19%,rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 57% 25%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 79% 21%, rgba(255,255,255,.45) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 94% 18%, rgba(255,255,255,.4) 0%, transparent 100%);
+}
 
-  /* ── Sección node ── */
-  .seccion-node {
-    position: relative;
-    margin-bottom: 0;
-  }
-  .seccion-node + .seccion-node {
-    margin-top: 8px;
-  }
+/* Montañas lejanas */
+.histo-adv-bg .hbg-far {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 42%;
+  background: linear-gradient(180deg, transparent 0%, #1e0d52cc 100%);
+  clip-path: polygon(
+    0% 100%, 0% 65%,
+    5% 50%,  9% 58%, 14% 38%, 19% 52%, 25% 28%,
+    31% 46%, 36% 32%, 42% 50%, 47% 22%, 53% 42%,
+    58% 30%, 63% 48%, 69% 36%, 74% 52%, 80% 40%,
+    86% 55%, 91% 42%, 96% 58%, 100% 48%,
+    100% 100%
+  );
+}
+/* Montañas cercanas — más oscuras, más definidas */
+.histo-adv-bg .hbg-near {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, #0c0824aa 0%, #0c0824ee 100%);
+  clip-path: polygon(
+    0% 100%, 0% 80%,
+    7% 58%, 14% 72%, 22% 48%, 30% 65%,
+    38% 44%, 46% 60%, 54% 38%, 62% 56%,
+    70% 44%, 78% 62%, 86% 48%, 93% 64%,
+    100% 52%, 100% 100%
+  );
+}
+/* Brillo de luna / planeta decorativo */
+.histo-adv-bg .hbg-moon {
+  position: absolute;
+  top: 6%; right: 8%;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff9c4 0%, #ffd54f 50%, #ffb300 100%);
+  box-shadow: 0 0 30px 10px rgba(255,213,79,0.35), 0 0 60px 20px rgba(255,213,79,0.15);
+  animation: moonGlow 4s ease-in-out infinite;
+}
+@keyframes moonGlow {
+  0%,100% { box-shadow: 0 0 30px 10px rgba(255,213,79,0.35), 0 0 60px 20px rgba(255,213,79,0.15); }
+  50%      { box-shadow: 0 0 40px 16px rgba(255,213,79,0.5),  0 0 80px 30px rgba(255,213,79,0.22); }
+}
+/* Nube de nebulosa decorativa */
+.histo-adv-bg .hbg-nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  pointer-events: none;
+}
+.histo-adv-bg .hbg-nebula.n1 {
+  width: 280px; height: 180px;
+  top: 12%; left: 2%;
+  background: rgba(108,99,255,0.22);
+}
+.histo-adv-bg .hbg-nebula.n2 {
+  width: 220px; height: 150px;
+  top: 8%; right: 15%;
+  background: rgba(78,205,196,0.15);
+}
+.histo-adv-bg .hbg-nebula.n3 {
+  width: 180px; height: 120px;
+  top: 30%; left: 60%;
+  background: rgba(255,107,107,0.12);
+}
 
-  .node-btn {
-    position: absolute;
-    left: -56px;
-    top: 14px;
-    width: 54px; height: 54px;
-    border-radius: 50%;
-    border: 3px solid white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem;
-    cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    z-index: 2;
-    background: var(--sec-color, #6C63FF);
-    text-decoration: none;
-  }
-  .node-btn:hover {
-    transform: scale(1.12);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
-  .node-btn.locked {
-    background: #ccc !important;
-    cursor: not-allowed;
-    filter: grayscale(0.5);
-  }
-  .node-btn.locked:hover {
-    transform: none;
-  }
-  .node-btn.completa {
-    border-color: #FFE66D;
-    box-shadow: 0 4px 16px rgba(255,230,109,0.5);
-  }
+/* ── Hero ── */
+.historia-hero {
+  background: linear-gradient(135deg, #4a2d8f 0%, #6C63FF 45%, #9b4dca 100%);
+  border-radius: 24px;
+  padding: 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  box-shadow:
+    0 16px 50px rgba(74,45,143,0.55),
+    0 0 0 2px rgba(255,255,255,0.12);
+  display: flex;
+  align-items: stretch;
+  min-height: 160px;
+}
+/* Brillo esquina superior */
+.historia-hero::before {
+  content: '';
+  position: absolute;
+  width: 280px; height: 280px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 50%;
+  top: -120px; right: -80px;
+  pointer-events: none;
+}
+/* Franja inferior difuminada */
+.historia-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.2));
+  pointer-events: none;
+  border-radius: 0 0 24px 24px;
+}
+/* Íconos decorativos Bootstrap (no emojis) */
+.hero-icon-deco {
+  position: absolute;
+  color: rgba(255,255,255,0.18);
+  font-size: 1.6rem;
+  animation: floatStation 4s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-icon-deco:nth-child(1) { top: 12%; right: 24%; animation-delay: 0s;   }
+.hero-icon-deco:nth-child(2) { bottom: 18%; right: 38%; animation-delay: 1s; font-size:1.1rem; }
+.hero-icon-deco:nth-child(3) { top: 55%; left: 10%;  animation-delay: .5s; font-size:1.3rem; }
 
-  /* ── Sección card ── */
-  .seccion-card {
-    background: white;
-    border-radius: 20px;
-    padding: 1rem 1.2rem;
-    box-shadow: 0 4px 16px rgba(108,99,255,0.08);
-    cursor: pointer;
-    transition: all .2s;
-    border-left: 4px solid var(--sec-color, #6C63FF);
-    margin-bottom: 8px;
-    user-select: none;
-  }
-  .seccion-card:hover:not(.locked-card) {
-    box-shadow: 0 8px 24px rgba(108,99,255,0.15);
-    transform: translateX(4px);
-  }
-  .seccion-card.locked-card {
-    opacity: .6;
-    cursor: not-allowed;
-    border-left-color: #ccc;
-  }
-  .seccion-card .sec-titulo {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.05rem;
-    color: var(--sec-color, #6C63FF);
-    margin-bottom: 2px;
-  }
-  .seccion-card.locked-card .sec-titulo {
-    color: #999;
-  }
+/* Contenido del hero */
+.hero-content {
+  flex: 1;
+  padding: 1.6rem 1.8rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+}
+/* Imagen de Milo en el hero */
+.hero-milo-img {
+  width: 145px;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
+  animation: miloHeroFloat 3.2s ease-in-out infinite;
+  align-self: flex-end;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+@keyframes miloHeroFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-10px) scale(1.04); }
+}
 
-  /* ── Progreso bar inside card ── */
-  .prog-bar-wrap {
-    height: 5px;
-    background: #e8e4ff;
-    border-radius: 99px;
-    overflow: hidden;
-    margin-top: 6px;
-  }
-  .prog-bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    background: var(--sec-color, #6C63FF);
-    transition: width .5s ease;
-  }
+.estrellas-contador {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 99px;
+  padding: .35rem 1.1rem;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  width: fit-content;
+}
 
-  /* ── Lecciones expandibles ── */
-  .lecciones-wrap {
-    display: none;
-    padding: .8rem 0 1rem;
-    animation: fadeInUp .3s ease;
-  }
-  .lecciones-wrap.open {
-    display: block;
-  }
-  .lecciones-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .lec-btn {
-    width: 64px; height: 64px;
-    border-radius: 16px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    font-size: 1.4rem;
-    position: relative;
-    border: none;
-    cursor: pointer;
-    transition: transform .2s, box-shadow .2s;
-    text-decoration: none;
-    background: #f0eeff;
-    color: #444;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  .lec-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-  }
-  .lec-btn.completada {
-    background: var(--sec-color, #6C63FF);
-    color: white;
-  }
-  .lec-btn.accesible {
-    background: white;
-    border: 2px solid var(--sec-color, #6C63FF);
-  }
-  .lec-btn.bloqueada {
-    opacity: .45;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-  .lec-btn:hover.bloqueada {
-    transform: none;
-  }
-  .estrellas-overlay {
-    position: absolute;
-    bottom: 2px;
-    font-size: .55rem;
-    letter-spacing: -1px;
-    line-height: 1;
-  }
+/* ═══════════════════════════════════════
+   ZIG-ZAG PATH — vibrante y colorido
+═══════════════════════════════════════ */
+.duolingo-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
 
-  /* Tooltip */
-  .lec-tooltip {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: white;
-    font-size: .75rem;
-    padding: .3rem .6rem;
-    border-radius: 8px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .15s;
-    z-index: 10;
-  }
-  .lec-btn:hover .lec-tooltip {
-    opacity: 1;
-  }
+/* ── Estación ── */
+.path-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+/* Más spread para que el zig-zag sea más dramático */
+.station-left  { align-items: flex-start; padding-left:  2%; }
+.station-right { align-items: flex-end;   padding-right: 2%; }
 
-  /* ── Continue button ── */
+/* ── Burbuja wrap ── */
+.station-bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
 
-  @keyframes fadeInUp {
-    from { opacity:0; transform:translateY(8px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
+/* Glow pulsante bajo el círculo */
+.station-bubble-wrap.desbloqueada::before {
+  content: '';
+  position: absolute;
+  width: 118px; height: 118px;
+  border-radius: 50%;
+  background: var(--sec-color, #6C63FF);
+  opacity: 0.3;
+  filter: blur(22px);
+  top: 4px;
+  animation: glowPulse 2.8s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: 0.22; transform: scale(1);    }
+  50%      { opacity: 0.48; transform: scale(1.22); }
+}
+
+/* ── Círculo principal — MÁS GRANDE ── */
+.station-circle {
+  width: 114px;
+  height: 114px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background: var(--sec-color, #6C63FF);
+  border: 7px solid white;
+  box-shadow:
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 12px 36px rgba(0,0,0,0.3),
+    0 0 0 10px rgba(255,255,255,0.15),
+    0 0 50px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform .32s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  position: relative;
+  z-index: 2;
+  text-decoration: none;
+  animation: floatStation 3.5s ease-in-out infinite;
+}
+.path-station:nth-child(1)  .station-circle { animation-delay: 0s;   }
+.path-station:nth-child(2)  .station-circle { animation-delay: 0.4s; }
+.path-station:nth-child(3)  .station-circle { animation-delay: 0.8s; }
+.path-station:nth-child(4)  .station-circle { animation-delay: 1.2s; }
+.path-station:nth-child(5)  .station-circle { animation-delay: 1.6s; }
+.path-station:nth-child(6)  .station-circle { animation-delay: 2.0s; }
+.path-station:nth-child(7)  .station-circle { animation-delay: 2.4s; }
+.path-station:nth-child(8)  .station-circle { animation-delay: 2.8s; }
+.path-station:nth-child(9)  .station-circle { animation-delay: 3.2s; }
+.path-station:nth-child(10) .station-circle { animation-delay: 3.6s; }
+
+@keyframes floatStation {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-9px) scale(1.03); }
+}
+
+.station-circle:hover {
+  transform: scale(1.2) translateY(-10px) !important;
+  box-shadow:
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 22px 55px rgba(0,0,0,0.38),
+    0 0 0 14px rgba(255,255,255,0.24),
+    0 0 50px var(--sec-color, #6C63FF),
+    0 0 80px rgba(108,99,255,0.2);
+  animation: none;
+}
+
+.station-circle.locked {
+  background: #c8c4d8 !important;
+  border-color: rgba(255,255,255,0.6);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+  cursor: not-allowed;
+  filter: grayscale(0.5) brightness(0.95);
+  animation: none;
+}
+.station-circle.locked:hover { transform: none !important; }
+
+.station-circle.completa {
+  box-shadow:
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 10px 32px rgba(255,220,50,0.5),
+    0 0 0 9px rgba(255,230,109,0.28),
+    0 0 26px rgba(255,220,50,0.45);
+}
+.station-trophy {
+  position: absolute;
+  top: -7px; right: -7px;
+  font-size: 1.3rem;
+  z-index: 3;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+  animation: trophySpin 4s ease-in-out infinite;
+}
+@keyframes trophySpin {
+  0%,85%,100% { transform: rotate(0deg) scale(1); }
+  90%          { transform: rotate(-15deg) scale(1.25); }
+  95%          { transform: rotate(12deg) scale(1.25); }
+}
+
+/* ── Nombre de la sección — pill más grande ── */
+.station-name-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--sec-color, #6C63FF);
+  color: white;
+  border-radius: 99px;
+  padding: 6px 18px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.95rem;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.2),
+    0 0 0 2.5px rgba(255,255,255,0.4);
+  white-space: nowrap;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.3px;
+}
+.station-name-pill.locked-pill {
+  background: #c8c4d8;
+  box-shadow: none;
+}
+
+.station-progress {
+  font-size: 0.74rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════════
+   CONECTORES — SVG curva S orgánica
+═══════════════════════════════════════════ */
+.path-connector-svg {
+  width: 100%;
+  height: 90px;
+  display: block;
+  overflow: visible;
+}
+/* Animación de flujo de guiones a lo largo de la curva */
+.connector-dash {
+  stroke-dasharray: 10 18;
+  stroke-dashoffset: 0;
+  animation: dashFlow 1.8s linear infinite;
+}
+@keyframes dashFlow {
+  to { stroke-dashoffset: -28; }
+}
+/* Puntos decorativos en el conector */
+.connector-dot {
+  animation: dotPop 2.2s ease-in-out infinite;
+}
+.connector-dot:nth-child(2) { animation-delay: 0.7s; }
+.connector-dot:nth-child(3) { animation-delay: 1.4s; }
+@keyframes dotPop {
+  0%,100% { r: 4; opacity: 0.55; }
+  50%      { r: 6; opacity: 1;    }
+}
+
+/* ══════════════════════════
+   PANEL DE LECCIONES
+══════════════════════════ */
+.lecciones-panel {
+  display: none;
+  background: white;
+  border-radius: 22px;
+  padding: 1.1rem 1.3rem;
+  margin-top: 12px;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.18),
+    0 0 0 3px var(--sec-color, #6C63FF),
+    0 0 0 5px rgba(255,255,255,0.6);
+  width: 300px;
+  max-width: 88vw;
+  position: relative;
+  z-index: 10;
+}
+.lecciones-panel.open {
+  display: block;
+  animation: popIn .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn {
+  from { opacity:0; transform: scale(0.8) translateY(10px); }
+  to   { opacity:1; transform: scale(1)   translateY(0); }
+}
+
+/* Banda de color en la parte superior del panel */
+.panel-header-band {
+  background: var(--sec-color, #6C63FF);
+  margin: -1.1rem -1.3rem 1rem;
+  border-radius: 20px 20px 0 0;
+  padding: 0.8rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-titulo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: white;
+}
+.panel-close {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  border-radius: 50%;
+  width: 26px; height: 26px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.panel-close:hover { background: rgba(255,255,255,0.45); }
+
+/* Barra de progreso */
+.prog-bar-wrap {
+  height: 8px;
+  background: #ece9ff;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.prog-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--sec-color, #6C63FF), rgba(255,255,255,0.6), var(--sec-color, #6C63FF));
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  transition: width .5s ease;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Grid de lecciones */
+.lecciones-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.lec-btn {
+  width: 68px; height: 68px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+  text-decoration: none;
+  background: #f0eeff;
+  color: #444;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+.lec-btn:hover {
+  transform: scale(1.18) translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+}
+.lec-btn.completada {
+  background: var(--sec-color, #6C63FF);
+  color: white;
+  box-shadow: 0 6px 18px rgba(108,99,255,0.4);
+}
+.lec-btn.accesible {
+  background: white;
+  border: 3px solid var(--sec-color, #6C63FF);
+  box-shadow: 0 5px 18px rgba(108,99,255,0.2);
+}
+.lec-btn.bloqueada {
+  opacity: .35;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+.estrellas-overlay {
+  position: absolute;
+  bottom: 2px;
+  font-size: .48rem;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.lec-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  font-size: .72rem;
+  padding: .25rem .55rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  z-index: 20;
+}
+.lec-btn:hover .lec-tooltip { opacity: 1; }
+
+/* ── Estado vacío ── */
+.historia-locked-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: white;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+
+<!-- Fondo bg_avent -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:url('{% static 'img/bg_avent.png' %}') center center / cover no-repeat;"></div>
+
 <div class="historia-wrap">
 
-  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <!-- Hero con Milo -->
   <div class="historia-hero mb-4">
-    <div class="position-relative" style="z-index:1">
-      <div class="d-flex align-items-center gap-3 flex-wrap">
-        <div>
-          <h2 class="font-fredoka mb-1" style="font-size:2rem">🗺️ Modo Historia</h2>
-          <p class="mb-0 fw-bold" style="opacity:.9;font-size:.95rem">
-            Aprende inglés viajando por el mundo de Milo
-          </p>
+    <i class="bi bi-star-fill hero-icon-deco"></i>
+    <i class="bi bi-stars hero-icon-deco"></i>
+    <i class="bi bi-star hero-icon-deco"></i>
+
+    <div class="hero-content">
+      <div>
+        <div style="font-size:.8rem;font-weight:800;opacity:.7;letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem">
+          <i class="bi bi-map-fill me-1"></i> NestGrow · Aventura
         </div>
-        <div class="ms-auto">
-          <div class="estrellas-contador">
-            ⭐ {{ total_estrellas }} estrella{{ total_estrellas|pluralize:"s" }}
-          </div>
-        </div>
+        <h2 class="font-fredoka mb-1" style="font-size:2.1rem;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,0.2)">
+          Modo Historia
+        </h2>
+        <p class="fw-bold mb-2" style="opacity:.88;font-size:.9rem">
+          Aprende inglés viajando por el mundo de Milo
+        </p>
+      </div>
+      <div class="estrellas-contador">
+        <i class="bi bi-star-fill" style="color:#FFE66D"></i>
+        {{ total_estrellas }} estrellas ganadas
       </div>
     </div>
+    <img src="{% static 'img/milo_avent.png' %}" class="hero-milo-img" alt="Milo">
   </div>
 
-  <!-- ── Timeline de secciones ─────────────────────────────────────────── -->
-  <div class="timeline">
+  <!-- Path zig-zag -->
+  <div class="duolingo-path">
+
+    {% if not secciones_data %}
+    <div class="historia-locked-state">
+      <i class="bi bi-lock-fill" style="font-size:3.5rem;color:rgba(255,255,255,0.5)"></i>
+      <h5 class="font-fredoka mt-3">Aún no tienes secciones disponibles</h5>
+      <p style="opacity:.6;font-weight:700;font-size:.9rem">
+        Tu profesor desbloqueará las secciones cuando estés listo.
+      </p>
+    </div>
+    {% endif %}
+
     {% for item in secciones_data %}
     {% with sec=item.seccion %}
+    {% cycle 'station-left' 'station-right' as pos silent %}
 
-    <div class="seccion-node"
-         style="--sec-color:{{ sec.color_hex }}">
+    <!-- Estación {{ forloop.counter }}: {{ sec.titulo }} -->
+    <div class="path-station {{ pos }}" style="--sec-color:{{ sec.color_hex }}">
+      <div class="station-bubble-wrap {% if item.desbloqueada %}desbloqueada{% endif %}">
 
-      <!-- Nodo circular -->
-      {% if item.desbloqueada %}
-      <button class="node-btn {% if item.completa %}completa{% endif %}"
-              onclick="toggleSeccion('sec{{ sec.pk }}')"
-              title="{{ sec.titulo }}"
-              aria-label="Sección {{ sec.titulo }}">
-        {{ sec.icono_emoji }}
-      </button>
-      {% else %}
-      <div class="node-btn locked" title="Sección bloqueada">🔒</div>
-      {% endif %}
-
-      <!-- Card de la sección -->
-      <div class="seccion-card {% if not item.desbloqueada %}locked-card{% endif %}"
-           {% if item.desbloqueada %}onclick="toggleSeccion('sec{{ sec.pk }}')"{% endif %}>
-
-        <div class="d-flex align-items-center justify-content-between gap-2">
-          <div>
-            <div class="sec-titulo">
-              {{ sec.icono_emoji }} {{ sec.titulo }}
-            </div>
-            <div class="text-muted small fw-bold">
-              {% if item.desbloqueada %}
-                {{ item.completadas }}/{{ item.total }} lecciones
-                · {{ item.estrellas }}/{{ item.max_estrellas }} ⭐
-              {% else %}
-                🔒 Bloqueada — pide a tu profesor que la desbloquee
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="d-flex align-items-center gap-2 flex-shrink-0">
-            {% if item.completa %}
-              <span style="font-size:1.4rem">🏆</span>
-            {% elif item.desbloqueada %}
-              <i class="bi bi-chevron-down text-muted"></i>
-            {% endif %}
-          </div>
-        </div>
-
-        {% if item.desbloqueada and item.total > 0 %}
-        <div class="prog-bar-wrap">
-          <div class="prog-bar-fill"
-               style="width:{% widthratio item.completadas item.total 100 %}%">
-          </div>
+        <!-- Círculo -->
+        {% if item.desbloqueada %}
+        <button class="station-circle {% if item.completa %}completa{% endif %}"
+                onclick="togglePanel('panel{{ sec.pk }}')"
+                aria-label="{{ sec.titulo }}">
+          {{ sec.icono_emoji }}
+        </button>
+        {% else %}
+        <div class="station-circle locked">
+          <i class="bi bi-lock-fill"></i>
         </div>
         {% endif %}
 
-        <!-- Lecciones expandibles -->
+        <!-- Nombre en pill de color -->
+        <div class="station-name-pill {% if not item.desbloqueada %}locked-pill{% endif %}">
+          {{ sec.titulo }}
+        </div>
         {% if item.desbloqueada %}
-        <div class="lecciones-wrap" id="sec{{ sec.pk }}">
-          <div class="lecciones-grid pt-2">
-            {% for lec_item in item.lecciones %}
-            {% with lec=lec_item.leccion %}
+        <div class="station-progress">
+          {{ item.completadas }}/{{ item.total }} lec &nbsp;·&nbsp;
+          <i class="bi bi-star-fill" style="color:#FFE66D;font-size:.65rem"></i> {{ item.estrellas }}
+        </div>
+        {% endif %}
+
+        <!-- Panel de lecciones -->
+        {% if item.desbloqueada %}
+        <div class="lecciones-panel" id="panel{{ sec.pk }}" style="--sec-color:{{ sec.color_hex }}">
+          <div class="panel-header-band">
+            <span class="panel-titulo">{{ sec.icono_emoji }} {{ sec.titulo }}</span>
+            <button class="panel-close" onclick="togglePanel('panel{{ sec.pk }}')">✕</button>
+          </div>
+
+          {% if item.total > 0 %}
+          <div class="prog-bar-wrap">
+            <div class="prog-bar-fill" style="width:{% widthratio item.completadas item.total 100 %}%"></div>
+          </div>
+          {% endif %}
+
+          <div class="lecciones-grid">
+            {% for lec_item in item.lecciones %}{% with lec=lec_item.leccion %}
             <div style="position:relative;display:inline-block">
               {% if lec_item.accesible %}
                 <a href="{% url 'historia:ver_leccion' pk=lec.pk %}"
-                   class="lec-btn {% if lec_item.completada %}completada{% elif lec_item.accesible %}accesible{% else %}bloqueada{% endif %}"
-                   title="{{ lec.titulo }}">
+                   class="lec-btn {% if lec_item.completada %}completada{% else %}accesible{% endif %}">
                   {{ lec.icono_emoji }}
                   {% if lec_item.completada %}
                   <span class="estrellas-overlay">
-                    {% for i in "123" %}{% if forloop.counter <= lec_item.estrellas %}⭐{% else %}☆{% endif %}{% endfor %}
+                    {% for i in "123" %}{% if forloop.counter <= lec_item.estrellas %}<i class="bi bi-star-fill" style="color:#FFE66D"></i>{% else %}<i class="bi bi-star" style="opacity:.4"></i>{% endif %}{% endfor %}
                   </span>
                   {% endif %}
                   <span class="lec-tooltip">{{ lec.titulo }}</span>
                 </a>
               {% else %}
-                <div class="lec-btn bloqueada" title="Completa la lección anterior primero">
-                  🔒
+                <div class="lec-btn bloqueada">
+                  <i class="bi bi-lock-fill"></i>
                   <span class="lec-tooltip">{{ lec.titulo }}</span>
                 </div>
               {% endif %}
             </div>
-            {% endwith %}
-            {% endfor %}
+            {% endwith %}{% endfor %}
           </div>
         </div>
         {% endif %}
 
-      </div><!-- /card -->
-    </div><!-- /node -->
+      </div><!-- /bubble-wrap -->
+    </div><!-- /station -->
+
+    <!-- Conector SVG — curva S orgánica hacia la siguiente estación -->
+    {% if not forloop.last %}
+      {% if pos == 'station-left' %}
+      {# izq → der: empieza arriba-izquierda, termina abajo-derecha #}
+      <svg class="path-connector-svg" viewBox="0 0 500 90" preserveAspectRatio="none">
+        {# Brillo de fondo #}
+        <path d="M 62 5 C 62 85, 438 5, 438 85"
+              stroke="{{ sec.color_hex }}" stroke-width="44" fill="none"
+              stroke-linecap="round" opacity="0.14"/>
+        {# Línea principal sólida #}
+        <path d="M 62 5 C 62 85, 438 5, 438 85"
+              stroke="{{ sec.color_hex }}" stroke-width="22" fill="none"
+              stroke-linecap="round" opacity="0.95"/>
+        {# Guiones animados encima #}
+        <path class="connector-dash" d="M 62 5 C 62 85, 438 5, 438 85"
+              stroke="white" stroke-width="5" fill="none"
+              stroke-linecap="round" opacity="0.45"/>
+        {# Puntos decorativos a lo largo de la curva #}
+        <circle class="connector-dot" cx="186" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        <circle class="connector-dot" cx="250" cy="45" r="4" fill="white" opacity="0.55"/>
+        <circle class="connector-dot" cx="314" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        {# Diamantes en extremos (SVG puro, sin emojis) #}
+        <polygon points="62,0 70,8 62,16 54,8" fill="{{ sec.color_hex }}" opacity="0.85"/>
+        <polygon points="438,74 446,82 438,90 430,82" fill="{{ sec.color_hex }}" opacity="0.85"/>
+      </svg>
+      {% else %}
+      {# der → izq: empieza arriba-derecha, termina abajo-izquierda #}
+      <svg class="path-connector-svg" viewBox="0 0 500 90" preserveAspectRatio="none">
+        <path d="M 438 5 C 438 85, 62 5, 62 85"
+              stroke="{{ sec.color_hex }}" stroke-width="44" fill="none"
+              stroke-linecap="round" opacity="0.14"/>
+        <path d="M 438 5 C 438 85, 62 5, 62 85"
+              stroke="{{ sec.color_hex }}" stroke-width="22" fill="none"
+              stroke-linecap="round" opacity="0.95"/>
+        <path class="connector-dash" d="M 438 5 C 438 85, 62 5, 62 85"
+              stroke="white" stroke-width="5" fill="none"
+              stroke-linecap="round" opacity="0.45"/>
+        <circle class="connector-dot" cx="314" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        <circle class="connector-dot" cx="250" cy="45" r="4" fill="white" opacity="0.55"/>
+        <circle class="connector-dot" cx="186" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        <polygon points="438,0 446,8 438,16 430,8" fill="{{ sec.color_hex }}" opacity="0.85"/>
+        <polygon points="62,74 70,82 62,90 54,82" fill="{{ sec.color_hex }}" opacity="0.85"/>
+      </svg>
+      {% endif %}
+    {% endif %}
 
     {% endwith %}
     {% endfor %}
-  </div><!-- /timeline -->
 
-  <!-- Mensaje si todo está bloqueado -->
-  {% with desbloqueadas=secciones_data|length %}
-  {% if desbloqueadas == 0 %}
-  <div class="nestgrow-card p-5 text-center mt-3">
-    <div style="font-size:4rem">🔒</div>
-    <h5 class="font-fredoka mt-3" style="color:var(--primary)">
-      Aún no tienes secciones disponibles
-    </h5>
-    <p class="text-muted fw-bold small">
-      Tu profesor desbloqueará las secciones cuando estés listo.
-    </p>
-  </div>
-  {% endif %}
-  {% endwith %}
-
-</div><!-- /wrap -->
-
-
+  </div><!-- /duolingo-path -->
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function toggleSeccion(id) {
-  const wrap = document.getElementById(id);
-  if (!wrap) return;
-  const card = wrap.closest('.seccion-card');
-  const icon = card.querySelector('.bi-chevron-down, .bi-chevron-up');
-
-  if (wrap.classList.contains('open')) {
-    wrap.classList.remove('open');
-    if (icon) { icon.classList.remove('bi-chevron-up'); icon.classList.add('bi-chevron-down'); }
-  } else {
-    // Close all others first
-    document.querySelectorAll('.lecciones-wrap.open').forEach(el => {
-      el.classList.remove('open');
-      const ic = el.closest('.seccion-card').querySelector('.bi-chevron-down, .bi-chevron-up');
-      if (ic) { ic.classList.remove('bi-chevron-up'); ic.classList.add('bi-chevron-down'); }
-    });
-    wrap.classList.add('open');
-    if (icon) { icon.classList.remove('bi-chevron-down'); icon.classList.add('bi-chevron-up'); }
-  }
+function togglePanel(id) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.lecciones-panel.open').forEach(p => p.classList.remove('open'));
+  if (!isOpen) panel.classList.add('open');
 }
 
-// Auto-open the first unlocked section that has pending lessons
+document.addEventListener('click', e => {
+  if (!e.target.closest('.station-bubble-wrap'))
+    document.querySelectorAll('.lecciones-panel.open').forEach(p => p.classList.remove('open'));
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   {% if primera_incompleta %}
-  // Find which section contains the first incomplete lesson and open it
-  document.querySelectorAll('.lecciones-wrap').forEach(wrap => {
-    const link = wrap.querySelector('a.accesible');
-    if (link && link.href.includes('/{{ primera_incompleta.1 }}/')) {
-      wrap.classList.add('open');
-    }
+  document.querySelectorAll('.lecciones-panel').forEach(panel => {
+    const link = panel.querySelector('a.accesible');
+    if (link && link.href.includes('/{{ primera_incompleta.1 }}/'))
+      panel.classList.add('open');
   });
   {% endif %}
 
-  // WebSocket: listen for seccion_desbloqueada events
-  const wsUrl = `ws://${window.location.host}/ws/notificaciones/`;
-  let ws;
   try {
-    ws = new WebSocket(wsUrl);
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (data.tipo === 'seccion_desbloqueada') {
-        showMiloMessage(
-          `🎉 ¡Nueva sección desbloqueada! ${data.seccion_emoji} ${data.seccion_titulo}`
-        );
-        setTimeout(() => location.reload(), 2500);
+    const ws = new WebSocket(`ws://${window.location.host}/ws/notificaciones/`);
+    ws.onmessage = e => {
+      const d = JSON.parse(e.data);
+      if (d.tipo === 'seccion_desbloqueada') {
+        const sp = document.getElementById('miloSpeech');
+        const bb = document.getElementById('miloBubble');
+        if (sp && bb) {
+          sp.textContent = `🎉 Nueva sección: ${d.seccion_emoji} ${d.seccion_titulo}`;
+          bb.classList.add('show');
+        }
+        setTimeout(() => location.reload(), 2800);
       }
     };
   } catch(e) {}
 });
-
-function showMiloMessage(msg) {
-  // Uses global Milo message from main.js if available
-  const bubble = document.querySelector('.milo-bubble');
-  if (bubble) {
-    bubble.textContent = msg;
-    bubble.style.display = 'block';
-    setTimeout(() => { bubble.style.display = 'none'; }, 4000);
-  }
-}
 </script>
 {% endblock %}
