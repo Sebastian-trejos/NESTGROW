@@ -100,7 +100,7 @@ body.nestgrow-body {
 }
 
 .milo-avatar {
-  width: 70px;
+  width: 100px;
   transition: transform 0.2s ease;
   animation: miloFloat 3s ease-in-out infinite;
   filter: drop-shadow(0 -4px 18px rgba(108,99,255,0.45));
@@ -109,7 +109,7 @@ body.nestgrow-body {
 .milo-avatar:hover { transform: scale(1.1); }
 
 #miloImgFloat {
-  width: 70px;
+  width: 100px;
   transition: opacity 0.18s ease;
   display: block;
 }
@@ -865,8 +865,8 @@ body.nestgrow-body {
   .auth-card { padding: 30px 24px; }
   .milo-float { bottom: -120px; right: 10px; }
   .milo-float.visible { bottom: 12px; }
-  .milo-avatar { width: 60px; }
-  #miloImgFloat { width: 60px; }
+  .milo-avatar { width: 80px; }
+  #miloImgFloat { width: 80px; }
   .ws-cell { width: 28px; height: 28px; font-size: 0.85rem; }
 }
 

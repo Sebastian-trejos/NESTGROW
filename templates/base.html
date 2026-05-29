@@ -397,6 +397,7 @@
     function openBubble() {
       if (comentaristaActivo) return;
       isOpen = true;
+      float.classList.add('visible');
       const pageCtx = getPageCtx();
       const role    = IS_AUTH ? (ROLE || 'none') : 'none';
       const ctxMap  = PAGE_MSGS[role] || PAGE_MSGS.none;
