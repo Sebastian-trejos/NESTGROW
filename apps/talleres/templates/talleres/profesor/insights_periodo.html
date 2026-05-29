@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% block title %}Insights IA — {{ periodo.titulo }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3 px-md-4">
+
+  <!-- ── Encabezado ─────────────────────────────────────────────────────────── -->
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <a href="{% url 'talleres:resultados_periodo' periodo.pk %}"
+         class="btn btn-outline-secondary rounded-pill btn-sm mb-2">← Resultados</a>
+      <h3 class="font-fredoka mb-1" style="color:var(--primary)">🧠 Análisis IA — {{ periodo.titulo }}</h3>
+      <div class="text-muted small">
+        <i class="bi bi-building me-1"></i>{{ periodo.salon }} &nbsp;·&nbsp;
+        <i class="bi bi-calendar-range me-1"></i>{{ periodo.fecha_inicio|date:"d/m/Y" }} → {{ periodo.fecha_fin|date:"d/m/Y" }}
+      </div>
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+      <span class="badge rounded-pill px-3 py-2 fw-bold"
+            style="background:#f5f3ff;color:#6C63FF;border:2px solid #d8d0ff;font-size:.85rem">
+        👨‍🎓 {{ total_estudiantes }} estudiante{{ total_estudiantes|pluralize }}
+      </span>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- ── Col izquierda: Análisis IA ────────────────────────────────────────── -->
+    <div class="col-12 col-xl-5">
+
+      <!-- Card de Milo -->
+      <div class="nestgrow-card p-0 overflow-hidden mb-4" style="border:2px solid #d8d0ff">
+        <div class="p-3 d-flex align-items-center gap-3"
+             style="background:linear-gradient(135deg,#6C63FF 0%,#a78bfa 100%)">
+          <img src="/static/img/milo-avatar.png" alt="Milo"
+               style="height:52px;border-radius:50%;background:#fff;padding:4px"
+               onerror="this.style.display='none'">
+          <div>
+            <div class="font-fredoka text-white fw-bold" style="font-size:1.1rem">
+              📊 Informe de Milo
+            </div>
+            <div class="text-white small" style="opacity:.85">
+              Análisis educativo generado por IA
+              {% if motor_ia == 'cache' %}
+                <span class="badge ms-1" style="background:rgba(255,255,255,.2);color:#fff;font-size:.7rem">⚡ caché</span>
+              {% elif motor_ia == 'gemini' %}
+                <span class="badge ms-1" style="background:rgba(255,255,255,.2);color:#fff;font-size:.7rem">Gemini</span>
+              {% elif motor_ia == 'groq' %}
+                <span class="badge ms-1" style="background:rgba(255,255,255,.2);color:#fff;font-size:.7rem">Groq</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="p-4">
+          {% if motor_ia == 'sin_datos' or not analisis_ia %}
+            <div class="text-center py-4">
+              <div style="font-size:3rem">🐾</div>
+              <div class="fw-bold mt-2" style="color:#6C63FF">Aún no hay suficientes datos</div>
+              <div class="text-muted small mt-1">Espera a que los estudiantes completen actividades del período.</div>
+            </div>
+          {% else %}
+            <div id="analisis-texto" class="prose-milo"
+                 style="font-size:.93rem;line-height:1.7;color:#333">
+              {{ analisis_ia|linebreaks }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Estudiantes en riesgo -->
+      {% if en_riesgo %}
+      <div class="nestgrow-card p-4 mb-4" style="border:2px solid #ffd0d0;background:#fff8f8">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span style="font-size:1.4rem">⚠️</span>
+          <div class="font-fredoka fw-bold" style="color:#c62828">Estudiantes que necesitan atención</div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          {% for nombre in en_riesgo %}
+          <span class="badge rounded-pill px-3 py-2"
+                style="background:#fff0f0;color:#c62828;border:1px solid #ffcdd2;font-size:.82rem">
+            👤 {{ nombre }}
+          </span>
+          {% endfor %}
+        </div>
+        <div class="text-muted small mt-2">
+          Nota final por debajo de 3.0 o sin actividades completadas.
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ── Col derecha: Gráficos ─────────────────────────────────────────────── -->
+    <div class="col-12 col-xl-7">
+
+      <!-- Distribución de notas finales -->
+      <div class="nestgrow-card p-4 mb-4">
+        <div class="font-fredoka fw-bold mb-3" style="color:var(--primary);font-size:1.05rem">
+          🏆 Distribución de notas finales
+        </div>
+        <div style="position:relative;height:220px">
+          <canvas id="chartNotas"></canvas>
+        </div>
+      </div>
+
+      <!-- Avance por taller -->
+      {% if datos_talleres_chart != '[]' %}
+      <div class="nestgrow-card p-4 mb-4">
+        <div class="font-fredoka fw-bold mb-3" style="color:var(--primary);font-size:1.05rem">
+          🎓 Completitud por Taller
+        </div>
+        <div style="position:relative;height:{% if datos_talleres_chart|length > 50 %}260{% else %}180{% endif %}px">
+          <canvas id="chartTalleres"></canvas>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Avance por minijuego -->
+      {% if datos_minis_chart != '[]' %}
+      <div class="nestgrow-card p-4 mb-4">
+        <div class="font-fredoka fw-bold mb-3" style="color:var(--primary);font-size:1.05rem">
+          🎮 Completitud por Minijuego
+        </div>
+        <div style="position:relative;height:{% if datos_minis_chart|length > 50 %}260{% else %}180{% endif %}px">
+          <canvas id="chartMinis"></canvas>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Tabla de notas por estudiante -->
+      {% if notas_finales != '[]' %}
+      <div class="nestgrow-card p-4 mb-4">
+        <div class="font-fredoka fw-bold mb-3" style="color:var(--primary);font-size:1.05rem">
+          📋 Notas individuales
+        </div>
+        <div id="tabla-notas"></div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script>
+const NOTAS_FINALES     = {{ notas_finales|safe }};
+const DIST_NOTAS        = {{ dist_notas|safe }};
+const DATOS_TALLERES    = {{ datos_talleres_chart|safe }};
+const DATOS_MINIS       = {{ datos_minis_chart|safe }};
+
+Chart.defaults.font.family = "'Nunito', sans-serif";
+Chart.defaults.color = '#555';
+
+// ── Distribución de notas (donut) ─────────────────────────────────────────────
+const ctxNotas = document.getElementById('chartNotas');
+if (ctxNotas) {
+  new Chart(ctxNotas, {
+    type: 'doughnut',
+    data: {
+      labels: ['1.0–2.0', '2.0–3.0 (bajo)', '3.0–4.0 (básico)', '4.0–5.0 (alto)'],
+      datasets: [{
+        data: [DIST_NOTAS['1-2'], DIST_NOTAS['2-3'], DIST_NOTAS['3-4'], DIST_NOTAS['4-5']],
+        backgroundColor: ['#FF6B6B','#FFB347','#4ECDC4','#6C63FF'],
+        borderWidth: 3,
+        borderColor: '#fff',
+        hoverOffset: 8,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {position: 'right', labels: {padding: 16, font: {size: 12}}},
+        tooltip: {callbacks: {label: ctx => ` ${ctx.raw} estudiante${ctx.raw !== 1 ? 's' : ''}`}},
+      },
+      cutout: '62%',
+    },
+  });
+}
+
+// ── Avance por taller (barras horizontales) ───────────────────────────────────
+const ctxTalleres = document.getElementById('chartTalleres');
+if (ctxTalleres && DATOS_TALLERES.length > 0) {
+  new Chart(ctxTalleres, {
+    type: 'bar',
+    data: {
+      labels: DATOS_TALLERES.map(d => d.nombre),
+      datasets: [{
+        label: '% completado',
+        data: DATOS_TALLERES.map(d => d.pct),
+        backgroundColor: '#a78bfa',
+        borderRadius: 8,
+        borderSkipped: false,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {legend: {display: false}},
+      scales: {
+        x: {min: 0, max: 100, ticks: {callback: v => v + '%'}, grid: {color: '#f0eeff'}},
+        y: {grid: {display: false}},
+      },
+    },
+  });
+}
+
+// ── Avance por minijuego (barras) ─────────────────────────────────────────────
+const ctxMinis = document.getElementById('chartMinis');
+if (ctxMinis && DATOS_MINIS.length > 0) {
+  new Chart(ctxMinis, {
+    type: 'bar',
+    data: {
+      labels: DATOS_MINIS.map(d => d.nombre),
+      datasets: [{
+        label: '% completado',
+        data: DATOS_MINIS.map(d => d.pct),
+        backgroundColor: '#4ECDC4',
+        borderRadius: 8,
+        borderSkipped: false,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {legend: {display: false}},
+      scales: {
+        x: {min: 0, max: 100, ticks: {callback: v => v + '%'}, grid: {color: '#e0faf9'}},
+        y: {grid: {display: false}},
+      },
+    },
+  });
+}
+
+// ── Tabla de notas individuales ───────────────────────────────────────────────
+const tablaEl = document.getElementById('tabla-notas');
+if (tablaEl && NOTAS_FINALES.length > 0) {
+  const colores = n => {
+    if (n === null) return {bg:'#f5f5f5', color:'#999'};
+    if (n >= 4.0)   return {bg:'#e8f5e9', color:'#2e7d32'};
+    if (n >= 3.0)   return {bg:'#fff8e1', color:'#f57f17'};
+    return           {bg:'#fff0f0', color:'#c62828'};
+  };
+  const rows = NOTAS_FINALES
+    .sort((a,b) => (b.nota||0) - (a.nota||0))
+    .map(s => {
+      const c = colores(s.nota);
+      const notaStr = s.nota !== null ? s.nota.toFixed(1) : '—';
+      const emoji = s.nota === null ? '⏳' : s.nota >= 4.5 ? '🏆' : s.nota >= 3.0 ? '👍' : '💪';
+      return `<div class="d-flex justify-content-between align-items-center px-3 py-2 rounded-3 mb-1"
+                   style="background:${c.bg}">
+        <span class="fw-bold small">${emoji} ${s.nombre}</span>
+        <span class="fw-bold" style="color:${c.color};font-size:1.1rem">${notaStr}</span>
+      </div>`;
+    }).join('');
+  tablaEl.innerHTML = rows;
+}
+</script>
+{% endblock %}

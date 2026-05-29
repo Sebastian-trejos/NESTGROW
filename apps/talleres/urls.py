@@ -37,4 +37,9 @@ urlpatterns = [
 
     # AJAX — Widget Milo
     path('milo-pendientes/', views.milo_pendientes, name='milo_pendientes'),
+
+    # ── IA ────────────────────────────────────────────────────────────────────
+    path('ia/generar/', views.generar_taller_ia, name='generar_taller_ia'),
+    path('ia/aplicar/', views.aplicar_taller_ia, name='aplicar_taller_ia'),
+    path('periodos/<int:pk>/insights/', views.insights_periodo, name='insights_periodo'),
 ]

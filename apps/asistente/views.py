@@ -10,15 +10,7 @@ from django_ratelimit.decorators import ratelimit
 from apps.accounts.decorators import profesor_required
 from apps.accounts.models import EstudianteProfile
 from .models import MensajeChat
-from .services import AsistenteMilo
-
-SYSTEM_CORRECCION = (
-    "Eres Milo, un perro amigable que ayuda a niños de primaria colombiana a aprender inglés. "
-    "Un estudiante respondió incorrectamente. "
-    "Da una corrección MUY breve (máximo 2 oraciones) en español, amigable y motivadora. "
-    "Explica por qué la respuesta correcta es correcta usando lenguaje simple para niños de 8–12 años. "
-    "Termina con una frase motivadora muy corta. NO uses palabras como 'Error' o 'Equivocado'."
-)
+from .services import AsistenteMilo, _get_prompt
 
 
 @profesor_required
@@ -123,7 +115,12 @@ def milo_correccion(request):
     messages = [{'role': 'user', 'content': mensaje}]
 
     milo = AsistenteMilo()
-    resultado = asyncio.run(milo._llamar_ia(messages, SYSTEM_CORRECCION))
+    resultado = asyncio.run(milo._llamar_ia(
+        messages, _get_prompt('correccion'),
+        proposito='milo_correccion',
+        usuario=request.user,
+        ttl=3600 * 24 * 7,  # correcciones se cachean 7 días
+    ))
     texto = resultado.get('texto', '').strip()
     if not texto or resultado.get('motor') == 'error':
         texto = '¡Casi lo logras! La respuesta correcta era: ' + (respuesta_correcta or '…') + '. ¡Tú puedes! 💪'

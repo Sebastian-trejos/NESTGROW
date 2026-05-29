@@ -15,6 +15,11 @@
       </div>
     </div>
     <div class="d-flex gap-2 flex-wrap align-items-center">
+      <a href="{% url 'talleres:insights_periodo' periodo.pk %}"
+         class="btn btn-sm fw-bold rounded-pill px-3"
+         style="background:linear-gradient(135deg,#6C63FF,#a78bfa);color:#fff;border:none;box-shadow:0 4px 14px rgba(108,99,255,.30)">
+        🧠 Análisis IA
+      </a>
       <a href="{% url 'talleres:enviar_informe_periodo' periodo.pk %}"
          class="btn btn-sm fw-bold rounded-pill px-3"
          style="background:linear-gradient(135deg,#4ECDC4,#44b89d);color:#fff;border:none;box-shadow:0 4px 14px rgba(78,205,196,.35)"

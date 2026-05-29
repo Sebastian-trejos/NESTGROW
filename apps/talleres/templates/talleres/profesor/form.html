@@ -9,6 +9,122 @@
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">📋 {{ titulo }}</h3>
   </div>
 
+  <!-- ── Generador IA (solo al crear, no al editar) ─────────────────────── -->
+  {% if not taller %}
+  <div class="nestgrow-card p-0 mb-4 overflow-hidden" style="border:2px solid #d8d0ff">
+    <div class="d-flex align-items-center gap-3 p-3 pb-2"
+         style="background:linear-gradient(135deg,#6C63FF 0%,#a78bfa 100%)">
+      <img src="/static/img/milo-avatar.png" alt="Milo" style="height:48px;border-radius:50%;background:#fff;padding:4px"
+           onerror="this.style.display='none'">
+      <div>
+        <div class="font-fredoka text-white fw-bold" style="font-size:1.1rem">✨ Generar Taller con Milo</div>
+        <div class="text-white small" style="opacity:.85">Dile a Milo el tema y él propone la estructura completa del taller.</div>
+      </div>
+      <button class="btn btn-sm ms-auto rounded-pill px-3 fw-bold"
+              style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)"
+              type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneradorIA"
+              aria-expanded="false">
+        <span id="btn-toggle-label">🪄 Abrir generador</span>
+      </button>
+    </div>
+
+    <div class="collapse" id="collapseGeneradorIA">
+      <div class="p-4 pt-3">
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-md-5">
+            <label class="form-label fw-bold small">📚 Tema del taller <span class="text-danger">*</span></label>
+            <input id="ia-tema" type="text" class="form-control rounded-3"
+                   placeholder="Ej: Los animales domésticos, Los colores, El abecedario…">
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label fw-bold small">🎒 Nivel / Grado</label>
+            <select id="ia-nivel" class="form-select rounded-3">
+              <option value="grado 1 de primaria">1° Primaria</option>
+              <option value="grado 2 de primaria">2° Primaria</option>
+              <option value="grado 3 de primaria" selected>3° Primaria</option>
+              <option value="grado 4 de primaria">4° Primaria</option>
+              <option value="grado 5 de primaria">5° Primaria</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-2">
+            <label class="form-label fw-bold small">🧩 Nº de bloques</label>
+            <select id="ia-bloques" class="form-select rounded-3">
+              <option value="5" selected>5</option>
+              <option value="6">6</option>
+              <option value="7">7 — 2 minijuegos</option>
+              <option value="8">8 — 2 minijuegos</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2 d-flex align-items-end">
+            <button id="btn-generar-ia" class="btn w-100 fw-bold rounded-3"
+                    style="background:linear-gradient(135deg,#6C63FF,#a78bfa);color:#fff;border:none"
+                    onclick="generarConIA()">
+              🪄 Generar
+            </button>
+          </div>
+        </div>
+
+        <!-- Estado / spinner -->
+        <div id="ia-estado" class="d-none">
+          <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:#f5f3ff">
+            <div class="spinner-border spinner-border-sm" style="color:#6C63FF" role="status"></div>
+            <span class="fw-bold" style="color:#6C63FF">Milo está pensando… 🐾</span>
+          </div>
+        </div>
+
+        <!-- Preview del taller generado -->
+        <div id="ia-preview" class="d-none">
+          <!-- Banner de medios -->
+          <div id="banner-medios" class="d-none alert rounded-3 mb-3"
+               style="background:#fff8e1;border:2px solid #ffc107;color:#856404">
+            <div class="fw-bold mb-1">📸 Estos bloques se beneficiarían de imágenes o videos:</div>
+            <ul id="lista-medios" class="mb-1 ps-3 small"></ul>
+            <div class="small text-muted">Podrás añadirlos después de crear el taller. No es obligatorio.</div>
+          </div>
+
+          <!-- Resumen del taller -->
+          <div class="p-3 rounded-3 mb-3" style="background:#f0eeff;border:2px solid #d8d0ff">
+            <div class="d-flex flex-wrap gap-3 align-items-start mb-2">
+              <div>
+                <div class="text-muted small fw-bold">Título propuesto</div>
+                <div class="fw-bold" id="prev-titulo" style="color:#6C63FF"></div>
+              </div>
+              <div>
+                <div class="text-muted small fw-bold">XP</div>
+                <div class="fw-bold" id="prev-xp"></div>
+              </div>
+              <div>
+                <div class="text-muted small fw-bold">Huesos 🦴</div>
+                <div class="fw-bold" id="prev-huesos"></div>
+              </div>
+            </div>
+            <div class="text-muted small" id="prev-desc"></div>
+          </div>
+
+          <!-- Lista de bloques preview -->
+          <div id="prev-bloques" class="d-flex flex-column gap-2 mb-3"></div>
+
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn fw-bold rounded-pill px-4"
+                    style="background:linear-gradient(135deg,#6C63FF,#a78bfa);color:#fff;border:none"
+                    onclick="aplicarTallerIA()">
+              ✅ Crear este taller
+            </button>
+            <button class="btn btn-outline-secondary rounded-pill px-4"
+                    onclick="descartarIA()">
+              🔄 Generar de nuevo
+            </button>
+          </div>
+
+          <div id="ia-error-aplicar" class="d-none mt-2 text-danger small fw-bold"></div>
+        </div>
+
+        <div id="ia-error" class="d-none mt-2 alert alert-danger rounded-3 small fw-bold"></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <!-- ── Información del taller ─────────────────────────────────────────── -->
   <div class="nestgrow-card p-4 mb-4">
     <h5 class="font-fredoka mb-3" style="color:var(--primary)">📝 Información del Taller</h5>
@@ -228,6 +344,177 @@
 {% endblock %}
 
 {% block extra_js %}
+
+{% if not taller %}
+{# ── JavaScript del Generador IA ──────────────────────────────────────────── #}
+<script>
+const CSRF_IA = "{{ csrf_token }}";
+const URL_GENERAR  = "{% url 'talleres:generar_taller_ia' %}";
+const URL_APLICAR  = "{% url 'talleres:aplicar_taller_ia' %}";
+
+let _tallerGenerado = null;
+
+function generarConIA() {
+  const tema = document.getElementById('ia-tema').value.trim();
+  if (!tema) {
+    document.getElementById('ia-error').textContent = '⚠️ Escribe el tema del taller antes de generar.';
+    document.getElementById('ia-error').classList.remove('d-none');
+    return;
+  }
+  document.getElementById('ia-error').classList.add('d-none');
+  document.getElementById('ia-preview').classList.add('d-none');
+
+  const nivel    = document.getElementById('ia-nivel').value;
+  const bloques  = parseInt(document.getElementById('ia-bloques').value);
+  const btn      = document.getElementById('btn-generar-ia');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Generando…';
+  document.getElementById('ia-estado').classList.remove('d-none');
+
+  fetch(URL_GENERAR, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF_IA},
+    body: JSON.stringify({tema, nivel, num_bloques: bloques}),
+  })
+  .then(r => r.json())
+  .then(data => {
+    btn.disabled = false;
+    btn.innerHTML = '🪄 Generar';
+    document.getElementById('ia-estado').classList.add('d-none');
+
+    if (data.error) {
+      document.getElementById('ia-error').textContent = '❌ ' + data.error;
+      document.getElementById('ia-error').classList.remove('d-none');
+      return;
+    }
+    _tallerGenerado = data.taller;
+    mostrarPreviewIA(data.taller);
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.innerHTML = '🪄 Generar';
+    document.getElementById('ia-estado').classList.add('d-none');
+    document.getElementById('ia-error').textContent = '❌ Error de conexión. Intenta de nuevo.';
+    document.getElementById('ia-error').classList.remove('d-none');
+  });
+}
+
+function mostrarPreviewIA(taller) {
+  document.getElementById('prev-titulo').textContent  = taller.titulo || '—';
+  document.getElementById('prev-desc').textContent    = taller.descripcion || '';
+  document.getElementById('prev-xp').textContent      = (taller.puntos_xp || 0) + ' XP';
+  document.getElementById('prev-huesos').textContent  = (taller.huesos_recompensa || 0) + ' 🦴';
+
+  // Bloques
+  const cont = document.getElementById('prev-bloques');
+  cont.innerHTML = '';
+  const bloques = taller.bloques || [];
+  const medios = [];
+
+  bloques.forEach((b, i) => {
+    const esPregunta = b.tipo === 'pregunta';
+    const div = document.createElement('div');
+    div.className = 'd-flex align-items-start gap-3 p-3 rounded-3';
+    div.style.background   = esPregunta ? '#f0eeff' : '#fff5f5';
+    div.style.border       = `2px solid ${esPregunta ? '#d8d0ff' : '#ffd0d0'}`;
+
+    let detalle = '';
+    if (esPregunta) {
+      const opciones = (b.opciones || []).map(o =>
+        `<li>${o.es_correcta ? '✅' : '○'} ${o.texto}</li>`
+      ).join('');
+      const tipoLabel = {'opcion_multiple':'⭕ Opción múltiple','casillas':'☑️ Casillas','parrafo':'✍️ Párrafo','dibujo':'🎨 Dibujo'}[b.tipo_respuesta] || b.tipo_respuesta;
+      detalle = `<div class="text-muted small mb-1">${tipoLabel} · ${b.puntaje_parcial || 10} pts</div>
+                 ${opciones ? `<ul class="mb-0 small ps-3">${opciones}</ul>` : ''}`;
+      if (b.sugiere_imagen || b.sugiere_video) {
+        medios.push({orden: i+1, enunciado: (b.enunciado||'').substring(0,50), imagen: b.sugiere_imagen, video: b.sugiere_video, nota: b.nota_imagen||''});
+        detalle += `<div class="mt-1 small" style="color:#856404">` +
+          (b.sugiere_imagen ? '📸 Sugiere imagen' : '') +
+          (b.sugiere_imagen && b.sugiere_video ? ' + ' : '') +
+          (b.sugiere_video ? '🎥 Sugiere video' : '') +
+          (b.nota_imagen ? ` — <em>${b.nota_imagen}</em>` : '') +
+          `</div>`;
+      }
+    } else {
+      detalle = `<div class="text-muted small">${b.instruccion_extra || '—'}</div>`;
+    }
+
+    div.innerHTML = `
+      <span style="font-size:1.5rem">${esPregunta ? '❓' : '🎮'}</span>
+      <div class="flex-grow-1">
+        <div class="fw-bold small text-muted">Bloque ${i+1} · ${esPregunta ? 'Pregunta' : 'Minijuego'}</div>
+        <div class="fw-bold">${(b.enunciado || b.instruccion_extra || '—').substring(0,80)}</div>
+        ${detalle}
+      </div>
+    `;
+    cont.appendChild(div);
+  });
+
+  // Banner de medios
+  const banner = document.getElementById('banner-medios');
+  const listaMedios = document.getElementById('lista-medios');
+  if (medios.length > 0) {
+    listaMedios.innerHTML = medios.map(m =>
+      `<li><strong>Bloque ${m.orden}:</strong> "${m.enunciado}…" — ` +
+      (m.imagen ? '📸 imagen' : '') + (m.imagen && m.video ? ' y ' : '') + (m.video ? '🎥 video' : '') +
+      (m.nota ? ` (${m.nota})` : '') + `</li>`
+    ).join('');
+    banner.classList.remove('d-none');
+  } else {
+    banner.classList.add('d-none');
+  }
+
+  document.getElementById('ia-preview').classList.remove('d-none');
+}
+
+function descartarIA() {
+  _tallerGenerado = null;
+  document.getElementById('ia-preview').classList.add('d-none');
+  document.getElementById('ia-error-aplicar').classList.add('d-none');
+}
+
+function aplicarTallerIA() {
+  if (!_tallerGenerado) return;
+  const btnAplicar = document.querySelector('#ia-preview .btn[onclick="aplicarTallerIA()"]');
+  btnAplicar.disabled = true;
+  btnAplicar.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Creando taller…';
+
+  fetch(URL_APLICAR, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF_IA},
+    body: JSON.stringify({taller: _tallerGenerado}),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      // Redirigir a la edición del taller recién creado
+      window.location.href = data.redirect_url;
+    } else {
+      btnAplicar.disabled = false;
+      btnAplicar.innerHTML = '✅ Crear este taller';
+      document.getElementById('ia-error-aplicar').textContent = '❌ ' + (data.error || 'Error al crear el taller.');
+      document.getElementById('ia-error-aplicar').classList.remove('d-none');
+    }
+  })
+  .catch(() => {
+    btnAplicar.disabled = false;
+    btnAplicar.innerHTML = '✅ Crear este taller';
+    document.getElementById('ia-error-aplicar').textContent = '❌ Error de conexión.';
+    document.getElementById('ia-error-aplicar').classList.remove('d-none');
+  });
+}
+
+// Actualizar label del botón collapse
+document.getElementById('collapseGeneradorIA')?.addEventListener('show.bs.collapse', () => {
+  document.getElementById('btn-toggle-label').textContent = '🔼 Cerrar generador';
+});
+document.getElementById('collapseGeneradorIA')?.addEventListener('hide.bs.collapse', () => {
+  document.getElementById('btn-toggle-label').textContent = '🪄 Abrir generador';
+});
+</script>
+{% endif %}
+
 {% if taller %}
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>

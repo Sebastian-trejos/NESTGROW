@@ -84,7 +84,6 @@ def lista_talleres(request):
 def crear_taller(request):
     if request.method == 'POST':
         form = TallerForm(request.POST)
-        form.fields['salon'].queryset = _salon_qs(request.user)
         if form.is_valid():
             taller = form.save(commit=False)
             taller.profesor = request.user
@@ -93,7 +92,6 @@ def crear_taller(request):
             return redirect('talleres:editar', pk=taller.pk)
     else:
         form = TallerForm()
-        form.fields['salon'].queryset = _salon_qs(request.user)
     return render(request, 'talleres/profesor/form.html', {
         'form': form, 'taller': None, 'titulo': 'Nuevo Taller',
     })
@@ -105,14 +103,12 @@ def editar_taller(request, pk):
     taller = get_object_or_404(Taller, pk=pk, profesor=request.user)
     if request.method == 'POST':
         form = TallerForm(request.POST, instance=taller)
-        form.fields['salon'].queryset = _salon_qs(request.user)
         if form.is_valid():
             form.save()
             messages.success(request, '✅ Taller actualizado.')
             return redirect('talleres:editar', pk=taller.pk)
     else:
         form = TallerForm(instance=taller)
-        form.fields['salon'].queryset = _salon_qs(request.user)
 
     bloques = list(
         taller.bloques.order_by('orden')
@@ -1005,4 +1001,291 @@ def milo_pendientes(request):
         'fecha_fin': periodo.fecha_fin.strftime('%d/%m'),
         'nombres_talleres': nombres_talleres,
         'nombres_minijuegos': nombres_minijuegos,
+    })
+
+
+# ── IA — Generador de talleres (M1) ───────────────────────────────────────────
+
+@login_required
+@profesor_required
+@require_POST
+def generar_taller_ia(request):
+    """
+    AJAX: recibe tema/nivel/num_bloques, devuelve JSON con estructura del taller generado por IA.
+    """
+    import asyncio
+    from apps.asistente.services import AsistenteMilo
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido.'}, status=400)
+
+    tema = (body.get('tema') or '').strip()[:200]
+    nivel = (body.get('nivel') or 'grado 3').strip()[:50]
+    try:
+        num_bloques = max(5, min(8, int(body.get('num_bloques', 5))))
+    except (TypeError, ValueError):
+        num_bloques = 5
+
+    if not tema:
+        return JsonResponse({'error': 'El tema es obligatorio.'}, status=400)
+
+    # Para el generador IA usamos TODOS los juegos disponibles (activos o no).
+    # La IA solo propone — el profesor revisa antes de crear el taller.
+    juegos_disponibles = list(
+        Game.objects.all()
+        .values('id', 'title', 'game_type')
+        .order_by('title')[:20]
+    )
+    juegos_para_ia = [
+        {'id': j['id'], 'nombre': f"{j['title']} — {j['game_type']}"}
+        for j in juegos_disponibles
+    ]
+
+    milo = AsistenteMilo()
+    resultado = asyncio.run(
+        milo.generar_taller(request.user, tema, nivel, num_bloques, juegos_para_ia)
+    )
+
+    if 'error' in resultado:
+        return JsonResponse({'error': resultado['error']}, status=500)
+
+    return JsonResponse({
+        'taller': resultado['taller'],
+        'motor': resultado['motor'],
+    })
+
+
+@login_required
+@profesor_required
+@require_POST
+def aplicar_taller_ia(request):
+    """
+    AJAX: recibe el JSON del taller generado por IA (ya aprobado por el profesor)
+    y lo crea en BD con todos sus bloques. Devuelve la URL de edición.
+    """
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'JSON inválido.'}, status=400)
+
+    data = body.get('taller')
+    if not data or not isinstance(data, dict):
+        return JsonResponse({'error': 'Datos del taller inválidos.'}, status=400)
+
+    titulo = (data.get('titulo') or 'Taller generado por IA').strip()[:200]
+    descripcion = (data.get('descripcion') or '').strip()
+    try:
+        puntos_xp = max(0, int(data.get('puntos_xp', 20)))
+        huesos = max(0, int(data.get('huesos_recompensa', 10)))
+    except (TypeError, ValueError):
+        puntos_xp, huesos = 20, 10
+
+    taller = Taller.objects.create(
+        titulo=titulo,
+        descripcion=descripcion,
+        profesor=request.user,
+        puntos_xp=puntos_xp,
+        huesos_recompensa=huesos,
+        is_active=False,
+    )
+
+    bloques_raw = data.get('bloques', [])
+    if not isinstance(bloques_raw, list):
+        bloques_raw = []
+
+    bloques_con_media = []  # Para el aviso de imágenes/videos
+
+    for i, bloque_data in enumerate(bloques_raw, start=1):
+        tipo = bloque_data.get('tipo', 'pregunta')
+        if tipo not in ('pregunta', 'minijuego'):
+            tipo = 'pregunta'
+
+        bloque = BloqueTaller.objects.create(taller=taller, orden=i, tipo=tipo)
+
+        if tipo == 'minijuego':
+            game_id = bloque_data.get('game_id')
+            instruccion = (bloque_data.get('instruccion_extra') or '').strip()[:500]
+            game = None
+            if game_id:
+                try:
+                    game = Game.objects.get(pk=game_id)
+                except Game.DoesNotExist:
+                    pass
+            if game:
+                BloqueMinijuego.objects.create(
+                    bloque=bloque, game=game, instruccion_extra=instruccion
+                )
+            else:
+                # Si el juego no existe, convertir en pregunta vacía como fallback
+                BloquePregunta.objects.create(
+                    bloque=bloque,
+                    enunciado=bloque_data.get('enunciado', 'Actividad de juego'),
+                    tipo_respuesta='parrafo',
+                    puntaje_parcial=10,
+                )
+
+        else:  # pregunta
+            enunciado = (bloque_data.get('enunciado') or 'Pregunta').strip()[:500]
+            tipo_respuesta = bloque_data.get('tipo_respuesta', 'opcion_multiple')
+            if tipo_respuesta not in ('opcion_multiple', 'casillas', 'parrafo', 'dibujo'):
+                tipo_respuesta = 'opcion_multiple'
+            puntaje_parcial = max(1, int(bloque_data.get('puntaje_parcial', 10) or 10))
+
+            pregunta = BloquePregunta.objects.create(
+                bloque=bloque,
+                enunciado=enunciado,
+                tipo_respuesta=tipo_respuesta,
+                puntaje_parcial=puntaje_parcial,
+            )
+
+            opciones_raw = bloque_data.get('opciones', [])
+            if isinstance(opciones_raw, list) and tipo_respuesta in ('opcion_multiple', 'casillas'):
+                for op in opciones_raw:
+                    texto = (op.get('texto') or '').strip()
+                    if texto:
+                        OpcionRespuesta.objects.create(
+                            pregunta=pregunta,
+                            texto=texto,
+                            es_correcta=bool(op.get('es_correcta', False)),
+                        )
+
+            # Registrar bloques que sugieren imagen o video
+            if bloque_data.get('sugiere_imagen') or bloque_data.get('sugiere_video'):
+                bloques_con_media.append({
+                    'orden': i,
+                    'enunciado': enunciado[:60],
+                    'sugiere_imagen': bool(bloque_data.get('sugiere_imagen')),
+                    'sugiere_video': bool(bloque_data.get('sugiere_video')),
+                    'nota_imagen': (bloque_data.get('nota_imagen') or '').strip()[:150],
+                })
+
+    return JsonResponse({
+        'ok': True,
+        'taller_pk': taller.pk,
+        'redirect_url': f'/talleres/{taller.pk}/editar/',
+        'bloques_con_media': bloques_con_media,
+    })
+
+
+# ── IA — Insights de período (M3) ─────────────────────────────────────────────
+
+@login_required
+@profesor_required
+def insights_periodo(request, pk):
+    """Dashboard analítico con gráficos y análisis IA del período."""
+    import asyncio
+    from apps.asistente.services import AsistenteMilo
+    from apps.accounts.models import CustomUser
+    from apps.games.models import pct_to_nota, pct_to_nota_minijuego
+
+    salon_qs = _salon_qs(request.user)
+    periodo = get_object_or_404(Periodo, pk=pk, salon__in=salon_qs)
+
+    # ── Datos crudos para gráficos ─────────────────────────────────────────────
+    estudiantes = CustomUser.objects.filter(
+        estudiante_profile__salon=periodo.salon, role='estudiante'
+    ).select_related('estudiante_profile').order_by('first_name', 'last_name', 'username')
+
+    talleres_asig = list(periodo.talleres_asignados.select_related('taller').order_by('orden'))
+    minijuegos_asig = list(periodo.minijuegos_asignados.select_related('game').order_by('orden'))
+
+    sesiones_all = {
+        (s.taller_id, s.estudiante_id): s
+        for s in SesionTaller.objects.filter(
+            taller__in=[a.taller for a in talleres_asig],
+            estudiante__in=estudiantes,
+        )
+    }
+    registros_all = {
+        (r.asignacion_id, r.estudiante_id): r
+        for r in RegistroMinijuegoPeriodo.objects.filter(
+            periodo=periodo, estudiante__in=estudiantes,
+        )
+    }
+
+    # ── Notas finales por estudiante (para gráfico distribución) ──────────────
+    notas_finales = []
+    en_riesgo = []
+    for est in estudiantes:
+        notas_ind = []
+        for asig in talleres_asig:
+            sesion = sesiones_all.get((asig.taller_id, est.pk))
+            if sesion and sesion.completada:
+                pts = sesion.puntos_obtenidos or 0
+                max_pts = asig.taller.total_puntos_posibles() or 1
+                pct = min(round((pts / max_pts) * 100), 100)
+                notas_ind.append(pct_to_nota(pct))
+        for asig in minijuegos_asig:
+            reg = registros_all.get((asig.pk, est.pk))
+            if reg and reg.completado and reg.max_score > 0:
+                notas_ind.append(pct_to_nota_minijuego(reg.porcentaje))
+        nota_final = round(sum(notas_ind) / len(notas_ind), 1) if notas_ind else None
+        notas_finales.append({
+            'nombre': est.get_full_name() or est.username,
+            'nota': nota_final,
+        })
+        if nota_final is not None and nota_final < 3.0:
+            en_riesgo.append(est.get_full_name() or est.username)
+        elif nota_final is None:
+            en_riesgo.append(est.get_full_name() or est.username)
+
+    # Distribución de notas (rangos 1-2, 2-3, 3-4, 4-5)
+    dist = {'1-2': 0, '2-3': 0, '3-4': 0, '4-5': 0}
+    for n in notas_finales:
+        v = n['nota']
+        if v is None:
+            continue
+        if v < 2.0:
+            dist['1-2'] += 1
+        elif v < 3.0:
+            dist['2-3'] += 1
+        elif v < 4.0:
+            dist['3-4'] += 1
+        else:
+            dist['4-5'] += 1
+
+    # ── Avance por taller ──────────────────────────────────────────────────────
+    datos_talleres_chart = []
+    for asig in talleres_asig:
+        completaron = sum(
+            1 for est in estudiantes
+            if (asig.taller_id, est.pk) in sesiones_all
+            and sesiones_all[(asig.taller_id, est.pk)].completada
+        )
+        total = estudiantes.count()
+        datos_talleres_chart.append({
+            'nombre': asig.taller.titulo[:30],
+            'pct': round((completaron / total) * 100) if total > 0 else 0,
+        })
+
+    # ── Avance por minijuego ───────────────────────────────────────────────────
+    datos_minis_chart = []
+    for asig in minijuegos_asig:
+        completaron = sum(
+            1 for est in estudiantes
+            if (asig.pk, est.pk) in registros_all
+            and registros_all[(asig.pk, est.pk)].completado
+        )
+        total = estudiantes.count()
+        datos_minis_chart.append({
+            'nombre': asig.game.title[:30],
+            'pct': round((completaron / total) * 100) if total > 0 else 0,
+        })
+
+    # ── Análisis IA (regenerar o desde caché) ─────────────────────────────────
+    milo = AsistenteMilo()
+    resultado_ia = asyncio.run(milo.generar_insights_periodo(request.user, periodo))
+
+    return render(request, 'talleres/profesor/insights_periodo.html', {
+        'periodo': periodo,
+        'notas_finales': json.dumps(notas_finales),
+        'dist_notas': json.dumps(dist),
+        'datos_talleres_chart': json.dumps(datos_talleres_chart),
+        'datos_minis_chart': json.dumps(datos_minis_chart),
+        'en_riesgo': en_riesgo,
+        'total_estudiantes': estudiantes.count(),
+        'analisis_ia': resultado_ia['texto'],
+        'motor_ia': resultado_ia['motor'],
     })

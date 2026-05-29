@@ -1,9 +1,12 @@
+import hashlib
 import json
 import logging
+import time
 from datetime import timedelta
 
 import httpx
 from django.conf import settings
+from django.core.cache import cache
 from django.utils import timezone
 
 from .models import MensajeChat
@@ -15,8 +18,12 @@ GEMINI_URL = (
     'gemini-2.0-flash:generateContent'
 )
 GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
+MYMEMORY_URL = 'https://api.mymemory.translated.net/get'
 
-SYSTEM_PLANEACION = """Eres el Asistente Milo, ayudante educativo para profesores de inglés \
+# ── Prompts predeterminados (fallback si no hay PromptTemplate en BD) ─────────
+
+_DEFAULT_PROMPTS = {
+    'planeacion': """Eres el Asistente Milo, ayudante educativo para profesores de inglés \
 en primaria colombiana que usan la plataforma NestGrow.
 
 ## Cómo funciona NestGrow
@@ -79,44 +86,216 @@ Cuando te pidan planear un taller para NestGrow, usa siempre esta estructura:
 - Usa Markdown: **negrita** para conceptos clave, ## para secciones, - para listas, emojis relevantes
 - Sé conciso y práctico — el contenido debe ser implementable directamente
 - Indica con ✅ la respuesta correcta en las preguntas de opción múltiple o casillas
-"""
+""",
+
+    'correccion': (
+        "Eres Milo, un perro amigable que ayuda a niños de primaria colombiana a aprender inglés. "
+        "Un estudiante respondió incorrectamente. "
+        "Da una corrección MUY breve (máximo 2 oraciones) en español, amigable y motivadora. "
+        "Explica por qué la respuesta correcta es correcta usando lenguaje simple para niños de 8–12 años. "
+        "Termina con una frase motivadora muy corta. NO uses palabras como 'Error' o 'Equivocado'."
+    ),
+
+    'generar_taller': (
+        "Eres un experto en diseño instruccional de INGLÉS para primaria colombiana. "
+        "Genera un taller de inglés completo en JSON válido según el esquema indicado. "
+        "Responde ÚNICAMENTE con el objeto JSON, sin texto adicional, sin bloques de código markdown. "
+        "El JSON debe ser parseable directamente.\n\n"
+
+        "## REGLAS DE CONTENIDO (MUY IMPORTANTE)\n"
+        "- El taller enseña INGLÉS: las preguntas, opciones y enunciados deben incluir vocabulario, "
+        "frases o estructuras en inglés. NO hagas el taller completamente en español.\n"
+        "- Formato bilingüe: instrucciones cortas en español, contenido a aprender en inglés. "
+        "Ejemplo correcto: '¿Cuál es el animal correcto?' con opciones: cat, dog, car, hat.\n"
+        "- Para preguntas de opción múltiple o casillas: las OPCIONES deben ser palabras o frases en inglés "
+        "cuando se esté practicando vocabulario o traducción.\n"
+        "- Adapta la dificultad al nivel: grado 1-2 = vocabulario básico (colores, números, animales), "
+        "grado 3-4 = frases simples y oraciones, grado 5 = gramática básica y expresiones.\n\n"
+
+        "## REGLAS DE ESTRUCTURA\n"
+        "- SIEMPRE incluye bloques de MINIJUEGO si hay juegos disponibles. "
+        "Distribuye los bloques: ~60%% preguntas, ~40%% minijuegos (redondeado al entero más cercano).\n"
+        "- Si hay 5 bloques: al menos 2 deben ser minijuego. Si hay 3 bloques: al menos 1 minijuego.\n"
+        "- Para bloques de pregunta tipo opcion_multiple o casillas: incluye exactamente 4 opciones.\n"
+        "- En opcion_multiple: exactamente UNA opción es_correcta=true.\n"
+        "- En casillas: pueden ser VARIAS opciones correctas.\n"
+        "- Marca sugiere_imagen=true cuando la pregunta se beneficia de imagen de apoyo visual.\n"
+        "- Marca sugiere_video=true solo si el bloque necesita escuchar audio o ver algo.\n"
+        "- Para bloques tipo 'parrafo': no incluyas el campo 'opciones'.\n\n"
+
+        "## TIPOS DE MINIJUEGO DISPONIBLES Y CUÁNDO USARLOS\n"
+        "- drag_and_drop: relacionar palabras en inglés con imágenes o categorías → ideal para vocabulario nuevo\n"
+        "- word_search: sopa de letras con palabras en inglés → ideal para repasar vocabulario\n"
+        "- puzzle: armar imagen relacionada al tema → ideal como actividad de cierre lúdica\n"
+        "- audio_matching: escuchar y relacionar sonidos con palabras → ideal para pronunciación\n"
+        "- painting: colorear según instrucciones en inglés → ideal para grados 1-2\n"
+        "- memoria: encontrar pares de palabras/imágenes → ideal para vocabulario\n"
+        "- ahorcado: adivinar palabras en inglés letra por letra → ideal para repasar palabras conocidas\n"
+        "- quiz: preguntas rápidas con tiempo → ideal para evaluación rápida\n"
+        "- ordenar_letras: formar palabras en inglés desorganizadas → ideal para ortografía\n"
+        "- globos: elegir respuesta correcta en globos → ideal como actividad motivadora\n"
+        "- comparacion: comparar pares de imágenes → ideal para descripciones\n"
+    ),
+
+    'insights_periodo': (
+        "Eres un analista educativo experto. Analiza los datos de rendimiento de un período escolar "
+        "y genera un informe ejecutivo en español. "
+        "Sé concreto, usa datos específicos del JSON, identifica patrones, menciona nombres reales si los hay. "
+        "Estructura tu respuesta en: (1) Resumen ejecutivo (2-3 oraciones), "
+        "(2) Fortalezas del grupo (2 puntos), (3) Áreas de mejora (2-3 puntos con recomendaciones prácticas), "
+        "(4) Estudiantes que requieren atención especial si los hay. "
+        "Tono profesional pero cálido, orientado a acción docente inmediata."
+    ),
+}
+
+
+def _get_prompt(nombre: str) -> str:
+    """Retorna el system prompt: intenta BD primero, fallback a hardcoded."""
+    from .models import PromptTemplate
+    try:
+        pt = PromptTemplate.objects.get(nombre=nombre, activo=True)
+        return pt.system
+    except Exception:
+        return _DEFAULT_PROMPTS.get(nombre, '')
+
+
+def _cache_key(messages: list, system: str) -> str:
+    raw = json.dumps({'m': messages, 's': system}, ensure_ascii=False, sort_keys=True)
+    return 'ia_' + hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _log_llamada(motor: str, proposito: str, latencia_ms: int,
+                 exito: bool = True, cache_hit: bool = False,
+                 usuario=None) -> None:
+    """Registra una llamada (o cache hit) en LlamadaIA de forma silenciosa."""
+    try:
+        from .models import LlamadaIA
+        LlamadaIA.objects.create(
+            motor=motor,
+            proposito=proposito,
+            latencia_ms=latencia_ms,
+            exito=exito,
+            cache_hit=cache_hit,
+            usuario=usuario,
+        )
+    except Exception as exc:
+        logger.warning('No se pudo registrar LlamadaIA: %s', exc)
+
+
+# ── Traducción con MyMemory ────────────────────────────────────────────────────
+
+def traducir_mymemory(texto: str, origen: str = 'es', destino: str = 'en') -> str | None:
+    """
+    Traduce `texto` usando MyMemory. Retorna la traducción o None si falla.
+    Almacena el resultado en caché por 30 días.
+    """
+    if not texto or not texto.strip():
+        return None
+
+    cache_k = 'trans_' + hashlib.md5(f'{origen}|{destino}|{texto}'.encode()).hexdigest()
+    cached = cache.get(cache_k)
+    if cached:
+        return cached
+
+    params: dict = {'q': texto.strip(), 'langpair': f'{origen}|{destino}'}
+    api_key = getattr(settings, 'MYMEMORY_API_KEY', '')
+    if api_key:
+        params['key'] = api_key
+
+    try:
+        with httpx.Client(timeout=10) as client:
+            resp = client.get(MYMEMORY_URL, params=params)
+        if resp.status_code == 200:
+            data = resp.json()
+            traduccion = data.get('responseData', {}).get('translatedText', '')
+            if traduccion and traduccion.upper() != texto.upper():
+                cache.set(cache_k, traduccion, 60 * 60 * 24 * 30)
+                return traduccion
+    except Exception as exc:
+        logger.warning('MyMemory falló: %s', exc)
+    return None
 
 
 class AsistenteMilo:
 
     # ── IA core ───────────────────────────────────────────────────────────────
 
-    async def _llamar_ia(self, messages: list[dict], system_prompt: str) -> dict:
-        """Intenta Gemini, fallback Groq. Retorna {'texto': ..., 'motor': ...}."""
+    async def _llamar_ia(
+        self,
+        messages: list[dict],
+        system_prompt: str,
+        json_mode: bool = False,
+        proposito: str = '',
+        usuario=None,
+        ttl: int = 86400,
+    ) -> dict:
+        """
+        Intenta Gemini, fallback Groq.
+        - Cachea la respuesta por `ttl` segundos (0 = sin caché).
+        - Registra en LlamadaIA.
+        - Si json_mode=True activa JSON mode en ambos proveedores.
+        Retorna {'texto': ..., 'motor': ...}
+        """
+        from asgiref.sync import sync_to_async
+
+        ck = _cache_key(messages, system_prompt) if ttl > 0 else None
+
+        # Intento desde caché
+        if ck:
+            cached = cache.get(ck)
+            if cached:
+                await sync_to_async(_log_llamada)(
+                    'cache', proposito, 0, True, True, usuario
+                )
+                return {'texto': cached, 'motor': 'cache'}
+
+        t0 = time.monotonic()
+
         try:
-            resultado = await self._gemini(messages, system_prompt)
+            resultado = await self._gemini(messages, system_prompt, json_mode=json_mode)
             if resultado:
+                latencia = int((time.monotonic() - t0) * 1000)
+                await sync_to_async(_log_llamada)('gemini', proposito, latencia, True, False, usuario)
+                if ck:
+                    cache.set(ck, resultado, ttl)
                 return {'texto': resultado, 'motor': 'gemini'}
         except Exception as exc:
             logger.warning('Gemini falló: %s', exc)
 
         try:
-            resultado = await self._groq(messages, system_prompt)
+            resultado = await self._groq(messages, system_prompt, json_mode=json_mode)
             if resultado:
+                latencia = int((time.monotonic() - t0) * 1000)
+                await sync_to_async(_log_llamada)('groq', proposito, latencia, True, False, usuario)
+                if ck:
+                    cache.set(ck, resultado, ttl)
                 return {'texto': resultado, 'motor': 'groq'}
         except Exception as exc:
             logger.warning('Groq falló: %s', exc)
 
+        latencia = int((time.monotonic() - t0) * 1000)
+        await sync_to_async(_log_llamada)('error', proposito, latencia, False, False, usuario)
         return {
             'texto': 'El asistente no está disponible en este momento. Intenta más tarde.',
             'motor': 'error',
         }
 
-    async def _gemini(self, messages: list[dict], system_prompt: str) -> str | None:
+    async def _gemini(
+        self, messages: list[dict], system_prompt: str, json_mode: bool = False
+    ) -> str | None:
         contents = []
         for m in messages:
             role = 'user' if m['role'] == 'user' else 'model'
             contents.append({'role': role, 'parts': [{'text': m['content']}]})
 
+        gen_config: dict = {'maxOutputTokens': 2048, 'temperature': 0.7}
+        if json_mode:
+            gen_config['responseMimeType'] = 'application/json'
+
         payload = {
             'system_instruction': {'parts': [{'text': system_prompt}]},
             'contents': contents,
-            'generationConfig': {'maxOutputTokens': 1024, 'temperature': 0.7},
+            'generationConfig': gen_config,
         }
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.post(
@@ -130,14 +309,19 @@ class AsistenteMilo:
         data = resp.json()
         return data['candidates'][0]['content']['parts'][0]['text']
 
-    async def _groq(self, messages: list[dict], system_prompt: str) -> str | None:
+    async def _groq(
+        self, messages: list[dict], system_prompt: str, json_mode: bool = False
+    ) -> str | None:
         groq_messages = [{'role': 'system', 'content': system_prompt}] + messages
-        payload = {
+        payload: dict = {
             'model': 'llama-3.3-70b-versatile',
             'messages': groq_messages,
-            'max_tokens': 1024,
+            'max_tokens': 2048,
             'temperature': 0.7,
         }
+        if json_mode:
+            payload['response_format'] = {'type': 'json_object'}
+
         async with httpx.AsyncClient(timeout=30) as client:
             resp = await client.post(
                 GROQ_URL,
@@ -167,25 +351,25 @@ class AsistenteMilo:
         ]
         messages.append({'role': 'user', 'content': mensaje_usuario})
 
-        resultado = await self._llamar_ia(messages, SYSTEM_PLANEACION)
+        system = _get_prompt('planeacion')
+        # Chat de planeación: caché 1h (respuestas conversacionales varían mucho)
+        resultado = await self._llamar_ia(
+            messages, system, proposito='chat_planeacion',
+            usuario=profesor, ttl=3600,
+        )
 
         await sync_to_async(MensajeChat.objects.create)(
-            profesor=profesor,
-            rol='user',
-            contenido=mensaje_usuario,
-            modo='planeacion',
+            profesor=profesor, rol='user',
+            contenido=mensaje_usuario, modo='planeacion',
         )
         await sync_to_async(MensajeChat.objects.create)(
-            profesor=profesor,
-            rol='assistant',
-            contenido=resultado['texto'],
-            modo='planeacion',
-            motor_usado=resultado['motor'],
+            profesor=profesor, rol='assistant',
+            contenido=resultado['texto'], modo='planeacion',
+            motor_usado=resultado['motor'] if resultado['motor'] != 'cache' else 'gemini',
         )
         await sync_to_async(MensajeChat.limpiar_historial_anterior)(
             profesor, 'planeacion'
         )
-
         return resultado
 
     # ── Análisis de resultados ────────────────────────────────────────────────
@@ -215,9 +399,237 @@ class AsistenteMilo:
             f'Datos: {json.dumps(datos, ensure_ascii=False, default=str)}'
         )
         messages = [{'role': 'user', 'content': '¿Cuál es tu análisis de estos datos?'}]
-        return await self._llamar_ia(messages, system_prompt)
+        return await self._llamar_ia(
+            messages, system_prompt,
+            proposito=f'analizar_{tipo_analisis}',
+            usuario=profesor,
+            ttl=3600 * 6,  # 6h de caché para análisis
+        )
 
-    # ── Recolección de datos ──────────────────────────────────────────────────
+    # ── Generador de talleres con IA (M1) ─────────────────────────────────────
+
+    async def generar_taller(
+        self,
+        profesor,
+        tema: str,
+        nivel: str,
+        num_bloques: int,
+        juegos_disponibles: list[dict],
+    ) -> dict:
+        """
+        Genera un taller completo en JSON.
+        `juegos_disponibles` es lista de {'id': pk, 'nombre': str}.
+        Retorna {'taller': dict, 'motor': str} o {'error': str}.
+        """
+        juegos_str = ', '.join(
+            f"id={j['id']} ({j['nombre']})" for j in juegos_disponibles
+        ) or 'ninguno disponible'
+
+        schema_ejemplo = {
+            "titulo": "Nombre del taller",
+            "descripcion": "Descripción breve del taller",
+            "puntos_xp": 20,
+            "huesos_recompensa": 10,
+            "bloques": [
+                {
+                    "tipo": "pregunta",
+                    "enunciado": "Texto de la pregunta",
+                    "tipo_respuesta": "opcion_multiple",
+                    "puntaje_parcial": 10,
+                    "sugiere_imagen": True,
+                    "nota_imagen": "Descripción de qué imagen sería útil aquí",
+                    "sugiere_video": False,
+                    "opciones": [
+                        {"texto": "opción 1", "es_correcta": True},
+                        {"texto": "opción 2", "es_correcta": False},
+                        {"texto": "opción 3", "es_correcta": False},
+                        {"texto": "opción 4", "es_correcta": False},
+                    ]
+                },
+                {
+                    "tipo": "minijuego",
+                    "game_id": 1,
+                    "instruccion_extra": "Descripción breve de lo que practicará el estudiante"
+                }
+            ]
+        }
+
+        # 5-6 bloques → 1 minijuego; 7+ bloques → 2 minijuegos
+        num_minis_requeridos = (1 if num_bloques < 7 else 2) if juegos_disponibles else 0
+        num_preguntas = num_bloques - num_minis_requeridos
+
+        if juegos_disponibles:
+            instruccion_minis = (
+                f"OBLIGATORIO: incluye EXACTAMENTE {num_minis_requeridos} bloque(s) de tipo 'minijuego' "
+                f"y {num_preguntas} bloque(s) de tipo 'pregunta'. "
+                f"Elige el tipo de minijuego más apropiado para el tema según las descripciones del sistema. "
+                f"Juegos disponibles (usa el game_id exacto): {juegos_str}."
+            )
+        else:
+            instruccion_minis = (
+                "No hay juegos disponibles, usa solo bloques de tipo 'pregunta'."
+            )
+
+        prompt = (
+            f"Crea un taller de inglés para {nivel} sobre el tema: '{tema}'.\n"
+            f"Total de bloques: {num_bloques}.\n"
+            f"{instruccion_minis}\n"
+            f"Recuerda: el contenido DEBE incluir inglés (vocabulario, frases u opciones en inglés). "
+            f"Usa instrucciones cortas en español pero el contenido a aprender en inglés.\n"
+            f"Varía los tipos de pregunta: opcion_multiple, casillas y parrafo.\n"
+            f"Para 'parrafo' no incluyas el campo 'opciones'.\n\n"
+            f"Devuelve ÚNICAMENTE este JSON (sin texto adicional):\n"
+            f"{json.dumps(schema_ejemplo, ensure_ascii=False, indent=2)}"
+        )
+
+        system = _get_prompt('generar_taller')
+        messages = [{'role': 'user', 'content': prompt}]
+
+        resultado = await self._llamar_ia(
+            messages, system,
+            json_mode=True,
+            proposito='generar_taller',
+            usuario=profesor,
+            ttl=0,  # No cachear — cada generación debe ser única
+        )
+
+        if resultado['motor'] == 'error':
+            return {'error': resultado['texto']}
+
+        try:
+            texto = resultado['texto'].strip()
+            # Limpiar bloques de código markdown si el modelo los incluye
+            if texto.startswith('```'):
+                texto = texto.split('```', 2)[1]
+                if texto.startswith('json'):
+                    texto = texto[4:]
+                texto = texto.rsplit('```', 1)[0]
+            taller_data = json.loads(texto)
+            return {'taller': taller_data, 'motor': resultado['motor']}
+        except (json.JSONDecodeError, KeyError, IndexError) as exc:
+            logger.warning('Error parseando JSON de generar_taller: %s | Respuesta: %s', exc, resultado['texto'][:500])
+            return {'error': 'La IA devolvió una respuesta que no se pudo procesar. Intenta de nuevo.'}
+
+    # ── Insights de período (M3) ──────────────────────────────────────────────
+
+    async def generar_insights_periodo(self, profesor, periodo) -> dict:
+        """
+        Genera un análisis textual del período con datos reales.
+        Retorna {'texto': str, 'motor': str}.
+        """
+        from asgiref.sync import sync_to_async
+        datos = await sync_to_async(self._datos_periodo)(profesor, periodo)
+
+        if datos.get('sin_datos'):
+            return {
+                'texto': 'Aún no hay datos suficientes en este período para generar un análisis.',
+                'motor': 'sin_datos',
+            }
+
+        system = _get_prompt('insights_periodo')
+        messages = [
+            {
+                'role': 'user',
+                'content': (
+                    f'Analiza el siguiente período escolar y genera el informe ejecutivo.\n'
+                    f'Datos: {json.dumps(datos, ensure_ascii=False, default=str)}'
+                ),
+            }
+        ]
+        return await self._llamar_ia(
+            messages, system,
+            proposito='insights_periodo',
+            usuario=profesor,
+            ttl=3600 * 3,  # 3h de caché
+        )
+
+    def _datos_periodo(self, profesor, periodo) -> dict:
+        """Recolecta datos del período para el análisis."""
+        from apps.talleres.models import (
+            AsignacionTaller, AsignacionMinijuego,
+            SesionTaller, RegistroMinijuegoPeriodo,
+        )
+        from django.db.models import Avg, Count
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
+
+        # Misma query que resultados_periodo: estudiantes cuyo perfil apunta al salón del período
+        estudiantes_ids = list(
+            User.objects.filter(
+                estudiante_profile__salon=periodo.salon,
+                role='estudiante',
+            ).values_list('id', flat=True)
+        )
+        if not estudiantes_ids:
+            return {'sin_datos': True}
+
+        total_estudiantes = len(estudiantes_ids)
+
+        # ── Talleres ──
+        talleres_asig = list(AsignacionTaller.objects.filter(periodo=periodo).select_related('taller'))
+        datos_talleres = []
+        for asig in talleres_asig:
+            sesiones = SesionTaller.objects.filter(
+                taller=asig.taller, estudiante_id__in=estudiantes_ids
+            )
+            completadas = sesiones.filter(completada=True)
+            avg = completadas.aggregate(avg=Avg('puntos_obtenidos'))['avg'] or 0
+            posibles = asig.taller.total_puntos_posibles() or 1
+            datos_talleres.append({
+                'taller': asig.taller.titulo,
+                'completaron': completadas.count(),
+                'total_estudiantes': total_estudiantes,
+                'promedio_pct': round((avg / posibles) * 100, 1) if posibles else 0,
+            })
+
+        # ── Minijuegos ──
+        mini_asig = list(AsignacionMinijuego.objects.filter(periodo=periodo).select_related('game'))
+        datos_minis = []
+        for asig in mini_asig:
+            registros = RegistroMinijuegoPeriodo.objects.filter(
+                asignacion=asig, estudiante_id__in=estudiantes_ids
+            )
+            completados = registros.filter(completado=True)
+            avg_pct = (
+                sum(r.porcentaje for r in completados) / completados.count()
+                if completados.count() > 0 else 0
+            )
+            datos_minis.append({
+                'juego': asig.game.title,
+                'completaron': completados.count(),
+                'total_estudiantes': total_estudiantes,
+                'promedio_pct': round(avg_pct, 1),
+            })
+
+        # ── Estudiantes en riesgo ──
+        en_riesgo = []
+        for uid in estudiantes_ids:
+            sesiones_est = SesionTaller.objects.filter(
+                taller__in=[a.taller for a in talleres_asig],
+                estudiante_id=uid, completada=True,
+            )
+            completadas_est = sesiones_est.count()
+            total_asig = len(talleres_asig)
+            if total_asig > 0 and completadas_est < total_asig * 0.5:
+                try:
+                    nombre = User.objects.get(pk=uid).get_full_name() or User.objects.get(pk=uid).username
+                    en_riesgo.append(nombre)
+                except Exception:
+                    pass
+
+        return {
+            'periodo': periodo.titulo,
+            'salon': str(periodo.salon),
+            'fecha_inicio': str(periodo.fecha_inicio),
+            'fecha_fin': str(periodo.fecha_fin),
+            'total_estudiantes': total_estudiantes,
+            'talleres': datos_talleres,
+            'minijuegos': datos_minis,
+            'estudiantes_en_riesgo': en_riesgo,
+        }
+
+    # ── Recolección de datos (análisis general) ───────────────────────────────
 
     def _recolectar_datos(
         self, profesor, tipo_analisis: str, estudiante_id: int | None
@@ -453,7 +865,6 @@ class AsistenteMilo:
         except User.DoesNotExist:
             return {'sin_datos': True}
 
-        # Verificar pertenencia al salón del profesor
         try:
             perfil_prof = profesor.profesor_profile
         except Exception:
@@ -489,8 +900,6 @@ class AsistenteMilo:
             .values_list('logro__nombre', flat=True)
         )
 
-        # Leer perfil — cada campo por separado para evitar que un error
-        # en uno reemplace datos válidos de los demás con defaults.
         try:
             perfil_est = EstudianteProfile.objects.get(user=estudiante)
             nivel = perfil_est.nivel
@@ -499,7 +908,6 @@ class AsistenteMilo:
         except EstudianteProfile.DoesNotExist:
             nivel, puntos, estrellas_totales = 1, 0, 0
 
-        # vocabulario_desbloqueado es related_name sobre CustomUser, no EstudianteProfile
         vocab_desbloqueado = estudiante.vocabulario_desbloqueado.count()
 
         return {

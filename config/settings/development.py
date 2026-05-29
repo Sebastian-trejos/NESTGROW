@@ -28,3 +28,13 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# ── Caché de respuestas IA (FileBasedCache, sin Redis) ────────────────────────
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': str(BASE_DIR / '.django_cache'),
+        'TIMEOUT': 86400,  # 24 horas
+        'OPTIONS': {'MAX_ENTRIES': 1000},
+    }
+}

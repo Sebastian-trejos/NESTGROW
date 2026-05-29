@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import Category, VocabularyItem, VocabularioDesbloqueado, HitoVocabulario
 
 
@@ -11,9 +12,8 @@ class VocabularyItemInline(admin.TabularInline):
 
     def imagen_thumb(self, obj):
         if obj.image:
-            return f'<img src="{obj.image.url}" style="height:40px">'
+            return format_html('<img src="{}" style="height:40px">', obj.image.url)
         return '—'
-    imagen_thumb.allow_tags = True
     imagen_thumb.short_description = 'Imagen'
 
 
@@ -33,6 +33,26 @@ class VocabularyItemAdmin(admin.ModelAdmin):
     list_editable = ('orden', 'is_unlocked_by_default', 'is_active')
     search_fields = ('word_en', 'word_es', 'descripcion_es')
     ordering = ('category__order', 'orden')
+
+    def save_model(self, request, obj, form, change):
+        """
+        Q3 — Traducción automática con MyMemory:
+        Si el profesor guardó word_es pero word_en está vacío (o viceversa),
+        auto-completa con MyMemory.
+        """
+        try:
+            from apps.asistente.services import traducir_mymemory
+            if obj.word_es and not obj.word_en:
+                traduccion = traducir_mymemory(obj.word_es, origen='es', destino='en')
+                if traduccion:
+                    obj.word_en = traduccion
+            elif obj.word_en and not obj.word_es:
+                traduccion = traducir_mymemory(obj.word_en, origen='en', destino='es')
+                if traduccion:
+                    obj.word_es = traduccion
+        except Exception:
+            pass  # Traducción es best-effort; no bloquea el guardado
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(VocabularioDesbloqueado)
