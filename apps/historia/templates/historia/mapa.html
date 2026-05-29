@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <style>
-/* ══ Contenedor del mapa — más ancho para más drama ══ */
+/* ══ Contenedor del mapa ══ */
 .historia-wrap {
   max-width: 620px;
   margin: 0 auto;
@@ -13,77 +13,204 @@
   position: relative;
 }
 
-/* Partículas decorativas fijas */
-.historia-wrap::before {
-  content: '🌟  ✨  ⭐  💫  🌟  ✨  ⭐  💫';
+/* ══ Fondo aventura — cielo nocturno con montañas ══ */
+.histo-adv-bg {
   position: fixed;
-  top: 2%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1rem;
-  letter-spacing: 28px;
-  opacity: 0.12;
-  pointer-events: none;
-  white-space: nowrap;
-  animation: driftParticles 12s linear infinite;
+  inset: 0;
+  z-index: -1;
+  /* Cielo degradado: profundo índigo → violeta → crepúsculo */
+  background: linear-gradient(180deg,
+    #0c0824 0%,
+    #1a0e4a 18%,
+    #2d1b6e 38%,
+    #4a2d8f 56%,
+    #6b3fa5 72%,
+    #8a5ab8 86%,
+    #a470c8 100%
+  );
+  overflow: hidden;
 }
-@keyframes driftParticles {
-  0%   { transform: translateX(-50%) translateY(0); }
-  50%  { transform: translateX(-50%) translateY(-10px); }
-  100% { transform: translateX(-50%) translateY(0); }
+
+/* Campo de estrellas — puntos CSS sin emojis */
+.histo-adv-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle 1.5px at  7% 6%,  rgba(255,255,255,.9) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 14% 3%,  rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px  at 21% 11%, rgba(255,255,255,.85) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 29% 4%,  rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 37% 9%, rgba(255,255,255,.9) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 45% 2%,  rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px  at 52% 14%, rgba(255,255,255,.8) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 60% 7%,  rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 68% 3%, rgba(255,255,255,.85) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 75% 12%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(circle 2px  at 83% 5%,  rgba(255,255,255,.9) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 91% 9%,  rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 97% 4%,  rgba(255,255,255,.55) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 11% 22%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 33% 19%,rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 57% 25%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(circle 1px  at 79% 21%, rgba(255,255,255,.45) 0%,transparent 100%),
+    radial-gradient(circle 1px  at 94% 18%, rgba(255,255,255,.4) 0%, transparent 100%);
+}
+
+/* Montañas lejanas */
+.histo-adv-bg .hbg-far {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 42%;
+  background: linear-gradient(180deg, transparent 0%, #1e0d52cc 100%);
+  clip-path: polygon(
+    0% 100%, 0% 65%,
+    5% 50%,  9% 58%, 14% 38%, 19% 52%, 25% 28%,
+    31% 46%, 36% 32%, 42% 50%, 47% 22%, 53% 42%,
+    58% 30%, 63% 48%, 69% 36%, 74% 52%, 80% 40%,
+    86% 55%, 91% 42%, 96% 58%, 100% 48%,
+    100% 100%
+  );
+}
+/* Montañas cercanas — más oscuras, más definidas */
+.histo-adv-bg .hbg-near {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, #0c0824aa 0%, #0c0824ee 100%);
+  clip-path: polygon(
+    0% 100%, 0% 80%,
+    7% 58%, 14% 72%, 22% 48%, 30% 65%,
+    38% 44%, 46% 60%, 54% 38%, 62% 56%,
+    70% 44%, 78% 62%, 86% 48%, 93% 64%,
+    100% 52%, 100% 100%
+  );
+}
+/* Brillo de luna / planeta decorativo */
+.histo-adv-bg .hbg-moon {
+  position: absolute;
+  top: 6%; right: 8%;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff9c4 0%, #ffd54f 50%, #ffb300 100%);
+  box-shadow: 0 0 30px 10px rgba(255,213,79,0.35), 0 0 60px 20px rgba(255,213,79,0.15);
+  animation: moonGlow 4s ease-in-out infinite;
+}
+@keyframes moonGlow {
+  0%,100% { box-shadow: 0 0 30px 10px rgba(255,213,79,0.35), 0 0 60px 20px rgba(255,213,79,0.15); }
+  50%      { box-shadow: 0 0 40px 16px rgba(255,213,79,0.5),  0 0 80px 30px rgba(255,213,79,0.22); }
+}
+/* Nube de nebulosa decorativa */
+.histo-adv-bg .hbg-nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  pointer-events: none;
+}
+.histo-adv-bg .hbg-nebula.n1 {
+  width: 280px; height: 180px;
+  top: 12%; left: 2%;
+  background: rgba(108,99,255,0.22);
+}
+.histo-adv-bg .hbg-nebula.n2 {
+  width: 220px; height: 150px;
+  top: 8%; right: 15%;
+  background: rgba(78,205,196,0.15);
+}
+.histo-adv-bg .hbg-nebula.n3 {
+  width: 180px; height: 120px;
+  top: 30%; left: 60%;
+  background: rgba(255,107,107,0.12);
 }
 
 /* ── Hero ── */
 .historia-hero {
-  background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 50%, #FF6B6B 100%);
-  border-radius: 28px;
-  padding: 1.8rem 2rem;
+  background: linear-gradient(135deg, #4a2d8f 0%, #6C63FF 45%, #9b4dca 100%);
+  border-radius: 24px;
+  padding: 0;
   color: white;
   position: relative;
   overflow: hidden;
   margin-bottom: 2.5rem;
   box-shadow:
-    0 14px 44px rgba(108,99,255,0.4),
-    0 0 0 3px rgba(255,255,255,0.12);
+    0 16px 50px rgba(74,45,143,0.55),
+    0 0 0 2px rgba(255,255,255,0.12);
+  display: flex;
+  align-items: stretch;
+  min-height: 160px;
 }
+/* Brillo esquina superior */
 .historia-hero::before {
   content: '';
   position: absolute;
-  width: 240px; height: 240px;
-  background: rgba(255,255,255,0.09);
+  width: 280px; height: 280px;
+  background: rgba(255,255,255,0.07);
   border-radius: 50%;
-  top: -90px; right: -60px;
+  top: -120px; right: -80px;
+  pointer-events: none;
 }
+/* Franja inferior difuminada */
 .historia-hero::after {
   content: '';
   position: absolute;
-  width: 150px; height: 150px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 50%;
-  bottom: -55px; left: 5%;
+  bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.2));
+  pointer-events: none;
+  border-radius: 0 0 24px 24px;
 }
-/* Estrella decorativa en hero */
-.historia-hero .hero-star {
+/* Íconos decorativos Bootstrap (no emojis) */
+.hero-icon-deco {
   position: absolute;
-  font-size: 1.2rem;
-  opacity: 0.3;
+  color: rgba(255,255,255,0.18);
+  font-size: 1.6rem;
   animation: floatStation 4s ease-in-out infinite;
+  pointer-events: none;
 }
-.historia-hero .hero-star:nth-child(1) { top: 15%; right: 22%; animation-delay: 0s; }
-.historia-hero .hero-star:nth-child(2) { bottom: 20%; right: 35%; animation-delay: 1.2s; }
-.historia-hero .hero-star:nth-child(3) { top: 60%; left: 12%; animation-delay: 0.6s; }
+.hero-icon-deco:nth-child(1) { top: 12%; right: 24%; animation-delay: 0s;   }
+.hero-icon-deco:nth-child(2) { bottom: 18%; right: 38%; animation-delay: 1s; font-size:1.1rem; }
+.hero-icon-deco:nth-child(3) { top: 55%; left: 10%;  animation-delay: .5s; font-size:1.3rem; }
+
+/* Contenido del hero */
+.hero-content {
+  flex: 1;
+  padding: 1.6rem 1.8rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+}
+/* Imagen de Milo en el hero */
+.hero-milo-img {
+  width: 145px;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
+  animation: miloHeroFloat 3.2s ease-in-out infinite;
+  align-self: flex-end;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+@keyframes miloHeroFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-10px) scale(1.04); }
+}
 
 .estrellas-contador {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  background: rgba(255,255,255,0.22);
+  gap: .45rem;
+  background: rgba(255,255,255,0.2);
   border-radius: 99px;
-  padding: .4rem 1.2rem;
+  padding: .35rem 1.1rem;
   font-family: 'Fredoka One', cursive;
-  font-size: 1.2rem;
-  box-shadow: 0 3px 14px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3);
-  border: 1.5px solid rgba(255,255,255,0.3);
+  font-size: 1.1rem;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  width: fit-content;
 }
 
 /* ═══════════════════════════════════════
@@ -432,30 +559,37 @@
 {% endblock %}
 
 {% block content %}
-<!-- Fondo personalizado historia: tapa el bg_nubes del base.html -->
+
+<!-- Fondo bg_avent -->
 <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
-            background:url('{% static 'img/histo_bg.jpeg' %}') center top / cover no-repeat;"></div>
+            background:url('{% static 'img/bg_avent.png' %}') center center / cover no-repeat;"></div>
 
 <div class="historia-wrap">
 
-  <!-- Hero -->
+  <!-- Hero con Milo -->
   <div class="historia-hero mb-4">
-    <span class="hero-star">⭐</span>
-    <span class="hero-star">✨</span>
-    <span class="hero-star">🌟</span>
-    <div class="position-relative" style="z-index:1">
-      <div class="d-flex align-items-center gap-3 flex-wrap">
-        <div>
-          <h2 class="font-fredoka mb-1" style="font-size:2rem">🗺️ Modo Historia</h2>
-          <p class="mb-0 fw-bold" style="opacity:.9;font-size:.95rem">
-            Aprende inglés viajando por el mundo de Milo
-          </p>
+    <i class="bi bi-star-fill hero-icon-deco"></i>
+    <i class="bi bi-stars hero-icon-deco"></i>
+    <i class="bi bi-star hero-icon-deco"></i>
+
+    <div class="hero-content">
+      <div>
+        <div style="font-size:.8rem;font-weight:800;opacity:.7;letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem">
+          <i class="bi bi-map-fill me-1"></i> NestGrow · Aventura
         </div>
-        <div class="ms-auto">
-          <div class="estrellas-contador">⭐ {{ total_estrellas }}</div>
-        </div>
+        <h2 class="font-fredoka mb-1" style="font-size:2.1rem;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,0.2)">
+          Modo Historia
+        </h2>
+        <p class="fw-bold mb-2" style="opacity:.88;font-size:.9rem">
+          Aprende inglés viajando por el mundo de Milo
+        </p>
+      </div>
+      <div class="estrellas-contador">
+        <i class="bi bi-star-fill" style="color:#FFE66D"></i>
+        {{ total_estrellas }} estrellas ganadas
       </div>
     </div>
+    <img src="{% static 'img/milo_avent.png' %}" class="hero-milo-img" alt="Milo">
   </div>
 
   <!-- Path zig-zag -->
@@ -463,7 +597,7 @@
 
     {% if not secciones_data %}
     <div class="historia-locked-state">
-      <div style="font-size:4rem">🔒</div>
+      <i class="bi bi-lock-fill" style="font-size:3.5rem;color:rgba(255,255,255,0.5)"></i>
       <h5 class="font-fredoka mt-3">Aún no tienes secciones disponibles</h5>
       <p style="opacity:.6;font-weight:700;font-size:.9rem">
         Tu profesor desbloqueará las secciones cuando estés listo.
@@ -485,10 +619,11 @@
                 onclick="togglePanel('panel{{ sec.pk }}')"
                 aria-label="{{ sec.titulo }}">
           {{ sec.icono_emoji }}
-          {% if item.completa %}<span class="station-trophy">🏆</span>{% endif %}
         </button>
         {% else %}
-        <div class="station-circle locked">🔒</div>
+        <div class="station-circle locked">
+          <i class="bi bi-lock-fill"></i>
+        </div>
         {% endif %}
 
         <!-- Nombre en pill de color -->
@@ -496,7 +631,10 @@
           {{ sec.titulo }}
         </div>
         {% if item.desbloqueada %}
-        <div class="station-progress">{{ item.completadas }}/{{ item.total }} lec · {{ item.estrellas }}⭐</div>
+        <div class="station-progress">
+          {{ item.completadas }}/{{ item.total }} lec &nbsp;·&nbsp;
+          <i class="bi bi-star-fill" style="color:#FFE66D;font-size:.65rem"></i> {{ item.estrellas }}
+        </div>
         {% endif %}
 
         <!-- Panel de lecciones -->
@@ -522,13 +660,16 @@
                   {{ lec.icono_emoji }}
                   {% if lec_item.completada %}
                   <span class="estrellas-overlay">
-                    {% for i in "123" %}{% if forloop.counter <= lec_item.estrellas %}⭐{% else %}☆{% endif %}{% endfor %}
+                    {% for i in "123" %}{% if forloop.counter <= lec_item.estrellas %}<i class="bi bi-star-fill" style="color:#FFE66D"></i>{% else %}<i class="bi bi-star" style="opacity:.4"></i>{% endif %}{% endfor %}
                   </span>
                   {% endif %}
                   <span class="lec-tooltip">{{ lec.titulo }}</span>
                 </a>
               {% else %}
-                <div class="lec-btn bloqueada">🔒<span class="lec-tooltip">{{ lec.titulo }}</span></div>
+                <div class="lec-btn bloqueada">
+                  <i class="bi bi-lock-fill"></i>
+                  <span class="lec-tooltip">{{ lec.titulo }}</span>
+                </div>
               {% endif %}
             </div>
             {% endwith %}{% endfor %}
@@ -546,41 +687,41 @@
       <svg class="path-connector-svg" viewBox="0 0 500 90" preserveAspectRatio="none">
         {# Brillo de fondo #}
         <path d="M 62 5 C 62 85, 438 5, 438 85"
-              stroke="{{ sec.color_hex }}" stroke-width="20" fill="none"
-              stroke-linecap="round" opacity="0.12"/>
+              stroke="{{ sec.color_hex }}" stroke-width="44" fill="none"
+              stroke-linecap="round" opacity="0.14"/>
         {# Línea principal sólida #}
         <path d="M 62 5 C 62 85, 438 5, 438 85"
-              stroke="{{ sec.color_hex }}" stroke-width="8" fill="none"
-              stroke-linecap="round" opacity="0.9"/>
+              stroke="{{ sec.color_hex }}" stroke-width="22" fill="none"
+              stroke-linecap="round" opacity="0.95"/>
         {# Guiones animados encima #}
         <path class="connector-dash" d="M 62 5 C 62 85, 438 5, 438 85"
-              stroke="white" stroke-width="4" fill="none"
-              stroke-linecap="round" opacity="0.5"/>
+              stroke="white" stroke-width="5" fill="none"
+              stroke-linecap="round" opacity="0.45"/>
         {# Puntos decorativos a lo largo de la curva #}
-        <circle class="connector-dot" cx="186" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
-        <circle class="connector-dot" cx="250" cy="45" r="4" fill="{{ sec.color_hex }}" opacity="0.6"/>
-        <circle class="connector-dot" cx="314" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
-        {# Estrellas en los extremos #}
-        <text x="45" y="14" font-size="14" text-anchor="middle" opacity="0.7">✨</text>
-        <text x="455" y="82" font-size="14" text-anchor="middle" opacity="0.7">⭐</text>
+        <circle class="connector-dot" cx="186" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        <circle class="connector-dot" cx="250" cy="45" r="4" fill="white" opacity="0.55"/>
+        <circle class="connector-dot" cx="314" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        {# Diamantes en extremos (SVG puro, sin emojis) #}
+        <polygon points="62,0 70,8 62,16 54,8" fill="{{ sec.color_hex }}" opacity="0.85"/>
+        <polygon points="438,74 446,82 438,90 430,82" fill="{{ sec.color_hex }}" opacity="0.85"/>
       </svg>
       {% else %}
       {# der → izq: empieza arriba-derecha, termina abajo-izquierda #}
       <svg class="path-connector-svg" viewBox="0 0 500 90" preserveAspectRatio="none">
         <path d="M 438 5 C 438 85, 62 5, 62 85"
-              stroke="{{ sec.color_hex }}" stroke-width="20" fill="none"
-              stroke-linecap="round" opacity="0.12"/>
+              stroke="{{ sec.color_hex }}" stroke-width="44" fill="none"
+              stroke-linecap="round" opacity="0.14"/>
         <path d="M 438 5 C 438 85, 62 5, 62 85"
-              stroke="{{ sec.color_hex }}" stroke-width="8" fill="none"
-              stroke-linecap="round" opacity="0.9"/>
+              stroke="{{ sec.color_hex }}" stroke-width="22" fill="none"
+              stroke-linecap="round" opacity="0.95"/>
         <path class="connector-dash" d="M 438 5 C 438 85, 62 5, 62 85"
-              stroke="white" stroke-width="4" fill="none"
-              stroke-linecap="round" opacity="0.5"/>
-        <circle class="connector-dot" cx="314" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
-        <circle class="connector-dot" cx="250" cy="45" r="4" fill="{{ sec.color_hex }}" opacity="0.6"/>
-        <circle class="connector-dot" cx="186" cy="36" r="5" fill="{{ sec.color_hex }}" opacity="0.7"/>
-        <text x="455" y="14" font-size="14" text-anchor="middle" opacity="0.7">✨</text>
-        <text x="45" y="82" font-size="14" text-anchor="middle" opacity="0.7">⭐</text>
+              stroke="white" stroke-width="5" fill="none"
+              stroke-linecap="round" opacity="0.45"/>
+        <circle class="connector-dot" cx="314" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        <circle class="connector-dot" cx="250" cy="45" r="4" fill="white" opacity="0.55"/>
+        <circle class="connector-dot" cx="186" cy="36" r="6" fill="{{ sec.color_hex }}" opacity="0.75"/>
+        <polygon points="438,0 446,8 438,16 430,8" fill="{{ sec.color_hex }}" opacity="0.85"/>
+        <polygon points="62,74 70,82 62,90 54,82" fill="{{ sec.color_hex }}" opacity="0.85"/>
       </svg>
       {% endif %}
     {% endif %}

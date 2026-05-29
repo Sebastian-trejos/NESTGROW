@@ -21,7 +21,9 @@ urlpatterns = [
 
     # Museo Virtual
     path('guardar-obra/', views.guardar_obra, name='guardar_obra'),
+    path('guardar-obra-libre/', views.guardar_obra_libre, name='guardar_obra_libre'),
     path('museo/', views.museo_virtual, name='museo_virtual'),
+    path('museo/pintar-libre/', views.pintar_libre, name='pintar_libre'),
     path('museo/global/', views.museo_global, name='museo_global'),
     path('museo/estudiante/<int:user_pk>/', views.museo_estudiante, name='museo_estudiante'),
 

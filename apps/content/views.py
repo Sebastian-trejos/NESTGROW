@@ -7,7 +7,7 @@ from .utils import desbloquear_palabras_iniciales, get_proximo_hito
 
 @login_required
 def category_list(request):
-    categories = Category.active.all()
+    categories = Category.active.exclude(name='Pintura Libre')
     return render(request, 'content/category_list.html', {'categories': categories})
 
 

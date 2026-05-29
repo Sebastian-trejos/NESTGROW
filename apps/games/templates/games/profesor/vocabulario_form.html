@@ -5,7 +5,7 @@
 <div class="container py-4" style="max-width:600px">
 
   <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'games:gestionar_vocabulario' categoria.pk %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <a href="{% url 'games:gestionar_vocabulario' categoria.pk %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>
     <div>
       <h3 class="font-fredoka mb-0" style="color:var(--primary)">📝 {{ titulo }}</h3>
       <div class="text-muted fw-bold small">Categoría: {{ categoria.icon }} {{ categoria.name_en }}</div>

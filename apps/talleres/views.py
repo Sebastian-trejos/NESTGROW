@@ -84,7 +84,6 @@ def lista_talleres(request):
 def crear_taller(request):
     if request.method == 'POST':
         form = TallerForm(request.POST)
-        form.fields['salon'].queryset = _salon_qs(request.user)
         if form.is_valid():
             taller = form.save(commit=False)
             taller.profesor = request.user
@@ -93,7 +92,6 @@ def crear_taller(request):
             return redirect('talleres:editar', pk=taller.pk)
     else:
         form = TallerForm()
-        form.fields['salon'].queryset = _salon_qs(request.user)
     return render(request, 'talleres/profesor/form.html', {
         'form': form, 'taller': None, 'titulo': 'Nuevo Taller',
     })
@@ -105,14 +103,12 @@ def editar_taller(request, pk):
     taller = get_object_or_404(Taller, pk=pk, profesor=request.user)
     if request.method == 'POST':
         form = TallerForm(request.POST, instance=taller)
-        form.fields['salon'].queryset = _salon_qs(request.user)
         if form.is_valid():
             form.save()
             messages.success(request, '✅ Taller actualizado.')
             return redirect('talleres:editar', pk=taller.pk)
     else:
         form = TallerForm(instance=taller)
-        form.fields['salon'].queryset = _salon_qs(request.user)
 
     bloques = list(
         taller.bloques.order_by('orden')

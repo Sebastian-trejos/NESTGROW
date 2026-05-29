@@ -37,10 +37,16 @@
   </style>
 </head>
 <body class="nestgrow-body">
-  <!-- Fondo imagen nubes (aplica a toda la app) -->
+  <!-- Fondo: bg_profe para profesores, bg_nubes para el resto -->
+  {% if user.is_authenticated and user.role == 'profesor' %}
+  <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+              background:url(&quot;{% static 'img/bg_profe.png' %}&quot;) center center / cover no-repeat;">
+  </div>
+  {% else %}
   <div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
               background:url(&quot;{% static 'img/bg_nubes.png' %}&quot;) center -20% / cover no-repeat;">
   </div>
+  {% endif %}
 
   <!-- Top Nav -->
   {% if not embedded %}

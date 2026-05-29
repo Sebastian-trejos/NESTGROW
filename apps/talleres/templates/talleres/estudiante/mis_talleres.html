@@ -210,43 +210,95 @@
 .mini-card.t-order  { border-color: #5f27cd; }
 .mini-card.t-glob   { border-color: #00d2d3; }
 
-.mini-img-wrap {
-  height: 130px;
-  overflow: hidden;
+/* ── Banner visual por tipo — colores de la app ── */
+.mini-banner {
+  height: 120px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
 }
-.mini-img-wrap img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s;
+.mb-drag   { background: linear-gradient(135deg, #6C63FF 0%, #a78bfa 100%); }
+.mb-search { background: linear-gradient(135deg, #FF6B6B 0%, #ffb3b3 100%); }
+.mb-puzzle { background: linear-gradient(135deg, #4ECDC4 0%, #7ee8e2 100%); }
+.mb-paint  { background: linear-gradient(135deg, #FFB347 0%, #FFE66D 100%); }
+.mb-audio  { background: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%); }
+.mb-mem    { background: linear-gradient(135deg, #a78bfa 0%, #FF6B6B 100%); }
+.mb-hang   { background: linear-gradient(135deg, #FF6B6B 0%, #FFB347 100%); }
+.mb-quiz   { background: linear-gradient(135deg, #4ECDC4 0%, #a78bfa 100%); }
+.mb-order  { background: linear-gradient(135deg, #FFB347 0%, #6C63FF 100%); }
+.mb-glob   { background: linear-gradient(135deg, #4ECDC4 0%, #FF6B6B 100%); }
+/* Orbes decorativos */
+.mini-banner::before {
+  content: '';
+  position: absolute;
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  top: -35px; left: -22px;
+  pointer-events: none;
 }
-.mini-card:hover .mini-img-wrap img { transform: scale(1.08); }
-
-/* Tipo badge flotante */
+.mini-banner::after {
+  content: '';
+  position: absolute;
+  width: 65px; height: 65px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  bottom: -20px; right: -14px;
+  pointer-events: none;
+}
+/* Watermark */
+.mb-wm {
+  position: absolute;
+  right: -12px; bottom: -14px;
+  font-size: 5.8rem;
+  color: rgba(255,255,255,0.1);
+  transform: rotate(-18deg);
+  line-height: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+/* Círculo central */
+.mb-circle {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  border: 3px solid rgba(255,255,255,0.38);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: transform 0.22s cubic-bezier(.34,1.56,.64,1);
+}
+.mini-card:hover .mb-circle { transform: scale(1.12); }
+.mb-icon { font-size: 1.9rem; color: white; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18)); }
+/* Tipo badge */
 .mini-type-badge {
   position: absolute;
-  top: 10px; left: 10px;
+  bottom: 8px; left: 10px;
   font-family: 'Fredoka One', cursive;
-  font-size: 0.72rem;
-  padding: 4px 10px;
+  font-size: 0.68rem;
+  padding: 3px 9px;
   border-radius: 50px;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.3);
   color: white;
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.2);
+  z-index: 3;
 }
 /* Badge completado */
 .mini-done-badge {
   position: absolute;
-  top: 10px; right: 10px;
+  top: 8px; right: 8px;
   font-family: 'Fredoka One', cursive;
-  font-size: 0.78rem;
-  padding: 5px 12px;
+  font-size: 0.7rem;
+  padding: 4px 10px;
   border-radius: 50px;
   background: rgba(20,180,110,0.92);
   color: white;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+  z-index: 3;
 }
 .mini-body { padding: 0.9rem 1rem 1rem; flex: 1; display: flex; flex-direction: column; }
 .mini-title {
@@ -337,9 +389,9 @@
   <!-- Hero -->
   <div class="act-hero mb-4">
     <div class="d-flex align-items-center gap-3 flex-wrap position-relative" style="z-index:1">
-      <img src="{% static 'img/milo_asombrado.png' %}" class="act-hero-milo" alt="Milo">
+      <img src="{% static 'img/milo_fest.png' %}" class="act-hero-milo" alt="Milo">
       <div>
-        <div class="act-hero-name">¡Hola, {{ user.first_name|default:user.username }}! 🎓</div>
+        <div class="act-hero-name">¡Hola, {{ user.first_name|default:user.username }}! <i class="bi bi-mortarboard-fill"></i></div>
         <div class="act-hero-sub">Aquí están tus actividades y minijuegos del período.</div>
       </div>
       <div class="ms-auto d-flex gap-2 flex-wrap">
@@ -440,7 +492,7 @@
 
     <!-- ── Minijuegos ── -->
     {% if minijuegos_pendientes %}
-    <div class="section-title">🎮 Minijuegos asignados</div>
+    <div class="section-title"><i class="bi bi-controller"></i> Minijuegos asignados</div>
     <div class="row g-3 mb-4">
       {% for item in minijuegos_pendientes %}
       {% with g=item.game r=item.registro %}
@@ -458,39 +510,60 @@
           {% elif g.game_type == 'globos' %}t-glob
           {% else %}t-drag{% endif %}">
 
-          <div class="mini-img-wrap">
-            {% if g.game_type == 'painting' %}
-              <img src="{% static 'img/games (2).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🎨 Pintura</span>
-            {% elif g.game_type == 'drag_and_drop' %}
-              <img src="{% static 'img/games (1).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🖱️ Arrastrar</span>
-            {% elif g.game_type == 'word_search' %}
-              <img src="{% static 'img/games (3).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🔍 Sopa letras</span>
-            {% elif g.game_type == 'memoria' %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🧠 Memoria</span>
-            {% elif g.game_type == 'quiz' %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">❓ Quiz</span>
-            {% elif g.game_type == 'ahorcado' %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🔤 Ahorcado</span>
-            {% elif g.game_type == 'ordenar_letras' %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🔀 Ordenar</span>
-            {% elif g.game_type == 'globos' %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🎈 Globos</span>
-            {% elif g.game_type == 'puzzle' %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🧩 Puzzle</span>
-            {% else %}
-              <img src="{% static 'img/games(4).jpeg' %}" alt="{{ g.title }}">
-              <span class="mini-type-badge">🎮 Juego</span>
+          <div class="mini-banner
+            {% if g.game_type == 'drag_and_drop' %}mb-drag
+            {% elif g.game_type == 'word_search' %}mb-search
+            {% elif g.game_type == 'puzzle' %}mb-puzzle
+            {% elif g.game_type == 'painting' %}mb-paint
+            {% elif g.game_type == 'audio_matching' %}mb-audio
+            {% elif g.game_type == 'memoria' %}mb-mem
+            {% elif g.game_type == 'ahorcado' %}mb-hang
+            {% elif g.game_type == 'quiz' %}mb-quiz
+            {% elif g.game_type == 'ordenar_letras' %}mb-order
+            {% elif g.game_type == 'globos' %}mb-glob
+            {% else %}mb-drag{% endif %}">
+            <i class="bi mb-wm
+              {% if g.game_type == 'drag_and_drop' %}bi-hand-index-thumb-fill
+              {% elif g.game_type == 'word_search' %}bi-search
+              {% elif g.game_type == 'puzzle' %}bi-puzzle-fill
+              {% elif g.game_type == 'painting' %}bi-brush-fill
+              {% elif g.game_type == 'audio_matching' %}bi-headphones
+              {% elif g.game_type == 'memoria' %}bi-grid-3x3-gap-fill
+              {% elif g.game_type == 'ahorcado' %}bi-alphabet
+              {% elif g.game_type == 'quiz' %}bi-patch-question-fill
+              {% elif g.game_type == 'ordenar_letras' %}bi-sort-alpha-down
+              {% elif g.game_type == 'globos' %}bi-balloon-fill
+              {% else %}bi-controller{% endif %}"></i>
+            <div class="mb-circle">
+              <i class="bi mb-icon
+                {% if g.game_type == 'drag_and_drop' %}bi-hand-index-thumb-fill
+                {% elif g.game_type == 'word_search' %}bi-search
+                {% elif g.game_type == 'puzzle' %}bi-puzzle-fill
+                {% elif g.game_type == 'painting' %}bi-brush-fill
+                {% elif g.game_type == 'audio_matching' %}bi-headphones
+                {% elif g.game_type == 'memoria' %}bi-grid-3x3-gap-fill
+                {% elif g.game_type == 'ahorcado' %}bi-alphabet
+                {% elif g.game_type == 'quiz' %}bi-patch-question-fill
+                {% elif g.game_type == 'ordenar_letras' %}bi-sort-alpha-down
+                {% elif g.game_type == 'globos' %}bi-balloon-fill
+                {% else %}bi-controller{% endif %}"></i>
+            </div>
+            <span class="mini-type-badge">
+              {% if g.game_type == 'drag_and_drop' %}Arrastrar
+              {% elif g.game_type == 'word_search' %}Sopa letras
+              {% elif g.game_type == 'puzzle' %}Puzzle
+              {% elif g.game_type == 'painting' %}Pintura
+              {% elif g.game_type == 'audio_matching' %}Audio
+              {% elif g.game_type == 'memoria' %}Memoria
+              {% elif g.game_type == 'ahorcado' %}Ahorcado
+              {% elif g.game_type == 'quiz' %}Quiz
+              {% elif g.game_type == 'ordenar_letras' %}Ordenar
+              {% elif g.game_type == 'globos' %}Globos
+              {% else %}Minijuego{% endif %}
+            </span>
+            {% if item.completado %}
+              <span class="mini-done-badge"><i class="bi bi-check-lg me-1"></i>Listo</span>
             {% endif %}
-            {% if item.completado %}<span class="mini-done-badge">✅ Completado</span>{% endif %}
           </div>
 
           <div class="mini-body">

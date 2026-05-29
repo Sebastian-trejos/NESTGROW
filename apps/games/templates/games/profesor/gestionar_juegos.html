@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Gestionar Juegos - NestGrow{% endblock %}
+
+{% block extra_css %}
+<style>
+.game-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 50px;
+  background: #f0eeff;
+  color: var(--primary);
+}
+.diff-badge { font-size: 0.75rem; padding: 3px 10px; border-radius: 50px; font-weight: 800; }
+.diff-1 { background: #d4edda; color: #155724; }
+.diff-2 { background: #fff3cd; color: #856404; }
+.diff-3 { background: #f8d7da; color: #721c24; }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -7,27 +28,28 @@
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🎮 Gestionar Juegos</h3>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">
+        <i class="bi bi-controller me-2"></i>Gestionar Juegos
+      </h3>
       <div class="text-muted fw-bold small">Crea, edita y activa juegos para tus estudiantes</div>
     </div>
     <div class="d-flex gap-2 flex-wrap">
       <a href="{% url 'games:gestionar_categorias' %}" class="btn btn-outline-primary rounded-pill fw-bold">
-        📚 Categorías
+        <i class="bi bi-book-fill me-1"></i>Categorías
       </a>
-      <a href="{% url 'games:crear_juego' %}" class="btn btn-nestgrow btn-primary-nestgrow">
-        ➕ Nuevo Juego
-      </a>
-      <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
-        ← Mi Panel
+      <a href="{% url 'games:crear_juego' %}" class="btn fw-bold rounded-pill"
+         style="background:#4ECDC4;color:white;border:none;font-family:'Fredoka One',cursive">
+        <i class="bi bi-plus-circle-fill me-1"></i>Nuevo Juego
       </a>
     </div>
   </div>
 
   <!-- Milo Banner -->
   <div class="milo-banner mb-4">
-    <div class="milo-banner-owl">🐺</div>
+    <img src="{% static 'img/milo_hablando.png' %}" style="height:55px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.15))">
     <div class="milo-banner-text">
-      Desde aquí puedes crear y gestionar todos los juegos que verán tus estudiantes. ¡Primero crea una Categoría, luego crea el Juego!
+      Desde aquí puedes crear y gestionar todos los juegos que verán tus estudiantes.
+      <span class="fw-bold" style="color:var(--primary)">Primero crea una Categoría, luego crea el Juego.</span>
     </div>
   </div>
 
@@ -35,58 +57,67 @@
   <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="stat-card">
-        <div style="font-size:1.8rem">🎮</div>
+        <div style="color:var(--primary);font-size:1.6rem"><i class="bi bi-controller-fill"></i></div>
         <div class="stat-number">{{ juegos.count }}</div>
         <div class="stat-label">Total Juegos</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card" style="border-top-color:var(--accent)">
-        <div style="font-size:1.8rem">✅</div>
+        <div style="color:var(--accent);font-size:1.6rem"><i class="bi bi-check-circle-fill"></i></div>
         <div class="stat-number" style="color:var(--accent)">{{ juegos|length }}</div>
         <div class="stat-label">Activos</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card" style="border-top-color:var(--secondary)">
-        <div style="font-size:1.8rem">📚</div>
+        <div style="color:var(--secondary);font-size:1.6rem"><i class="bi bi-book-fill"></i></div>
         <div class="stat-number" style="color:var(--secondary)">{{ categorias.count }}</div>
         <div class="stat-label">Categorías</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card" style="border-top-color:var(--orange)">
-        <div style="font-size:1.8rem">🏆</div>
-        <div class="stat-number" style="color:var(--orange)">4</div>
+        <div style="color:var(--orange);font-size:1.6rem"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+        <div class="stat-number" style="color:var(--orange)">10</div>
         <div class="stat-label">Tipos de Juego</div>
       </div>
     </div>
   </div>
 
-  <!-- Games Table -->
+  <!-- Tabla de juegos -->
   <div class="nestgrow-card p-4">
     {% if juegos %}
     <div class="table-responsive">
       <table class="table table-hover align-middle">
         <thead>
           <tr style="background:#f8f6ff">
-            <th>Tipo</th>
-            <th>Título</th>
-            <th>Categoría</th>
-            <th>Dificultad</th>
-            <th>Puntos</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th style="color:var(--primary)">Tipo</th>
+            <th style="color:var(--primary)">Título</th>
+            <th style="color:var(--primary)">Categoría</th>
+            <th style="color:var(--primary)">Dificultad</th>
+            <th style="color:var(--primary)">Puntos</th>
+            <th style="color:var(--primary)">Estado</th>
+            <th style="color:var(--primary)">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {% for juego in juegos %}
           <tr>
-            <td style="font-size:1.6rem">
-              {% if juego.game_type == 'drag_and_drop' %}🖱️
-              {% elif juego.game_type == 'word_search' %}🔍
-              {% elif juego.game_type == 'puzzle' %}🧩
-              {% else %}🎵{% endif %}
+            <td>
+              <span class="game-type-badge">
+                {% if juego.game_type == 'drag_and_drop' %}<i class="bi bi-hand-index-thumb-fill"></i>Arrastrar
+                {% elif juego.game_type == 'word_search' %}<i class="bi bi-search"></i>Sopa
+                {% elif juego.game_type == 'puzzle' %}<i class="bi bi-puzzle-fill"></i>Puzzle
+                {% elif juego.game_type == 'audio_matching' %}<i class="bi bi-volume-up-fill"></i>Audio
+                {% elif juego.game_type == 'painting' %}<i class="bi bi-brush-fill"></i>Pintura
+                {% elif juego.game_type == 'memoria' %}<i class="bi bi-grid-3x3-gap-fill"></i>Memoria
+                {% elif juego.game_type == 'ahorcado' %}<i class="bi bi-alphabet"></i>Ahorcado
+                {% elif juego.game_type == 'quiz' %}<i class="bi bi-patch-question-fill"></i>Quiz
+                {% elif juego.game_type == 'ordenar_letras' %}<i class="bi bi-sort-alpha-down"></i>Ordenar
+                {% elif juego.game_type == 'globos' %}<i class="bi bi-balloon-fill"></i>Globos
+                {% else %}<i class="bi bi-controller"></i>Juego{% endif %}
+              </span>
             </td>
             <td>
               <div class="fw-bold">{{ juego.title }}</div>
@@ -98,25 +129,42 @@
               </span>
             </td>
             <td>
-              <span class="badge badge-difficulty-{{ juego.difficulty }} rounded-pill">
-                {% if juego.difficulty == 1 %}⭐ Fácil
-                {% elif juego.difficulty == 2 %}⭐⭐ Medio
-                {% else %}⭐⭐⭐ Difícil{% endif %}
+              <span class="diff-badge diff-{{ juego.difficulty }}">
+                {% if juego.difficulty == 1 %}<i class="bi bi-star-fill me-1"></i>Fácil
+                {% elif juego.difficulty == 2 %}<i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i>Medio
+                {% else %}<i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i><i class="bi bi-star-fill me-1"></i>Difícil{% endif %}
               </span>
             </td>
-            <td><span class="fw-bold" style="color:var(--orange)">⭐ {{ juego.points_reward }}</span></td>
+            <td>
+              <span class="fw-bold" style="color:var(--orange)">
+                <i class="bi bi-star-fill me-1"></i>{{ juego.points_reward }}
+              </span>
+            </td>
             <td>
               <a href="{% url 'games:toggle_juego' juego.pk %}"
                  class="badge rounded-pill text-decoration-none"
                  style="{% if juego.is_active %}background:#d4edda;color:#155724{% else %}background:#f8d7da;color:#721c24{% endif %}">
-                {% if juego.is_active %}✅ Activo{% else %}🔒 Taller{% endif %}
+                {% if juego.is_active %}
+                  <i class="bi bi-check-circle-fill me-1"></i>Activo
+                {% else %}
+                  <i class="bi bi-lock-fill me-1"></i>Inactivo
+                {% endif %}
               </a>
             </td>
             <td>
               <div class="d-flex gap-1">
-                <a href="{{ juego.get_absolute_url }}" class="btn btn-sm btn-outline-primary rounded-pill" title="Ver juego">▶</a>
-                <a href="{% url 'games:editar_juego' juego.pk %}" class="btn btn-sm btn-outline-warning rounded-pill" title="Editar">✏️</a>
-                <a href="{% url 'games:eliminar_juego' juego.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">🗑️</a>
+                <a href="{{ juego.get_absolute_url }}"
+                   class="btn btn-sm btn-outline-primary rounded-pill" title="Ver juego">
+                  <i class="bi bi-play-fill"></i>
+                </a>
+                <a href="{% url 'games:editar_juego' juego.pk %}"
+                   class="btn btn-sm btn-outline-warning rounded-pill" title="Editar">
+                  <i class="bi bi-pencil-fill"></i>
+                </a>
+                <a href="{% url 'games:eliminar_juego' juego.pk %}"
+                   class="btn btn-sm btn-outline-danger rounded-pill" title="Eliminar">
+                  <i class="bi bi-trash-fill"></i>
+                </a>
               </div>
             </td>
           </tr>
@@ -126,11 +174,17 @@
     </div>
     {% else %}
     <div class="text-center py-5">
-      <div style="font-size:5rem">🎮</div>
-      <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡Aún no hay juegos!</h4>
-      <p class="text-muted fw-bold">Primero crea una <a href="{% url 'games:gestionar_categorias' %}">categoría de vocabulario</a>, luego crea un juego.</p>
+      <div style="width:90px;height:90px;border-radius:50%;background:#f0eeff;
+                  display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+        <i class="bi bi-controller-fill" style="font-size:2.5rem;color:var(--primary)"></i>
+      </div>
+      <h4 class="font-fredoka mt-2" style="color:var(--primary)">¡Aún no hay juegos!</h4>
+      <p class="text-muted fw-bold">Primero crea una
+        <a href="{% url 'games:gestionar_categorias' %}">categoría de vocabulario</a>,
+        luego crea un juego.
+      </p>
       <a href="{% url 'games:crear_juego' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2">
-        ➕ Crear mi primer juego
+        <i class="bi bi-plus-circle-fill me-1"></i>Crear mi primer juego
       </a>
     </div>
     {% endif %}

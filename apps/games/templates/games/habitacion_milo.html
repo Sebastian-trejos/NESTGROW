@@ -215,7 +215,7 @@
   .room-item-drag {
     position: absolute;
     cursor: grab;
-    transform-origin: bottom center;
+    transform-origin: center center;
     transition: box-shadow 0.15s;
     user-select: none;
   }
@@ -1104,37 +1104,58 @@ function despertarMilo() {
 const SAVE_URL  = "{% url 'games:guardar_posicion_item' %}";
 const CSRF_INV  = document.cookie.match(/csrftoken=([^;]+)/)?.[1] ?? '';
 
-/* Aplica posición y escala desde data-* al cargar */
+/* ──────────────────────────────────────────────
+   Sistema de posición: left% (0-100) + top% (0-100)
+   Cubre toda la habitación sin restricciones.
+────────────────────────────────────────────── */
+
+/* Aplica posición y escala desde data-* al cargar.
+   Migra automáticamente valores del sistema antiguo (bottom-px) al nuevo (top%). */
 document.querySelectorAll('.room-item-drag').forEach(el => {
-  const px     = parseFloat(el.dataset.posX)   || 50;
-  const py     = parseFloat(el.dataset.posY)   || 10;
+  let px     = parseFloat(el.dataset.posX)   || 50;
+  let py     = parseFloat(el.dataset.posY);
   const escala = parseFloat(el.dataset.escala) || 1.0;
-  el.style.position       = 'absolute';
-  el.style.left           = px + '%';
-  el.style.bottom         = 'calc(32% + ' + py + 'px)';
-  el.style.transform      = 'scale(' + escala + ')';
-  el.style.transformOrigin = 'bottom center';
+
+  // Detección del sistema antiguo: pos_y era píxeles desde una línea al 32% del fondo.
+  // Valores fuera del rango 0-100 indican sistema viejo → convertir a top%.
+  if (isNaN(py) || py < 0 || py > 100) {
+    const roomH = room.offsetHeight || 600;
+    // Fórmula inversa: top% = (1 - 0.32 - py_old/roomH) * 100
+    py = Math.max(5, Math.min(90, (1 - 0.32 - (py || 0) / roomH) * 100));
+    el.dataset.posY = py.toFixed(1);
+    // Guardar la posición migrada en BD (autosave tras 200ms para no bloquear el render)
+    setTimeout(() => scheduleItemSave(el), 200);
+  }
+
+  el.style.position        = 'absolute';
+  el.style.left            = px + '%';
+  el.style.top             = py + '%';
+  el.style.bottom          = 'auto';
+  el.style.transform       = 'scale(' + escala + ')';
+  el.style.transformOrigin = 'center center';
 });
 
-/* Autosave con debounce por ítem */
+/* Autosave con debounce por ítem — guarda en InventarioEstudiante */
 const saveTimers = {};
 function scheduleItemSave(el) {
   const invId = el.dataset.invId;
   clearTimeout(saveTimers[invId]);
   saveTimers[invId] = setTimeout(() => {
     const px     = parseFloat(el.dataset.posX)   || 50;
-    const py     = parseFloat(el.dataset.posY)   || 10;
+    const py     = parseFloat(el.dataset.posY)   || 30;
     const escala = parseFloat(el.dataset.escala) || 1.0;
     fetch(SAVE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_INV },
       body: JSON.stringify({ inv_id: parseInt(invId), pos_x: px, pos_y: py, escala })
+    }).then(r => r.json()).then(d => {
+      if (d.status !== 'ok') console.warn('No se pudo guardar posición:', d);
     });
   }, 600);
 }
 
-/* ── Drag (mouse + touch) ── */
-let dragEl = null, dragStartX = 0, dragStartY = 0, dragOrigLeft = 0, dragOrigBottom = 0;
+/* ── Drag (mouse + touch) — toda la habitación ── */
+let dragEl = null, dragStartX = 0, dragStartY = 0, dragOrigLeft = 0, dragOrigTop = 0;
 
 function getPageXY(e) {
   return e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
@@ -1145,12 +1166,12 @@ document.querySelectorAll('.room-item-drag').forEach(el => {
   function onStart(e) {
     if (e.target.closest('.item-ctrl-btn')) return;
     e.preventDefault();
-    dragEl = el;
-    const p = getPageXY(e);
-    dragStartX    = p.x;
-    dragStartY    = p.y;
-    dragOrigLeft  = parseFloat(el.style.left) || parseFloat(el.dataset.posX) || 50;
-    dragOrigBottom = parseFloat(el.dataset.posY) || 10;
+    dragEl       = el;
+    const p      = getPageXY(e);
+    dragStartX   = p.x;
+    dragStartY   = p.y;
+    dragOrigLeft = parseFloat(el.dataset.posX) || 50;
+    dragOrigTop  = parseFloat(el.dataset.posY) || 30;
     el.classList.add('dragging');
   }
   el.addEventListener('mousedown',  onStart);
@@ -1165,17 +1186,19 @@ document.addEventListener('touchend',   onDragEnd);
 function onDragMove(e) {
   if (!dragEl) return;
   e.preventDefault();
-  const p      = getPageXY(e);
-  const roomW  = room.offsetWidth;
-  const roomH  = room.offsetHeight;
-  const dx     = p.x - dragStartX;
-  const dy     = p.y - dragStartY;
-  const newPx  = Math.max(0, Math.min(100, dragOrigLeft  + (dx / roomW * 100)));
-  const newPy  = Math.max(-50, dragOrigBottom - (dy));
-  dragEl.style.left   = newPx + '%';
-  dragEl.style.bottom = 'calc(32% + ' + newPy + 'px)';
-  dragEl.dataset.posX = newPx.toFixed(1);
-  dragEl.dataset.posY = newPy.toFixed(1);
+  const p     = getPageXY(e);
+  const roomW = room.offsetWidth;
+  const roomH = room.offsetHeight;
+  const dx    = p.x - dragStartX;
+  const dy    = p.y - dragStartY;
+  /* left y top como porcentaje — 0 a 100, sin restricciones adicionales */
+  const newPx = Math.max(0, Math.min(100, dragOrigLeft + (dx / roomW * 100)));
+  const newPy = Math.max(0, Math.min(100, dragOrigTop  + (dy / roomH * 100)));
+  dragEl.style.left    = newPx + '%';
+  dragEl.style.top     = newPy + '%';
+  dragEl.style.bottom  = 'auto';
+  dragEl.dataset.posX  = newPx.toFixed(1);
+  dragEl.dataset.posY  = newPy.toFixed(1);
 }
 
 function onDragEnd() {
