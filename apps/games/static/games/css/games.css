@@ -517,7 +517,7 @@
   font-weight: 700;
   color: var(--primary);
   letter-spacing: 0.3px;
-  min-height: 56px;
+  min-height: 68px; /* igual que .connect-node base */
 }
 
 /* Emoji interno */
@@ -630,6 +630,7 @@
   }
   .connect-node--word {
     font-size: 0.82rem;
+    min-height: 56px; /* igual al base en mobile */
   }
   .connect-emoji-fallback {
     width: 40px;

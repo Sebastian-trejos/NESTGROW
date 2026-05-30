@@ -9,6 +9,7 @@ from reportlab.lib.units import cm
 from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer,
                                  Table, TableStyle, HRFlowable)
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.graphics.shapes import Drawing, Rect
 from datetime import date
 
 
@@ -335,6 +336,27 @@ def _nota_bg_pdf(nota):
     return colors.HexColor('#f8d7da')
 
 
+def _barra_progreso(pct, bar_width=82, bar_height=7):
+    """Devuelve un Drawing con una barra de progreso coloreada."""
+    d = Drawing(bar_width, bar_height)
+    d.add(Rect(0, 0, bar_width, bar_height,
+               fillColor=colors.HexColor('#E8E4FF'),
+               strokeColor=colors.HexColor('#C8C0FF'),
+               strokeWidth=0.5))
+    if pct and pct > 0:
+        fill_w = max(bar_width * pct / 100, 2)
+        if pct >= 80:
+            fill_color = colors.HexColor('#28a745')
+        elif pct >= 60:
+            fill_color = colors.HexColor('#ffc107')
+        elif pct >= 40:
+            fill_color = colors.HexColor('#fd7e14')
+        else:
+            fill_color = colors.HexColor('#dc3545')
+        d.add(Rect(0, 0, fill_w, bar_height, fillColor=fill_color, strokeColor=None))
+    return d
+
+
 def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijuegos,
                                  estrellas_historia, nota_final=None):
     """PDF visual de resultados de un período para un estudiante."""
@@ -346,9 +368,9 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     styles  = getSampleStyleSheet()
     primary = colors.HexColor('#6C63FF')
     accent  = colors.HexColor('#4ECDC4')
-    gold    = colors.HexColor('#FFB347')
     light   = colors.HexColor('#F8F6FF')
     white   = colors.white
+    W       = 17.4 * cm  # ancho disponible (A4 - márgenes)
 
     # ── Estilos de texto ──────────────────────────────────────────────────────
     brand_style   = ParagraphStyle('Br', parent=styles['Normal'],
@@ -362,11 +384,15 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                                    spaceAfter=0, alignment=TA_CENTER)
     section_style = ParagraphStyle('Sec', parent=styles['Heading2'],
                                    textColor=primary, fontSize=12,
-                                   spaceBefore=12, spaceAfter=5, fontName='Helvetica-Bold')
+                                   spaceBefore=12, spaceAfter=4, fontName='Helvetica-Bold')
+    sub_style     = ParagraphStyle('Sub', parent=styles['Normal'], fontSize=9,
+                                   textColor=colors.HexColor('#666666'), spaceAfter=5)
     body_style    = ParagraphStyle('B', parent=styles['Normal'], fontSize=10, spaceAfter=3)
     footer_style  = ParagraphStyle('F', parent=styles['Normal'],
                                    textColor=colors.HexColor('#aaaaaa'), fontSize=8,
                                    alignment=TA_CENTER)
+    center9       = ParagraphStyle('C9', parent=styles['Normal'], fontSize=9,
+                                   alignment=TA_CENTER, leading=14)
 
     nombre     = estudiante.user.get_full_name() or estudiante.user.username
     salon_name = str(estudiante.salon) if estudiante.salon else '—'
@@ -379,56 +405,62 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
 
     # ── 1. Cabecera con fondo morado ──────────────────────────────────────────
     header_data = [[
-        Paragraph('NestGrow · Plataforma de Aprendizaje de Inglés', brand_style),
-        '',
+        Paragraph('NestGrow · Plataforma de Aprendizaje de Inglés', brand_style), '',
     ], [
-        Paragraph(f'Informe de Período: <b>{periodo.titulo}</b>', title_style),
-        '',
+        Paragraph(f'Informe de Período: <b>{periodo.titulo}</b>', title_style), '',
     ], [
         Paragraph(
-            f'{periodo.fecha_inicio.strftime("%d/%m/%Y")}  →  {periodo.fecha_fin.strftime("%d/%m/%Y")}',
+            f'{periodo.fecha_inicio.strftime("%d/%m/%Y")}  →  {periodo.fecha_fin.strftime("%d/%m/%Y")}'
+            f'  ·  Salón: {salon_name}',
             dates_style,
-        ),
-        '',
+        ), '',
     ]]
     header_table = Table(header_data, colWidths=['100%', 0])
     header_table.setStyle(TableStyle([
-        ('BACKGROUND',   (0, 0), (-1, -1), primary),
-        ('SPAN',         (0, 0), (1, 0)),
-        ('SPAN',         (0, 1), (1, 1)),
-        ('SPAN',         (0, 2), (1, 2)),
-        ('TOPPADDING',   (0, 0), (-1, -1), 10),
-        ('BOTTOMPADDING',(0, 0), (-1, -1), 8),
-        ('LEFTPADDING',  (0, 0), (-1, -1), 12),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 12),
+        ('BACKGROUND',    (0, 0), (-1, -1), primary),
+        ('SPAN',          (0, 0), (1, 0)),
+        ('SPAN',          (0, 1), (1, 1)),
+        ('SPAN',          (0, 2), (1, 2)),
+        ('TOPPADDING',    (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ('LEFTPADDING',   (0, 0), (-1, -1), 12),
+        ('RIGHTPADDING',  (0, 0), (-1, -1), 12),
         ('ROUNDEDCORNERS', [8, 8, 8, 8]),
     ]))
     story += [header_table, Spacer(1, 10)]
 
     # ── 2. Datos del estudiante + Nota Final (lado a lado) ────────────────────
     info_rows = [
-        ['👤 Estudiante', nombre],
-        ['🏫 Salón',       salon_name],
+        ['Estudiante', nombre],
+        ['Salon',      salon_name],
     ]
     if salon_prof:
-        info_rows.append(['👩‍🏫 Profesor/a', salon_prof])
+        info_rows.append(['Profesor/a', salon_prof])
     if estudiante.numero_lista:
-        info_rows.append(['📋 N° de Lista', estudiante.numero_lista])
+        info_rows.append(['N de Lista', str(estudiante.numero_lista)])
+    nivel = getattr(estudiante, 'nivel', None)
+    xp    = getattr(estudiante, 'puntos_acumulados', 0) or 0
+    if nivel is not None:
+        info_rows.append(['Nivel / XP', f'Nivel {nivel}  -  {xp} XP'])
+    ranking_pos, ranking_total = calcular_ranking(estudiante)
+    if ranking_pos:
+        trofeo = 'Oro' if ranking_pos == 1 else 'Plata' if ranking_pos == 2 else 'Bronce' if ranking_pos == 3 else 'Top'
+        info_rows.append([f'Ranking ({trofeo})', f'{ranking_pos} de {ranking_total} estudiantes'])
     if estudiante.correo_padre:
-        info_rows.append(['📧 Correo padre/madre', estudiante.correo_padre])
+        info_rows.append(['Correo padre/madre', estudiante.correo_padre])
 
-    info_table = Table(info_rows, colWidths=[4.2*cm, 8*cm])
+    info_table = Table(info_rows, colWidths=[4.4*cm, 8*cm])
     info_table.setStyle(TableStyle([
-        ('BACKGROUND',   (0, 0), (0, -1), light),
-        ('TEXTCOLOR',    (0, 0), (0, -1), primary),
-        ('FONTNAME',     (0, 0), (0, -1), 'Helvetica-Bold'),
-        ('FONTSIZE',     (0, 0), (-1, -1), 9.5),
+        ('BACKGROUND',    (0, 0), (0, -1), light),
+        ('TEXTCOLOR',     (0, 0), (0, -1), primary),
+        ('FONTNAME',      (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE',      (0, 0), (-1, -1), 9.5),
         ('ROWBACKGROUNDS',(0, 0), (-1, -1), [white, light]),
-        ('GRID',         (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
-        ('VALIGN',       (0, 0), (-1, -1), 'MIDDLE'),
-        ('TOPPADDING',   (0, 0), (-1, -1), 5),
-        ('BOTTOMPADDING',(0, 0), (-1, -1), 5),
-        ('LEFTPADDING',  (0, 0), (-1, -1), 8),
+        ('GRID',          (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
+        ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+        ('TOPPADDING',    (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+        ('LEFTPADDING',   (0, 0), (-1, -1), 8),
         ('ROUNDEDCORNERS', [6, 6, 6, 6]),
     ]))
 
@@ -438,26 +470,24 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
         nf_color = _nota_color_pdf(nota_final)
         nf_emoji = _nota_emoji(nota_final)
         nf_label = _nota_label(nota_final)
-        nota_box_data = [[Paragraph(
-            f'<b>NOTA FINAL</b>',
-            ParagraphStyle('NF_lbl', parent=styles['Normal'], textColor=nf_color,
-                           fontSize=9, alignment=TA_CENTER, fontName='Helvetica-Bold'),
-        )], [Paragraph(
-            f'<b>{nota_final}</b>',
-            ParagraphStyle('NF_val', parent=styles['Normal'], textColor=nf_color,
-                           fontSize=28, alignment=TA_CENTER, fontName='Helvetica-Bold'),
-        )], [Paragraph(
-            f'{nf_emoji} {nf_label}',
-            ParagraphStyle('NF_sub', parent=styles['Normal'], textColor=nf_color,
-                           fontSize=9, alignment=TA_CENTER),
-        )]]
+        nota_box_data = [
+            [Paragraph('<b>NOTA FINAL</b>',
+                       ParagraphStyle('NF_lbl', parent=styles['Normal'], textColor=nf_color,
+                                      fontSize=9, alignment=TA_CENTER, fontName='Helvetica-Bold'))],
+            [Paragraph(f'<b>{nota_final}</b>',
+                       ParagraphStyle('NF_val', parent=styles['Normal'], textColor=nf_color,
+                                      fontSize=28, alignment=TA_CENTER, fontName='Helvetica-Bold'))],
+            [Paragraph(f'{nf_emoji} {nf_label}',
+                       ParagraphStyle('NF_sub', parent=styles['Normal'], textColor=nf_color,
+                                      fontSize=9, alignment=TA_CENTER))],
+        ]
         nota_box = Table(nota_box_data, colWidths=[4.5*cm])
         nota_box.setStyle(TableStyle([
-            ('BACKGROUND',   (0, 0), (-1, -1), nf_bg),
-            ('TOPPADDING',   (0, 0), (-1, -1), 8),
-            ('BOTTOMPADDING',(0, 0), (-1, -1), 8),
-            ('LEFTPADDING',  (0, 0), (-1, -1), 6),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+            ('BACKGROUND',    (0, 0), (-1, -1), nf_bg),
+            ('TOPPADDING',    (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('LEFTPADDING',   (0, 0), (-1, -1), 6),
+            ('RIGHTPADDING',  (0, 0), (-1, -1), 6),
             ('ROUNDEDCORNERS', [10, 10, 10, 10]),
             ('BOX', (0, 0), (-1, -1), 1.5, nf_color),
         ]))
@@ -470,38 +500,92 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     combined = Table([[info_table, Spacer(0.4*cm, 1), nota_box]],
                      colWidths=[None, 0.4*cm, 4.5*cm])
     combined.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('LEFTPADDING', (0, 0), (-1, -1), 0),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+        ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING',   (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING',  (0, 0), (-1, -1), 0),
     ]))
     story += [combined, Spacer(1, 12)]
 
-    # ── 3. Talleres ───────────────────────────────────────────────────────────
+    # ── 3. Resumen de actividad ───────────────────────────────────────────────
+    t_completados = sum(1 for t in fila_talleres if t['nota'] is not None)
+    t_total       = len(fila_talleres)
+    m_completados = sum(1 for m in fila_minijuegos if m['nota'] is not None)
+    m_total       = len(fila_minijuegos)
+    total_act     = t_total + m_total
+    pct_global    = round((t_completados + m_completados) / total_act * 100) if total_act > 0 else 0
+
+    if total_act > 0:
+        summary_data = [[
+            Paragraph(
+                f'<b>Talleres</b><br/><font size=13><b>{t_completados}/{t_total}</b></font><br/>completados',
+                center9,
+            ),
+            Paragraph(
+                f'<b>Minijuegos</b><br/><font size=13><b>{m_completados}/{m_total}</b></font><br/>completados',
+                center9,
+            ),
+            Paragraph(
+                f'<b>Completitud</b><br/><font size=13><b>{pct_global}%</b></font><br/>del periodo',
+                center9,
+            ),
+        ]]
+        c3_bg = (colors.HexColor('#E8F5E9') if pct_global >= 80
+                 else colors.HexColor('#FFF8E1') if pct_global >= 50
+                 else colors.HexColor('#FFEBEE'))
+        summary_table = Table(summary_data, colWidths=[W/3, W/3, W/3])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND',    (0, 0), (0, 0), colors.HexColor('#EDE9FF')),
+            ('BACKGROUND',    (1, 0), (1, 0), colors.HexColor('#E8FAF9')),
+            ('BACKGROUND',    (2, 0), (2, 0), c3_bg),
+            ('GRID',          (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
+            ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+            ('ALIGN',         (0, 0), (-1, -1), 'CENTER'),
+            ('TOPPADDING',    (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('ROUNDEDCORNERS', [6, 6, 6, 6]),
+        ]))
+        story += [summary_table, Spacer(1, 10)]
+
+    # ── 4. Talleres ───────────────────────────────────────────────────────────
     if fila_talleres:
-        story.append(Paragraph('🎓 Talleres', section_style))
-        t_data = [['Taller', 'Nota', 'Desempeño', '%']]
+        story.append(Paragraph('Talleres', section_style))
+        story.append(Paragraph(
+            f'{t_completados} de {t_total} taller{"es" if t_total != 1 else ""} completado{"s" if t_completados != 1 else ""}',
+            sub_style,
+        ))
+        t_data = [['Taller', 'Nota', 'Desempeno', 'Progreso', 'Fecha']]
         for t in fila_talleres:
             if t['nota'] is not None:
                 nota_str  = str(t['nota'])
                 label_str = _nota_label(t['nota'])
-                pct_str   = f"{t['pct']}%"
+                bar       = _barra_progreso(t['pct'], bar_width=82)
+                sesion    = t.get('sesion')
+                fecha_str = (
+                    sesion.completada_en.strftime('%d/%m/%y')
+                    if sesion and sesion.completada_en else '—'
+                )
             else:
-                nota_str = label_str = '—'
-                pct_str  = 'Sin completar'
-            t_data.append([t['asig'].taller.titulo, nota_str, label_str, pct_str])
+                nota_str  = '—'
+                label_str = 'Sin completar'
+                bar       = _barra_progreso(0)
+                fecha_str = '—'
+            t_data.append([t['asig'].taller.titulo, nota_str, label_str, bar, fecha_str])
 
-        t_table = Table(t_data, colWidths=[None, 2*cm, 3.2*cm, 2.2*cm])
+        # colWidths: 6 + 1.8 + 3 + 3.8 + 2.8 = 17.4cm
+        t_table = Table(t_data, colWidths=[6*cm, 1.8*cm, 3*cm, 3.8*cm, 2.8*cm])
         t_style = [
-            ('BACKGROUND',   (0, 0), (-1, 0), primary),
-            ('TEXTCOLOR',    (0, 0), (-1, 0), white),
-            ('FONTNAME',     (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE',     (0, 0), (-1, -1), 9.5),
-            ('ALIGN',        (1, 0), (-1, -1), 'CENTER'),
-            ('VALIGN',       (0, 0), (-1, -1), 'MIDDLE'),
-            ('GRID',         (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
-            ('TOPPADDING',   (0, 0), (-1, -1), 5),
-            ('BOTTOMPADDING',(0, 0), (-1, -1), 5),
-            ('LEFTPADDING',  (0, 0), (0, -1), 8),
+            ('BACKGROUND',    (0, 0), (-1, 0), primary),
+            ('TEXTCOLOR',     (0, 0), (-1, 0), white),
+            ('FONTNAME',      (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE',      (0, 0), (-1, -1), 9.5),
+            ('ALIGN',         (1, 0), (2, -1), 'CENTER'),
+            ('ALIGN',         (4, 0), (4, -1), 'CENTER'),
+            ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+            ('GRID',          (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
+            ('TOPPADDING',    (0, 0), (-1, -1), 5),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+            ('LEFTPADDING',   (0, 0), (0, -1), 8),
+            ('LEFTPADDING',   (3, 1), (3, -1), 4),
         ]
         for i, t in enumerate(fila_talleres, 1):
             bg = _nota_bg_pdf(t['nota']) if t['nota'] else colors.HexColor('#fafafa')
@@ -514,77 +598,93 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
         t_table.setStyle(TableStyle(t_style))
         story += [t_table, Spacer(1, 8)]
 
-    # ── 4. Minijuegos ─────────────────────────────────────────────────────────
+    # ── 5. Minijuegos ─────────────────────────────────────────────────────────
     if fila_minijuegos:
-        story.append(Paragraph('🎮 Minijuegos', section_style))
-        m_data = [['Juego', 'Nota', 'Desempeño', '%']]
+        story.append(Paragraph('Minijuegos', section_style))
+        story.append(Paragraph(
+            f'{m_completados} de {m_total} minijuego{"s" if m_total != 1 else ""} completado{"s" if m_completados != 1 else ""}',
+            sub_style,
+        ))
+        m_data = [['Juego', 'Tipo', 'Nota', 'Desempeno', 'Progreso']]
         for m in fila_minijuegos:
+            tipo_str = (m['asig'].game.get_game_type_display()
+                        if hasattr(m['asig'].game, 'get_game_type_display')
+                        else m['asig'].game.game_type)
             if m['nota'] is not None:
                 nota_str  = str(m['nota'])
                 label_str = _nota_label(m['nota'])
-                pct_str   = f"{m['registro'].porcentaje}%"
+                pct_val   = m['registro'].porcentaje if m['registro'] else 0
+                bar       = _barra_progreso(pct_val, bar_width=82)
             else:
-                nota_str = label_str = '—'
-                pct_str  = 'Sin completar'
-            m_data.append([m['asig'].game.title, nota_str, label_str, pct_str])
+                nota_str  = '—'
+                label_str = 'Sin completar'
+                bar       = _barra_progreso(0)
+            m_data.append([m['asig'].game.title, tipo_str, nota_str, label_str, bar])
 
-        m_table = Table(m_data, colWidths=[None, 2*cm, 3.2*cm, 2.2*cm])
+        # colWidths: 5.2 + 3 + 1.8 + 3.6 + 3.8 = 17.4cm
+        m_table = Table(m_data, colWidths=[5.2*cm, 3*cm, 1.8*cm, 3.6*cm, 3.8*cm])
         m_style = [
-            ('BACKGROUND',   (0, 0), (-1, 0), accent),
-            ('TEXTCOLOR',    (0, 0), (-1, 0), white),
-            ('FONTNAME',     (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE',     (0, 0), (-1, -1), 9.5),
-            ('ALIGN',        (1, 0), (-1, -1), 'CENTER'),
-            ('VALIGN',       (0, 0), (-1, -1), 'MIDDLE'),
-            ('GRID',         (0, 0), (-1, -1), 0.4, colors.HexColor('#C8F4F1')),
-            ('TOPPADDING',   (0, 0), (-1, -1), 5),
-            ('BOTTOMPADDING',(0, 0), (-1, -1), 5),
-            ('LEFTPADDING',  (0, 0), (0, -1), 8),
+            ('BACKGROUND',    (0, 0), (-1, 0), accent),
+            ('TEXTCOLOR',     (0, 0), (-1, 0), white),
+            ('FONTNAME',      (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE',      (0, 0), (-1, -1), 9.5),
+            ('ALIGN',         (2, 0), (3, -1), 'CENTER'),
+            ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+            ('GRID',          (0, 0), (-1, -1), 0.4, colors.HexColor('#C8F4F1')),
+            ('TOPPADDING',    (0, 0), (-1, -1), 5),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+            ('LEFTPADDING',   (0, 0), (0, -1), 8),
+            ('LEFTPADDING',   (4, 1), (4, -1), 4),
         ]
         for i, m in enumerate(fila_minijuegos, 1):
             nota = m['nota']
             bg = _nota_bg_pdf(nota) if nota else colors.HexColor('#fafafa')
             fc = _nota_color_pdf(nota) if nota else colors.HexColor('#888888')
             m_style += [
-                ('BACKGROUND', (1, i), (2, i), bg),
-                ('TEXTCOLOR',  (1, i), (2, i), fc),
-                ('FONTNAME',   (1, i), (2, i), 'Helvetica-Bold'),
+                ('BACKGROUND', (2, i), (3, i), bg),
+                ('TEXTCOLOR',  (2, i), (3, i), fc),
+                ('FONTNAME',   (2, i), (3, i), 'Helvetica-Bold'),
             ]
         m_table.setStyle(TableStyle(m_style))
         story += [m_table, Spacer(1, 8)]
 
-    # ── 5. Modo Historia ──────────────────────────────────────────────────────
+    # ── 6. Modo Historia ──────────────────────────────────────────────────────
     if periodo.meta_historia > 0:
-        story.append(Paragraph('⭐ Modo Historia', section_style))
-        alcanzado   = estrellas_historia >= periodo.meta_historia
-        estado_str  = 'Meta alcanzada ✅' if alcanzado else 'En progreso ⏳'
-        hist_color  = colors.HexColor('#1a7a3b') if alcanzado else colors.HexColor('#856404')
-        hist_bg     = colors.HexColor('#d4edda') if alcanzado else colors.HexColor('#fff3cd')
+        story.append(Paragraph('Modo Historia', section_style))
+        alcanzado  = estrellas_historia >= periodo.meta_historia
+        pct_hist   = min(round((estrellas_historia / periodo.meta_historia) * 100), 100)
+        estado_str = 'Meta alcanzada' if alcanzado else 'En progreso'
+        hist_color = colors.HexColor('#1a7a3b') if alcanzado else colors.HexColor('#856404')
+        hist_bg    = colors.HexColor('#d4edda') if alcanzado else colors.HexColor('#fff3cd')
+        bar_hist   = _barra_progreso(pct_hist, bar_width=110, bar_height=8)
+
         hist_data = [[
             Paragraph(f'Estrellas: <b>{estrellas_historia}</b> de <b>{periodo.meta_historia}</b>', body_style),
-            Paragraph(f'<b>{estado_str}</b>',
+            bar_hist,
+            Paragraph(f'<b>{estado_str}  ({pct_hist}%)</b>',
                       ParagraphStyle('H', parent=styles['Normal'],
                                      textColor=hist_color, fontSize=10,
                                      alignment=TA_CENTER, fontName='Helvetica-Bold')),
         ]]
-        hist_table = Table(hist_data, colWidths=[None, 5*cm])
+        hist_table = Table(hist_data, colWidths=[5.2*cm, 4.2*cm, None])
         hist_table.setStyle(TableStyle([
-            ('BACKGROUND',   (1, 0), (1, 0), hist_bg),
-            ('BACKGROUND',   (0, 0), (0, 0), light),
-            ('GRID',         (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
-            ('VALIGN',       (0, 0), (-1, -1), 'MIDDLE'),
-            ('TOPPADDING',   (0, 0), (-1, -1), 7),
-            ('BOTTOMPADDING',(0, 0), (-1, -1), 7),
-            ('LEFTPADDING',  (0, 0), (-1, -1), 8),
+            ('BACKGROUND',    (0, 0), (1, 0), light),
+            ('BACKGROUND',    (2, 0), (2, 0), hist_bg),
+            ('GRID',          (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
+            ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+            ('ALIGN',         (1, 0), (1, 0), 'CENTER'),
+            ('TOPPADDING',    (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('LEFTPADDING',   (0, 0), (-1, -1), 8),
         ]))
         story += [hist_table, Spacer(1, 8)]
 
-    # ── 6. Footer ─────────────────────────────────────────────────────────────
+    # ── 7. Footer ─────────────────────────────────────────────────────────────
     story.append(Spacer(1, 14))
     story.append(HRFlowable(width='100%', thickness=1, color=colors.HexColor('#E0DCFF')))
     story.append(Spacer(1, 6))
     story.append(Paragraph(
-        f'Generado automáticamente por <b>NestGrow</b> · Aprendizaje de Inglés · {date.today().strftime("%d/%m/%Y")}',
+        f'Generado automaticamente por <b>NestGrow</b> · Aprendizaje de Ingles · {date.today().strftime("%d/%m/%Y")}',
         footer_style,
     ))
 

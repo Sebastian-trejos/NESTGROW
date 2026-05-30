@@ -138,6 +138,15 @@ function initConnectGame(vocabulary, gameId, timeLimit, pointsReward, penaltyAmo
   maxScoreEl.textContent  = maxScoreVal;
   if (miloInstr) miloInstr.textContent = cfg.instruction;
 
+  // ── SVG defs: filtros de resplandor ──────────────────────
+  const svgDefs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  svgDefs.innerHTML = `
+    <filter id="dot-glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>`;
+  svg.appendChild(svgDefs);
+
   // ── Render emoji visual ──────────────────────────────────
   function renderEmojiVisual(item) {
     if (item.emoji) {
@@ -180,6 +189,37 @@ function initConnectGame(vocabulary, gameId, timeLimit, pointsReward, penaltyAmo
     node.addEventListener('click', () => onNodeClick('word', id, node));
     wordCol.appendChild(node);
   });
+
+  // ── Normalizar altura fila a fila ───────────────────────
+  // Se ejecuta DESPUÉS de que gameSection sea visible para que offsetHeight sea correcto
+  function normalizeHeights() {
+    const emojiNds = Array.from(emojiCol.querySelectorAll('.connect-node--emoji'));
+    const wordNds  = Array.from(wordCol.querySelectorAll('.connect-node--word'));
+    for (let i = 0; i < emojiNds.length; i++) {
+      const h = Math.max(
+        emojiNds[i].offsetHeight,
+        wordNds[i] ? wordNds[i].offsetHeight : 0
+      );
+      emojiNds[i].style.minHeight = h + 'px';
+      if (wordNds[i]) wordNds[i].style.minHeight = h + 'px';
+    }
+    // Redibujar líneas existentes por si cambiaron los centros
+    redrawAllLines();
+  }
+
+  // Disparar al mostrar el juego (clic en "¡Jugar!") o si ya está visible (embedded)
+  const startBtn = document.getElementById('startGameBtn');
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      // Esperar 2 frames para que el display:block haya sido pintado
+      requestAnimationFrame(() => requestAnimationFrame(normalizeHeights));
+    }, { once: true });
+  } else {
+    // Modo embedded: gameSection ya está visible
+    requestAnimationFrame(() => requestAnimationFrame(normalizeHeights));
+  }
+  // Segunda pasada tras cargar imágenes
+  window.addEventListener('load', normalizeHeights, { once: true });
 
   // ── Modo Memoria (difícil) ───────────────────────────────
   if (cfg.memoryFlip && cfg.memoryFlipCount > 0) {
@@ -297,24 +337,94 @@ function initConnectGame(vocabulary, gameId, timeLimit, pointsReward, penaltyAmo
     const p2    = getCenter(wordNode);
     const idx   = items.findIndex(it => String(it.id) === emojiId);
     const color = CABLE_COLORS[idx % CABLE_COLORS.length];
+    const dist  = Math.hypot(p2.x - p1.x, p2.y - p1.y);
 
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', p1.x);
-    line.setAttribute('y1', p1.y);
-    line.setAttribute('x2', p2.x);
-    line.setAttribute('y2', p2.y);
-    line.setAttribute('stroke', color);
-    line.setAttribute('stroke-width', '3.5');
-    line.setAttribute('stroke-linecap', 'round');
-    line.setAttribute('opacity', '0.82');
-    line.classList.add('connect-cable');
-    svg.appendChild(line);
-    lines.set(emojiId, line);
+    // Trazado animado con <path> + stroke-dashoffset
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`);
+    path.setAttribute('stroke', color);
+    path.setAttribute('stroke-width', '3.5');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('opacity', '0.85');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke-dasharray', dist);
+    path.setAttribute('stroke-dashoffset', dist);
+    path.classList.add('connect-cable');
+    svg.appendChild(path);
+    lines.set(emojiId, path);
+
+    // Punto viajero luminoso
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('r', '5');
+    dot.setAttribute('fill', color);
+    dot.setAttribute('filter', 'url(#dot-glow)');
+    dot.setAttribute('opacity', '0.9');
+    dot.setAttribute('cx', p1.x);
+    dot.setAttribute('cy', p1.y);
+    svg.appendChild(dot);
+
+    const DURATION = 340;
+    const t0 = performance.now();
+
+    (function animate(now) {
+      const raw  = Math.min((now - t0) / DURATION, 1);
+      const ease = 1 - Math.pow(1 - raw, 3); // ease-out cúbico
+
+      path.setAttribute('stroke-dashoffset', dist * (1 - ease));
+      dot.setAttribute('cx', p1.x + (p2.x - p1.x) * ease);
+      dot.setAttribute('cy', p1.y + (p2.y - p1.y) * ease);
+
+      if (raw < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        dot.remove();
+        spawnBurst(p2.x, p2.y, color);
+      }
+    })(t0);
+  }
+
+  // ── Burst de partículas en el destino ────────────────────
+  function spawnBurst(x, y, color) {
+    const COUNT    = 9;
+    const RADIUS   = 24;
+    const DURATION = 440;
+    const particles = [];
+
+    for (let i = 0; i < COUNT; i++) {
+      const angle  = (i / COUNT) * Math.PI * 2;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', x);
+      circle.setAttribute('cy', y);
+      circle.setAttribute('r', '3.5');
+      circle.setAttribute('fill', color);
+      circle.setAttribute('opacity', '1');
+      svg.appendChild(circle);
+      particles.push({ el: circle, angle });
+    }
+
+    const t0 = performance.now();
+    (function animate(now) {
+      const raw  = Math.min((now - t0) / DURATION, 1);
+      const ease = 1 - Math.pow(1 - raw, 2); // ease-out cuad
+
+      particles.forEach(p => {
+        p.el.setAttribute('cx', x + Math.cos(p.angle) * RADIUS * ease);
+        p.el.setAttribute('cy', y + Math.sin(p.angle) * RADIUS * ease);
+        p.el.setAttribute('opacity', (1 - ease).toFixed(3));
+        p.el.setAttribute('r',  (3.5 * (1 - raw * 0.6)).toFixed(2));
+      });
+
+      if (raw < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        particles.forEach(p => p.el.remove());
+      }
+    })(t0);
   }
 
   function removeLine(emojiId) {
-    const line = lines.get(emojiId);
-    if (line) { svg.removeChild(line); lines.delete(emojiId); }
+    const el = lines.get(emojiId);
+    if (el) { el.remove(); lines.delete(emojiId); }
   }
 
   function redrawAllLines() {
