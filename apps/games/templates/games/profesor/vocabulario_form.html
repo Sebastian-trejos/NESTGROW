@@ -36,8 +36,22 @@
         </div>
         <div class="col-md-6">
           <label class="form-label fw-bold">{{ form.image.label }}</label>
+          {% if form.instance.pk %}
+            {% with img_url=form.instance.display_image_url %}
+            {% if img_url %}
+            <div class="mb-2 p-2 rounded-3 text-center" style="background:#f8f6ff;border:2px dashed #c4b8ff">
+              <img src="{{ img_url }}" alt="Imagen actual" style="width:80px;height:80px;object-fit:contain;border-radius:8px">
+              {% if form.instance.image %}
+                <div class="text-muted small mt-1">📁 Imagen subida · <em>Sube otra para reemplazarla</em></div>
+              {% else %}
+                <div class="text-muted small mt-1">📚 Imagen automática de biblioteca · <em>Sube una para personalizarla</em></div>
+              {% endif %}
+            </div>
+            {% endif %}
+            {% endwith %}
+          {% endif %}
           {{ form.image }}
-          <div class="text-muted small mt-1">JPG, PNG · Recomendado: 200x200px</div>
+          <div class="text-muted small mt-1">JPG, PNG · Recomendado: 200×200px</div>
         </div>
         <div class="col-md-6">
           <label class="form-label fw-bold">{{ form.audio.label }}</label>

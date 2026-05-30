@@ -149,12 +149,11 @@ function initConnectGame(vocabulary, gameId, timeLimit, pointsReward, penaltyAmo
 
   // ── Render emoji visual ──────────────────────────────────
   function renderEmojiVisual(item) {
+    if (item.image) {
+      return `<img src="${item.image}" alt="${item.word_en}" class="drag-node-img">`;
+    }
     if (item.emoji) {
       return `<span class="connect-emoji-glyph" style="font-size:${cfg.emojiSize}">${item.emoji}</span>`;
-    }
-    if (item.image) {
-      return `<img src="${item.image}" alt="${item.word_en}"
-               style="width:56px;height:56px;object-fit:cover;border-radius:12px;display:block">`;
     }
     return `<div class="connect-emoji-fallback">${item.word_en[0].toUpperCase()}</div>`;
   }

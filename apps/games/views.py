@@ -21,7 +21,7 @@ def vocabulary_payload_for_game(game, vocabulary):
             'id': v.id,
             'word_en': v.word_en,
             'word_es': v.word_es,
-            'image': v.image.url if v.image else None,
+            'image': v.display_image_url,
             'audio': v.audio.url if v.audio else None,
             'emoji': v.emoji or '',
             'orden': getattr(v, 'orden', 0),
@@ -589,7 +589,7 @@ def crear_juego(request):
                     if w.strip():
                         WordSearchWord.objects.create(game=juego, word=w.strip().upper(), order=i)
             messages.success(request, f'🎮 Juego "{juego.title}" creado correctamente.')
-            return redirect('games:editar_juego', pk=juego.pk)
+            return redirect('talleres:lista_periodos')
     else:
         form = GameForm()
     return render(request, 'games/profesor/juego_form.html', {
@@ -628,7 +628,7 @@ def editar_juego(request, pk):
                     if w.strip():
                         WordSearchWord.objects.create(game=juego, word=w.strip().upper(), order=i)
             messages.success(request, f'✅ Juego "{juego.title}" actualizado!')
-            return redirect('games:gestionar_juegos')
+            return redirect('talleres:lista_periodos')
     else:
         form = GameForm(instance=juego)
     puzzle_imagenes = (

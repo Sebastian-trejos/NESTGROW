@@ -48,9 +48,16 @@
           {% for item in vocabulario %}
           <tr>
             <td>
-              {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.word_en }}"
-                     style="width:50px;height:50px;object-fit:cover;border-radius:8px">
+              {% with img_url=item.display_image_url %}
+              {% if img_url %}
+                <div style="position:relative;width:50px;height:50px">
+                  <img src="{{ img_url }}" alt="{{ item.word_en }}"
+                       style="width:50px;height:50px;object-fit:contain;border-radius:8px;background:#f8f6ff">
+                  {% if not item.image %}
+                    <span title="Imagen de biblioteca automática"
+                          style="position:absolute;bottom:-4px;right:-4px;font-size:.65rem;background:#6C63FF;color:#fff;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;line-height:1">📚</span>
+                  {% endif %}
+                </div>
               {% elif item.emoji %}
                 <div style="width:50px;height:50px;background:#f0eeff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;line-height:1">
                   {{ item.emoji }}
@@ -60,6 +67,7 @@
                   {{ categoria.icon }}
                 </div>
               {% endif %}
+              {% endwith %}
             </td>
             <td><span class="font-fredoka fs-5" style="color:var(--primary)">{{ item.word_en }}</span></td>
             <td><span class="fw-bold">{{ item.word_es }}</span></td>

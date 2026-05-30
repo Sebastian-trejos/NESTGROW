@@ -408,8 +408,11 @@
     }
 
     function buildCard(word, pairIndex, type) {
-      const emoji = emojiForWord(word.word_en, word.word_es, CATEGORY_ICON);
       const text = type === 'en' ? word.word_en : word.word_es;
+      // Visual: imagen estática/subida → emoji heurístico → icono de categoría
+      const visualHtml = word.image
+        ? `<img src="${word.image}" alt="${word.word_en}" class="memory-img">`
+        : `<span class="memory-emoji">${emojiForWord(word.word_en, word.word_es, CATEGORY_ICON)}</span>`;
       const wrap = document.createElement('div');
       wrap.className = 'memory-slot';
       wrap.innerHTML =
@@ -421,7 +424,7 @@
         `<img class="memory-milo-thumb" src="${MILO_CARD_BACK_URL}" alt="" width="64" height="64" draggable="false">` +
         '</div>' +
         `<div class="memory-face memory-reveal">` +
-        `<span class="memory-emoji">${emoji}</span>` +
+        visualHtml +
         `<span class="memory-lang">${text}</span>` +
         '</div></div></div>';
       wrap.querySelector('.memory-card').addEventListener('click', () => {

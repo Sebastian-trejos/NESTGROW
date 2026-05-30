@@ -1,16 +1,86 @@
 """
 PDF generation for student reports using reportlab.
 """
+import os
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer,
-                                 Table, TableStyle, HRFlowable)
+                                 Table, TableStyle, HRFlowable,
+                                 Image as RLImage)
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.graphics.shapes import Drawing, Rect
 from datetime import date
+
+# ── Rutas de assets estáticos ─────────────────────────────────────────────────
+_BASE = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'static', 'img')
+)
+
+
+def _milo(nombre):
+    """Devuelve la ruta absoluta de un asset Milo si existe, o None."""
+    p = os.path.join(_BASE, nombre)
+    return p if os.path.isfile(p) else None
+
+
+def _milo_img(nombre, ancho=3.2*cm, alto=3.5*cm):
+    """Devuelve un flowable RLImage de Milo o un Spacer si el archivo no existe."""
+    p = _milo(nombre)
+    return RLImage(p, width=ancho, height=alto) if p else Spacer(ancho, alto)
+
+
+def _milo_segun_nota(nota):
+    """Elige el nombre del PNG de Milo apropiado para la nota dada."""
+    if nota is None:
+        return 'milo_apuntes.png'
+    if nota >= 4.5:
+        return 'milo_aplaudiendo.png'
+    if nota >= 4.0:
+        return 'milo_orgulloso.png'
+    if nota >= 3.5:
+        return 'milo_pulgar.png'
+    if nota >= 3.0:
+        return 'milo_leyendo1.png'
+    return 'milo_preocupado.png'
+
+
+def _decorar_pagina(canvas, doc):
+    """Dibuja el fondo decorativo en cada página del informe."""
+    canvas.saveState()
+    pw, ph = A4
+
+    # ── Franjas de color top / bottom ────────────────────────────────────────
+    canvas.setFillColor(colors.HexColor('#6C63FF'))
+    canvas.rect(0, ph - 7, pw, 7, fill=1, stroke=0)
+
+    canvas.setFillColor(colors.HexColor('#4ECDC4'))
+    canvas.rect(0, 0, pw, 5, fill=1, stroke=0)
+
+    # ── Burbuja grande esquina superior-derecha ───────────────────────────────
+    canvas.setFillColor(colors.HexColor('#EDE9FF'))
+    canvas.circle(pw + 10, ph + 10, 130, fill=1, stroke=0)
+
+    # ── Burbuja grande esquina inferior-izquierda ────────────────────────────
+    canvas.setFillColor(colors.HexColor('#E0FBF9'))
+    canvas.circle(-10, -10, 100, fill=1, stroke=0)
+
+    # ── Círculos pequeños de acento en los márgenes ───────────────────────────
+    canvas.setFillColor(colors.HexColor('#FFD166'))
+    canvas.circle(pw - 18, ph * 0.58, 14, fill=1, stroke=0)
+
+    canvas.setFillColor(colors.HexColor('#FF6B6B'))
+    canvas.circle(18, ph * 0.30, 10, fill=1, stroke=0)
+
+    canvas.setFillColor(colors.HexColor('#6C63FF'))
+    canvas.circle(pw - 14, ph * 0.22, 7, fill=1, stroke=0)
+
+    canvas.setFillColor(colors.HexColor('#4ECDC4'))
+    canvas.circle(14, ph * 0.72, 6, fill=1, stroke=0)
+
+    canvas.restoreState()
 
 
 def calcular_nota(pct):
@@ -373,13 +443,13 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     W       = 17.4 * cm  # ancho disponible (A4 - márgenes)
 
     # ── Estilos de texto ──────────────────────────────────────────────────────
-    brand_style   = ParagraphStyle('Br', parent=styles['Normal'],
+    brand_style   = ParagraphStyle('Br',  parent=styles['Normal'],
                                    textColor=colors.HexColor('#8b7fff'), fontSize=9,
                                    spaceAfter=1, alignment=TA_CENTER, fontName='Helvetica-Bold')
-    title_style   = ParagraphStyle('T', parent=styles['Heading1'],
+    title_style   = ParagraphStyle('T',   parent=styles['Heading1'],
                                    textColor=white, fontSize=17, spaceAfter=2,
                                    alignment=TA_CENTER, fontName='Helvetica-Bold')
-    dates_style   = ParagraphStyle('D', parent=styles['Normal'],
+    dates_style   = ParagraphStyle('D',   parent=styles['Normal'],
                                    textColor=colors.HexColor('#ddd8ff'), fontSize=9,
                                    spaceAfter=0, alignment=TA_CENTER)
     section_style = ParagraphStyle('Sec', parent=styles['Heading2'],
@@ -387,11 +457,11 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                                    spaceBefore=12, spaceAfter=4, fontName='Helvetica-Bold')
     sub_style     = ParagraphStyle('Sub', parent=styles['Normal'], fontSize=9,
                                    textColor=colors.HexColor('#666666'), spaceAfter=5)
-    body_style    = ParagraphStyle('B', parent=styles['Normal'], fontSize=10, spaceAfter=3)
-    footer_style  = ParagraphStyle('F', parent=styles['Normal'],
+    body_style    = ParagraphStyle('B',   parent=styles['Normal'], fontSize=10, spaceAfter=3)
+    footer_style  = ParagraphStyle('F',   parent=styles['Normal'],
                                    textColor=colors.HexColor('#aaaaaa'), fontSize=8,
                                    alignment=TA_CENTER)
-    center9       = ParagraphStyle('C9', parent=styles['Normal'], fontSize=9,
+    center9       = ParagraphStyle('C9',  parent=styles['Normal'], fontSize=9,
                                    alignment=TA_CENTER, leading=14)
 
     nombre     = estudiante.user.get_full_name() or estudiante.user.username
@@ -403,33 +473,43 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
 
     story = []
 
-    # ── 1. Cabecera con fondo morado ──────────────────────────────────────────
-    header_data = [[
-        Paragraph('NestGrow · Plataforma de Aprendizaje de Inglés', brand_style), '',
-    ], [
-        Paragraph(f'Informe de Período: <b>{periodo.titulo}</b>', title_style), '',
-    ], [
-        Paragraph(
-            f'{periodo.fecha_inicio.strftime("%d/%m/%Y")}  →  {periodo.fecha_fin.strftime("%d/%m/%Y")}'
-            f'  ·  Salón: {salon_name}',
+    # ── 1. Cabecera morada con Milo celebrando ────────────────────────────────
+    milo_cabecera = _milo_img('milo_emociontotal.png', ancho=2.8*cm, alto=3.4*cm)
+
+    # Columna de texto dentro del header (sin fondo propio — hereda el morado)
+    hdr_text = Table([
+        [Paragraph('NestGrow  ·  Plataforma de Aprendizaje de Ingles', brand_style)],
+        [Paragraph(f'Informe de Periodo: <b>{periodo.titulo}</b>',      title_style)],
+        [Paragraph(
+            f'{periodo.fecha_inicio.strftime("%d/%m/%Y")}  →  '
+            f'{periodo.fecha_fin.strftime("%d/%m/%Y")}  ·  Salon: {salon_name}',
             dates_style,
-        ), '',
-    ]]
-    header_table = Table(header_data, colWidths=['100%', 0])
+        )],
+    ], colWidths=[W - 3.2*cm])
+    hdr_text.setStyle(TableStyle([
+        ('TOPPADDING',    (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+        ('LEFTPADDING',   (0, 0), (-1, -1), 12),
+        ('RIGHTPADDING',  (0, 0), (-1, -1), 6),
+    ]))
+
+    header_table = Table([[hdr_text, milo_cabecera]], colWidths=[W - 3.2*cm, 3.2*cm])
     header_table.setStyle(TableStyle([
         ('BACKGROUND',    (0, 0), (-1, -1), primary),
-        ('SPAN',          (0, 0), (1, 0)),
-        ('SPAN',          (0, 1), (1, 1)),
-        ('SPAN',          (0, 2), (1, 2)),
-        ('TOPPADDING',    (0, 0), (-1, -1), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-        ('LEFTPADDING',   (0, 0), (-1, -1), 12),
-        ('RIGHTPADDING',  (0, 0), (-1, -1), 12),
+        ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN',         (1, 0), (1, 0),  'CENTER'),
+        ('TOPPADDING',    (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ('LEFTPADDING',   (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING',  (0, 0), (0, 0),  0),
+        ('RIGHTPADDING',  (1, 0), (1, 0),  6),
         ('ROUNDEDCORNERS', [8, 8, 8, 8]),
     ]))
     story += [header_table, Spacer(1, 10)]
 
-    # ── 2. Datos del estudiante + Nota Final (lado a lado) ────────────────────
+    # ── 2. Info + Nota Final + Milo de calificación ───────────────────────────
+    INFO_W = W - 0.3*cm - 4.5*cm - 0.3*cm - 3.2*cm  # = 9.1 cm
+
     info_rows = [
         ['Estudiante', nombre],
         ['Salon',      salon_name],
@@ -445,11 +525,11 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     ranking_pos, ranking_total = calcular_ranking(estudiante)
     if ranking_pos:
         trofeo = 'Oro' if ranking_pos == 1 else 'Plata' if ranking_pos == 2 else 'Bronce' if ranking_pos == 3 else 'Top'
-        info_rows.append([f'Ranking ({trofeo})', f'{ranking_pos} de {ranking_total} estudiantes'])
+        info_rows.append([f'Ranking ({trofeo})', f'{ranking_pos} de {ranking_total}'])
     if estudiante.correo_padre:
-        info_rows.append(['Correo padre/madre', estudiante.correo_padre])
+        info_rows.append(['Correo padre', estudiante.correo_padre])
 
-    info_table = Table(info_rows, colWidths=[4.4*cm, 8*cm])
+    info_table = Table(info_rows, colWidths=[3.6*cm, INFO_W - 3.6*cm])
     info_table.setStyle(TableStyle([
         ('BACKGROUND',    (0, 0), (0, -1), light),
         ('TEXTCOLOR',     (0, 0), (0, -1), primary),
@@ -461,7 +541,6 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
         ('TOPPADDING',    (0, 0), (-1, -1), 5),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
         ('LEFTPADDING',   (0, 0), (-1, -1), 8),
-        ('ROUNDEDCORNERS', [6, 6, 6, 6]),
     ]))
 
     # Cuadro de nota final
@@ -476,7 +555,7 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                                       fontSize=9, alignment=TA_CENTER, fontName='Helvetica-Bold'))],
             [Paragraph(f'<b>{nota_final}</b>',
                        ParagraphStyle('NF_val', parent=styles['Normal'], textColor=nf_color,
-                                      fontSize=28, alignment=TA_CENTER, fontName='Helvetica-Bold'))],
+                                      fontSize=26, alignment=TA_CENTER, fontName='Helvetica-Bold'))],
             [Paragraph(f'{nf_emoji} {nf_label}',
                        ParagraphStyle('NF_sub', parent=styles['Normal'], textColor=nf_color,
                                       fontSize=9, alignment=TA_CENTER))],
@@ -486,8 +565,8 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
             ('BACKGROUND',    (0, 0), (-1, -1), nf_bg),
             ('TOPPADDING',    (0, 0), (-1, -1), 8),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-            ('LEFTPADDING',   (0, 0), (-1, -1), 6),
-            ('RIGHTPADDING',  (0, 0), (-1, -1), 6),
+            ('LEFTPADDING',   (0, 0), (-1, -1), 4),
+            ('RIGHTPADDING',  (0, 0), (-1, -1), 4),
             ('ROUNDEDCORNERS', [10, 10, 10, 10]),
             ('BOX', (0, 0), (-1, -1), 1.5, nf_color),
         ]))
@@ -497,17 +576,23 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                                             textColor=colors.grey, fontSize=9,
                                             alignment=TA_CENTER))
 
-    combined = Table([[info_table, Spacer(0.4*cm, 1), nota_box]],
-                     colWidths=[None, 0.4*cm, 4.5*cm])
+    # Milo apropiado según la nota
+    milo_nota = _milo_img(_milo_segun_nota(nota_final), ancho=3.0*cm, alto=3.5*cm)
+
+    combined = Table(
+        [[info_table, Spacer(0.3*cm, 1), nota_box, Spacer(0.3*cm, 1), milo_nota]],
+        colWidths=[INFO_W, 0.3*cm, 4.5*cm, 0.3*cm, 3.2*cm],
+    )
     combined.setStyle(TableStyle([
-        ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
-        ('LEFTPADDING',   (0, 0), (-1, -1), 0),
-        ('RIGHTPADDING',  (0, 0), (-1, -1), 0),
+        ('VALIGN',      (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN',       (4, 0), (4, 0),  'CENTER'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING',(0, 0), (-1, -1), 0),
     ]))
     story += [combined, Spacer(1, 12)]
 
-    # ── 3. Resumen de actividad ───────────────────────────────────────────────
-    t_completados = sum(1 for t in fila_talleres if t['nota'] is not None)
+    # ── 3. Resumen de actividad (3 chips de colores) ──────────────────────────
+    t_completados = sum(1 for t in fila_talleres  if t['nota'] is not None)
     t_total       = len(fila_talleres)
     m_completados = sum(1 for m in fila_minijuegos if m['nota'] is not None)
     m_total       = len(fila_minijuegos)
@@ -515,7 +600,10 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     pct_global    = round((t_completados + m_completados) / total_act * 100) if total_act > 0 else 0
 
     if total_act > 0:
-        summary_data = [[
+        c3_bg = (colors.HexColor('#E8F5E9') if pct_global >= 80
+                 else colors.HexColor('#FFF8E1') if pct_global >= 50
+                 else colors.HexColor('#FFEBEE'))
+        summary_table = Table([[
             Paragraph(
                 f'<b>Talleres</b><br/><font size=13><b>{t_completados}/{t_total}</b></font><br/>completados',
                 center9,
@@ -528,11 +616,7 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                 f'<b>Completitud</b><br/><font size=13><b>{pct_global}%</b></font><br/>del periodo',
                 center9,
             ),
-        ]]
-        c3_bg = (colors.HexColor('#E8F5E9') if pct_global >= 80
-                 else colors.HexColor('#FFF8E1') if pct_global >= 50
-                 else colors.HexColor('#FFEBEE'))
-        summary_table = Table(summary_data, colWidths=[W/3, W/3, W/3])
+        ]], colWidths=[W/3, W/3, W/3])
         summary_table.setStyle(TableStyle([
             ('BACKGROUND',    (0, 0), (0, 0), colors.HexColor('#EDE9FF')),
             ('BACKGROUND',    (1, 0), (1, 0), colors.HexColor('#E8FAF9')),
@@ -550,7 +634,8 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     if fila_talleres:
         story.append(Paragraph('Talleres', section_style))
         story.append(Paragraph(
-            f'{t_completados} de {t_total} taller{"es" if t_total != 1 else ""} completado{"s" if t_completados != 1 else ""}',
+            f'{t_completados} de {t_total} taller{"es" if t_total != 1 else ""}'
+            f' completado{"s" if t_completados != 1 else ""}',
             sub_style,
         ))
         t_data = [['Taller', 'Nota', 'Desempeno', 'Progreso', 'Fecha']]
@@ -571,7 +656,7 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                 fecha_str = '—'
             t_data.append([t['asig'].taller.titulo, nota_str, label_str, bar, fecha_str])
 
-        # colWidths: 6 + 1.8 + 3 + 3.8 + 2.8 = 17.4cm
+        # 6 + 1.8 + 3 + 3.8 + 2.8 = 17.4 cm
         t_table = Table(t_data, colWidths=[6*cm, 1.8*cm, 3*cm, 3.8*cm, 2.8*cm])
         t_style = [
             ('BACKGROUND',    (0, 0), (-1, 0), primary),
@@ -602,7 +687,8 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
     if fila_minijuegos:
         story.append(Paragraph('Minijuegos', section_style))
         story.append(Paragraph(
-            f'{m_completados} de {m_total} minijuego{"s" if m_total != 1 else ""} completado{"s" if m_completados != 1 else ""}',
+            f'{m_completados} de {m_total} minijuego{"s" if m_total != 1 else ""}'
+            f' completado{"s" if m_completados != 1 else ""}',
             sub_style,
         ))
         m_data = [['Juego', 'Tipo', 'Nota', 'Desempeno', 'Progreso']]
@@ -621,7 +707,7 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
                 bar       = _barra_progreso(0)
             m_data.append([m['asig'].game.title, tipo_str, nota_str, label_str, bar])
 
-        # colWidths: 5.2 + 3 + 1.8 + 3.6 + 3.8 = 17.4cm
+        # 5.2 + 3 + 1.8 + 3.6 + 3.8 = 17.4 cm
         m_table = Table(m_data, colWidths=[5.2*cm, 3*cm, 1.8*cm, 3.6*cm, 3.8*cm])
         m_style = [
             ('BACKGROUND',    (0, 0), (-1, 0), accent),
@@ -648,7 +734,7 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
         m_table.setStyle(TableStyle(m_style))
         story += [m_table, Spacer(1, 8)]
 
-    # ── 6. Modo Historia ──────────────────────────────────────────────────────
+    # ── 6. Modo Historia con Milo estrella ────────────────────────────────────
     if periodo.meta_historia > 0:
         story.append(Paragraph('Modo Historia', section_style))
         alcanzado  = estrellas_historia >= periodo.meta_historia
@@ -656,37 +742,64 @@ def generar_pdf_informe_periodo(estudiante, periodo, fila_talleres, fila_minijue
         estado_str = 'Meta alcanzada' if alcanzado else 'En progreso'
         hist_color = colors.HexColor('#1a7a3b') if alcanzado else colors.HexColor('#856404')
         hist_bg    = colors.HexColor('#d4edda') if alcanzado else colors.HexColor('#fff3cd')
-        bar_hist   = _barra_progreso(pct_hist, bar_width=110, bar_height=8)
+        bar_hist   = _barra_progreso(pct_hist, bar_width=100, bar_height=8)
 
-        hist_data = [[
-            Paragraph(f'Estrellas: <b>{estrellas_historia}</b> de <b>{periodo.meta_historia}</b>', body_style),
+        milo_star = _milo_img('milo_star.png', ancho=2.8*cm, alto=3.0*cm)
+
+        # 4.5 + 3.8 + 6.3 + 2.8 = 17.4 cm
+        hist_table = Table([[
+            Paragraph(
+                f'Estrellas: <b>{estrellas_historia}</b> de <b>{periodo.meta_historia}</b>',
+                body_style,
+            ),
             bar_hist,
-            Paragraph(f'<b>{estado_str}  ({pct_hist}%)</b>',
-                      ParagraphStyle('H', parent=styles['Normal'],
-                                     textColor=hist_color, fontSize=10,
-                                     alignment=TA_CENTER, fontName='Helvetica-Bold')),
-        ]]
-        hist_table = Table(hist_data, colWidths=[5.2*cm, 4.2*cm, None])
+            Paragraph(
+                f'<b>{estado_str}  ({pct_hist}%)</b>',
+                ParagraphStyle('H', parent=styles['Normal'],
+                               textColor=hist_color, fontSize=10,
+                               alignment=TA_CENTER, fontName='Helvetica-Bold'),
+            ),
+            milo_star,
+        ]], colWidths=[4.5*cm, 3.8*cm, 6.3*cm, 2.8*cm])
         hist_table.setStyle(TableStyle([
             ('BACKGROUND',    (0, 0), (1, 0), light),
             ('BACKGROUND',    (2, 0), (2, 0), hist_bg),
-            ('GRID',          (0, 0), (-1, -1), 0.4, colors.HexColor('#E0DCFF')),
+            ('BACKGROUND',    (3, 0), (3, 0), white),
+            ('GRID',          (0, 0), (2, 0), 0.4, colors.HexColor('#E0DCFF')),
             ('VALIGN',        (0, 0), (-1, -1), 'MIDDLE'),
-            ('ALIGN',         (1, 0), (1, 0), 'CENTER'),
+            ('ALIGN',         (1, 0), (1, 0),  'CENTER'),
+            ('ALIGN',         (3, 0), (3, 0),  'CENTER'),
             ('TOPPADDING',    (0, 0), (-1, -1), 8),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-            ('LEFTPADDING',   (0, 0), (-1, -1), 8),
+            ('LEFTPADDING',   (0, 0), (2, 0),  8),
         ]))
         story += [hist_table, Spacer(1, 8)]
 
-    # ── 7. Footer ─────────────────────────────────────────────────────────────
-    story.append(Spacer(1, 14))
+    # ── 7. Footer con Milo saludando ──────────────────────────────────────────
+    story.append(Spacer(1, 10))
     story.append(HRFlowable(width='100%', thickness=1, color=colors.HexColor('#E0DCFF')))
     story.append(Spacer(1, 6))
-    story.append(Paragraph(
-        f'Generado automaticamente por <b>NestGrow</b> · Aprendizaje de Ingles · {date.today().strftime("%d/%m/%Y")}',
-        footer_style,
-    ))
 
-    doc.build(story)
+    milo_footer = _milo_img('milo_saludando.png', ancho=1.8*cm, alto=2.2*cm)
+    footer_table = Table([[
+        Paragraph(
+            f'Generado automaticamente por <b>NestGrow</b> · Aprendizaje de Ingles'
+            f' · {date.today().strftime("%d/%m/%Y")}',
+            footer_style,
+        ),
+        milo_footer,
+    ]], colWidths=[W - 2.0*cm, 2.0*cm])
+    footer_table.setStyle(TableStyle([
+        ('VALIGN',      (0, 0), (-1, -1), 'BOTTOM'),
+        ('ALIGN',       (1, 0), (1, 0),  'CENTER'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING',(0, 0), (-1, -1), 0),
+        ('TOPPADDING',  (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING',(0, 0), (-1, -1), 0),
+    ]))
+    story.append(footer_table)
+
+    doc.build(story,
+              onFirstPage=_decorar_pagina,
+              onLaterPages=_decorar_pagina)
     return buffer.getvalue()

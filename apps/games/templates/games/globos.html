@@ -173,9 +173,9 @@ function buildRound() {
   let options = [
     ...currentTargets.map(w => {
       const v = VOCABULARY.find(x => x.word_en === w) || {};
-      return { word:w, emoji:v.emoji||'', isCorrect:true, isFake:false };
+      return { word:w, emoji:v.emoji||'', image:v.image||'', isCorrect:true, isFake:false };
     }),
-    ...distractors.map(v => ({ word:v.word_en, emoji:v.emoji||'', isCorrect:false, isFake:false }))
+    ...distractors.map(v => ({ word:v.word_en, emoji:v.emoji||'', image:v.image||'', isCorrect:false, isFake:false }))
   ];
 
   // Inject fake clone (Hard, single-target only)
@@ -183,7 +183,7 @@ function buildRound() {
     const real     = options.find(o => o.isCorrect);
     const distrIdx = options.findIndex(o => !o.isCorrect);
     if (real && distrIdx >= 0)
-      options[distrIdx] = { word:real.word, emoji:real.emoji, isCorrect:false, isFake:true };
+      options[distrIdx] = { word:real.word, emoji:real.emoji, image:real.image||'', isCorrect:false, isFake:true };
   }
 
   options = shuffle(options);
@@ -324,7 +324,9 @@ function buildRound() {
 
     el.style.cssText = `left:${startX}px;top:${startY}px;background:${color};z-index:2;`;
     el.innerHTML = `
-      ${opt.emoji ? `<div class="balloon-emoji">${opt.emoji}</div>` : ''}
+      ${opt.image
+        ? `<img src="${opt.image}" class="balloon-img" alt="${opt.word || ''}">`
+        : opt.emoji ? `<div class="balloon-emoji">${opt.emoji}</div>` : ''}
       <div class="balloon-text">${opt.word}</div>
     `;
     el.addEventListener('click', () => handleClick(el, opt));
@@ -663,6 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
     question: v.word_es,
     answer:   v.word_en,
     emoji:    v.emoji || '',
+    image:    v.image || '',
   }));
   PTS_PER_Q = Math.max(1, Math.round(POINTS_REWARD / questions.length));
 

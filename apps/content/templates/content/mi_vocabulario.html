@@ -4,8 +4,9 @@
 
 {% block extra_css %}
 <style>
+/* ── Animaciones ─────────────────────────────────────────────────────────── */
 @keyframes fadeInUp {
-  from { opacity:0; transform:translateY(24px); }
+  from { opacity:0; transform:translateY(20px); }
   to   { opacity:1; transform:translateY(0); }
 }
 @keyframes floatMilo {
@@ -26,8 +27,12 @@
   80%  { transform:scale(1.08); }
   100% { transform:scale(1); opacity:1; }
 }
+@keyframes slideIn {
+  from { opacity:0; transform:translateX(-10px); }
+  to   { opacity:1; transform:translateX(0); }
+}
 
-/* ── Hero ── */
+/* ── Hero ───────────────────────────────────────────────────────────────── */
 .vocab-hero {
   background: linear-gradient(135deg, #6C63FF 0%, #a78bfa 60%, #f472b6 100%);
   border-radius: 28px;
@@ -35,7 +40,7 @@
   color: white;
   position: relative;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   box-shadow: 0 15px 40px rgba(108,99,255,.3);
 }
 .vocab-hero::before {
@@ -43,10 +48,13 @@
   width:220px;height:220px;border-radius:50%;
   background:rgba(255,255,255,.08);top:-70px;right:-50px;
 }
-
-/* ── Barra de progreso global ── */
+.vocab-hero::after {
+  content:''; position:absolute;
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(255,255,255,.06);bottom:-30px;left:30%;
+}
 .global-progress-bar {
-  height:14px;border-radius:99px;overflow:hidden;
+  height:12px;border-radius:99px;overflow:hidden;
   background:rgba(255,255,255,.25);
 }
 .global-progress-fill {
@@ -57,138 +65,256 @@
   transition:width .8s cubic-bezier(.34,1.56,.64,1);
 }
 
-/* ── Palabra del día ── */
+/* ── Palabra del día ─────────────────────────────────────────────────────── */
 .word-of-day {
   background: linear-gradient(135deg, #fff9c4, #fff3cd);
   border: 2px solid #ffc107;
   border-radius: 20px;
-  padding: 1.2rem 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
   animation: fadeInUp .5s ease both;
   box-shadow: 0 4px 20px rgba(255,193,7,.2);
 }
-.word-of-day .eng-word {
-  font-family: 'Fredoka One', cursive;
-  font-size: 2rem;
-  color: #6C63FF;
-  letter-spacing: 1px;
-}
-.word-of-day .pron {
-  font-size:.85rem;
-  color:#888;
-  font-style:italic;
+
+/* ── Panel principal ─────────────────────────────────────────────────────── */
+.vocab-panel {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
 }
 
-/* ── Accordion de categorías ── */
-.cat-accordion {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,.08);
-  margin-bottom: 1.5rem;
-  animation: fadeInUp .4s ease both;
+/* ── Sidebar de categorías ───────────────────────────────────────────────── */
+.vocab-nav {
+  width: 210px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  position: sticky;
+  top: 72px;
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #c4b5fd transparent;
 }
-.cat-header {
-  display:flex; align-items:center; gap:.75rem;
-  padding: 1rem 1.25rem;
+.vocab-nav::-webkit-scrollbar { width:4px; }
+.vocab-nav::-webkit-scrollbar-track { background:transparent; }
+.vocab-nav::-webkit-scrollbar-thumb { background:#c4b5fd; border-radius:99px; }
+
+.vocab-nav-item {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .6rem .85rem;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
   cursor: pointer;
-  user-select: none;
-  transition: filter .2s;
+  transition: all .2s cubic-bezier(.34,1.56,.64,1);
+  text-align: left;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.vocab-nav-item::before {
+  content:'';position:absolute;inset:0;
+  background:var(--cat-color,#6C63FF);
+  opacity:0;transition:opacity .2s;
+  border-radius: 12px;
+}
+.vocab-nav-item:hover { transform:translateX(4px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+.vocab-nav-item:hover::before { opacity:.08; }
+.vocab-nav-item.active {
+  background: var(--cat-color, #6C63FF);
   color: white;
+  box-shadow: 0 6px 20px rgba(0,0,0,.15);
+  transform: translateX(4px);
+  border-color: transparent;
 }
-.cat-header:hover { filter:brightness(1.08); }
-.cat-header .cat-icon-badge {
-  width:48px;height:48px;border-radius:50%;
-  background:rgba(255,255,255,.22);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;flex-shrink:0;
-}
-.cat-header .cat-names { flex:1; }
-.cat-header .cat-name-en {
-  font-family:'Fredoka One',cursive;font-size:1.15rem;line-height:1.1;
-}
-.cat-header .cat-name-es { font-size:.78rem;opacity:.85;font-weight:700; }
-.cat-progress-pill {
-  background:rgba(255,255,255,.22);
-  border:1.5px solid rgba(255,255,255,.4);
-  border-radius:50px;padding:3px 12px;
-  font-size:.78rem;font-weight:800;white-space:nowrap;
-}
-.cat-chevron { transition:transform .3s; font-size:1.1rem; }
-.cat-accordion.open .cat-chevron { transform:rotate(180deg); }
+.vocab-nav-item.active::before { opacity:0; }
 
-/* mini barra de progreso dentro del header */
-.cat-mini-bar { height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.25);margin-top:5px; }
-.cat-mini-fill { height:100%;border-radius:99px;background:rgba(255,255,255,.8);transition:width .7s; }
-
-/* ── Grid de palabras ── */
-.vocab-body {
-  padding: 1.25rem;
-  background: #fafafa;
-  display:none;
+.nav-icon { font-size:1.25rem; flex-shrink:0; position:relative;z-index:1; }
+.nav-info  { flex:1; min-width:0; position:relative;z-index:1; }
+.nav-en    { font-family:'Fredoka One',cursive; font-size:.88rem; line-height:1.2;
+             white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#333; }
+.nav-es    { font-size:.68rem; font-weight:700; color:#999; }
+.vocab-nav-item.active .nav-en { color:white; }
+.vocab-nav-item.active .nav-es { color:rgba(255,255,255,.75); }
+.nav-badge {
+  font-size:.65rem; font-weight:800;
+  background:rgba(0,0,0,.07); color:#555;
+  padding:2px 7px; border-radius:99px;
+  flex-shrink:0; position:relative;z-index:1;
 }
-.cat-accordion.open .vocab-body { display:block; }
+.vocab-nav-item.active .nav-badge {
+  background:rgba(255,255,255,.25); color:white;
+}
 
+/* ── Área derecha de contenido ───────────────────────────────────────────── */
+.vocab-content { flex:1; min-width:0; }
+
+.vocab-cat-panel { display:none; }
+.vocab-cat-panel.active {
+  display:block;
+  animation:fadeInUp .28s ease both;
+}
+
+/* Encabezado del panel activo */
+.cat-panel-header {
+  display:flex; align-items:center; gap:.8rem;
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
+  margin-bottom: .75rem;
+  background: white;
+  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+  border-left: 5px solid var(--cat-color, #6C63FF);
+}
+.cat-panel-title {
+  font-family:'Fredoka One',cursive; font-size:1.2rem;
+  color:#333; line-height:1.1;
+}
+.cat-panel-sub { font-size:.78rem; font-weight:700; color:#999; }
+.cat-panel-count {
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-weight:800; color:white;
+  padding:3px 12px; border-radius:99px;
+}
+.cat-panel-pct { font-size:.72rem; color:#aaa; font-weight:700; }
+
+/* Barra de progreso de categoría */
+.cat-prog-bar {
+  height:7px; background:#eee; border-radius:99px;
+  overflow:hidden; margin-bottom:1rem;
+}
+.cat-prog-fill {
+  height:100%; border-radius:99px;
+  transition:width .8s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── Grid de palabras ────────────────────────────────────────────────────── */
 .vocab-grid {
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
-  gap:.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: .65rem;
 }
 
-/* Tarjeta DESBLOQUEADA */
+/* ── Tarjeta DESBLOQUEADA ────────────────────────────────────────────────── */
 .word-card {
-  background:white;
-  border-radius:16px;
-  padding:.9rem .75rem .75rem;
-  text-align:center;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
-  cursor:pointer;
-  position:relative;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0,0,0,.07);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid transparent;
 }
-.word-card:hover { transform:translateY(-5px) scale(1.03); box-shadow:0 8px 25px rgba(0,0,0,.12); }
-.word-card .wc-emoji {
-  font-size:2rem; line-height:1; margin-bottom:4px;
+.word-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(0,0,0,.13);
+  border-color: var(--cat-color, #6C63FF);
 }
-.word-card .wc-en {
-  font-family:'Fredoka One',cursive;font-size:1.1rem;
-  color:#333;margin-bottom:2px;
+
+/* Área de imagen — altura fija para uniformidad */
+.wc-img-area {
+  width: 100%;
+  height: 90px;
+  background: #f5f3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  flex-shrink: 0;
 }
-.word-card .wc-es { font-size:.78rem;font-weight:700;color:#888; }
-.word-card .wc-desc {
-  font-size:.7rem;color:#aaa;margin-top:4px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+.wc-img {
+  max-width: 74px;
+  max-height: 74px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
-.word-card .wc-diff {
-  position:absolute;top:6px;right:8px;
-  font-size:.6rem;font-weight:800;padding:2px 6px;border-radius:99px;
+.wc-emoji-area {
+  width: 100%;
+  height: 90px;
+  background: #f5f3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  flex-shrink: 0;
+}
+.wc-no-img-area {
+  width: 100%;
+  height: 90px;
+  background: #f5f3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #c4b5fd;
+  flex-shrink: 0;
+}
+
+/* Cuerpo de texto de la tarjeta */
+.wc-body {
+  padding: .45rem .5rem .5rem;
+  flex: 1;
+  text-align: center;
+}
+.wc-en {
+  font-family:'Fredoka One',cursive;
+  font-size:.95rem; color:#333;
+  line-height:1.2; margin-bottom:1px;
+}
+.wc-es {
+  font-size:.7rem; font-weight:700; color:#aaa;
+}
+
+/* Badge de dificultad */
+.wc-diff {
+  position:absolute; top:5px; right:6px;
+  font-size:.55rem; font-weight:800;
+  padding:2px 6px; border-radius:99px;
 }
 .diff-1 { background:#d1fae5;color:#065f46; }
 .diff-2 { background:#fef3c7;color:#92400e; }
 .diff-3 { background:#fee2e2;color:#991b1b; }
 
-/* Tarjeta BLOQUEADA */
+/* ── Tarjeta BLOQUEADA ───────────────────────────────────────────────────── */
 .word-card-locked {
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   background: linear-gradient(135deg,#f3f4f6,#e9ecef);
-  border-radius:16px;
-  padding:.9rem .75rem .75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  filter: grayscale(.2);
+}
+.wc-locked-area {
+  width:100%; height:90px;
+  background:#e9ecef;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem; color:#bbb;
+  flex-shrink:0;
+}
+.lock-icon { animation:lockShake 4s ease infinite; display:block; }
+.wc-locked-body {
+  padding:.45rem .5rem .5rem;
   text-align:center;
-  position:relative;
-  overflow:hidden;
-  filter:grayscale(.3);
-  cursor:default;
 }
-.word-card-locked .lock-icon {
-  font-size:1.4rem;color:#9ca3af;
-  display:block;margin-bottom:4px;
-  animation:lockShake 4s ease infinite;
-}
-.word-card-locked .lock-label {
-  font-size:.7rem;font-weight:700;color:#9ca3af;
+.lock-label {
+  font-size:.7rem; font-weight:700; color:#9ca3af;
   background:rgba(156,163,175,.15);
-  border-radius:99px;padding:2px 8px;
+  border-radius:99px; padding:2px 8px;
+  display:inline-block;
 }
 
-/* ── Modal de palabra ── */
+/* ── Modal de palabra ────────────────────────────────────────────────────── */
 .word-modal-backdrop {
   position:fixed;inset:0;background:rgba(0,0,0,.5);
   display:none;z-index:9999;align-items:center;justify-content:center;
@@ -196,7 +322,7 @@
 .word-modal-backdrop.show { display:flex; }
 .word-modal {
   background:white;border-radius:28px;
-  padding:2rem;max-width:380px;width:90%;
+  padding:2rem;max-width:360px;width:90%;
   text-align:center;
   animation:popIn .35s cubic-bezier(.34,1.56,.64,1) both;
   box-shadow:0 25px 70px rgba(0,0,0,.25);
@@ -206,28 +332,52 @@
   padding:3px 12px;border-radius:99px;color:white;margin-bottom:.75rem;
 }
 .word-modal .modal-en {
-  font-family:'Fredoka One',cursive;font-size:2.5rem;color:#333;line-height:1.1;
+  font-family:'Fredoka One',cursive;font-size:2.3rem;color:#333;line-height:1.1;
 }
-.word-modal .modal-es {
-  font-size:1.1rem;font-weight:700;color:#6C63FF;margin-bottom:.5rem;
-}
-.word-modal .modal-pron {
-  font-size:.85rem;color:#aaa;font-style:italic;margin-bottom:.75rem;
-}
-.word-modal .modal-desc {
+.word-modal .modal-es  { font-size:1.1rem;font-weight:700;color:#6C63FF;margin-bottom:.5rem; }
+.word-modal .modal-pron{ font-size:.85rem;color:#aaa;font-style:italic;margin-bottom:.75rem; }
+.word-modal .modal-desc{
   font-size:.9rem;color:#555;background:#f8f7ff;
   border-radius:12px;padding:.75rem 1rem;margin-bottom:1rem;
 }
 
-/* ── Hito toast ── */
+/* ── Hito toast ──────────────────────────────────────────────────────────── */
 .hito-toast {
   position:fixed;bottom:2rem;right:2rem;z-index:10000;
   background:linear-gradient(135deg,#6C63FF,#a78bfa);
   color:white;border-radius:20px;padding:1rem 1.5rem;
   box-shadow:0 10px 40px rgba(108,99,255,.4);
-  animation:popIn .4s both;
-  display:none;
-  max-width:300px;
+  animation:popIn .4s both; display:none; max-width:300px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .vocab-panel { flex-direction:column; gap:.85rem; }
+
+  .vocab-nav {
+    width:100%; flex-direction:row;
+    overflow-x:auto; max-height:none;
+    position:static; padding:.25rem 0 .5rem;
+    gap:.4rem; scrollbar-width:none;
+  }
+  .vocab-nav::-webkit-scrollbar { display:none; }
+
+  .vocab-nav-item {
+    flex-direction:column; align-items:center;
+    flex-shrink:0; min-width:78px; max-width:88px;
+    padding:.55rem .45rem; text-align:center;
+    transform:none !important;
+  }
+  .vocab-nav-item:hover { transform:none !important; }
+  .vocab-nav-item.active { transform:none !important; }
+  .nav-info { text-align:center; }
+  .nav-badge { display:none; }
+  .nav-en { font-size:.78rem; white-space:normal; overflow:visible; text-overflow:clip; }
+  .nav-es { display:none; }
+
+  .vocab-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:.5rem; }
+  .wc-img-area, .wc-emoji-area, .wc-no-img-area, .wc-locked-area { height:78px; }
+  .wc-img { max-width:62px; max-height:62px; }
 }
 </style>
 {% endblock %}
@@ -238,23 +388,21 @@
   {# ── Hero ── #}
   <div class="vocab-hero">
     <div style="position:relative;z-index:1;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
-      
       <img src="{% static 'img/milo_apuntes.png' %}" alt="Milo"
-           style="width:85px;height:85px;object-fit:contain;
+           style="width:82px;height:82px;object-fit:contain;
                   animation:floatMilo 3s ease-in-out infinite;
                   filter:drop-shadow(0 4px 12px rgba(0,0,0,.2))">
       <div style="flex:1;min-width:200px">
-        <div style="font-family:'Fredoka One',cursive;font-size:1.8rem;line-height:1.2">
+        <div style="font-family:'Fredoka One',cursive;font-size:1.75rem;line-height:1.2">
           📚 Mi Vocabulario
         </div>
-        <div style="font-size:.95rem;opacity:.9;font-weight:700;margin-top:4px">
+        <div style="font-size:.9rem;opacity:.9;font-weight:700;margin-top:4px">
           {{ total_desbloqueadas }} de {{ total_palabras }} palabras desbloqueadas
         </div>
-        {# Barra global #}
-        <div class="global-progress-bar mt-3" style="max-width:320px">
+        <div class="global-progress-bar mt-2" style="max-width:300px">
           <div class="global-progress-fill" style="width:{{ pct_global }}%"></div>
         </div>
-        <div style="font-size:.78rem;opacity:.8;margin-top:4px">
+        <div style="font-size:.75rem;opacity:.8;margin-top:4px">
           {{ pct_global }}% completado
           {% if proximo_hito %}
             · Faltan <strong>{{ proximo_hito.faltan }}</strong> para ganar <strong>{{ proximo_hito.huesos }} 🦴</strong>
@@ -268,120 +416,177 @@
   {% if palabra_del_dia %}
   <div class="word-of-day">
     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-      <span style="font-size:2.5rem">⭐</span>
+      <span style="font-size:2.2rem">⭐</span>
       <div>
-        <div style="font-size:.8rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">
+        <div style="font-size:.75rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">
           Palabra del Día
         </div>
-        <div class="eng-word">{{ palabra_del_dia.word_en }}</div>
-        <div style="font-weight:700;color:#555;font-size:1.05rem">{{ palabra_del_dia.word_es }}</div>
-        {% if palabra_del_dia.pronunciacion_es %}
-          <div class="pron">🔊 se pronuncia: {{ palabra_del_dia.pronunciacion_es }}</div>
-        {% endif %}
+        <div style="font-family:'Fredoka One',cursive;font-size:1.75rem;color:#6C63FF">{{ palabra_del_dia.word_en }}</div>
+        <div style="font-weight:700;color:#555;font-size:1rem">{{ palabra_del_dia.word_es }}</div>
         {% if palabra_del_dia.descripcion_es %}
-          <div style="font-size:.88rem;color:#666;margin-top:4px">{{ palabra_del_dia.descripcion_es }}</div>
+          <div style="font-size:.82rem;color:#777;margin-top:3px">{{ palabra_del_dia.descripcion_es }}</div>
+        {% endif %}
+        {% if palabra_del_dia.pronunciacion_es %}
+          <div style="font-size:.82rem;color:#888;font-style:italic">🔊 {{ palabra_del_dia.pronunciacion_es }}</div>
         {% endif %}
       </div>
     </div>
   </div>
   {% endif %}
 
-  {# ── Hito próximo (barra destacada) ── #}
+  {# ── Hito próximo ── #}
   {% if proximo_hito %}
   <div style="background:linear-gradient(90deg,#f8f7ff,#ede9fe);border-radius:16px;
-              padding:1rem 1.5rem;margin-bottom:2rem;border:2px solid #c4b5fd;
+              padding:.85rem 1.25rem;margin-bottom:1.25rem;border:2px solid #c4b5fd;
               display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-    <span style="font-size:1.8rem">🏆</span>
+    <span style="font-size:1.6rem">🏆</span>
     <div style="flex:1;min-width:180px">
-      <div style="font-weight:800;color:#6C63FF;font-size:.9rem">
+      <div style="font-weight:800;color:#6C63FF;font-size:.85rem">
         Próximo hito: {{ proximo_hito.cantidad }} palabras → {{ proximo_hito.huesos }} 🦴
       </div>
-      <div style="height:10px;background:#ddd;border-radius:99px;overflow:hidden;margin-top:6px">
+      <div style="height:8px;background:#ddd;border-radius:99px;overflow:hidden;margin-top:5px">
         <div style="height:100%;width:{{ proximo_hito.pct }}%;background:linear-gradient(90deg,#6C63FF,#a78bfa);
                     border-radius:99px;transition:width .8s;"></div>
       </div>
-      <div style="font-size:.75rem;color:#888;margin-top:3px">
+      <div style="font-size:.72rem;color:#888;margin-top:2px">
         {{ proximo_hito.pct }}% — te faltan {{ proximo_hito.faltan }} palabras
       </div>
     </div>
   </div>
   {% endif %}
 
-  {# ── Acordeones de categorías ── #}
-  {% for cd in categorias_data %}
-  <div class="cat-accordion" id="accordion-{{ cd.categoria.pk }}">
-    <div class="cat-header" style="background:linear-gradient(135deg,{{ cd.categoria.color }},{{ cd.categoria.color }}cc);"
-         onclick="toggleAccordion({{ cd.categoria.pk }})">
-      <div class="cat-icon-badge">{{ cd.categoria.icon|safe }}</div>
-      <div class="cat-names" style="flex:1">
-        <div class="cat-name-en">{{ cd.categoria.name_en }}</div>
-        <div class="cat-name-es">{{ cd.categoria.name }}</div>
-        <div class="cat-mini-bar">
-          <div class="cat-mini-fill" style="width:{{ cd.pct }}%"></div>
-        </div>
-      </div>
-      <div class="cat-progress-pill">
-        {{ cd.desbloqueadas|length }} / {{ cd.total }}
-      </div>
-      <i class="bi bi-chevron-down cat-chevron ms-2"></i>
-    </div>
+  {# ── Panel principal: nav izquierdo + contenido derecho ── #}
+  {% if categorias_data %}
+  <div class="vocab-panel">
 
-    <div class="vocab-body">
-      <div class="vocab-grid">
-        {# Palabras desbloqueadas #}
-        {% for item in cd.desbloqueadas %}
-        <div class="word-card"
-             onclick="openWordModal('{{ item.word_en|escapejs }}','{{ item.word_es|escapejs }}',
-                                    '{{ item.descripcion_es|escapejs }}','{{ item.pronunciacion_es|escapejs }}',
-                                    '{{ cd.categoria.name_en|escapejs }}','{{ cd.categoria.color|escapejs }}',
-                                    {{ item.difficulty }},'{{ item.emoji|escapejs }}')">
-          <span class="wc-diff diff-{{ item.difficulty }}">
-            {% if item.difficulty == 1 %}Fácil{% elif item.difficulty == 2 %}Medio{% else %}Difícil{% endif %}
-          </span>
-          {% if item.emoji %}
-            <div class="wc-emoji">{{ item.emoji }}</div>
-          {% endif %}
-          <div class="wc-en">{{ item.word_en }}</div>
-          <div class="wc-es">{{ item.word_es }}</div>
-          {% if item.descripcion_es %}
-            <div class="wc-desc">{{ item.descripcion_es }}</div>
-          {% endif %}
+    {# Sidebar de categorías #}
+    <nav class="vocab-nav" id="vocabNav" aria-label="Categorías de vocabulario">
+      {% for cd in categorias_data %}
+      <button class="vocab-nav-item {% if forloop.first %}active{% endif %}"
+              id="nav-{{ cd.categoria.pk }}"
+              style="--cat-color:{{ cd.categoria.color }}"
+              onclick="selectCat({{ cd.categoria.pk }}, this)"
+              type="button">
+        <span class="nav-icon">{{ cd.categoria.icon|safe }}</span>
+        <div class="nav-info">
+          <div class="nav-en">{{ cd.categoria.name_en }}</div>
+          <div class="nav-es">{{ cd.categoria.name }}</div>
         </div>
-        {% endfor %}
+        <span class="nav-badge">{{ cd.desbloqueadas|length }}/{{ cd.total }}</span>
+      </button>
+      {% endfor %}
+    </nav>
 
-        {# Palabras bloqueadas #}
-        {% for item in cd.bloqueadas %}
-        <div class="word-card-locked">
-          <span class="lock-icon">🔒</span>
-          <div class="lock-label">Bloqueada</div>
+    {# Paneles de palabras #}
+    <div class="vocab-content" id="vocabContent">
+      {% for cd in categorias_data %}
+      <div class="vocab-cat-panel {% if forloop.first %}active{% endif %}"
+           id="cat-panel-{{ cd.categoria.pk }}">
+
+        {# Encabezado de categoría #}
+        <div class="cat-panel-header" style="--cat-color:{{ cd.categoria.color }}">
+          <span style="font-size:1.9rem">{{ cd.categoria.icon|safe }}</span>
+          <div style="flex:1">
+            <div class="cat-panel-title">{{ cd.categoria.name_en }}</div>
+            <div class="cat-panel-sub">{{ cd.categoria.name }}</div>
+          </div>
+          <div style="text-align:right">
+            <span class="cat-panel-count" style="background:{{ cd.categoria.color }}">
+              {{ cd.desbloqueadas|length }} / {{ cd.total }}
+            </span>
+            <div class="cat-panel-pct mt-1">{{ cd.pct }}% completado</div>
+          </div>
         </div>
-        {% endfor %}
-      </div>
 
-      {% if not cd.desbloqueadas and not cd.bloqueadas %}
-      <p class="text-muted text-center py-3 mb-0">Esta categoría aún no tiene palabras.</p>
-      {% endif %}
-    </div>
-  </div>
-  {% empty %}
+        {# Barra de progreso #}
+        <div class="cat-prog-bar">
+          <div class="cat-prog-fill" style="width:{{ cd.pct }}%;background:{{ cd.categoria.color }}"></div>
+        </div>
+
+        {# Grid de palabras #}
+        <div class="vocab-grid">
+
+          {# Palabras desbloqueadas #}
+          {% for item in cd.desbloqueadas %}
+          {% with img_url=item.display_image_url %}
+          <div class="word-card"
+               style="--cat-color:{{ cd.categoria.color }}"
+               onclick="openWordModal(
+                 '{{ item.word_en|escapejs }}',
+                 '{{ item.word_es|escapejs }}',
+                 '{{ item.descripcion_es|escapejs }}',
+                 '{{ item.pronunciacion_es|escapejs }}',
+                 '{{ cd.categoria.name_en|escapejs }}',
+                 '{{ cd.categoria.color|escapejs }}',
+                 {{ item.difficulty }},
+                 '{{ item.emoji|escapejs }}',
+                 '{{ img_url|default:''|escapejs }}')">
+
+            <span class="wc-diff diff-{{ item.difficulty }}">
+              {% if item.difficulty == 1 %}Fácil{% elif item.difficulty == 2 %}Medio{% else %}Difícil{% endif %}
+            </span>
+
+            {% if img_url %}
+              <div class="wc-img-area">
+                <img src="{{ img_url }}" alt="{{ item.word_en }}" class="wc-img">
+              </div>
+            {% elif item.emoji %}
+              <div class="wc-emoji-area">{{ item.emoji }}</div>
+            {% else %}
+              <div class="wc-no-img-area">{{ cd.categoria.icon|safe }}</div>
+            {% endif %}
+
+            <div class="wc-body">
+              <div class="wc-en">{{ item.word_en }}</div>
+              <div class="wc-es">{{ item.word_es }}</div>
+            </div>
+          </div>
+          {% endwith %}
+          {% endfor %}
+
+          {# Palabras bloqueadas #}
+          {% for item in cd.bloqueadas %}
+          <div class="word-card-locked">
+            <div class="wc-locked-area">
+              <span class="lock-icon">🔒</span>
+            </div>
+            <div class="wc-locked-body">
+              <span class="lock-label">Bloqueada</span>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>{# /vocab-grid #}
+
+        {% if not cd.desbloqueadas and not cd.bloqueadas %}
+        <div class="text-center py-4 text-muted fw-bold">Esta categoría aún no tiene palabras.</div>
+        {% endif %}
+
+      </div>{# /vocab-cat-panel #}
+      {% endfor %}
+    </div>{# /vocab-content #}
+
+  </div>{# /vocab-panel #}
+
+  {% else %}
   <div class="text-center py-5">
     <img src="{% static 'img/milo_duda1.png' %}" style="width:90px;opacity:.7;margin-bottom:1rem">
     <p class="fw-bold text-muted">Aún no hay categorías de vocabulario cargadas.</p>
   </div>
-  {% endfor %}
+  {% endif %}
 
-</div>
+</div>{# /container #}
 
 {# ── Modal de detalle de palabra ── #}
 <div class="word-modal-backdrop" id="wordModal" onclick="closeWordModal(event)">
   <div class="word-modal">
     <span class="modal-cat-badge" id="modalCatBadge"></span>
-    <div class="modal-emoji" id="modalEmoji" style="font-size:3.5rem;line-height:1;margin:8px 0 4px"></div>
+    <div id="modalEmoji" style="margin:8px 0 4px"></div>
     <div class="modal-en" id="modalEn"></div>
     <div class="modal-es" id="modalEs"></div>
     <div class="modal-pron" id="modalPron"></div>
     <div class="modal-desc" id="modalDesc" style="display:none"></div>
-    <button class="btn btn-primary rounded-pill px-4 mt-1" onclick="closeWordModal(null)">
+    <button class="btn btn-primary rounded-pill px-4 mt-2" onclick="closeWordModal(null)">
       <i class="bi bi-x-lg me-1"></i> Cerrar
     </button>
   </div>
@@ -398,25 +603,43 @@
 
 {% block extra_js %}
 <script>
-function toggleAccordion(catPk) {
-  const el = document.getElementById('accordion-' + catPk);
-  el.classList.toggle('open');
+/* ── Seleccionar categoría ── */
+function selectCat(pk, btn) {
+  document.querySelectorAll('.vocab-nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.vocab-cat-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('cat-panel-' + pk);
+  if (panel) panel.classList.add('active');
+
+  // En móvil: scroll del botón al centro del nav
+  btn.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
 }
 
-function openWordModal(en, es, desc, pron, catName, catColor, diff, emoji) {
+/* ── Modal de palabra ── */
+function openWordModal(en, es, desc, pron, catName, catColor, diff, emoji, imgUrl) {
   document.getElementById('modalEn').textContent = en;
   document.getElementById('modalEs').textContent = es;
 
   const emojiEl = document.getElementById('modalEmoji');
-  emojiEl.textContent = emoji || '';
-  emojiEl.style.display = emoji ? '' : 'none';
+  if (imgUrl) {
+    emojiEl.innerHTML = `<img src="${imgUrl}" alt="${en}"
+      style="width:120px;height:120px;object-fit:contain;border-radius:14px;
+             display:block;margin:0 auto;background:#f5f3ff;padding:4px">`;
+    emojiEl.style.display = '';
+  } else if (emoji) {
+    emojiEl.innerHTML = `<span style="font-size:3.5rem;line-height:1">${emoji}</span>`;
+    emojiEl.style.display = '';
+  } else {
+    emojiEl.innerHTML = '';
+    emojiEl.style.display = 'none';
+  }
 
   const pronEl = document.getElementById('modalPron');
   pronEl.textContent = pron ? '🔊 ' + pron : '';
 
   const descEl = document.getElementById('modalDesc');
   if (desc) { descEl.textContent = desc; descEl.style.display = ''; }
-  else { descEl.style.display = 'none'; }
+  else       { descEl.style.display = 'none'; }
 
   const badge = document.getElementById('modalCatBadge');
   badge.textContent = catName;
@@ -424,17 +647,12 @@ function openWordModal(en, es, desc, pron, catName, catColor, diff, emoji) {
 
   document.getElementById('wordModal').classList.add('show');
 }
+
 function closeWordModal(e) {
   if (!e || e.target === document.getElementById('wordModal')) {
     document.getElementById('wordModal').classList.remove('show');
   }
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeWordModal(null); });
-
-// Abrir primer acordeón automáticamente
-document.addEventListener('DOMContentLoaded', () => {
-  const first = document.querySelector('.cat-accordion');
-  if (first) first.classList.add('open');
-});
 </script>
 {% endblock %}

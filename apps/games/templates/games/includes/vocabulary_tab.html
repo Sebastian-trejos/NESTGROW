@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
     {% for item in vocabulary|slice:":8" %}
     <div class="col-6 col-sm-4 col-md-3">
       <div class="vocab-card" onclick="speakWord('{{ item.word_en }}')">
-        {% if item.image %}
-          <img src="{{ item.image.url }}" alt="{{ item.word_en }}" class="vocab-img">
+        {% if item.display_image_url %}
+          <img src="{{ item.display_image_url }}" alt="{{ item.word_en }}" class="vocab-img">
         {% elif item.emoji %}
           <div style="font-size:2.5rem; margin-bottom:8px; line-height:1">{{ item.emoji }}</div>
         {% else %}

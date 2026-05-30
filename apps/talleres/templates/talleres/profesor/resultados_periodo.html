@@ -44,6 +44,22 @@
 }
 .th-taller { font-size: 0.75rem; font-weight: 800; }
 .th-game   { font-size: 0.75rem; font-weight: 800; }
+
+/* ── Fix Bootstrap 5.3: --bs-table-bg aplicado a cada <th>/<td> tapa el
+   background del <tr>. Usamos especificidad alta para ganar a Bootstrap
+   sin !important, preservando el efecto hover en tbody. ── */
+.results-table {
+  --bs-table-hover-bg: rgba(108,99,255,0.06);
+  --bs-table-hover-color: #333;
+}
+.results-table > thead > tr > th {
+  background: linear-gradient(135deg,#6C63FF 0%,#8b7fff 100%);
+  color: white;
+}
+.results-table > tbody > tr > td {
+  background-color: #ffffff;
+  color: #333;
+}
 .results-hero {
   background: linear-gradient(135deg, #6C63FF 0%, #9c94ff 60%, #4ECDC4 100%);
   border-radius: 24px;
@@ -128,9 +144,9 @@
   <!-- ── Tabla de resultados ── -->
   <div class="nestgrow-card p-0 overflow-hidden mb-3">
     <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0" style="font-size:0.85rem">
+      <table class="table table-hover align-middle mb-0 results-table" style="font-size:0.85rem">
         <thead>
-          <tr style="background:linear-gradient(135deg,#6C63FF 0%,#8b7fff 100%)">
+          <tr>
             <th class="ps-3 py-3 text-white" style="min-width:160px;font-weight:800">
               <i class="bi bi-person-fill me-1"></i>Estudiante
             </th>
@@ -155,7 +171,7 @@
             {% endfor %}
             {% if periodo.meta_historia > 0 %}
             <th class="text-center py-3 text-white" style="min-width:85px;opacity:.92;font-weight:800">
-              <i class="bi bi-map-fill me-1"></i>Historia
+              <i class="bi bi-map-fill me-1"></i>Aventura
             </th>
             {% endif %}
           </tr>

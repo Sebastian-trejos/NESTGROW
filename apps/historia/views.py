@@ -1,5 +1,6 @@
 import io
 import json
+import random as _random
 from PIL import Image, ImageDraw
 
 from django.http import HttpResponse, JsonResponse
@@ -230,8 +231,6 @@ def ver_leccion(request, pk):
         messages.error(request, '🔒 Esta sección aún no está desbloqueada.')
         return redirect('historia:mapa_historia')
 
-    actividades = list(leccion.actividades.order_by('orden'))
-
     progreso, created = ProgresoLeccion.objects.get_or_create(
         estudiante=request.user,
         leccion=leccion,
@@ -244,14 +243,32 @@ def ver_leccion(request, pk):
         progreso.intentos = 1
         update_progreso_fields.append('intentos')
 
-    # Replay: lección ya completada → reiniciar desde el principio para que
-    # el estudiante pueda mejorar sus estrellas.
+    # Replay: lección ya completada → reiniciar desde el principio e incrementar
+    # intentos para que el siguiente intento use un orden de actividades distinto.
     if not created and progreso.completada:
         progreso.actividad_actual = 0
-        update_progreso_fields.append('actividad_actual')
+        progreso.intentos += 1
+        update_progreso_fields.extend(['actividad_actual', 'intentos'])
 
     if update_progreso_fields:
         progreso.save(update_fields=update_progreso_fields)
+
+    # ── Orden dinámico de actividades ─────────────────────────────────────────
+    # introduccion y vocabulario siempre van primero (base pedagógica);
+    # minijuego_embed siempre va al final (actividad culminante).
+    # El bloque del medio (dialogo, listening, pronunciacion, reading, writing)
+    # se baraja con una semilla determinista (leccion.pk × intento) para que:
+    #   • el orden sea distinto en cada lección y en cada replay,
+    #   • pero estable durante un mismo intento (recarga no pierde el lugar).
+    _actos_raw   = list(leccion.actividades.order_by('orden'))
+    _fijas_ini   = [a for a in _actos_raw if a.tipo in ('introduccion', 'vocabulario')]
+    _fija_fin    = [a for a in _actos_raw if a.tipo == 'minijuego_embed']
+    _medio       = [a for a in _actos_raw if a.tipo not in ('introduccion', 'vocabulario', 'minijuego_embed')]
+
+    _rng = _random.Random(leccion.pk * 1000 + progreso.intentos)
+    _rng.shuffle(_medio)
+
+    actividades = _fijas_ini + _medio + _fija_fin
 
     actividades_json = json.dumps([
         {

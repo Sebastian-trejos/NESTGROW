@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ leccion.titulo }} — Modo Historia{% endblock %}
+{% block title %}{{ leccion.titulo }} — Aventura{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -1207,7 +1207,7 @@ function showCorrection(tipo, msg, sub, _duration, actDatos) {
         pregunta:           d.pregunta || '',
         respuesta_correcta: d.respuesta_correcta || '',
         respuesta_dada:     d.respuesta_dada || '',
-        contexto:           'Modo Historia — inglés para primaria',
+        contexto:           'Aventura — inglés para primaria',
       }, resolve);
     } else {
       // Neutro (intro, vocabulario, dialogo…): avanza aunque el estudiante
@@ -1335,7 +1335,7 @@ async function onContinue() {
         if (window.miloComentarista) {
           window.miloComentarista('incorrecto', {
             pregunta, respuesta_correcta, respuesta_dada,
-            contexto: 'Modo Historia — rellena el espacio en inglés',
+            contexto: 'Aventura — rellena el espacio en inglés',
           }, function() { btn.disabled = false; });
         }
         return;
@@ -1356,7 +1356,7 @@ async function onContinue() {
             pregunta: 'Ordena las palabras para formar la oración correcta',
             respuesta_correcta: ordenState._actuales.join(' '),
             respuesta_dada,
-            contexto: 'Modo Historia — ordenar oración en inglés',
+            contexto: 'Aventura — ordenar oración en inglés',
           }, function() { /* el estudiante reintenta */ });
         }
         return;
@@ -1382,7 +1382,7 @@ async function onContinue() {
             pregunta: 'Clasifica cada palabra en su categoría correcta',
             respuesta_correcta: '',
             respuesta_dada: '',
-            contexto: 'Modo Historia — clasificar palabras',
+            contexto: 'Aventura — clasificar palabras',
           }, function() { /* el estudiante reintenta */ });
         }
         return;

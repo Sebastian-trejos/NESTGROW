@@ -1,4 +1,57 @@
 /* Game-specific additional styles */
+
+/* ── Imágenes de vocabulario — tamaño uniforme ───────────────────────────── */
+.vocab-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto 8px;
+  background: transparent;
+}
+
+/* Tarjeta de palabra en mi_vocabulario */
+.wc-img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+/* Imagen dentro de globo */
+.balloon-img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto 4px;
+  pointer-events: none;
+}
+
+/* Imagen en nodo drag-and-drop */
+.drag-node-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+}
+
+/* Imagen en tarjeta de comparación */
+.comp-card-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto;
+}
+
+
 .option-card {
   transition: all 0.2s ease;
   border: 3px solid #e8e4ff !important;
@@ -310,6 +363,14 @@
 .memory-emoji {
   font-size: 2.45rem;
   line-height: 1;
+}
+
+.memory-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
 }
 
 .memory-lang {
