@@ -1,72 +1,147 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{ salon.nombre }} - NestGrow{% endblock %}
+{% block title %}Gestionar Estudiantes — {{ salon.nombre }}{% endblock %}
+
 {% block content %}
 <div class="container py-4">
+
+  <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-      <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill mb-2"><i class="bi bi-caret-left-fill me-1"></i> Panel</a>
-      <h3 class="font-fredoka mb-0" style="color:var(--primary)">🏫 {{ salon.nombre }}</h3>
-      <div class="text-muted fw-bold small">{{ salon.get_grado_display }} · Código: <strong style="color:var(--accent);letter-spacing:3px">{{ salon.codigo_clase }}</strong></div>
+      <a href="{% url 'accounts:dashboard_profesor' %}" class="btn btn-outline-secondary rounded-pill mb-2">
+        <i class="bi bi-caret-left-fill me-1"></i> Panel
+      </a>
+      <h3 class="font-fredoka mb-0" style="color:var(--primary)">
+        <i class="bi bi-people-fill me-2"></i>Gestionar Estudiantes
+      </h3>
+      <div class="text-muted fw-bold small mt-1">
+        <i class="bi bi-building-fill me-1" style="color:var(--accent)"></i>{{ salon.nombre }}
+        &nbsp;·&nbsp;{{ salon.get_grado_display }}
+        &nbsp;·&nbsp;Código: <strong style="color:var(--accent);letter-spacing:3px">{{ salon.codigo_clase }}</strong>
+      </div>
     </div>
-    <a href="{% url 'accounts:editar_salon' salon.pk %}" class="btn btn-outline-warning rounded-pill fw-bold">✏️ Editar salón</a>
+
+    <!-- Acciones del salón -->
+    <div class="d-flex gap-2 flex-wrap">
+      <!-- Subir grado de salón (form propio, independiente) -->
+      <form method="post" action="{% url 'accounts:subir_grado_salon' salon.pk %}" class="d-inline"
+            onsubmit="return confirm('¿Subir el grado de TODO el salón al siguiente grado? Esto cambiará el grado de todos los estudiantes.')">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm rounded-pill fw-bold"
+                style="background:#fff3cd;color:#856404;border:1px solid #ffc107"
+                {% if salon.grado == '5' %}disabled title="Ya están en 5° Primaria"{% endif %}>
+          <i class="bi bi-arrow-up-circle-fill me-1"></i>Subir Grado de Salón
+        </button>
+      </form>
+      <a href="{% url 'accounts:editar_salon' salon.pk %}"
+         class="btn btn-sm rounded-pill fw-bold"
+         style="background:#fff9ee;color:#FFB347;border:none">
+        <i class="bi bi-pencil-fill me-1"></i>Editar salón
+      </a>
+    </div>
   </div>
 
+  <!-- Tabla de gestión — un solo formulario -->
   <div class="nestgrow-card p-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="font-fredoka mb-0" style="color:var(--primary)">👨‍🎓 Estudiantes ({{ estudiantes.count }})</h5>
+      <h5 class="font-fredoka mb-0" style="color:var(--primary)">
+        👨‍🎓 Estudiantes ({{ estudiantes|length }})
+      </h5>
+      <span class="text-muted small fw-bold">
+        <i class="bi bi-info-circle me-1"></i>Edita los campos y pulsa <strong>Guardar cambios</strong>
+      </span>
     </div>
 
     {% if estudiantes %}
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead style="background:#f8f6ff">
-          <tr>
-            <th>Nombre completo</th>
-            <th class="text-center">N° Lista</th>
-            <th class="text-center">Nivel</th>
-            <th class="text-center">⭐ Aventura</th>
-            <th>Correo Padre/Madre</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for est in estudiantes %}
-          <tr>
-            <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
-            <td class="text-center">
-              <form method="post" action="{% url 'accounts:set_numero_lista' est.pk %}" class="d-inline-flex align-items-center gap-1">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{% url 'accounts:detalle_salon' salon.pk %}">
-                <input type="number" name="numero_lista" value="{{ est.numero_lista|default:'' }}"
-                       min="1" max="99" style="width:52px;text-align:center;border:1px solid #ddd;border-radius:8px;padding:2px 4px;font-size:.85rem"
+    <form method="post" action="{% url 'accounts:detalle_salon' salon.pk %}">
+      {% csrf_token %}
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle" style="font-size:.92rem">
+          <thead style="background:#f8f6ff">
+            <tr>
+              <th style="min-width:90px"><i class="bi bi-list-ol me-1" style="color:var(--accent)"></i>N° Lista</th>
+              <th><i class="bi bi-person-fill me-1"></i>Nombre</th>
+              <th>Apellido</th>
+              <th style="min-width:130px">Grado</th>
+              <th style="min-width:200px"><i class="bi bi-envelope-fill me-1"></i>Correo acudiente</th>
+              <th class="text-center"><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
+              <th class="text-center"><i class="bi bi-star-fill" style="color:#f0a500"></i> Aventura</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for est in estudiantes %}
+            <tr>
+              <!-- N° Lista (editable) -->
+              <td>
+                <input type="number" name="numero_lista_{{ est.pk }}" value="{{ est.numero_lista|default:'' }}"
+                       min="1" max="99"
+                       class="form-control form-control-sm text-center"
+                       style="width:64px"
                        placeholder="—">
-                <button type="submit" class="btn btn-sm p-0 px-1" style="color:var(--primary)" title="Guardar">
-                  <i class="bi bi-check-circle-fill"></i>
-                </button>
-              </form>
-            </td>
-            <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
-            <td class="text-center">
-              <span class="fw-bold" style="color:#f0a500">⭐ {{ est.total_estrellas_historia }}</span>
-            </td>
-            <td>
-              {% if est.correo_padre %}
-                <span class="text-success fw-bold small">{{ est.correo_padre }}</span>
-              {% else %}
-                <span class="badge rounded-pill" style="background:#fff3cd;color:#856404">⚠️ Sin correo</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+              </td>
+
+              <!-- Nombre (solo lectura) -->
+              <td><strong>{{ est.user.first_name|default:est.user.username }}</strong></td>
+
+              <!-- Apellido (solo lectura) -->
+              <td>{{ est.user.last_name }}</td>
+
+              <!-- Grado (editable) -->
+              <td>
+                <select name="grado_{{ est.pk }}" class="form-select form-select-sm" style="min-width:120px">
+                  <option value="">— Sin grado —</option>
+                  {% for val, label in grado_choices %}
+                  <option value="{{ val }}" {% if est.grado == val %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+
+              <!-- Correo acudiente (editable) -->
+              <td>
+                <input type="email" name="correo_padre_{{ est.pk }}" value="{{ est.correo_padre|default:'' }}"
+                       class="form-control form-control-sm"
+                       placeholder="correo@ejemplo.com"
+                       style="min-width:180px">
+              </td>
+
+              <!-- Nivel (solo lectura) -->
+              <td class="text-center">
+                <span class="level-badge">Nv. {{ est.nivel }}</span>
+              </td>
+
+              <!-- Estrellas aventura (solo lectura) -->
+              <td class="text-center">
+                <span class="fw-bold" style="color:#f0a500">
+                  <i class="bi bi-star-fill me-1"></i>{{ est.total_estrellas_historia }}
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Botón global de guardar -->
+      <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn rounded-pill fw-bold px-4 py-2"
+                style="background:var(--primary);color:white;font-size:1rem;box-shadow:0 4px 16px rgba(108,99,255,0.25)">
+          <i class="bi bi-check-circle-fill me-2"></i>Guardar cambios
+        </button>
+      </div>
+    </form>
+
     {% else %}
-    <div class="text-center py-4">
-      <div style="font-size:3.5rem"><img src="{% static 'img/milo_fest.png' %}" style="width:70px;height:70px;object-fit:contain"></div>
-      <p class="fw-bold text-muted mt-2">Comparte el código <strong style="color:var(--primary)">{{ salon.codigo_clase }}</strong> con tus estudiantes.</p>
+    <div class="text-center py-5">
+      <img src="{% static 'img/milo_fest.png' %}" style="width:80px;height:80px;object-fit:contain" alt="Milo">
+      <p class="fw-bold text-muted mt-3">
+        Aún no hay estudiantes en este salón. Comparte el código
+        <strong style="color:var(--primary);letter-spacing:3px">{{ salon.codigo_clase }}</strong>
+        para que se unan.
+      </p>
     </div>
     {% endif %}
   </div>
+
 </div>
 {% endblock %}

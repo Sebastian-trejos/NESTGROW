@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Editar Perfil - NestGrow{% endblock %}
+{% block title %}Mi Perfil - NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -142,13 +142,13 @@
         <div class="col-8">
           <div class="d-inline-flex align-items-center gap-2 mb-2 px-3 py-1 rounded-pill fw-bold"
                style="background:rgba(255,255,255,0.2);font-size:0.8rem">
-            <i class="bi bi-pencil-fill"></i> Tu perfil
+            <i class="bi bi-person-fill"></i> Mi Perfil
           </div>
           <h3 class="font-fredoka mb-1" style="font-size:1.8rem;line-height:1.1">
-            ¡Actualiza tu información!
+            ¡Tu información!
           </h3>
           <p style="opacity:0.85;font-weight:700;font-size:0.9rem;margin:0">
-            Mantén tus datos al día para que tu profe te conozca mejor.
+            Edita tu nombre. El grado y correo lo gestiona tu profe.
           </p>
         </div>
         <div class="col-4 text-center">
@@ -199,7 +199,7 @@
         {% endfor %}
       </div>
 
-      <!-- Información escolar -->
+      <!-- Información escolar (solo lectura — gestionada por el profesor) -->
       <div class="edit-card">
         <div class="section-title">
           <div style="width:32px;height:32px;border-radius:50%;background:#fff0f0;
@@ -209,33 +209,38 @@
           Información Escolar
         </div>
 
-        {% for field in profile_form %}
-        <div class="mb-3">
-          <label class="field-label">{{ field.label }}</label>
-          <div class="field-wrap">
-            {% if 'grado' in field.label|lower %}
-              <i class="bi bi-mortarboard-fill field-icon"></i>
-            {% elif 'identidad' in field.label|lower or 'tarjeta' in field.label|lower %}
-              <i class="bi bi-card-text field-icon"></i>
-            {% elif 'correo' in field.label|lower or 'padre' in field.label|lower %}
-              <i class="bi bi-envelope-heart-fill field-icon"></i>
-            {% else %}
-              <i class="bi bi-pencil-fill field-icon"></i>
-            {% endif %}
-            {{ field }}
-          </div>
-          {% if field.errors %}
-            <div class="mt-1" style="color:var(--secondary);font-size:0.82rem;font-weight:700">
-              <i class="bi bi-exclamation-circle me-1"></i>{{ field.errors.0 }}
-            </div>
-          {% endif %}
-          {% if field.help_text %}
-            <div class="text-muted small mt-1 fw-bold">
-              <i class="bi bi-info-circle me-1"></i>{{ field.help_text }}
-            </div>
-          {% endif %}
+        <!-- Nota informativa -->
+        <div class="d-flex align-items-center gap-2 mb-3 px-3 py-2 rounded-3 fw-bold small"
+             style="background:#f0eeff;color:var(--primary);border-left:4px solid var(--primary)">
+          <i class="bi bi-shield-lock-fill"></i>
+          Esta información es gestionada por tu profesor/a.
         </div>
-        {% endfor %}
+
+        <!-- Grado (solo lectura) -->
+        <div class="mb-3">
+          <span class="field-label"><i class="bi bi-mortarboard-fill me-1"></i>Grado</span>
+          <div class="px-3 py-2 rounded-3 fw-bold"
+               style="background:#f8f6ff;border:2px solid #e8e4ff;color:#555;font-size:.95rem">
+            {% if profile.grado %}
+              {{ profile.get_grado_display }}
+            {% else %}
+              <span class="text-muted">Sin asignar</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Correo acudiente (solo lectura) -->
+        <div class="mb-1">
+          <span class="field-label"><i class="bi bi-envelope-heart-fill me-1"></i>Correo del acudiente</span>
+          <div class="px-3 py-2 rounded-3 fw-bold"
+               style="background:#f8f6ff;border:2px solid #e8e4ff;color:#555;font-size:.95rem">
+            {% if profile.correo_padre %}
+              {{ profile.correo_padre }}
+            {% else %}
+              <span class="text-muted">Tu profe aún no ha registrado un correo</span>
+            {% endif %}
+          </div>
+        </div>
       </div>
 
       <!-- Botón guardar -->

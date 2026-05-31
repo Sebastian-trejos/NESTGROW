@@ -19,6 +19,8 @@ urlpatterns = [
     path('salones/<int:pk>/', views.detalle_salon, name='detalle_salon'),
     path('estudiante/<int:estudiante_pk>/informe/', views.enviar_informe, name='enviar_informe'),
     path('estudiante/<int:pk>/numero-lista/', views.set_numero_lista, name='set_numero_lista'),
+    path('estudiante/<int:pk>/actualizar/', views.actualizar_estudiante, name='actualizar_estudiante'),
+    path('salones/<int:pk>/subir-grado/', views.subir_grado_salon, name='subir_grado_salon'),
 
     # Estudiante
     path('dashboard/estudiante/', views.dashboard_estudiante, name='dashboard_estudiante'),

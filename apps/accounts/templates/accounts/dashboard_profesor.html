@@ -330,14 +330,15 @@
   {% for salon in salones %}
   <div class="salon-card-prof mb-3" style="padding:0;overflow:hidden">
 
-    <!-- Header colapsable del salón -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3"
-         style="cursor:pointer"
-         data-bs-toggle="collapse"
-         data-bs-target="#salonEstudiantes{{ salon.pk }}"
-         aria-expanded="false"
-         aria-controls="salonEstudiantes{{ salon.pk }}">
-      <div>
+    <!-- Header del salón: fila exterior (no toggleable) -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 p-3">
+
+      <!-- Zona de info: SÍ es el toggle del acordeón -->
+      <div class="flex-grow-1" style="cursor:pointer;min-width:0"
+           data-bs-toggle="collapse"
+           data-bs-target="#salonEstudiantes{{ salon.pk }}"
+           aria-expanded="false"
+           aria-controls="salonEstudiantes{{ salon.pk }}">
         <h5 class="font-fredoka mb-1" style="color:var(--primary)">
           <i class="bi bi-chevron-down me-2 collapse-icon" style="font-size:.8rem;transition:transform .3s"></i>
           <i class="bi bi-building-fill me-1"></i>{{ salon.nombre }}
@@ -360,11 +361,13 @@
           {% endif %}
         </div>
       </div>
-      <div class="d-flex gap-2" onclick="event.stopPropagation()">
+
+      <!-- Botones de acción: FUERA del toggle, nunca disparan el acordeón -->
+      <div class="d-flex gap-2 flex-shrink-0">
         <a href="{% url 'accounts:detalle_salon' salon.pk %}"
            class="btn btn-sm rounded-pill fw-bold"
            style="background:#f0eeff;color:var(--primary);border:none">
-          <i class="bi bi-eye-fill me-1"></i>Ver detalle
+          <i class="bi bi-people-fill me-1"></i>Gestionar Estudiantes
         </a>
         <a href="{% url 'accounts:editar_salon' salon.pk %}"
            class="btn btn-sm rounded-pill fw-bold"
@@ -377,6 +380,7 @@
           <i class="bi bi-trash-fill"></i>
         </a>
       </div>
+
     </div>
 
     <!-- Tabla estudiantes (colapsable) -->
@@ -399,16 +403,7 @@
             <tr>
               <td><strong>{{ est.user.get_full_name|default:est.user.username }}</strong></td>
               <td class="text-center">
-                <form method="post" action="{% url 'accounts:set_numero_lista' est.pk %}" class="d-inline-flex align-items-center gap-1" style="min-width:90px">
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{% url 'accounts:dashboard_profesor' %}">
-                  <input type="number" name="numero_lista" value="{{ est.numero_lista|default:'' }}"
-                         min="1" max="99" style="width:52px;text-align:center;border:1px solid #ddd;border-radius:8px;padding:2px 4px;font-size:.85rem"
-                         placeholder="—">
-                  <button type="submit" class="btn btn-sm p-0 px-1" style="color:var(--primary)" title="Guardar N° lista">
-                    <i class="bi bi-check-circle-fill"></i>
-                  </button>
-                </form>
+                <span class="fw-bold" style="color:var(--primary)">{{ est.numero_lista|default:"—" }}</span>
               </td>
               <td class="text-center"><span class="level-badge">Nv. {{ est.nivel }}</span></td>
               <td class="text-center">

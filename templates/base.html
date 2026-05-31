@@ -171,11 +171,10 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 {% if user.role == 'estudiante' %}
-                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:mis_logros' %}"><i class="fas fa-medal me-2"></i>Mis Logros</a></li>
-                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'games:ranking_salon' %}"><i class="fas fa-trophy me-2"></i>Ranking</a></li>
-                <li><hr class="dropdown-divider"></li>
-                {% endif %}
+                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-user me-2"></i>Ver Perfil</a></li>
+                {% else %}
                 <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
+                {% endif %}
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
               </ul>

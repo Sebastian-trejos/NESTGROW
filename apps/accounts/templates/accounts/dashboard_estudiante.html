@@ -408,49 +408,154 @@
 
   </div>
 
-  <!-- SALÓN -->
-  {% if not profile.salon %}
-  <div class="nestgrow-card p-4 mb-4"
-       style="border:3px dashed var(--accent);background:linear-gradient(135deg,#f0fffe,#fff)">
-    <div class="d-flex align-items-center gap-3">
-      <div style="width:56px;height:56px;border-radius:18px;background:#f0fffe;
-                  display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="bi bi-building-fill" style="color:var(--accent);font-size:1.5rem"></i>
-      </div>
-      <div>
-        <div class="fw-bold fs-5">¡Únete a la clase de tu profesor!</div>
-        <div class="text-muted fw-bold small">Pídele el código de clase a tu profe.</div>
-      </div>
-      <a href="{% url 'accounts:unirse_clase' %}"
-         class="btn btn-nestgrow btn-primary-nestgrow ms-auto">
-        Unirme →
-      </a>
-    </div>
-  </div>
-  {% else %}
-  <div class="nestgrow-card p-4 mb-4"
-       style="border-left:5px solid var(--accent);background:linear-gradient(135deg,#f0fffe,#fff)">
-    <div class="d-flex align-items-center gap-3">
-      <div style="width:50px;height:50px;border-radius:16px;background:#f0fffe;
-                  display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="bi bi-building-fill" style="color:var(--accent);font-size:1.3rem"></i>
-      </div>
-      <div>
-        <div class="fw-bold">
-          {{ profile.salon.nombre }}
-          <span class="badge rounded-pill ms-2"
-                style="background:#f0fffe;color:var(--accent);font-size:0.75rem">
-            {{ profile.salon.get_grado_display }}
-          </span>
+  <!-- SALÓN + AVENTURA (lado a lado) -->
+  <div class="row g-3 mb-4">
+
+    <!-- ── Tarjeta Salón / Profesor ── -->
+    <div class="col-12 col-md-6">
+      {% if not profile.salon %}
+      <div class="nestgrow-card p-4 h-100 d-flex flex-column align-items-center justify-content-center text-center"
+           style="border:3px dashed var(--accent);background:linear-gradient(135deg,#f0fffe,#fff)">
+        <div style="width:64px;height:64px;border-radius:20px;background:#f0fffe;
+                    display:flex;align-items:center;justify-content:center;margin-bottom:1rem">
+          <i class="bi bi-building-fill" style="color:var(--accent);font-size:1.8rem"></i>
         </div>
-        <div class="text-muted small fw-bold">
-          <i class="bi bi-person-fill me-1"></i>
-          Profe: {{ profile.salon.profesor.user.get_full_name }}
+        <div class="fw-bold fs-5 mb-1">¡Únete a tu clase!</div>
+        <div class="text-muted fw-bold small mb-3">Pídele el código a tu profe.</div>
+        <a href="{% url 'accounts:unirse_clase' %}"
+           class="btn btn-nestgrow btn-primary-nestgrow">Unirme →</a>
+      </div>
+
+      {% else %}
+      <div class="nestgrow-card p-4 h-100"
+           style="border-top:4px solid var(--primary);background:linear-gradient(160deg,#f6f4ff,#fff)">
+
+        <!-- Foto del profesor (grande y centrada) -->
+        <div class="text-center mb-3">
+          {% if profesor_profile and profesor_profile.foto_perfil %}
+            <img src="{{ profesor_profile.foto_perfil.url }}"
+                 alt="Foto del profe"
+                 style="width:90px;height:90px;border-radius:50%;object-fit:cover;
+                        border:4px solid var(--primary);
+                        box-shadow:0 6px 20px rgba(108,99,255,0.25)">
+          {% else %}
+            <div style="width:90px;height:90px;border-radius:50%;margin:0 auto;
+                        background:linear-gradient(135deg,var(--primary),#9c94ff);
+                        display:flex;align-items:center;justify-content:center;
+                        border:4px solid #e8e4ff;
+                        box-shadow:0 6px 20px rgba(108,99,255,0.2)">
+              <i class="bi bi-person-fill" style="color:white;font-size:2.4rem"></i>
+            </div>
+          {% endif %}
+
+          {% if profesor_profile %}
+          <div class="fw-bold mt-2" style="color:var(--primary);font-size:1.05rem">
+            {{ profesor_profile.user.get_full_name|default:profesor_profile.user.username }}
+          </div>
+          <div class="text-muted fw-bold" style="font-size:0.8rem">
+            {% if profesor_profile.institucion %}
+              <i class="bi bi-bank2 me-1"></i>{{ profesor_profile.institucion }}
+            {% else %}
+              👩‍🏫 Tu profesora/or
+            {% endif %}
+          </div>
+          {% endif %}
         </div>
+
+        <!-- Separador -->
+        <hr style="border-color:#e8e4ff;margin:0.75rem 0">
+
+        <!-- Info del salón -->
+        <div class="d-flex align-items-center gap-2">
+          <div style="width:38px;height:38px;border-radius:12px;background:#f0fffe;flex-shrink:0;
+                      display:flex;align-items:center;justify-content:center">
+            <i class="bi bi-building-fill" style="color:var(--accent);font-size:1rem"></i>
+          </div>
+          <div>
+            <div class="fw-bold" style="font-size:1rem">
+              {{ profile.salon.nombre }}
+              <span class="badge rounded-pill ms-1"
+                    style="background:#f0fffe;color:var(--accent);font-size:0.7rem">
+                {{ profile.salon.get_grado_display }}
+              </span>
+            </div>
+            <div class="text-muted small fw-bold">Tu salón</div>
+          </div>
+        </div>
+
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- ── Tarjeta Aventura ── -->
+    <div class="col-12 col-md-6">
+      <div class="nestgrow-card p-4 h-100 d-flex flex-column"
+           style="border-top:4px solid #6C63FF;background:linear-gradient(160deg,#f6f4ff,#fff)">
+
+        <!-- Encabezado -->
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div class="section-title mb-0">
+            <i class="bi bi-map-fill" style="color:#6C63FF"></i>
+            Aventura
+          </div>
+          {% if historia_primera_incompleta %}
+          <a href="{% url 'historia:ver_leccion' pk=historia_primera_incompleta.leccion_pk %}"
+             class="btn btn-sm rounded-pill fw-bold"
+             style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white">
+            <i class="bi bi-play-fill me-1"></i>Continuar
+          </a>
+          {% else %}
+          <a href="{% url 'historia:mapa_historia' %}"
+             class="btn btn-sm rounded-pill fw-bold"
+             style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white">
+            <i class="bi bi-map-fill me-1"></i>Explorar
+          </a>
+          {% endif %}
+        </div>
+
+        <!-- Estrellas (grande) -->
+        <div class="d-flex align-items-center gap-3 flex-grow-1">
+          <div class="text-center px-3 py-3 rounded-3 flex-shrink-0"
+               style="background:rgba(108,99,255,0.09);min-width:90px">
+            <div style="font-family:'Fredoka One',cursive;font-size:2.2rem;color:#6C63FF;line-height:1">
+              {{ profile.total_estrellas_historia }}
+            </div>
+            <div style="font-size:1.3rem;line-height:1">⭐</div>
+            <div style="font-size:.72rem;color:#888;font-weight:700;margin-top:2px">estrellas</div>
+          </div>
+
+          <!-- Descripción -->
+          {% if historia_primera_incompleta %}
+          <div>
+            <div class="fw-bold" style="color:#6C63FF;font-size:1rem">
+              {{ historia_primera_incompleta.seccion_titulo }}
+            </div>
+            {% if historia_primera_incompleta.seccion_emoji %}
+            <div style="font-size:1.4rem;line-height:1.2">{{ historia_primera_incompleta.seccion_emoji }}</div>
+            {% endif %}
+            <div class="text-muted fw-bold" style="font-size:0.8rem">Próxima lección desbloqueada</div>
+          </div>
+          {% elif profile.total_estrellas_historia > 0 %}
+          <div>
+            <div class="fw-bold" style="color:#6C63FF;font-size:1rem">¡Increíble!</div>
+            <div class="text-muted fw-bold" style="font-size:0.82rem">
+              Has completado todas las lecciones disponibles.
+            </div>
+          </div>
+          {% else %}
+          <div>
+            <div class="fw-bold" style="color:#6C63FF;font-size:1rem">¡Empieza tu aventura!</div>
+            <div class="text-muted fw-bold" style="font-size:0.82rem">
+              Explora el mapa y completa lecciones para ganar estrellas.
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
       </div>
     </div>
-  </div>
-  {% endif %}
+
+  </div><!-- /row salón + aventura -->
 
   <!-- LOGROS RECIENTES -->
   {% if logros_recientes %}
@@ -472,52 +577,6 @@
         </div>
       </div>
       {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  <!-- MODO HISTORIA -->
-  {% if profile.total_estrellas_historia > 0 or historia_primera_incompleta %}
-  <div class="nestgrow-card p-4 mb-4"
-       style="border-left:5px solid #6C63FF;background:linear-gradient(135deg,#f6f4ff,#fff)">
-    <div class="d-flex align-items-center justify-content-between mb-3">
-      <div class="section-title mb-0">
-        <i class="bi bi-map-fill" style="color:#6C63FF"></i>
-        Aventura
-      </div>
-      {% if historia_primera_incompleta %}
-      <a href="{% url 'historia:ver_leccion' pk=historia_primera_incompleta.leccion_pk %}"
-         class="btn btn-sm rounded-pill"
-         style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;font-weight:700">
-        <i class="bi bi-play-fill me-1"></i>Continuar
-      </a>
-      {% else %}
-      <a href="{% url 'historia:mapa_historia' %}"
-         class="btn btn-sm rounded-pill"
-         style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;font-weight:700">
-        <i class="bi bi-map-fill me-1"></i>Ver mapa
-      </a>
-      {% endif %}
-    </div>
-    <div class="d-flex align-items-center gap-3 flex-wrap">
-      <div class="text-center px-3 py-2 rounded-3"
-           style="background:rgba(108,99,255,0.08);min-width:90px">
-        <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;color:#6C63FF;line-height:1">
-          <i class="bi bi-star-fill me-1" style="color:#FFE66D"></i>{{ profile.total_estrellas_historia }}
-        </div>
-        <div style="font-size:.72rem;color:#888;font-weight:700">estrellas</div>
-      </div>
-      {% if historia_primera_incompleta %}
-      <div style="font-size:.88rem;font-weight:700;color:#555">
-        <span style="color:#6C63FF">{{ historia_primera_incompleta.seccion_titulo }}</span><br>
-        <span style="font-size:.78rem;color:#999">Próxima lección desbloqueada</span>
-      </div>
-      {% else %}
-      <div style="font-size:.88rem;font-weight:700;color:#555">
-        ¡Sigue así!<br>
-        <span style="font-size:.78rem;color:#999">Sigue coleccionando estrellas</span>
-      </div>
-      {% endif %}
     </div>
   </div>
   {% endif %}

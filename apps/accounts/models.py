@@ -59,6 +59,7 @@ class Salon(TimeStampedModel):
 class ProfesorProfile(TimeStampedModel):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profesor_profile')
     institucion = models.CharField(max_length=200, blank=True)
+    foto_perfil = models.ImageField(upload_to='profesores/fotos/', blank=True, null=True, verbose_name='Foto de perfil')
 
     def get_total_estudiantes(self):
         return EstudianteProfile.objects.filter(salon__profesor=self).count()

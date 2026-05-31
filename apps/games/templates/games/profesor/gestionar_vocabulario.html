@@ -24,7 +24,7 @@
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl">🐺</div>
     <div class="milo-banner-text">
-      Añade palabras con imagen y audio para que los juegos sean más divertidos. ¡Al menos 4 palabras por categoría para que los juegos funcionen bien!
+      Añade palabras con imagen para que los juegos sean más divertidos. ¡Al menos 4 palabras por categoría para que los juegos funcionen bien!
     </div>
   </div>
 
@@ -37,9 +37,7 @@
             <th>Imagen</th>
             <th>English</th>
             <th>Español</th>
-            <th>Pista</th>
             <th>Dificultad</th>
-            <th>Audio</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -71,19 +69,10 @@
             </td>
             <td><span class="font-fredoka fs-5" style="color:var(--primary)">{{ item.word_en }}</span></td>
             <td><span class="fw-bold">{{ item.word_es }}</span></td>
-            <td><span class="text-muted small">{{ item.hint|default:"—" }}</span></td>
             <td>
               <span class="badge badge-difficulty-{{ item.difficulty }} rounded-pill">
                 {% if item.difficulty == 1 %}⭐{% elif item.difficulty == 2 %}⭐⭐{% else %}⭐⭐⭐{% endif %}
               </span>
-            </td>
-            <td>
-              {% if item.audio %}
-                <button class="btn btn-sm rounded-pill" style="background:#f0eeff;color:var(--primary)"
-                        onclick="new Audio('{{ item.audio.url }}').play()">🔊</button>
-              {% else %}
-                <span class="text-muted small">—</span>
-              {% endif %}
             </td>
             <td>
               {% if item.is_active %}

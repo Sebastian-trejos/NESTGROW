@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from .forms import (RegistroForm, LoginForm,
                     ProfesorUserForm, ProfesorProfileForm,
                     EstudianteUserForm, EstudianteProfileForm,
+                    GestionarEstudianteForm,
                     SalonForm, UnirseClaseForm)
 from .models import CustomUser, ProfesorProfile, EstudianteProfile, Salon
 from .decorators import profesor_required, estudiante_required
@@ -25,6 +26,11 @@ def registro_view(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Si es estudiante, asignar el grado seleccionado al perfil recién creado
+            if user.role == 'estudiante':
+                grado = form.cleaned_data.get('grado', '')
+                if grado:
+                    EstudianteProfile.objects.filter(user=user).update(grado=grado)
             login(request, user)
             messages.success(request, f'¡Bienvenido/a a NestGrow, {user.first_name}! 🎉')
             return redirect('accounts:dashboard')
@@ -87,7 +93,8 @@ def editar_perfil_profesor(request):
 
     if request.method == 'POST':
         user_form = ProfesorUserForm(request.POST, instance=request.user)
-        profile_form = ProfesorProfileForm(request.POST, instance=request.user.profesor_profile)
+        profile_form = ProfesorProfileForm(request.POST, request.FILES, instance=request.user.profesor_profile)
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -155,11 +162,83 @@ def eliminar_salon(request, pk):
 @profesor_required
 def detalle_salon(request, pk):
     salon = get_object_or_404(Salon, pk=pk, profesor=request.user.profesor_profile)
-    estudiantes = salon.estudiantes.select_related('user').all()
+
+    if request.method == 'POST':
+        # Guardar cambios en bulk para todos los estudiantes del salón
+        estudiantes_qs = salon.estudiantes.select_related('user').all()
+        grados_validos = [v for v, _ in EstudianteProfile.GRADO_CHOICES]
+        actualizados = 0
+        for est in estudiantes_qs:
+            pk_str = str(est.pk)
+            grado = request.POST.get(f'grado_{pk_str}', '').strip()
+            correo = request.POST.get(f'correo_padre_{pk_str}', '').strip()
+            numero = request.POST.get(f'numero_lista_{pk_str}', '').strip()
+            # Validación básica de grado
+            if grado and grado not in grados_validos:
+                grado = est.grado
+            EstudianteProfile.objects.filter(pk=est.pk).update(
+                grado=grado,
+                correo_padre=correo,
+                numero_lista=numero,
+            )
+            actualizados += 1
+        messages.success(request, f'✅ Cambios guardados para {actualizados} estudiante(s).')
+        return redirect('accounts:detalle_salon', pk=pk)
+
+    # Ordenar por numero_lista numérico (vacíos al final)
+    estudiantes_qs = salon.estudiantes.select_related('user').all()
+    estudiantes = sorted(
+        estudiantes_qs,
+        key=lambda e: (int(e.numero_lista) if e.numero_lista and str(e.numero_lista).strip().isdigit() else 9999)
+    )
     return render(request, 'accounts/detalle_salon.html', {
         'salon': salon,
         'estudiantes': estudiantes,
+        'grado_choices': EstudianteProfile.GRADO_CHOICES,
     })
+
+
+@login_required
+@profesor_required
+@require_POST
+def actualizar_estudiante(request, pk):
+    """El profesor edita grado, correo_padre y numero_lista de un estudiante."""
+    estudiante = get_object_or_404(EstudianteProfile, pk=pk)
+    # Verificar propiedad: el estudiante debe estar en un salon del profesor
+    if not estudiante.salon or estudiante.salon.profesor != request.user.profesor_profile:
+        messages.error(request, '⛔ No tienes permiso para editar este estudiante.')
+        return redirect('accounts:dashboard_profesor')
+    form = GestionarEstudianteForm(request.POST, instance=estudiante)
+    if form.is_valid():
+        form.save()
+        messages.success(request, f'✅ Datos de {estudiante.user.get_full_name() or estudiante.user.username} actualizados.')
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, f'{error}')
+    salon_pk = estudiante.salon.pk
+    return redirect('accounts:detalle_salon', pk=salon_pk)
+
+
+@login_required
+@profesor_required
+@require_POST
+def subir_grado_salon(request, pk):
+    """Sube el grado de todos los estudiantes del salón en un nivel."""
+    salon = get_object_or_404(Salon, pk=pk, profesor=request.user.profesor_profile)
+    grado_orden = ['1', '2', '3', '4', '5']
+    idx_actual = grado_orden.index(salon.grado) if salon.grado in grado_orden else -1
+    if idx_actual == -1 or idx_actual >= len(grado_orden) - 1:
+        messages.warning(request, '⚠️ El salón ya está en el grado máximo (5° Primaria).')
+        return redirect('accounts:detalle_salon', pk=pk)
+    nuevo_grado = grado_orden[idx_actual + 1]
+    salon.grado = nuevo_grado
+    salon.save(update_fields=['grado'])
+    # Actualizar el grado de todos los estudiantes del salón
+    actualizados = salon.estudiantes.update(grado=nuevo_grado)
+    grado_display = dict(EstudianteProfile.GRADO_CHOICES).get(nuevo_grado, nuevo_grado)
+    messages.success(request, f'✅ Grado subido a {grado_display} para {actualizados} estudiante(s).')
+    return redirect('accounts:detalle_salon', pk=pk)
 
 
 # ── Profesor — Editar número de lista del estudiante ─────────────────────────
@@ -305,6 +384,14 @@ def dashboard_estudiante(request):
     except Exception:
         pass
 
+    # Info del profesor para el mini panel
+    profesor_profile = None
+    if profile.salon:
+        try:
+            profesor_profile = profile.salon.profesor
+        except Exception:
+            pass
+
     context = {
         'profile': profile,
         'progreso': progreso,
@@ -313,6 +400,7 @@ def dashboard_estudiante(request):
         'logros_pendientes': logros_pendientes,
         'puntos_requeridos': profile.puntos_requeridos(),
         'historia_primera_incompleta': historia_primera_incompleta,
+        'profesor_profile': profesor_profile,
     }
     return render(request, 'accounts/dashboard_estudiante.html', context)
 
@@ -356,6 +444,7 @@ def editar_perfil_estudiante(request):
     return render(request, 'accounts/editar_perfil_estudiante.html', {
         'user_form': user_form,
         'profile_form': profile_form,
+        'profile': request.user.estudiante_profile,
     })
 
 
@@ -369,12 +458,22 @@ def unirse_clase(request):
             try:
                 salon = Salon.objects.get(codigo_clase=codigo, is_active=True)
                 estudiante = request.user.estudiante_profile
-                estudiante.salon = salon
-                estudiante.profesor = salon.profesor
-                estudiante.grado = salon.grado
-                estudiante.save()
-                messages.success(request, f'✅ ¡Te uniste al salón {salon.nombre} del profesor {salon.profesor.user.get_full_name()}!')
-                return redirect('accounts:dashboard_estudiante')
+                # Verificar que el grado del estudiante coincide con el del salón
+                if estudiante.grado and salon.grado and estudiante.grado != salon.grado:
+                    grado_salon = salon.get_grado_display()
+                    grado_est = dict(EstudianteProfile.GRADO_CHOICES).get(estudiante.grado, estudiante.grado)
+                    messages.error(
+                        request,
+                        f'❌ Este salón es de {grado_salon}, pero tú estás registrado en {grado_est}. '
+                        f'Pídele a tu profesor que verifique el código o ajuste tu grado.'
+                    )
+                else:
+                    estudiante.salon = salon
+                    estudiante.profesor = salon.profesor
+                    estudiante.grado = salon.grado
+                    estudiante.save()
+                    messages.success(request, f'✅ ¡Te uniste al salón {salon.nombre} del profesor {salon.profesor.user.get_full_name()}!')
+                    return redirect('accounts:dashboard_estudiante')
             except Salon.DoesNotExist:
                 messages.error(request, '❌ Código inválido. Verifica con tu profesor.')
     else:

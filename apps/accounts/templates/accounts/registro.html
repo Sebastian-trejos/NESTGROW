@@ -372,12 +372,17 @@
                 </div>
               </div>
 
-              <div class="col-12">
-                <label class="fw-bold small" style="color:var(--primary)">Correo electrónico</label>
-                <div class="input-group-nestgrow">
-                  <i class="bi bi-envelope-fill input-icon"></i>
-                  {{ form.email }}
+              <!-- Grado (solo para estudiantes) -->
+              <div class="col-12" id="campoGrado" style="display:none">
+                <label class="fw-bold small" style="color:var(--primary)">
+                  <i class="bi bi-mortarboard-fill me-1"></i>Grado
+                </label>
+                {{ form.grado }}
+                {% if form.grado.errors %}
+                <div style="color:var(--secondary);font-size:0.82rem;font-weight:700;margin-top:4px">
+                  <i class="bi bi-exclamation-circle me-1"></i>{{ form.grado.errors.0 }}
                 </div>
+                {% endif %}
               </div>
 
               <div class="col-12">
@@ -511,6 +516,19 @@
     actualizarRoles();
     document.querySelectorAll('input[name="role"]').forEach(r => {
       r.addEventListener('change', actualizarRoles);
+    });
+
+    // Mostrar/ocultar campo Grado según rol seleccionado
+    const campoGrado = document.getElementById('campoGrado');
+    function toggleGrado() {
+      const rolEstudiante = document.getElementById('radio-estudiante');
+      if (campoGrado) {
+        campoGrado.style.display = (rolEstudiante && rolEstudiante.checked) ? 'block' : 'none';
+      }
+    }
+    toggleGrado();
+    document.querySelectorAll('input[name="role"]').forEach(r => {
+      r.addEventListener('change', toggleGrado);
     });
   });
 
