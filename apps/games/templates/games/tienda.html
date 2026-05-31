@@ -4,6 +4,16 @@
 
 {% block extra_css %}
 <style>
+  /* Fondo de la tienda */
+  body.nestgrow-body { background: transparent !important; }
+  .tienda-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: url("{% static 'img/histo_bg.jpeg' %}") center center / cover no-repeat;
+    pointer-events: none;
+  }
+
   .shop-header {
     background: linear-gradient(135deg, #2d1b69 0%, #6C63FF 55%, #4ECDC4 100%);
     border-radius: 28px;
@@ -204,6 +214,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="tienda-bg"></div>
 <div class="container py-4">
 
   <!-- Shop Header -->

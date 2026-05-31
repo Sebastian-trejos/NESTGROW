@@ -417,6 +417,18 @@
   <div class="word-of-day">
     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
       <span style="font-size:2.2rem">⭐</span>
+      {% with wod_img=palabra_del_dia.display_image_url %}
+      {% if wod_img %}
+        <div style="width:72px;height:72px;background:#fff8e1;border-radius:14px;
+                    display:flex;align-items:center;justify-content:center;
+                    border:2px solid #fde68a;flex-shrink:0;">
+          <img src="{{ wod_img }}" alt="{{ palabra_del_dia.word_en }}"
+               style="max-width:58px;max-height:58px;object-fit:contain;display:block;">
+        </div>
+      {% elif palabra_del_dia.emoji %}
+        <span style="font-size:2.8rem;line-height:1;flex-shrink:0">{{ palabra_del_dia.emoji }}</span>
+      {% endif %}
+      {% endwith %}
       <div>
         <div style="font-size:.75rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">
           Palabra del Día

@@ -30,8 +30,9 @@ _WORD_ALIASES = {
     'sesenta': '60','setenta': '70', 'ochenta': '80',  'noventa': '90',
     'cien': '100', 'ciento': '100', 'mil': '1000',
     # ── Colores en inglés → nombre de archivo (en español) ──────────────────
+    # (orange se resuelve via category-aware: Orange_color / orange_fruit)
     'red': 'rojo',     'blue': 'azul',      'green': 'verde',
-    'yellow': 'amarillo','orange': 'naranja','purple': 'morado',
+    'yellow': 'amarillo',                   'purple': 'morado',
     'pink': 'rosa',    'white': 'blanco',   'black': 'negro',
     'gray': 'gris',    'grey': 'gris',      'brown': 'cafe',
     'cyan': 'cian',    'indigo': 'indigo',  'magenta': 'magenta',
@@ -98,6 +99,10 @@ _WORD_ALIASES = {
     'rectangle': 'rectangle','oval': 'oval','diamond': 'diamond',
     'star': 'star','hexagon': 'hexagon','pentagon': 'pentagon',
     'cross': 'cross','arrow': 'arrow',
+    # ── "Wake Up" tiene espacio en el nombre → wakeup.png ──────────────────
+    'wake up': 'wakeup',          'despertar': 'wakeup',
+    # ── Zero → dígito 0 (igual que los demás números) ───────────────────────
+    'zero': '0',                  'cero': '0',
     # ── Acciones → imágenes de Milo (1 imagen por palabra, sin repetir) ─────
     'run': 'milo_corriendo',      'correr': 'milo_corriendo',
     'dance': 'milo_bai',          'bailar': 'milo_bai',
@@ -123,7 +128,7 @@ _WORD_ALIASES = {
     'beautiful': 'milo_asombrado2','hermoso': 'milo_asombrado2',
 }
 
-_STATIC_IMG_MAP = None  # populated on first call
+_STATIC_IMG_MAP = None  # populated lazily on first call; reset to None to force rebuild
 
 
 def _normalize(s):
@@ -149,25 +154,38 @@ def _build_static_img_map():
     return img_map
 
 
-def _resolve_static_image(word_en, word_es):
-    """Return a static URL for the vocabulary word, or None if no match found."""
+def _resolve_static_image(word_en, word_es, category_en=''):
+    """Return a static URL for the vocabulary word, or None if no match found.
+
+    Resolution order:
+    1. Category-specific file: {word_en}_{category_singular}.png
+       (handles e.g. Orange_color.png vs orange_fruit.png)
+    2. Direct match by word_en or word_es
+    3. Alias match by word_en or word_es
+    """
     global _STATIC_IMG_MAP
     if _STATIC_IMG_MAP is None:
         _STATIC_IMG_MAP = _build_static_img_map()
 
     from django.templatetags.static import static as _static
 
+    # ── 1. Category-specific variant ────────────────────────────────────────
+    if category_en and word_en:
+        cat_singular = _normalize(category_en).rstrip('s')  # "Colors"→"color", "Fruits"→"fruit"
+        cat_key = _normalize(word_en) + ' ' + cat_singular
+        if cat_key in _STATIC_IMG_MAP:
+            return _static(_STATIC_IMG_MAP[cat_key])
+
+    # ── 2 & 3. Direct + alias match for word_en then word_es ────────────────
     candidates_raw = [
         word_en.strip() if word_en else '',
         word_es.strip() if word_es else '',
     ]
 
-    checked = []
     for raw in candidates_raw:
         if not raw:
             continue
         norm = _normalize(raw)
-        checked.append(norm)
 
         # Direct match (e.g. "airport" → Airport.png, "perro" → perro.png)
         if norm in _STATIC_IMG_MAP:
@@ -238,7 +256,8 @@ class VocabularyItem(TimeStampedModel, ActiveModel):
         """Image URL with priority: uploaded image → static library match → None."""
         if self.image:
             return self.image.url
-        return _resolve_static_image(self.word_en, self.word_es)
+        cat_en = getattr(getattr(self, 'category', None), 'name_en', '')
+        return _resolve_static_image(self.word_en, self.word_es, category_en=cat_en)
 
     def __str__(self):
         return f"{self.word_en} / {self.word_es} ({self.category.name})"
