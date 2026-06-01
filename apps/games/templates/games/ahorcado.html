@@ -1,159 +1,461 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}{{ game.title }} - NestGrow{% endblock %}
- 
+
+{% block extra_css %}
+<style>
+.letter-box {
+  display: inline-block;
+  width: 62px; height: 72px;
+  border-bottom: 4px solid var(--primary);
+  margin: 0 6px;
+  font-size: 2.5rem; font-weight: 800;
+  text-align: center; line-height: 72px;
+  color: var(--primary);
+}
+.letter-box.revealed { background: #f0eeff; border-radius: 8px 8px 0 0; }
+.word-display { letter-spacing: 3px; min-height: 84px; }
+.kb-key {
+  min-width: 46px; height: 46px;
+  font-weight: 700; font-size: 1.05rem;
+  border-radius: 10px !important;
+  padding: 0 !important;
+}
+
+/* Hangman card */
+.hangman-card {
+  background: linear-gradient(160deg, #f8f6ff 0%, #ede9ff 100%);
+  border-radius: 20px;
+  padding: .75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+.hangman-card svg { width: 100%; height: auto; }
+.hm-part { opacity: 0; transition: opacity 0.35s ease; }
+
+/* Hint card */
+.hint-card {
+  background: white;
+  border-radius: 16px;
+  border: 2.5px solid #e8e4ff;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  text-align: center;
+}
+.hint-media {
+  width: 180px; height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f0eeff;
+  display: flex; align-items: center; justify-content: center;
+}
+.hint-media img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+.hint-word {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2.1rem;
+  color: var(--primary);
+  line-height: 1.1;
+}
+
+/* Wrong letters */
+.wrong-badge {
+  display: inline-block;
+  background: #fff0f0;
+  color: #e53935;
+  border: 1.5px solid #ffcdd2;
+  border-radius: 8px;
+  padding: 2px 9px;
+  font-size: .95rem; font-weight: 800;
+  margin: 2px;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+.shake { animation: shake .3s ease; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
+
   <div class="d-flex align-items-center gap-3 mb-4">
-    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>{% endif %}
+    {% if user.role == 'profesor' %}
+      <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">
+        <i class="bi bi-caret-left-fill me-1"></i>Volver
+      </a>
+    {% else %}
+      <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">
+        <i class="bi bi-caret-left-fill me-1"></i>Volver
+      </a>
+    {% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🦴 {{ game.title }}</h3>
   </div>
- 
+
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega dentro de los
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
   </div>
   {% endif %}
- 
+
   {% include 'games/includes/vocabulary_tab.html' %}
- 
+
+  <!-- ── Juego ─────────────────────────────────────────────────────────── -->
   <div id="gameSection" style="display:none">
+
     <div class="game-score-bar">
       <span>🦴 Ahorcado de Milo</span>
       <span>Palabra <strong id="wordNum">1</strong> / <strong id="totalWords">0</strong></span>
-      <span>Vidas: <span id="livesDisplay">🦴🦴🦴🦴🦴🦴</span></span>
+      <span style="color:#e53935;font-weight:800">
+        <i class="bi bi-x-circle-fill me-1"></i>
+        <span id="wrongCount">0</span> / <span id="maxLivesBar">0</span> fallos
+      </span>
+      <span>⭐ <strong id="scoreDisplay">0</strong> pts</span>
     </div>
- 
-    <div class="milo-banner mb-3">
-      <div class="milo-banner-owl" id="miloFace">🐺</div>
-      <div class="milo-banner-text">
-        Adivina la palabra en inglés. La pista en español es: <strong id="hintEs">-</strong>
+
+    <div class="row g-3 mb-3">
+
+      <!-- ── Horca (SVG) ── -->
+      <div class="col-lg-4 col-md-5" style="display:flex;flex-direction:column">
+        <div class="hangman-card" style="flex:1">
+          <div class="fw-bold small mb-2" style="color:var(--primary)">
+            <i class="bi bi-person-fill me-1"></i>El Ahorcado
+          </div>
+
+          <!--
+            7 partes en total (índices 0-6):
+              0 – Cabeza
+              1 – Tronco
+              2 – Ambos brazos (grupo)
+              3 – Ambas piernas (grupo)
+              4 – Ojos × (grupo rojo)  ← Fácil termina aquí (5 vidas)
+              5 – Antebrazos (grupo)
+              6 – Boca triste          ← Medio/Difícil termina aquí (7 vidas)
+          -->
+          <svg viewBox="0 0 220 270" xmlns="http://www.w3.org/2000/svg"
+               style="width:100%;height:100%;flex:1;min-height:0">
+            <!-- Horca (siempre visible) -->
+            <g stroke="#6C63FF" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12"  y1="258" x2="130" y2="258" stroke-width="5"/>
+              <line x1="60"  y1="258" x2="60"  y2="20"  stroke-width="5"/>
+              <line x1="60"  y1="20"  x2="162" y2="20"  stroke-width="5"/>
+              <line x1="60"  y1="55"  x2="90"  y2="20"  stroke-width="4"/>
+              <line x1="162" y1="20"  x2="162" y2="52"  stroke-width="3.5"/>
+            </g>
+            <!-- Partes del cuerpo -->
+            <g stroke="#444" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+
+              <!-- 0: Cabeza -->
+              <circle id="hm-0" class="hm-part" cx="162" cy="71" r="19"/>
+
+              <!-- 1: Tronco -->
+              <line id="hm-1" class="hm-part" x1="162" y1="90" x2="162" y2="160"/>
+
+              <!-- 2: Ambos brazos -->
+              <g id="hm-2" class="hm-part">
+                <line x1="162" y1="108" x2="126" y2="142"/>
+                <line x1="162" y1="108" x2="198" y2="142"/>
+              </g>
+
+              <!-- 3: Ambas piernas -->
+              <g id="hm-3" class="hm-part">
+                <line x1="162" y1="160" x2="133" y2="210"/>
+                <line x1="162" y1="160" x2="191" y2="210"/>
+              </g>
+
+              <!-- 4: Ojos × (rojo) -->
+              <g id="hm-4" class="hm-part" stroke="#e53935" stroke-width="2.8">
+                <line x1="153" y1="63" x2="158" y2="68"/>
+                <line x1="158" y1="63" x2="153" y2="68"/>
+                <line x1="166" y1="63" x2="171" y2="68"/>
+                <line x1="171" y1="63" x2="166" y2="68"/>
+              </g>
+
+              <!-- 5: Antebrazos -->
+              <g id="hm-5" class="hm-part">
+                <line x1="126" y1="142" x2="113" y2="165"/>
+                <line x1="198" y1="142" x2="211" y2="165"/>
+              </g>
+
+              <!-- 6: Boca triste (rojo) -->
+              <path id="hm-6" class="hm-part"
+                    d="M 153,78 Q 162,85 171,78"
+                    stroke="#e53935" stroke-width="2.8"/>
+
+            </g>
+          </svg>
+
+          <div id="miloFace" style="font-size:2.2rem;margin-top:.5rem">🐺</div>
+        </div>
       </div>
-    </div>
- 
-    <div class="text-center mb-4">
-      <div id="wordDisplay" class="word-display mb-3"></div>
-      <div id="wrongLetters" class="text-danger fw-bold mb-3" style="font-size:1.2rem;letter-spacing:4px;"></div>
-      <div id="keyboard" class="d-flex flex-wrap justify-content-center gap-1 mb-4"></div>
-      <div class="stat-card d-inline-block px-5">
-        <div class="stat-number" id="scoreDisplay">0</div>
-        <div class="stat-label">Puntos</div>
+
+      <!-- ── Área de juego ── -->
+      <div class="col-lg-8 col-md-7 d-flex flex-column gap-3">
+
+        <!-- Pista: imagen + palabra en español en grande -->
+        <div class="hint-card">
+          <div class="hint-media" id="hintMedia">
+            <i class="bi bi-question-lg" style="font-size:4rem;color:var(--primary)" id="hintIcon"></i>
+            <img id="hintImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:contain">
+            <span id="hintEmoji" style="display:none;font-size:7rem;line-height:1"></span>
+          </div>
+          <div>
+            <div class="hint-word" id="hintEs">—</div>
+            <div class="text-muted small fw-bold" style="font-size:.75rem">
+              ¿Cómo se dice en inglés?
+            </div>
+          </div>
+        </div>
+
+        <!-- Letras a adivinar -->
+        <div id="wordDisplay" class="word-display text-center"></div>
+
+        <!-- Letras incorrectas -->
+        <div id="wrongLetters" class="text-center" style="min-height:30px"></div>
+
+        <!-- Teclado -->
+        <div id="keyboard" class="d-flex flex-wrap justify-content-center gap-1"></div>
+
+        <!-- Puntos -->
+        <div class="text-center mt-auto">
+          <div class="stat-card d-inline-block px-5">
+            <div class="stat-number" id="scoreDisplayBottom">0</div>
+            <div class="stat-label">Puntos</div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
- 
+
+<!-- Win overlay -->
 <div class="win-overlay" id="winOverlay" style="display:none">
   <div class="win-card">
     <div class="win-milo-wrap">
       <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
     <div class="win-card-body">
-    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
-    <div class="win-title" id="winTitle">¡Lo lograste!</div>
-    <div class="win-stars" id="winStars">⭐⭐⭐</div>
-    <div class="win-clasif font-fredoka" id="winClasif"></div>
-    <div class="win-score"><span id="winScore">0</span> pts</div>
-    <div class="win-huesos" id="winHuesos"></div>
-    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
+      <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
+      <div class="win-title"   id="winTitle">¡Lo lograste!</div>
+      <div class="win-stars"   id="winStars">⭐⭐⭐</div>
+      <div class="win-clasif font-fredoka" id="winClasif"></div>
+      <div class="win-score"><span id="winScore">0</span> pts</div>
+      <div class="win-huesos"  id="winHuesos"></div>
+      <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}"
+         class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">
+        ✔️ Volver al panel
+      </a>
     </div>
   </div>
 </div>
 {% endblock %}
- 
+
+
 {% block extra_js %}
 <script src="{% static 'games/js/score_utils.js' %}"></script>
 <script>
-const VOCABULARY = {{ vocabulary_json|safe }}.filter(v => v.word_en);
-const GAME_ID = {{ game.id }};
-const POINTS_REWARD = {{ game.points_reward }};
+// ── Constantes ────────────────────────────────────────────────────────────────
+const VOCABULARY     = {{ vocabulary_json|safe }}.filter(v => v.word_en);
+const GAME_ID        = {{ game.id }};
+const DIFFICULTY     = {{ game.difficulty }};
+const POINTS_REWARD  = {{ game.points_reward }};
 const PENALTY_AMOUNT = {{ game.penalty_amount }};
-const HANGMAN_PENALTY = Math.max(1, Math.floor(PENALTY_AMOUNT / 2));
-let PTS_PER_WORD = POINTS_REWARD; // se recalcula al conocer num palabras
-const SAVE_URL = "{% url 'games:save_score' %}";
-const CSRF = "{{ csrf_token }}";
-const MAX_LIVES = 6;
-const MILO_FACES = ['🐺','😟','😰','😨','😱','💀','☠️'];
- 
+const SAVE_URL       = "{% url 'games:save_score' %}";
+const CSRF           = "{{ csrf_token }}";
+
+const WORD_COUNT = { 1: 4, 2: 6, 3: 8 }[DIFFICULTY] || 6;
+const MAX_LIVES  = { 1: 5, 2: 7, 3: 7 }[DIFFICULTY] || 5;
+
+// ── Estado ────────────────────────────────────────────────────────────────────
 let words = [], currentIdx = 0, score = 0, lives = MAX_LIVES;
 let currentWord = '', guessed = new Set(), wrong = [];
-let totalWords = 0;
- 
+let totalWords = 0, PTS_PER_WORD = 1;
+
+const $ = id => document.getElementById(id);
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
- 
+
+// ── Selección de vocabulario ponderada ────────────────────────────────────────
+function selectWords(vocab) {
+  const byD = { 1: [], 2: [], 3: [] };
+  vocab.forEach(v => {
+    const d = (v.item_difficulty >= 1 && v.item_difficulty <= 3) ? v.item_difficulty : 1;
+    byD[d].push(v);
+  });
+  const s = a => shuffle([...a]);
+
+  let pool;
+  if (DIFFICULTY === 1) {
+    pool = [...s(byD[1]), ...s(byD[2]), ...s(byD[3])];
+  } else if (DIFFICULTY === 2) {
+    const nH = Math.ceil(WORD_COUNT * 0.7);
+    pool = shuffle([...s([...byD[2], ...byD[3]]).slice(0, nH),
+                    ...s(byD[1]).slice(0, WORD_COUNT - nH)]);
+  } else {
+    const nD = Math.ceil(WORD_COUNT * 0.6);
+    const nM = Math.ceil(WORD_COUNT * 0.25);
+    pool = shuffle([...s(byD[3]).slice(0, nD),
+                    ...s(byD[2]).slice(0, nM),
+                    ...s(byD[1]).slice(0, WORD_COUNT - nD - nM)]);
+  }
+  if (pool.length < WORD_COUNT) {
+    const used = new Set(pool.map(v => v.word_en));
+    pool = [...pool, ...shuffle(vocab.filter(v => !used.has(v.word_en)))];
+  }
+  return pool.slice(0, WORD_COUNT);
+}
+
+// ── Pista visual: imagen o emoji de la palabra ────────────────────────────────
+function setHintMedia(item) {
+  const imgEl   = $('hintImg');
+  const emojiEl = $('hintEmoji');
+  const iconEl  = $('hintIcon');
+
+  if (item.image) {
+    imgEl.src = item.image;
+    imgEl.style.display   = 'block';
+    emojiEl.style.display = 'none';
+    iconEl.style.display  = 'none';
+  } else if (item.emoji) {
+    emojiEl.textContent   = item.emoji;
+    emojiEl.style.display = 'block';
+    imgEl.style.display   = 'none';
+    iconEl.style.display  = 'none';
+  } else {
+    imgEl.style.display   = 'none';
+    emojiEl.style.display = 'none';
+    iconEl.style.display  = 'block';
+  }
+}
+
+// ── Figura del ahorcado (7 partes agrupadas) ──────────────────────────────────
+function updateHangman() {
+  for (let i = 0; i < 7; i++) {
+    const el = $('hm-' + i);
+    if (el) el.style.opacity = (i < MAX_LIVES && wrong.length > i) ? '1' : '0';
+  }
+  $('wrongCount').textContent = wrong.length;
+}
+
+// ── Cara de Milo proporcional a vidas restantes ───────────────────────────────
+const MILO_FACES = ['🐺', '😟', '😰', '😨', '😱', '💀'];
+function updateMiloFace() {
+  const pct = lives / MAX_LIVES;
+  const idx  = pct > 0.75 ? 0
+             : pct > 0.55 ? 1
+             : pct > 0.35 ? 2
+             : pct > 0.18 ? 3
+             : lives > 0   ? 4
+             :               5;
+  $('miloFace').textContent = MILO_FACES[idx];
+}
+
+// ── Turno de palabra ──────────────────────────────────────────────────────────
 function startWord() {
   if (currentIdx >= words.length) { endGame(true); return; }
-  const item = words[currentIdx];
+  const item  = words[currentIdx];
   currentWord = item.word_en.toUpperCase().replace(/[^A-Z]/g, '');
   guessed = new Set();
-  wrong = [];
-  lives = MAX_LIVES;
-  document.getElementById('wordNum').textContent = currentIdx + 1;
-  document.getElementById('hintEs').textContent = item.word_es;
-  document.getElementById('wrongLetters').textContent = '';
-  document.getElementById('livesDisplay').textContent = '🦴'.repeat(MAX_LIVES);
-  document.getElementById('miloFace').textContent = '🐺';
+  wrong   = [];
+  lives   = MAX_LIVES;
+
+  $('wordNum').textContent      = currentIdx + 1;
+  $('hintEs').textContent       = item.word_es;
+  $('wrongLetters').innerHTML   = '';
+  $('miloFace').textContent     = '🐺';
+  setHintMedia(item);
+  updateHangman();
   renderWord();
   renderKeyboard();
 }
- 
+
 function renderWord() {
-  const display = currentWord.split('').map(l => guessed.has(l) ? `<span class="letter-box">${l}</span>` : `<span class="letter-box">_</span>`).join('');
-  document.getElementById('wordDisplay').innerHTML = display;
+  $('wordDisplay').innerHTML = currentWord.split('').map(l =>
+    `<span class="letter-box${guessed.has(l) ? ' revealed' : ''}">${guessed.has(l) ? l : '_'}</span>`
+  ).join('');
 }
- 
+
 function renderKeyboard() {
-  const kb = document.getElementById('keyboard');
+  const kb = $('keyboard');
   kb.innerHTML = '';
   'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
     const btn = document.createElement('button');
-    btn.className = 'btn btn-sm kb-key';
+    btn.className   = 'btn btn-sm kb-key';
     btn.textContent = l;
-    btn.disabled = guessed.has(l) || wrong.includes(l);
-    if (wrong.includes(l)) btn.classList.add('btn-danger');
-    else if (guessed.has(l)) btn.classList.add('btn-success');
-    else btn.classList.add('btn-outline-secondary');
+    btn.disabled    = guessed.has(l) || wrong.includes(l);
+    if      (wrong.includes(l)) btn.classList.add('btn-danger');
+    else if (guessed.has(l))    btn.classList.add('btn-success');
+    else                        btn.classList.add('btn-outline-secondary');
     btn.addEventListener('click', () => guess(l));
     kb.appendChild(btn);
   });
 }
- 
+
+// ── Lógica de adivinanza ──────────────────────────────────────────────────────
 function guess(letter) {
+  if (guessed.has(letter) || wrong.includes(letter)) return;
+
   if (currentWord.includes(letter)) {
     guessed.add(letter);
-    const solved = currentWord.split('').every(l => guessed.has(l));
-    if (solved) {
+    renderWord();
+    renderKeyboard();
+    if (currentWord.split('').every(l => guessed.has(l))) {
       score += PTS_PER_WORD;
-      document.getElementById('scoreDisplay').textContent = score;
+      syncScore();
       showScoreToast(PTS_PER_WORD, true);
       currentIdx++;
-      setTimeout(startWord, 800);
+      setTimeout(startWord, 900);
     }
   } else {
     wrong.push(letter);
-    lives--;
-    score = Math.max(0, score - HANGMAN_PENALTY);
-    document.getElementById('scoreDisplay').textContent = score;
-    showScoreToast(HANGMAN_PENALTY, false);
-    document.getElementById('livesDisplay').textContent = '🦴'.repeat(Math.max(0, lives)) + '💀'.repeat(MAX_LIVES - lives);
-    document.getElementById('miloFace').textContent = MILO_FACES[MAX_LIVES - lives];
-    document.getElementById('wrongLetters').textContent = wrong.join(' ');
+    lives = Math.max(0, lives - 1);
+    score = Math.max(0, score - PENALTY_AMOUNT);
+    syncScore();
+    showScoreToast(PENALTY_AMOUNT, false);
+    updateHangman();
+    updateMiloFace();
+
+    $('wrongLetters').innerHTML = wrong.map(l => `<span class="wrong-badge">${l}</span>`).join('');
+
+    const wd = $('wordDisplay');
+    wd.classList.remove('shake');
+    void wd.offsetWidth;
+    wd.classList.add('shake');
+    setTimeout(() => wd.classList.remove('shake'), 350);
+
+    renderWord();
+    renderKeyboard();
+
     if (lives <= 0) {
       guessed = new Set(currentWord.split(''));
       renderWord();
-      setTimeout(() => { currentIdx++; startWord(); }, 1200);
+      setTimeout(() => { currentIdx++; startWord(); }, 1500);
     }
   }
-  renderWord();
-  renderKeyboard();
 }
- 
+
+function syncScore() {
+  $('scoreDisplay').textContent       = score;
+  $('scoreDisplayBottom').textContent = score;
+}
+
+// ── Fin del juego ─────────────────────────────────────────────────────────────
 async function endGame(completed) {
-  const maxScore = totalWords * PTS_PER_WORD;
-  const pct = Math.round((score / Math.max(maxScore, 1)) * 100);
-  document.getElementById('winScore').textContent = score;
-  const $ = id => document.getElementById(id);
+  const maxScore = WORD_COUNT * PTS_PER_WORD;
+  const pct      = Math.round((score / Math.max(maxScore, 1)) * 100);
+
   let tier, stars, miloFile, msg, title;
   if (pct >= 70) {
     tier='excelente'; stars='⭐⭐⭐'; miloFile='milo_fest.png';
@@ -165,44 +467,55 @@ async function endGame(completed) {
     tier='mal'; stars='⭐'; miloFile='milo_llorando.png';
     msg='¡No te rindas! Tú puedes.'; title='¡Sigue intentando!';
   }
-  if ($('winMilo')) $('winMilo').src = STATIC_URL + 'img/' + miloFile;
+
+  if ($('winMilo'))    $('winMilo').src           = STATIC_URL + 'img/' + miloFile;
   if ($('winMessage')) $('winMessage').textContent = msg;
-  if ($('winTitle')) $('winTitle').textContent = title;
-  if ($('winStars')) $('winStars').textContent = stars;
+  if ($('winTitle'))   $('winTitle').textContent   = title;
+  if ($('winStars'))   $('winStars').textContent   = stars;
+  if ($('winScore'))   $('winScore').textContent   = score;
+
   const card = document.querySelector('#winOverlay .win-card');
-  if (card) { card.className = 'win-card'; card.classList.add('win-card--' + tier); }
+  if (card) card.className = 'win-card win-card--' + tier;
   if (tier === 'excelente' && typeof launchConfetti === 'function') launchConfetti();
   $('winOverlay').style.display = 'flex';
+
   try {
-    const res = await fetch(SAVE_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'X-CSRFToken': CSRF},
-      body: JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed })
+    const res  = await fetch(SAVE_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
+      body:    JSON.stringify({ game_id: GAME_ID, score, max_score: maxScore, time_spent: 0, completed })
     });
     const data = await res.json();
-    if (data.registro_pk && $('btnVolverPanel')) {
+    if (data.registro_pk && $('btnVolverPanel'))
       $('btnVolverPanel').href = '/talleres/mis-talleres/?revisado=' + data.registro_pk;
-    }
-  } catch(e) {}
+  } catch (e) {}
 }
- 
+
+// ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   if (VOCABULARY.length === 0) {
-    document.getElementById('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ No hay palabras en esta categoría todavía. Pídele al profesor que las añada.</div>';
-    document.getElementById('gameSection').style.display = 'block';
+    $('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ No hay palabras en esta categoría. Pídele al profesor que las añada.</div>';
+    $('gameSection').style.display = 'block';
     return;
   }
-  words = shuffle(VOCABULARY).slice(0, 8);
-  totalWords = words.length;
+  words        = selectWords(VOCABULARY);
+  totalWords   = words.length;
   PTS_PER_WORD = Math.max(1, Math.round(POINTS_REWARD / totalWords));
-  document.getElementById('totalWords').textContent = totalWords;
-  document.getElementById('gameSection').style.display = 'block';
-  startWord();
+
+  $('totalWords').textContent  = totalWords;
+  $('maxLivesBar').textContent = MAX_LIVES;
+
+  // En modo embedded el vocabulary_tab oculta el tab y ya muestra gameSection
+  // automáticamente → iniciar de inmediato.
+  // En modo normal esperar al clic del botón "¡Jugar!" del vocabulary_tab.
+  const vocabTab = document.querySelector('.vocab-tab-container');
+  if (vocabTab && vocabTab.style.display === 'none') {
+    // Embedded: el tab ya está oculto, arrancar directo
+    startWord();
+  } else {
+    document.getElementById('startGameBtn')
+      ?.addEventListener('click', startWord, { once: true });
+  }
 });
 </script>
-<style>
-.letter-box { display:inline-block; width:36px; height:44px; border-bottom:3px solid var(--primary); margin:0 4px; font-size:1.5rem; font-weight:700; text-align:center; line-height:44px; color:var(--primary); }
-.word-display { letter-spacing:2px; min-height:60px; }
-.kb-key { min-width:36px; font-weight:600; font-size:.85rem; }
-</style>
 {% endblock %}

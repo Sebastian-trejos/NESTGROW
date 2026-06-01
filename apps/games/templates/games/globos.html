@@ -692,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cursor:pointer; user-select:none; gap:2px;
   box-shadow:inset -8px -8px 18px rgba(0,0,0,.18), 0 4px 14px rgba(0,0,0,.14);
   transition:transform .15s, opacity .28s;
+  clip-path: none;
 }
 .balloon-el::after {
   content:''; position:absolute; bottom:-14px; left:50%;
@@ -702,6 +703,20 @@ document.addEventListener('DOMContentLoaded', () => {
 .balloon-text  {
   color:#fff; font-weight:800; font-size:.76rem; text-align:center;
   padding:0 5px; text-shadow:0 1px 3px rgba(0,0,0,.45); line-height:1.2;
+  flex-shrink:0;
+}
+
+/* Imagen dentro del globo — restringida al tamaño del globo (90×105) */
+.balloon-img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 6px;
+  display: block;
+  pointer-events: none;
+  flex-shrink: 0;
+  max-width: 76px;
+  max-height: 62px;
 }
 
 /* Target word badge */

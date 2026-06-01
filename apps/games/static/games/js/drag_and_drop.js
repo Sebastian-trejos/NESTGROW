@@ -171,7 +171,7 @@ function initConnectGame(vocabulary, gameId, timeLimit, pointsReward, penaltyAmo
         <div class="connect-emoji-front">${renderEmojiVisual(item)}</div>
         <div class="connect-emoji-back">❓</div>
       </div>
-      <div class="connect-node-label">${item.word_es}</div>`;
+      <div class="connect-node-label">${item.word_en}</div>`;
 
     node.addEventListener('click', () => onNodeClick('emoji', id, node));
     emojiCol.appendChild(node);
@@ -184,7 +184,7 @@ function initConnectGame(vocabulary, gameId, timeLimit, pointsReward, penaltyAmo
     node.className    = 'connect-node connect-node--word mb-2';
     node.dataset.id   = id;
     node.dataset.word = item.word_en;
-    node.textContent  = item.word_en;
+    node.textContent  = item.word_es;
     node.addEventListener('click', () => onNodeClick('word', id, node));
     wordCol.appendChild(node);
   });

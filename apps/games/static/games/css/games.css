@@ -578,7 +578,7 @@
   font-weight: 700;
   color: var(--primary);
   letter-spacing: 0.3px;
-  min-height: 68px; /* igual que .connect-node base */
+  min-height: 68px;
 }
 
 /* Emoji interno */
@@ -607,11 +607,19 @@
 }
 
 .connect-node-label {
-  font-size: 0.7rem;
-  color: #aaa;
-  font-style: italic;
-  line-height: 1;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: 'Fredoka One', 'Nunito', cursive;
+  color: var(--primary);
+  line-height: 1.1;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
+
 
 /* Modo memoria: ocultar/mostrar cara del emoji */
 .connect-emoji-back {
@@ -691,7 +699,7 @@
   }
   .connect-node--word {
     font-size: 0.82rem;
-    min-height: 56px; /* igual al base en mobile */
+    min-height: 56px;
   }
   .connect-emoji-fallback {
     width: 40px;
