@@ -137,8 +137,10 @@
 
 .nav-icon { font-size:1.25rem; flex-shrink:0; position:relative;z-index:1; }
 .nav-info  { flex:1; min-width:0; position:relative;z-index:1; }
-.nav-en    { font-family:'Fredoka One',cursive; font-size:.88rem; line-height:1.2;
-             white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#333; }
+.nav-en    { font-family:'Fredoka One',cursive; font-size:.88rem; line-height:1.25;
+             white-space:normal; overflow:visible; color:#333;
+             display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+             word-break:break-word; }
 .nav-es    { font-size:.68rem; font-weight:700; color:#999; }
 .vocab-nav-item.active .nav-en { color:white; }
 .vocab-nav-item.active .nav-es { color:rgba(255,255,255,.75); }
@@ -372,7 +374,7 @@
   .vocab-nav-item.active { transform:none !important; }
   .nav-info { text-align:center; }
   .nav-badge { display:none; }
-  .nav-en { font-size:.78rem; white-space:normal; overflow:visible; text-overflow:clip; }
+  .nav-en { font-size:.74rem; white-space:normal; overflow:visible; -webkit-line-clamp:2; }
   .nav-es { display:none; }
 
   .vocab-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap:.5rem; }

@@ -85,30 +85,40 @@
   /* ══ TARJETAS ══ */
   .game-card {
     background: white;
-    border-radius: 26px;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
-    transition: transform 0.32s cubic-bezier(.22,1,.36,1), box-shadow 0.32s;
-    border: 4px solid transparent;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.05);
+    transition: transform 0.3s cubic-bezier(.22,1,.36,1), box-shadow 0.3s;
+    border: 2.5px solid transparent;
     text-decoration: none;
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
   .game-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 28px 60px rgba(0,0,0,0.18);
+    transform: translateY(-10px) scale(1.015);
+    box-shadow: 0 24px 52px rgba(0,0,0,0.14), 0 8px 20px rgba(0,0,0,0.08);
   }
-  .game-card.drag   { border-color: #6C63FF; }
-  .game-card.search { border-color: #FF6B6B; }
-  .game-card.puzzle { border-color: #4ECDC4; }
-  .game-card.paint  { border-color: #FFB347; }
-  .game-card.audio  { border-color: #9c94ff; }
-  .game-card.mem    { border-color: #a78bfa; }
-  .game-card.hang   { border-color: #FF6B6B; }
-  .game-card.glob   { border-color: #4ECDC4; }
+  .game-card.drag   { border-color: #ded8ff; }
+  .game-card.search { border-color: #ffd4d4; }
+  .game-card.puzzle { border-color: #c4f0ed; }
+  .game-card.paint  { border-color: #ffe9c4; }
+  .game-card.audio  { border-color: #ddd8ff; }
+  .game-card.mem    { border-color: #e4d8ff; }
+  .game-card.hang   { border-color: #ffd4d4; }
+  .game-card.glob   { border-color: #c4f0ed; }
+
+  .game-card:hover.drag   { border-color: #6C63FF; }
+  .game-card:hover.search { border-color: #FF6B6B; }
+  .game-card:hover.puzzle { border-color: #4ECDC4; }
+  .game-card:hover.paint  { border-color: #FFB347; }
+  .game-card:hover.audio  { border-color: #9c94ff; }
+  .game-card:hover.mem    { border-color: #a78bfa; }
+  .game-card:hover.hang   { border-color: #FF6B6B; }
+  .game-card:hover.glob   { border-color: #4ECDC4; }
 
   /* ── Banner ── */
   .game-banner {
-    height: 172px;
+    height: 160px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -116,7 +126,7 @@
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
-    gap: 6px;
+    gap: 8px;
   }
   /* Colores por tipo */
   .gb-drag   { background: linear-gradient(145deg, #5a52d5, #6C63FF, #9c94ff); }
@@ -124,44 +134,45 @@
   .gb-puzzle { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #7ee8e2); }
   .gb-paint  { background: linear-gradient(145deg, #e6982a, #FFB347, #FFE66D); }
   .gb-audio  { background: linear-gradient(145deg, #5a52d5, #7c6fff, #4ECDC4); }
-  .gb-mem    { background: linear-gradient(145deg, #8c7be8, #a78bfa, #FF6B6B); }
+  .gb-mem    { background: linear-gradient(145deg, #8c7be8, #a78bfa, #c0a8ff); }
   .gb-hang   { background: linear-gradient(145deg, #e85555, #FF6B6B, #FFB347); }
-  .gb-glob   { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #FF6B6B); }
+  .gb-glob   { background: linear-gradient(145deg, #3ab8b0, #4ECDC4, #7ee8e2); }
 
-  /* Brillo dinámico que cruza el banner */
+  /* Brillo que cruza el banner */
   .game-banner::before {
     content: '';
     position: absolute;
     top: -60%; left: -80%;
-    width: 60%; height: 200%;
-    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.18), transparent);
+    width: 55%; height: 220%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
     transform: skewX(-15deg);
-    animation: bannerShine 4s ease-in-out infinite;
+    animation: bannerShine 4.5s ease-in-out infinite;
     pointer-events: none;
   }
   @keyframes bannerShine {
     0%, 100% { left: -80%; }
     50%       { left: 140%; }
   }
+
   /* Puntos decorativos */
   .game-banner::after {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-      radial-gradient(circle 2.5px at 12% 18%, rgba(255,255,255,0.35) 0%, transparent 100%),
-      radial-gradient(circle 1.5px at 88% 14%, rgba(255,255,255,0.28) 0%, transparent 100%),
-      radial-gradient(circle 2px   at 80% 82%, rgba(255,255,255,0.28) 0%, transparent 100%),
-      radial-gradient(circle 1.5px at 18% 80%, rgba(255,255,255,0.22) 0%, transparent 100%),
+      radial-gradient(circle 2.5px at 12% 18%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 88% 14%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(circle 2px   at 80% 82%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 18% 80%, rgba(255,255,255,0.25) 0%, transparent 100%),
       radial-gradient(circle 1px   at 50% 10%, rgba(255,255,255,0.2)  0%, transparent 100%);
     pointer-events: none;
   }
 
-  /* Ícono principal — grande y flotante */
+  /* Ícono principal */
   .gb-main-icon {
-    font-size: 4rem;
+    font-size: 3.6rem;
     color: white;
-    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.28));
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.3));
     position: relative;
     z-index: 2;
     animation: gbIconFloat 3.2s ease-in-out infinite;
@@ -170,9 +181,8 @@
   }
   @keyframes gbIconFloat {
     0%,100% { transform: translateY(0) scale(1); }
-    50%      { transform: translateY(-7px) scale(1.08); }
+    50%      { transform: translateY(-8px) scale(1.1); }
   }
-  /* Delay distinto por posición en grid */
   .col-sm-6:nth-child(2) .gb-main-icon { animation-delay: 0.5s; }
   .col-sm-6:nth-child(3) .gb-main-icon { animation-delay: 1s; }
   .col-sm-6:nth-child(4) .gb-main-icon { animation-delay: 1.5s; }
@@ -180,37 +190,114 @@
   .col-sm-6:nth-child(6) .gb-main-icon { animation-delay: 0.8s; }
 
   .game-card:hover .gb-main-icon {
-    transform: translateY(-10px) scale(1.22) !important;
-    filter: drop-shadow(0 10px 24px rgba(0,0,0,0.35));
+    transform: translateY(-12px) scale(1.25) !important;
+    filter: drop-shadow(0 12px 26px rgba(0,0,0,0.38));
     animation: none;
   }
 
-  /* Nombre del tipo de juego — visible en el banner */
+  /* Nombre del tipo */
   .gb-type-name {
     font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    color: rgba(255,255,255,0.95);
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.96);
     letter-spacing: 0.5px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
     position: relative;
     z-index: 2;
-    background: rgba(0,0,0,0.18);
+    background: rgba(0,0,0,0.2);
     padding: 3px 14px;
     border-radius: 50px;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.3);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+
+  /* ── Cuerpo de la card ── */
+  .game-card-body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  /* Badges superiores */
+  .gc-top-badges {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .gc-cat-badge {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 700;
   }
 
   /* Badge dificultad */
   .diff-badge {
     font-family: 'Fredoka One', cursive;
-    font-size: 0.85rem;
-    padding: 6px 14px;
+    font-size: 0.8rem;
+    padding: 4px 12px;
     border-radius: 50px;
+    white-space: nowrap;
   }
-  .diff-easy { background: #e6faf8; color: #4ECDC4; }
-  .diff-medium { background: #fff8eb; color: #FFB347; }
-  .diff-hard { background: #ffeaea; color: #FF6B6B; }
+  .diff-easy   { background: #e6faf8; color: #2ab5ac; }
+  .diff-medium { background: #fff8eb; color: #e09a2a; }
+  .diff-hard   { background: #ffeaea; color: #e05555; }
+
+  /* Título y descripción */
+  .gc-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: var(--primary);
+    line-height: 1.25;
+    margin: 0;
+  }
+  .gc-desc {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 600;
+    line-height: 1.45;
+    margin: 0;
+    flex: 1;
+  }
+
+  /* Pie de la card */
+  .gc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1.5px solid #f0eeff;
+  }
+  .gc-points {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #e09a2a;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .gc-play-btn {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    color: white;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 3px 12px rgba(108,99,255,0.3);
+  }
+  .game-card:hover .gc-play-btn {
+    transform: scale(1.06);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.5);
+  }
 
   /* Empty state */
   .empty-state {
@@ -219,7 +306,7 @@
     padding: 4rem 2rem;
     text-align: center;
     box-shadow: 0 10px 35px rgba(108,99,255,0.1);
-    border: 4px dashed #e8e4ff;
+    border: 3px dashed #e8e4ff;
   }
 </style>
 {% endblock %}
@@ -340,29 +427,26 @@
         </div>
 
         <!-- Info del juego -->
-        <div class="p-3">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="badge rounded-pill fw-bold px-3 py-1"
-                  style="background:{{ game.category.color }}20;color:{{ game.category.color }};font-size:0.8rem">
+        <div class="game-card-body">
+          <div class="gc-top-badges">
+            <span class="gc-cat-badge"
+                  style="background:{{ game.category.color }}18;color:{{ game.category.color }}">
               {{ game.category.icon|safe }} {{ game.category.name }}
             </span>
             <span class="diff-badge {% if game.difficulty == 1 %}diff-easy{% elif game.difficulty == 2 %}diff-medium{% else %}diff-hard{% endif %}">
-              {% if game.difficulty == 1 %}<i class="bi bi-star-fill"></i> Fácil
-              {% elif game.difficulty == 2 %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Medio
-              {% else %}<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> Difícil{% endif %}
+              {% if game.difficulty == 1 %}⭐ Fácil
+              {% elif game.difficulty == 2 %}⭐⭐ Medio
+              {% else %}⭐⭐⭐ Difícil{% endif %}
             </span>
           </div>
-          <h4 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.2rem;line-height:1.2">{{ game.title }}</h4>
-          <p class="text-muted fw-bold mb-2" style="font-size:0.82rem;line-height:1.4">
-            {{ game.description|truncatewords:8 }}
-          </p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="fw-bold" style="color:#FFB347;font-size:1.1rem">
-              <i class="bi bi-star-fill me-1"></i>+{{ game.points_reward }} pts
+          <p class="gc-title">{{ game.title }}</p>
+          <p class="gc-desc">{{ game.description|truncatewords:10 }}</p>
+          <div class="gc-footer">
+            <span class="gc-points">
+              <i class="bi bi-star-fill" style="color:#FFB347"></i>+{{ game.points_reward }} pts
             </span>
-            <span class="btn fw-bold px-4 py-2"
-                  style="background:linear-gradient(135deg, #6C63FF, #9c94ff);color:white;border-radius:50px;font-family:'Fredoka One',cursive;font-size:1rem">
-              <i class="bi bi-play-fill me-1"></i>¡Jugar!
+            <span class="gc-play-btn">
+              <i class="bi bi-play-fill"></i>¡Jugar!
             </span>
           </div>
         </div>

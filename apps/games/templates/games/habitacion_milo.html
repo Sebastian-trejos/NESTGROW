@@ -545,6 +545,7 @@
   <a href="{% url 'accounts:dashboard_estudiante' %}" class="room-hud hud-panel"><i class="bi bi-caret-left-fill"></i>Mi Panel</a>
   <a href="{% url 'games:tienda' %}" class="room-hud hud-shop"><i class="bi bi-shop"></i> Tienda</a>
 
+
   <!-- ── Milo ────────────────────────────────────────── -->
   <div class="milo-lector" id="miloLector">
     <div class="milo-bubble" id="miloBubble" style="min-width:180px">
@@ -973,41 +974,20 @@ let miloMouseStartX = 0, miloMouseStartY = 0;
 let miloMoved     = false;
 const DRAG_THRESHOLD = 6; // px — menos de esto se considera click
 
-let miloBubbleTimer = null;
+let initialGreetDismissed = false;
 
-function mostrarMiloBubble() {
-  const bubble = document.getElementById('miloBubble');
-  const txt    = document.getElementById('miloBubbleText');
-  const img    = document.getElementById('miloImg');
-  if (txt)    txt.textContent = MILO_HAB_MSG;
-  if (bubble) {
-    bubble.style.opacity = '1';
-    bubble.style.transform = 'translateX(-30%) translateY(0)';
+/* ─────────────────────────────
+   HOVER: descarta saludo inicial → vuelve a saludando
+───────────────────────────── */
+milo.addEventListener('mouseenter', () => {
+  if (!initialGreetDismissed) {
+    initialGreetDismissed = true;
+    const bubble = document.getElementById('miloBubble');
+    const img    = document.getElementById('miloImg');
+    if (bubble) { bubble.style.opacity = ''; bubble.style.transform = ''; }
+    if (img && !estaDormido) img.src = MILO_DEFAULT_IMG;
   }
-  if (img) {
-    img.style.opacity = '0';
-    setTimeout(() => {
-      img.src = MILO_CLICK_IMG;
-      img.style.transition = 'opacity 0.3s';
-      img.style.opacity = '1';
-    }, 150);
-  }
-  clearTimeout(miloBubbleTimer);
-  miloBubbleTimer = setTimeout(() => {
-    if (bubble) {
-      bubble.style.opacity = '';
-      bubble.style.transform = '';
-    }
-    if (img && !estaDormido) {
-      img.style.opacity = '0';
-      setTimeout(() => {
-        img.src = MILO_DEFAULT_IMG;
-        img.style.transition = 'opacity 0.3s';
-        img.style.opacity = '1';
-      }, 150);
-    }
-  }, 3500);
-}
+});
 
 milo.addEventListener("mousedown", (e) => {
   dragging = true;
@@ -1025,7 +1005,6 @@ document.addEventListener("mousemove", (e) => {
   const dy = Math.abs(e.clientY - miloMouseStartY);
   if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) miloMoved = true;
   if (!miloMoved) return;
-
   milo.style.left   = (e.clientX - offsetX) + "px";
   milo.style.top    = (e.clientY - offsetY) + "px";
   milo.style.bottom = "auto";
@@ -1034,69 +1013,59 @@ document.addEventListener("mousemove", (e) => {
 document.addEventListener("mouseup", () => {
   if (!dragging) return;
   dragging = false;
-
-  if (!miloMoved) {
-    mostrarMiloBubble();
-  } else {
-    checkBed();
-  }
+  if (miloMoved) checkBed();
   miloMoved = false;
 });
 
 /* ─────────────────────────────
    DETECTAR CAMA
+   La cama en h_dia.png está en el área SUPERIOR-IZQUIERDA.
+   Se usa el centro de Milo relativo al room.
+   cy < 0.50 excluye la posición inicial de Milo (standing ~54% desde top).
 ───────────────────────────── */
 function checkBed() {
   const miloRect = milo.getBoundingClientRect();
   const roomRect = room.getBoundingClientRect();
 
-  const bedZone = {
-    x1: roomRect.left,
-    x2: roomRect.left + roomRect.width * 0.35,
-    y1: roomRect.top + roomRect.height * 0.55,
-    y2: roomRect.bottom
-  };
+  // Posición del centro de Milo relativa al room (0 = izquierda/arriba, 1 = derecha/abajo)
+  const cx = (miloRect.left + miloRect.width  / 2 - roomRect.left) / roomRect.width;
+  const cy = (miloRect.top  + miloRect.height / 2 - roomRect.top)  / roomRect.height;
 
-  const estaEnCama =
-    miloRect.left > bedZone.x1 &&
-    miloRect.right < bedZone.x2 &&
-    miloRect.bottom > bedZone.y1;
+  // Hitbox de la cama: zona superior-izquierda del fondo h_dia.png
+  // La cama ocupa aprox. izq 6-35%, alto 18-70%; el colchón/almohada está en el 40% superior
+  // cy < 0.40 excluye la posición inicial de Milo (parado al pie, cy ≈ 50-60%)
+  const estaEnCama = cx < 0.40 && cy < 0.40;
 
-  if (estaEnCama && !estaDormido) {
-    dormirMilo();
-  }
-
-  if (!estaEnCama && estaDormido) {
-    despertarMilo(); // 👈 NUEVO
-  }
+  if (estaEnCama && !estaDormido) dormirMilo();
+  if (!estaEnCama && estaDormido) despertarMilo();
 }
 
 /* ─────────────────────────────
    MILO SE DUERME 🌙
 ───────────────────────────── */
 function dormirMilo() {
-  const img = document.getElementById("miloImg");
-
   estaDormido = true;
-
-  img.src = "{% static 'img/milo_dormido.png' %}";
-
-  room.style.background =
-    "url('{% static 'img/h_noche.png' %}') center center / cover no-repeat";
+  const img = document.getElementById('miloImg');
+  if (img) img.src = "{% static 'img/milo_dormido.png' %}";
+  room.style.setProperty(
+    'background',
+    "url('{% static 'img/h_noche.png' %}') center center / cover no-repeat",
+    'important'
+  );
 }
 
 /* ─────────────────────────────
    MILO SE DESPIERTA ☀️
 ───────────────────────────── */
 function despertarMilo() {
-  const img = document.getElementById("miloImg");
-
   estaDormido = false;
-
-  img.src = "{% static 'img/milo_saludando.png' %}";
-
-  room.style.background =
-    "url('{% static 'img/h_dia.png' %}') center center / cover no-repeat";
+  const img = document.getElementById('miloImg');
+  if (img) img.src = MILO_DEFAULT_IMG;
+  room.style.setProperty(
+    'background',
+    "url('{% static 'img/h_dia.png' %}') center center / cover no-repeat",
+    'important'
+  );
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1234,5 +1203,19 @@ function verItemDrag(btn) {
   const nombre = label ? label.textContent.trim() : '?';
   verItem(nombre, '', '');
 }
+
+/* ─────────────────────────────
+   ESTADO INICIAL: milo_asombrado2 + burbuja al abrir la página
+   Persiste hasta que el estudiante pase el mouse por encima de Milo
+───────────────────────────── */
+(function initMiloGreeting() {
+  const img    = document.getElementById('miloImg');
+  const bubble = document.getElementById('miloBubble');
+  if (img)    img.src = MILO_CLICK_IMG;
+  if (bubble) {
+    bubble.style.opacity   = '1';
+    bubble.style.transform = 'translateX(-30%) translateY(0)';
+  }
+})();
 </script>
 {% endblock %}

@@ -10,7 +10,7 @@
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: url("{% static 'img/histo_bg.jpeg' %}") center center / cover no-repeat;
+    background: url("{% static 'img/bg_nubes.png' %}") center center / cover no-repeat;
     pointer-events: none;
   }
 
@@ -193,7 +193,31 @@
   }
   .buy-btn:hover { transform: translateY(-2px); }
   .buy-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .category-filter .btn.active { background: var(--primary); color: white; }
+  /* Botones de filtro — fondo blanco */
+  .category-filter .filter-btn {
+    background: white;
+    color: var(--primary);
+    border: 2px solid #d8d2ff;
+    font-weight: 700;
+    transition: all 0.22s cubic-bezier(.22,1,.36,1);
+  }
+  .category-filter .filter-btn:hover {
+    background: #f4f2ff;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(108,99,255,0.18);
+  }
+  .category-filter .filter-btn.active {
+    background: linear-gradient(135deg, #6C63FF, #9c94ff);
+    color: white;
+    border-color: #6C63FF;
+    box-shadow: 0 6px 20px rgba(108,99,255,0.38);
+  }
+  .category-filter .filter-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
   .toast-notify {
     position: fixed;
     bottom: 30px;
@@ -253,11 +277,11 @@
 
   <!-- Category Filter -->
   <div class="d-flex gap-2 flex-wrap mb-4 category-filter">
-    <button class="btn rounded-pill fw-bold active" onclick="filterCategory('all', this)">All</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('mueble', this)"><i class="bi bi-house-door-fill"></i> Furniture</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('decoracion', this)"><i class="bi bi-camera-fill"></i> Decoration</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('electronico', this)"><i class="bi bi-tv-fill"></i> Electronics</button>
-    <button class="btn btn-outline-secondary rounded-pill fw-bold" onclick="filterCategory('planta', this)"><i class="bi bi-bug-fill"></i> Nature</button>
+    <button class="btn filter-btn rounded-pill active" onclick="filterCategory('all', this)"><i class="bi bi-grid-fill me-1"></i>All</button>
+    <button class="btn filter-btn rounded-pill" onclick="filterCategory('mueble', this)"><i class="bi bi-house-door-fill me-1"></i>Furniture</button>
+    <button class="btn filter-btn rounded-pill" onclick="filterCategory('decoracion', this)"><i class="bi bi-camera-fill me-1"></i>Decoration</button>
+    <button class="btn filter-btn rounded-pill" onclick="filterCategory('electronico', this)"><i class="bi bi-tv-fill me-1"></i>Electronics</button>
+    <button class="btn filter-btn rounded-pill" onclick="filterCategory('planta', this)"><i class="bi bi-bug-fill me-1"></i>Nature</button>
   </div>
 
   <!-- Info banner -->
@@ -329,7 +353,7 @@
   <div class="text-center py-5">
     <div style="font-size:5rem"><i class="bi bi-shop"></i></div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡La tienda está vacía!</h4>
-    <p class="text-muted fw-bold">El profesor añadirá objetos pronto.</p>
+    <p class="text-muted fw-bold">No hay objetos disponibles en este momento.</p>
   </div>
   {% endif %}
 

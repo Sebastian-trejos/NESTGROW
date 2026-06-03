@@ -74,15 +74,15 @@ class Game(TimeStampedModel, ActiveModel):
     # Tiempo límite en segundos según tipo de juego (0 = sin límite)
     # Juegos creativos o basados en vocabulario no tienen presión de tiempo
     TIEMPO_POR_TIPO = {
-        'drag_and_drop':   90,
-        'word_search':    120,
+        'drag_and_drop':  300,
+        'word_search':    300,
         'puzzle':           0,
-        'audio_matching':  60,
+        'audio_matching': 300,
         'painting':         0,
-        'memoria':         90,
+        'memoria':        300,
         'ahorcado':         0,
-        'globos':          60,
-        'comparacion':     90,
+        'globos':         300,
+        'comparacion':    300,
     }
 
     title = models.CharField(max_length=200)
@@ -101,8 +101,8 @@ class Game(TimeStampedModel, ActiveModel):
     @property
     def time_limit(self):
         if self.game_type == 'drag_and_drop':
-            # Easy: no timer, Medium: 90s, Hard: 75s
-            return {1: 0, 2: 90, 3: 75}.get(self.difficulty, 90)
+            # Easy: no timer, Medium/Hard: 5 min
+            return {1: 0, 2: 300, 3: 300}.get(self.difficulty, 300)
         return self.TIEMPO_POR_TIPO.get(self.game_type, 0)
 
     @property
