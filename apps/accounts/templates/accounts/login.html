@@ -6,10 +6,9 @@
 {% block extra_css %}
 <style>
   .login-page {
-    min-height: 90vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    background: linear-gradient(135deg, #f0eeff 0%, #ffe9e9 50%, #e9f9ff 100%);
     position: relative;
     overflow: hidden;
     padding: 2rem 0;
@@ -120,6 +119,10 @@
 {% endblock %}
 
 {% block content %}
+<!-- Capa de degradado fija que cubre todo el viewport por encima de bg_nubes -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:linear-gradient(135deg,#f0eeff 0%,#ffe9e9 50%,#e9f9ff 100%)"></div>
+
 <div class="login-page">
 
   <!-- Burbujas de fondo -->
@@ -197,7 +200,7 @@
           <div class="px-3 py-2 rounded-pill fw-bold"
                style="background:white;color:var(--accent);font-size:0.85rem;
                       box-shadow:0 4px 15px rgba(78,205,196,0.15)">
-            <i class="bi bi-controller-fill me-1" style="color:#4ECDC4"></i>Minijuegos
+            <i class="bi bi-controller me-1" style="color:#4ECDC4"></i>Minijuegos
           </div>
         </div>
       </div>

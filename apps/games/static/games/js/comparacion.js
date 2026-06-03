@@ -555,7 +555,6 @@ function initComparacion(opts) {
         ${imgHtml}
         ${placeholderHtml}
       </div>
-      <div class="comp-card-label">${v.word_es}</div>
     `;
 
     el.addEventListener('click', () => handleClick(el));

@@ -205,7 +205,7 @@
       <h3 class="font-fredoka mb-0" style="color:var(--primary)">
         <i class="bi bi-gear-wide-connected"></i> Panel de Gestión
       </h3>
-      <div class="text-muted fw-bold small">Períodos · Talleres · Juegos</div>
+      <div class="text-muted fw-bold small">Períodos · Talleres · Minijuegos</div>
     </div>
     <div class="d-flex gap-2 flex-wrap">
       <a href="{% url 'talleres:crear_periodo' %}" class="btn fw-bold rounded-pill"
@@ -306,7 +306,7 @@
                       <i class="bi bi-clipboard-fill"></i>{{ p.talleres_asignados.count }} taller{{ p.talleres_asignados.count|pluralize:"es" }}
                     </span>
                     <span class="periodo-badge-item" style="background:#fff3e0;color:#e65100">
-                      <i class="bi bi-controller"></i>{{ p.minijuegos_asignados.count }} juego{{ p.minijuegos_asignados.count|pluralize:"s" }}
+                      <i class="bi bi-controller"></i>{{ p.minijuegos_asignados.count }} minijuego{{ p.minijuegos_asignados.count|pluralize:"s" }}
                     </span>
                     {% if p.meta_historia > 0 %}
                     <span class="periodo-badge-item" style="background:#fff9c4;color:#f57f17">
@@ -442,7 +442,7 @@
                        class="tbl-btn" style="border-color:#888;color:#888" title="Vista previa" target="_blank">
                       <i class="bi bi-eye-fill"></i>
                     </a>
-                    <a href="{% url 'talleres:eliminar' pk=taller.pk %}"
+                    <a href="{% url 'talleres:eliminar' pk=taller.pk %}?next={% url 'talleres:lista_periodos' %}"
                        class="tbl-btn" style="border-color:#FF6B6B;color:#FF6B6B" title="Eliminar">
                       <i class="bi bi-trash-fill"></i>
                     </a>
@@ -473,7 +473,7 @@
     <div class="col-md-6">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="mgmt-section-title mb-0">
-          <i class="bi bi-controller-fill"></i>Juegos
+          <i class="bi bi-controller"></i>Minijuegos
         </div>
         <div class="d-flex gap-1">
           <a href="{% url 'games:gestionar_categorias' %}"
@@ -494,7 +494,7 @@
             <thead style="background:#f8f6ff">
               <tr>
                 <th class="ps-3" style="width:2rem;color:var(--primary)"></th>
-                <th style="color:var(--primary)">Juego</th>
+                <th style="color:var(--primary)">Minijuego</th>
                 <th class="text-center" style="color:var(--primary)">Estado</th>
                 <th class="text-center" style="color:var(--primary)">Acciones</th>
               </tr>
@@ -542,7 +542,7 @@
                        class="tbl-btn" style="border-color:#FFB347;color:#FFB347" title="Editar">
                       <i class="bi bi-pencil-fill"></i>
                     </a>
-                    <a href="{% url 'games:eliminar_juego' juego.pk %}"
+                    <a href="{% url 'games:eliminar_juego' juego.pk %}?next={% url 'talleres:lista_periodos' %}"
                        class="tbl-btn" style="border-color:#FF6B6B;color:#FF6B6B" title="Eliminar">
                       <i class="bi bi-trash-fill"></i>
                     </a>
@@ -559,11 +559,11 @@
       <div class="nestgrow-card p-4 text-center">
         <div style="width:52px;height:52px;border-radius:50%;background:#f0eeff;
                     display:flex;align-items:center;justify-content:center;margin:0 auto 0.6rem">
-          <i class="bi bi-controller-fill" style="font-size:1.4rem;color:var(--primary)"></i>
+          <i class="bi bi-controller" style="font-size:1.4rem;color:var(--primary)"></i>
         </div>
-        <p class="text-muted small fw-bold mb-2">Aún no hay juegos.</p>
+        <p class="text-muted small fw-bold mb-2">Aún no hay minijuegos.</p>
         <a href="{% url 'games:crear_juego' %}" class="btn btn-nestgrow btn-primary-nestgrow btn-sm">
-          <i class="bi bi-plus-circle-fill me-1"></i>Crear juego
+          <i class="bi bi-plus-circle-fill me-1"></i>Crear minijuego
         </a>
       </div>
       {% endif %}

@@ -488,3 +488,37 @@ def editar_perfil(request):
     if request.user.role == 'profesor':
         return redirect('accounts:editar_perfil_profesor')
     return redirect('accounts:editar_perfil_estudiante')
+
+
+# ── Eliminar cuenta propia ────────────────────────────────────────────────────
+
+@login_required
+def eliminar_cuenta(request):
+    """El usuario elimina su propia cuenta (requiere confirmación)."""
+    if request.method == 'POST':
+        user = request.user
+        logout(request)
+        user.delete()
+        messages.success(request, '✅ Tu cuenta ha sido eliminada correctamente.')
+        return redirect('core:home')
+    return render(request, 'accounts/confirmar_eliminar_cuenta.html', {
+        'usuario': request.user,
+    })
+
+
+# ── Eliminar cuenta de estudiante (acción del profesor) ──────────────────────
+
+@login_required
+@profesor_required
+@require_POST
+def eliminar_cuenta_estudiante(request, pk):
+    """El profesor elimina la cuenta de un estudiante de su salón."""
+    estudiante = get_object_or_404(EstudianteProfile, pk=pk)
+    if not estudiante.salon or estudiante.salon.profesor != request.user.profesor_profile:
+        messages.error(request, '⛔ No tienes permiso para eliminar este estudiante.')
+        return redirect('accounts:dashboard_profesor')
+    salon_pk = estudiante.salon.pk
+    nombre = estudiante.user.get_full_name() or estudiante.user.username
+    estudiante.user.delete()
+    messages.success(request, f'🗑️ La cuenta de {nombre} ha sido eliminada.')
+    return redirect('accounts:detalle_salon', pk=salon_pk)

@@ -67,6 +67,7 @@
               <th style="min-width:200px"><i class="bi bi-envelope-fill me-1"></i>Correo acudiente</th>
               <th class="text-center"><i class="bi bi-speedometer2 me-1"></i>Nivel</th>
               <th class="text-center"><i class="bi bi-star-fill" style="color:#f0a500"></i> Aventura</th>
+              <th class="text-center" style="width:50px"></th>
             </tr>
           </thead>
           <tbody>
@@ -115,6 +116,21 @@
                 <span class="fw-bold" style="color:#f0a500">
                   <i class="bi bi-star-fill me-1"></i>{{ est.total_estrellas_historia }}
                 </span>
+              </td>
+
+              <!-- Eliminar estudiante (fuera del form principal) -->
+              <td class="text-center">
+                <form method="post"
+                      action="{% url 'accounts:eliminar_cuenta_estudiante' est.pk %}"
+                      onsubmit="return confirm('¿Eliminar la cuenta de {{ est.user.get_full_name|default:est.user.username }}? Esta acción no se puede deshacer.')">
+                  {% csrf_token %}
+                  <button type="submit"
+                          class="btn btn-sm rounded-circle"
+                          style="width:32px;height:32px;padding:0;background:#fff5f5;color:#c62828;border:1px solid #ffcdd2"
+                          title="Eliminar cuenta">
+                    <i class="bi bi-trash3-fill" style="font-size:0.75rem"></i>
+                  </button>
+                </form>
               </td>
             </tr>
             {% endfor %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Eliminar cuenta - NestGrow{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width:520px">
+  <div class="nestgrow-card p-5 text-center">
+
+    <div style="font-size:4rem">⚠️</div>
+    <h3 class="font-fredoka mt-3" style="color:var(--secondary)">¿Eliminar tu cuenta?</h3>
+
+    <p class="fw-bold text-muted mt-2">
+      Vas a eliminar permanentemente la cuenta de
+      <strong style="color:var(--primary)">{{ usuario.get_full_name|default:usuario.username }}</strong>.
+    </p>
+    <p class="fw-bold small" style="color:#FF6B6B">
+      Esta acción <u>no se puede deshacer</u>. Se eliminarán todos tus datos,
+      progreso, logros e historial.
+    </p>
+
+    <div class="d-flex gap-3 justify-content-center mt-4">
+      {% if usuario.role == 'profesor' %}
+        <a href="{% url 'accounts:editar_perfil_profesor' %}"
+           class="btn btn-outline-secondary rounded-pill px-4 fw-bold">Cancelar</a>
+      {% else %}
+        <a href="{% url 'accounts:editar_perfil_estudiante' %}"
+           class="btn btn-outline-secondary rounded-pill px-4 fw-bold">Cancelar</a>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit"
+                class="btn btn-danger rounded-pill px-4 fw-bold">
+          🗑️ Sí, eliminar mi cuenta
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -11,9 +11,11 @@
       <br>Esta acción <strong>no se puede deshacer</strong>.
     </p>
     <div class="d-flex gap-3 justify-content-center mt-4">
-      <a href="{% url 'talleres:lista' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+      <a href="{% if next_url %}{{ next_url }}{% else %}{% url 'talleres:lista' %}{% endif %}"
+         class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
       <form method="post">
         {% csrf_token %}
+        {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
         <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
           Sí, eliminar
         </button>

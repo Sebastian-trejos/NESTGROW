@@ -14,6 +14,7 @@
 
     <form method="post" class="d-flex gap-3 justify-content-center mt-4">
       {% csrf_token %}
+      {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
       <button type="submit" class="btn btn-nestgrow btn-danger-nestgrow">
         🗑️ Sí, eliminar
       </button>

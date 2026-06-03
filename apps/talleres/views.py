@@ -134,12 +134,14 @@ def editar_taller(request, pk):
 @profesor_required
 def eliminar_taller(request, pk):
     taller = get_object_or_404(Taller, pk=pk, profesor=request.user)
+    next_url = request.GET.get('next') or request.POST.get('next', '')
     if request.method == 'POST':
         titulo = taller.titulo
         taller.delete()
         messages.success(request, f'🗑️ Taller "{titulo}" eliminado.')
-        return redirect('talleres:lista')
-    return render(request, 'talleres/profesor/confirmar_eliminar.html', {'taller': taller})
+        return redirect(next_url or 'talleres:lista')
+    return render(request, 'talleres/profesor/confirmar_eliminar.html', {
+        'taller': taller, 'next_url': next_url})
 
 
 @login_required

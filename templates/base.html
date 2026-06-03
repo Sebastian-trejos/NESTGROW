@@ -35,6 +35,22 @@
       50%      { transform: translateY(-8px) rotate(15deg); opacity:1; }
     }
   </style>
+
+  <!-- ══ OCULTAR PÁGINA DURANTE TRANSICIÓN ENTRANTE (antes de cualquier render) ══ -->
+  <script>
+  (function(){
+    var flags=['ngTransition','ngStars','ngCircles'];
+    for(var i=0;i<flags.length;i++){
+      if(sessionStorage.getItem(flags[i])==='1'){
+        document.documentElement.setAttribute('data-ng-loading','1');
+        break;
+      }
+    }
+  })();
+  </script>
+  <style>
+  html[data-ng-loading]{opacity:0}
+  </style>
 </head>
 <body class="nestgrow-body">
   <!-- Fondo: bg_profe para profesores, bg_nubes para el resto -->
@@ -666,6 +682,8 @@
         c.style.transition = 'none';
         c.style.transform  = 'translate(-50%,-50%) scale(1)';
       });
+      void circles[0].offsetWidth; /* forzar repaint para que el overlay tape antes de revelar */
+      document.documentElement.removeAttribute('data-ng-loading');
       setTimeout(descubrir, 120);
     }
   })();
@@ -792,11 +810,9 @@
       sessionStorage.removeItem('ngTransition');
       wrap.style.opacity = '1';
       order.forEach(cfgIdx => spawnPaw(cfgIdx, true));
-      document.documentElement.removeAttribute('data-ng-paws-entry');
-      void wrap.offsetWidth;
+      void wrap.offsetWidth; /* forzar repaint: overlay visible antes de mostrar la página */
+      document.documentElement.removeAttribute('data-ng-loading');
       setTimeout(descubrir, 350);
-    } else {
-      document.documentElement.removeAttribute('data-ng-paws-entry');
     }
 
     window.ngTransicion = { cubrir, descubrir };
@@ -905,6 +921,8 @@
       wrap.style.opacity = '1';
       bg.style.transition = 'none';
       bg.style.opacity = '1';
+      void bg.offsetWidth; /* forzar repaint: overlay visible antes de mostrar la página */
+      document.documentElement.removeAttribute('data-ng-loading');
       core.style.transition = 'none';
       core.style.transform = 'translate(-50%,-50%) scale(2.2) rotate(15deg)';
       stars.forEach((s, i) => {
@@ -947,22 +965,34 @@
     if (!a) return;
     const href = a.getAttribute('href') || '';
     if (!href || href.startsWith('#') || href.startsWith('javascript')) return;
+    if (a.getAttribute('target') === '_blank') return; /* nueva pestaña: sin transición */
+    if (a.hasAttribute('download')) return;             /* descarga: sin transición */
     const isInternal = !href.startsWith('http') || a.href.startsWith(location.origin);
     if (!isInternal) return;
 
-    /* 1. Atributo explícito: data-ng-trans="stars|circles|paws" */
+    e.preventDefault();
+    const url = a.href;
     const explicit = a.dataset.ngTrans;
-    if (explicit === 'stars')   { sessionStorage.setItem('ngStars',    '1'); return; }
-    if (explicit === 'circles') { sessionStorage.setItem('ngCircles',  '1'); return; }
-    if (explicit === 'paws')    { sessionStorage.setItem('ngTransition','1'); return; }
 
-    /* 2. Botón "Volver al panel" de los minijuegos → estrellas */
-    if (a.id === 'btnVolverPanel' || a.closest('#btnVolverPanel')) {
-      sessionStorage.setItem('ngStars', '1'); return;
+    const isStars   = explicit === 'stars' || a.id === 'btnVolverPanel' || !!a.closest('#btnVolverPanel');
+    const isCircles = explicit === 'circles';
+
+    /* Cubrir pantalla primero → luego navegar para evitar flash de la página nueva */
+    if (isStars) {
+      /* Estrellas: el fondo cubre en ~280 ms, navegamos a los 520 ms */
+      sessionStorage.setItem('ngStars', '1');
+      window.ngStars.explotar();
+      setTimeout(function() { window.location.href = url; }, 520);
+    } else if (isCircles) {
+      /* Círculos: usa el callback doneCb incorporado */
+      sessionStorage.setItem('ngCircles', '1');
+      window.ngCircles.cubrir(function() { window.location.href = url; });
+    } else {
+      /* Huellas (default + explicit paws): fondo cubre al instante, navegamos a los 600 ms */
+      sessionStorage.setItem('ngTransition', '1');
+      window.ngTransicion.cubrir();
+      setTimeout(function() { window.location.href = url; }, 600);
     }
-
-    /* 3. Catch-all: cualquier otra navegación interna → huellas de Milo */
-    sessionStorage.setItem('ngTransition', '1');
   });
   </script>
 

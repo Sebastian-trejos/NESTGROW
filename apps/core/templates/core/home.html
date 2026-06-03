@@ -33,7 +33,6 @@
   .hero {
     min-height: 92vh;
     display: flex; align-items: center;
-    background: linear-gradient(140deg, #f0eeff 0%, #ffe9f0 50%, #e6f9ff 100%);
     position: relative; overflow: hidden;
   }
   .hero-title {
@@ -128,6 +127,10 @@
 
 {% block content %}
 
+<!-- Capa de degradado fija que cubre todo el viewport por encima de bg_nubes -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:linear-gradient(140deg,#f0eeff 0%,#ffe9f0 50%,#e6f9ff 100%)"></div>
+
 <!-- ══════════════════════════════════════════════════════════════
      HERO
 ══════════════════════════════════════════════════════════════ -->
@@ -191,7 +194,7 @@
 
         <!-- Chips de features rápidas -->
         <div class="d-flex flex-wrap gap-2">
-          <span class="feat-chip"><i class="bi bi-controller-fill" style="color:#6C63FF"></i>10 Minijuegos</span>
+          <span class="feat-chip"><i class="bi bi-controller" style="color:#6C63FF"></i>10 Minijuegos</span>
           <span class="feat-chip"><i class="bi bi-map-fill" style="color:#4ECDC4"></i>Aventura</span>
           <span class="feat-chip"><i class="bi bi-trophy-fill" style="color:#FFB347"></i>Logros</span>
           <span class="feat-chip"><i class="bi bi-heart-fill" style="color:#FF6B6B"></i>100% Gratis</span>
@@ -227,7 +230,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <section class="feat-section" style="background:white">
   <!-- Decoraciones -->
-  <span class="deco fa" style="--dur:4s;top:10%;right:4%;font-size:2.5rem;color:#FFE66D;opacity:.7"><i class="bi bi-controller-fill"></i></span>
+  <span class="deco fa" style="--dur:4s;top:10%;right:4%;font-size:2.5rem;color:#FFE66D;opacity:.7"><i class="bi bi-controller"></i></span>
   <span class="deco fc" style="--dur:3s;bottom:15%;left:3%;font-size:1.8rem;color:#6C63FF;opacity:.5"><i class="bi bi-sparkle-fill"></i></span>
   <div class="deco deco-bubble" style="--c:rgba(108,99,255,0.07);width:300px;height:300px;bottom:-80px;right:-80px"></div>
   <div class="deco deco-bubble" style="--c:rgba(255,230,109,0.1);width:180px;height:180px;top:10%;left:-40px"></div>
@@ -242,7 +245,7 @@
 
       <div class="col-lg-7">
         <div class="feat-badge" style="background:#f0eeff;color:#6C63FF">
-          <i class="bi bi-controller-fill"></i> Minijuegos educativos
+          <i class="bi bi-controller"></i> Minijuegos educativos
         </div>
         <h2 class="feat-title mb-3" style="color:#6C63FF">
           🎮 10 minijuegos<br>para aprender inglés

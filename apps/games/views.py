@@ -651,12 +651,15 @@ def editar_juego(request, pk):
 @profesor_required
 def eliminar_juego(request, pk):
     juego = get_object_or_404(Game, pk=pk)
+    next_url = request.GET.get('next') or request.POST.get('next', '')
     if request.method == 'POST':
         juego.delete()
-        messages.success(request, f'🗑️ Juego eliminado.')
-        return redirect('games:gestionar_juegos')
+        messages.success(request, '🗑️ Minijuego eliminado.')
+        return redirect(next_url or 'games:gestionar_juegos')
     return render(request, 'games/profesor/confirmar_eliminar.html', {
-        'objeto': juego, 'tipo': 'juego', 'volver': 'games:gestionar_juegos'})
+        'objeto': juego, 'tipo': 'minijuego',
+        'volver_url': next_url or None, 'volver': None if next_url else 'games:gestionar_juegos',
+        'next_url': next_url})
 
 
 @login_required

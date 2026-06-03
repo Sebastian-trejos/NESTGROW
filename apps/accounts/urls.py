@@ -28,6 +28,10 @@ urlpatterns = [
     path('avatar/guardar/', views.guardar_avatar, name='guardar_avatar'),
     path('unirse/', views.unirse_clase, name='unirse_clase'),
 
+    # Eliminar cuenta
+    path('perfil/eliminar/', views.eliminar_cuenta, name='eliminar_cuenta'),
+    path('estudiante/<int:pk>/eliminar-cuenta/', views.eliminar_cuenta_estudiante, name='eliminar_cuenta_estudiante'),
+
     # Legacy
     path('perfil/editar/', views.editar_perfil, name='editar_perfil'),
 ]

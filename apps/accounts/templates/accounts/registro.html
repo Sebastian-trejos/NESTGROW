@@ -38,7 +38,6 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #ddeeff 0%, #e8e4ff 35%, #d6eaff 65%, #ece8ff 100%);
   position: relative;
   overflow: hidden;
   padding: 2.5rem 0;
@@ -166,6 +165,10 @@
 {% endblock %}
 
 {% block content %}
+<!-- Capa de degradado fija que cubre todo el viewport por encima de bg_nubes -->
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background:linear-gradient(135deg,#ddeeff 0%,#e8e4ff 35%,#d6eaff 65%,#ece8ff 100%)"></div>
+
 <div class="register-page">
 
   <!-- ══════════════════════════ -->

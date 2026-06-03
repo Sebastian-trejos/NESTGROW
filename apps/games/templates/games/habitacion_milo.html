@@ -115,31 +115,31 @@
   /* Bocadillo de Milo */
   .milo-bubble {
     position: absolute;
-    bottom: calc(100% + 12px);
-    left: -200%;
-    transform: translateX(-30%);
+    bottom: calc(100% + 16px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
     background: white;
-    border-radius: 20px 20px 20px 6px;
-    padding: 12px 18px;
+    border-radius: 22px;
+    padding: 16px 28px;
     font-family: 'Fredoka One', cursive;
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     color: #6C63FF;
     white-space: nowrap;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s, transform 0.3s;
-    transform: translateX(-30%) translateY(6px);
     z-index: 30;
     border: 2.5px solid #e0d8ff;
-    min-width: 160px;
+    min-width: 220px;
     text-align: center;
   }
   .milo-bubble::after {
     content: '';
     position: absolute;
-    bottom: -10px; left: 22px;
-    border: 6px solid transparent;
+    bottom: -12px; left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
     border-top-color: white;
   }
   /* hover no muestra el bubble — lo controla JS */
@@ -545,6 +545,17 @@
   <a href="{% url 'accounts:dashboard_estudiante' %}" class="room-hud hud-panel"><i class="bi bi-caret-left-fill"></i>Mi Panel</a>
   <a href="{% url 'games:tienda' %}" class="room-hud hud-shop"><i class="bi bi-shop"></i> Tienda</a>
 
+
+  <!-- ── Hitbox invisible de la cama ─────────────────── -->
+  <!-- Ajustar left/top/width/height según la posición real de la cama en h_dia.png -->
+  <div id="bedHitbox" style="
+    position: absolute;
+    left: 0%;  top: 28%;
+    width: 30%; height: 44%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+  "></div>
 
   <!-- ── Milo ────────────────────────────────────────── -->
   <div class="milo-lector" id="miloLector">
@@ -985,7 +996,7 @@ milo.addEventListener('mouseenter', () => {
     const bubble = document.getElementById('miloBubble');
     const img    = document.getElementById('miloImg');
     if (bubble) { bubble.style.opacity = ''; bubble.style.transform = ''; }
-    if (img && !estaDormido) img.src = MILO_DEFAULT_IMG;
+    if (img && !estaDormido) { img.src = MILO_DEFAULT_IMG; img.style.transform = ''; }
   }
 });
 
@@ -1008,6 +1019,8 @@ document.addEventListener("mousemove", (e) => {
   milo.style.left   = (e.clientX - offsetX) + "px";
   milo.style.top    = (e.clientY - offsetY) + "px";
   milo.style.bottom = "auto";
+  // Revertir a modo día en tiempo real si Milo sale de la zona de la cama
+  if (estaDormido) checkBed();
 });
 
 document.addEventListener("mouseup", () => {
@@ -1018,26 +1031,19 @@ document.addEventListener("mouseup", () => {
 });
 
 /* ─────────────────────────────
-   DETECTAR CAMA
-   La cama en h_dia.png está en el área SUPERIOR-IZQUIERDA.
-   Se usa el centro de Milo relativo al room.
-   cy < 0.50 excluye la posición inicial de Milo (standing ~54% desde top).
+   DETECTAR CAMA — colisión AABB entre Milo y #bedHitbox
 ───────────────────────────── */
 function checkBed() {
   const miloRect = milo.getBoundingClientRect();
-  const roomRect = room.getBoundingClientRect();
+  const bedRect  = document.getElementById('bedHitbox').getBoundingClientRect();
 
-  // Posición del centro de Milo relativa al room (0 = izquierda/arriba, 1 = derecha/abajo)
-  const cx = (miloRect.left + miloRect.width  / 2 - roomRect.left) / roomRect.width;
-  const cy = (miloRect.top  + miloRect.height / 2 - roomRect.top)  / roomRect.height;
+  const overlap = miloRect.right  > bedRect.left  &&
+                  miloRect.left   < bedRect.right  &&
+                  miloRect.bottom > bedRect.top    &&
+                  miloRect.top    < bedRect.bottom;
 
-  // Hitbox de la cama: zona superior-izquierda del fondo h_dia.png
-  // La cama ocupa aprox. izq 6-35%, alto 18-70%; el colchón/almohada está en el 40% superior
-  // cy < 0.40 excluye la posición inicial de Milo (parado al pie, cy ≈ 50-60%)
-  const estaEnCama = cx < 0.40 && cy < 0.40;
-
-  if (estaEnCama && !estaDormido) dormirMilo();
-  if (!estaEnCama && estaDormido) despertarMilo();
+  if (overlap && !estaDormido) dormirMilo();
+  if (!overlap && estaDormido) despertarMilo();
 }
 
 /* ─────────────────────────────
@@ -1046,7 +1052,7 @@ function checkBed() {
 function dormirMilo() {
   estaDormido = true;
   const img = document.getElementById('miloImg');
-  if (img) img.src = "{% static 'img/milo_dormido.png' %}";
+  if (img) { img.src = "{% static 'img/milo_dormido.png' %}"; img.style.transform = 'scale(1.22)'; }
   room.style.setProperty(
     'background',
     "url('{% static 'img/h_noche.png' %}') center center / cover no-repeat",
@@ -1060,7 +1066,7 @@ function dormirMilo() {
 function despertarMilo() {
   estaDormido = false;
   const img = document.getElementById('miloImg');
-  if (img) img.src = MILO_DEFAULT_IMG;
+  if (img) { img.src = MILO_DEFAULT_IMG; img.style.transform = ''; }
   room.style.setProperty(
     'background',
     "url('{% static 'img/h_dia.png' %}') center center / cover no-repeat",
@@ -1211,10 +1217,10 @@ function verItemDrag(btn) {
 (function initMiloGreeting() {
   const img    = document.getElementById('miloImg');
   const bubble = document.getElementById('miloBubble');
-  if (img)    img.src = MILO_CLICK_IMG;
+  if (img)    { img.src = MILO_CLICK_IMG; img.style.transform = 'scale(0.88)'; }
   if (bubble) {
     bubble.style.opacity   = '1';
-    bubble.style.transform = 'translateX(-30%) translateY(0)';
+    bubble.style.transform = 'translateX(-50%) translateY(0)';
   }
 })();
 </script>
