@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}¡Taller completado! — {{ taller.titulo }}{% endblock %}
+{% block title %}Workshop completed! — {{ taller.titulo }}{% endblock %}
 
 {% block extra_js %}
 <script>document.addEventListener('DOMContentLoaded', function(){ if(typeof launchConfetti==='function') launchConfetti(); });</script>
@@ -34,7 +34,7 @@
   <!-- Trofeo + título -->
   <div class="text-center mb-4">
     <div class="trofeo-anim" style="font-size:4rem">🏆</div>
-    <h2 class="font-fredoka mt-2" style="color:var(--primary)">¡Taller completado!</h2>
+    <h2 class="font-fredoka mt-2" style="color:var(--primary)">Workshop completed!</h2>
     <p class="text-muted">{{ taller.titulo }}</p>
   </div>
 
@@ -46,21 +46,21 @@
         <div class="fw-bold" style="font-size:2rem;color:{% if nota >= 4.0 %}#28a745{% elif nota >= 3.0 %}#e67e22{% else %}#e53935{% endif %}">
           {{ nota }}
         </div>
-        <div class="text-muted small fw-bold">Nota</div>
+        <div class="text-muted small fw-bold">Grade</div>
       </div>
       <div class="reward-card" style="background:#e8f4ff">
         <div class="fw-bold" style="font-size:2rem;color:var(--primary)">{{ pct }}%</div>
-        <div class="text-muted small fw-bold">Porcentaje</div>
+        <div class="text-muted small fw-bold">Percentage</div>
       </div>
       {% endif %}
       <div class="reward-card" style="background:#fff9ee">
         <div class="fw-bold" style="font-size:2rem;color:#e67e22">{{ sesion.puntos_obtenidos }}</div>
-        <div class="text-muted small fw-bold">Puntos XP</div>
+        <div class="text-muted small fw-bold">XP Points</div>
       </div>
       {% if sesion.huesos_ganados %}
       <div class="reward-card" style="background:#fff3e0">
         <div class="hueso-anim fw-bold" style="font-size:2rem">🦴 {{ sesion.huesos_ganados }}</div>
-        <div class="text-muted small fw-bold">Huesos</div>
+        <div class="text-muted small fw-bold">Bones</div>
       </div>
       {% endif %}
     </div>
@@ -69,14 +69,14 @@
   <!-- Resumen de respuestas -->
   {% if resumen %}
   <div class="nestgrow-card p-4 mb-4">
-    <h5 class="font-fredoka mb-3" style="color:var(--primary)">📝 Resumen de respuestas</h5>
+    <h5 class="font-fredoka mb-3" style="color:var(--primary)">📝 Answer Summary</h5>
     {% for item in resumen %}
     {% with resp=item.respuesta preg=item.pregunta %}
     <div class="resp-item {% if preg.tipo_respuesta == 'dibujo' %}resp-dibujo{% elif preg.tipo_respuesta == 'parrafo' %}resp-parrafo{% elif resp and resp.es_correcta %}resp-correcta{% else %}resp-incorrecta{% endif %}">
       <div class="fw-bold mb-1" style="font-size:.95rem">{{ preg.enunciado }}</div>
       {% if resp %}
         {% if preg.tipo_respuesta == 'parrafo' %}
-          <div class="text-muted small">✍️ {{ resp.texto_respuesta|default:"Sin respuesta" }}</div>
+          <div class="text-muted small">✍️ {{ resp.texto_respuesta|default:"No answer" }}</div>
         {% elif preg.tipo_respuesta == 'dibujo' %}
           {% if resp.dibujo_data %}
           <div class="mt-2">
@@ -85,17 +85,17 @@
             <div class="text-muted small mt-1">🎨 +{{ preg.puntaje_parcial }} pts</div>
           </div>
           {% else %}
-          <div class="text-muted small">Sin dibujo enviado</div>
+          <div class="text-muted small">No drawing submitted</div>
           {% endif %}
         {% else %}
           {% for op in resp.opciones_elegidas.all %}
           <div class="small">{% if op.es_correcta %}✅{% else %}❌{% endif %} {{ op.texto }}</div>
           {% empty %}
-          <div class="text-muted small">Sin respuesta</div>
+          <div class="text-muted small">No answer</div>
           {% endfor %}
         {% endif %}
       {% else %}
-        <div class="text-muted small">Sin respuesta</div>
+        <div class="text-muted small">No answer</div>
       {% endif %}
     </div>
     {% endwith %}
@@ -107,10 +107,10 @@
   <form method="post" action="{% url 'talleres:resultado_sesion' sesion.pk %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100 py-3" style="font-size:1.1rem">
-      ✔️ Entendido — Volver al panel
+      ✔️ Got it — Back to dashboard
     </button>
   </form>
-  <p class="text-center text-muted small mt-2">Este taller desaparecerá de tu panel al volver.</p>
+  <p class="text-center text-muted small mt-2">This workshop will disappear from your dashboard when you go back.</p>
 
 </div>
 {% endblock %}

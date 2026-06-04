@@ -2,22 +2,22 @@ import random
 
 
 MILO_MESSAGES = [
-    {"text": "¡Hola! Soy Milo 🐺 ¡Estoy aquí para ayudarte a aprender inglés!", "mood": "happy"},
-    {"text": "¡Tú puedes lograrlo! Cada ejercicio te hace más inteligente. 💪", "mood": "encouraging"},
-    {"text": "¡Wow, qué bien lo estás haciendo! ¡Sigue así! ⭐", "mood": "excited"},
-    {"text": "Recuerda: aprender inglés es divertido cuando juegas. ¡Vamos! 🎮", "mood": "playful"},
-    {"text": "¡Eres un campeón! Un paso a la vez... ¡tú puedes! 🏆", "mood": "proud"},
-    {"text": "¡Practica todos los días y verás cuánto aprendes! 📚", "mood": "wise"},
-    {"text": "¡Los errores también son aprendizaje! No te rindas. 🌟", "mood": "supportive"},
-    {"text": "¡Increíble! Cada palabra nueva que aprendes es un superpoder. ✨", "mood": "excited"},
+    {"text": "Hi! I'm Milo 🐺 I'm here to help you learn English!", "mood": "happy"},
+    {"text": "You can do it! Every exercise makes you smarter. 💪", "mood": "encouraging"},
+    {"text": "Wow, you're doing great! Keep it up! ⭐", "mood": "excited"},
+    {"text": "Remember: learning English is fun when you play. Let's go! 🎮", "mood": "playful"},
+    {"text": "You're a champion! One step at a time... you've got this! 🏆", "mood": "proud"},
+    {"text": "Practice every day and you'll be amazed how much you learn! 📚", "mood": "wise"},
+    {"text": "Mistakes are part of learning! Don't give up. 🌟", "mood": "supportive"},
+    {"text": "Incredible! Every new word you learn is a superpower. ✨", "mood": "excited"},
 ]
 
 MILO_GREETINGS = [
-    "¡Hola, explorador!",
-    "¡Bienvenido de vuelta!",
-    "¡Qué bueno verte!",
-    "¡Es hora de aprender!",
-    "¡Listo para jugar!",
+    "Hello, explorer!",
+    "Welcome back!",
+    "Great to see you!",
+    "Time to learn!",
+    "Ready to play!",
 ]
 
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ leccion.titulo }} — Aventura{% endblock %}
+{% block title %}{{ leccion.titulo }} — Adventure{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -458,7 +458,7 @@
   <!-- Top bar redondeado -->
   <div class="top-bar">
     <div class="top-bar-row">
-      <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Volver al mapa">
+      <a href="{% url 'historia:mapa_historia' %}" class="back-btn" title="Back to map">
         <i class="bi bi-caret-left-fill"></i>
       </a>
       <div class="top-bar-info">
@@ -478,32 +478,32 @@
   <div class="activity-card" id="activityCard">
     <div style="text-align:center;padding:2rem">
       <div style="font-size:2.5rem">⏳</div>
-      <p class="fw-bold text-muted mt-2">Cargando lección…</p>
+      <p class="fw-bold text-muted mt-2">Loading lesson…</p>
     </div>
   </div>
 
   <!-- Continue button -->
   <div class="continue-wrap">
     <button class="btn-continue" id="btnContinue" onclick="onContinue()">
-      ¡Continuar! 🚀
+      Continue! 🚀
     </button>
   </div>
 
   <!-- Final screen (hidden) -->
   <div class="final-screen" id="finalScreen">
     <div style="font-size:3rem" id="finalEmoji">🎉</div>
-    <h2 class="font-fredoka" style="color:var(--primary);font-size:1.8rem">¡Lección completada!</h2>
+    <h2 class="font-fredoka" style="color:var(--primary);font-size:1.8rem">Lesson completed!</h2>
     <div class="stars-row" id="starsRow"></div>
     <div class="recompensas" id="recompensas"></div>
     <div id="logrosNuevos" class="d-flex flex-column gap-2 w-100"></div>
     <div class="d-flex gap-3 mt-2 w-100 justify-content-center">
       <a href="{% url 'historia:mapa_historia' %}" class="btn btn-outline-primary rounded-pill px-4 fw-bold"
          data-ng-trans="stars">
-        🗺️ Volver al mapa
+        🗺️ Back to the map
       </a>
       <a href="{% url 'historia:ver_leccion' pk=leccion.pk %}" class="btn rounded-pill px-4 fw-bold text-white"
          style="background:var(--primary)">
-        🔄 Reintentar
+        🔄 Try again
       </a>
     </div>
   </div>
@@ -567,7 +567,7 @@ function renderIntroduccion(d) {
      </span>`
   ).join('');
   return `
-    <p class="act-title">${d.titulo||'Introducción'}</p>
+    <p class="act-title">${d.titulo||'Introduction'}</p>
     ${d.imagen_url ? `<img src="${d.imagen_url}" onerror="this.style.display='none'"
       style="width:100%;max-height:180px;object-fit:cover;border-radius:16px">` : ''}
     <p class="act-instruccion">${d.texto||''}</p>
@@ -591,8 +591,8 @@ function renderVocabulario(d) {
     </div>
   `).join('');
   return `
-    <p class="act-title">🃏 ${d.titulo||'Vocabulario'}</p>
-    <p class="act-instruccion">🖐️ Toca cada tarjeta para ver cómo se dice en inglés.</p>
+    <p class="act-title">🃏 ${d.titulo||'Vocabulary'}</p>
+    <p class="act-instruccion">🖐️ Tap each card to see how it's said in English.</p>
     <div class="vocab-grid">${tarjetas}</div>
   `;
 }
@@ -610,7 +610,7 @@ function renderDialogo(d) {
     `;
   }).join('');
   return `
-    <p class="act-title">${d.titulo||'Diálogo'}</p>
+    <p class="act-title">${d.titulo||'Dialogue'}</p>
     <div class="dialogo-wrap">${lineas}</div>
   `;
 }
@@ -623,7 +623,7 @@ function renderListening(d) {
       <div class="mb-3">
         <div class="d-flex align-items-center gap-3 mb-2">
           <button class="play-btn" onclick="speak('${p.audio_texto.replace(/'/g,"\\'")}')">🔊</button>
-          <span class="fw-bold" style="font-size:1.2rem;color:var(--primary)">Pregunta ${i+1}</span>
+          <span class="fw-bold" style="font-size:1.2rem;color:var(--primary)">Question ${i+1}</span>
         </div>
         <div class="opciones-grid" data-qidx="${i}">
           ${opciones.map(op => `
@@ -634,8 +634,8 @@ function renderListening(d) {
     `;
   }).join('');
   return `
-    <p class="act-title">🔊 ${d.titulo||'¡Escucha!'}</p>
-    <p class="act-instruccion">${d.instruccion||'Escucha el audio y elige la respuesta correcta.'}</p>
+    <p class="act-title">🔊 ${d.titulo||'Listen!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Listen to the audio and choose the correct answer.'}</p>
     ${bloques}
   `;
 }
@@ -657,8 +657,8 @@ function renderPronunciacion(d) {
     </div>
   `).join('');
   return `
-    <p class="act-title">🗣️ ${d.titulo||'¡Pronunciación!'}</p>
-    <p class="act-instruccion">${d.instruccion||'Presiona el botón 🔊, escucha la palabra y repítela en voz alta.'}</p>
+    <p class="act-title">🗣️ ${d.titulo||'Pronunciation!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Press the 🔊 button, listen to the word and repeat it aloud.'}</p>
     <div class="pron-list">${palabras}</div>
   `;
 }
@@ -668,7 +668,7 @@ function renderReading(d) {
     const opciones = [...p.opciones].sort(() => Math.random() - .5);
     return `
       <div>
-        <div class="preg-num">Pregunta ${i+1}</div>
+        <div class="preg-num">Question ${i+1}</div>
         <div class="fw-bold mb-2" style="font-size:1.15rem">${p.pregunta}</div>
         <div class="opciones-grid" data-qidx="${i}">
           ${opciones.map(op => `
@@ -679,8 +679,8 @@ function renderReading(d) {
     `;
   }).join('');
   return `
-    <p class="act-title">📖 ${d.titulo||'¡Lectura!'}</p>
-    <p class="act-instruccion">${d.instruccion||'Lee el texto con atención y responde las preguntas.'}</p>
+    <p class="act-title">📖 ${d.titulo||'Reading!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Read the text carefully and answer the questions.'}</p>
     <div class="reading-texto">${d.texto||''}</div>
     <div class="reading-pregs">${preguntas}</div>
   `;
@@ -691,13 +691,13 @@ function renderWriting(d) {
     <div class="writing-item">
       <div class="writing-emoji">${e.emoji||'📝'}</div>
       <div class="writing-label">${e.es}</div>
-      <input class="writing-input" type="text" placeholder="en inglés…"
+      <input class="writing-input" type="text" placeholder="in English…"
              data-eidx="${i}" autocomplete="off" spellcheck="false">
     </div>
   `).join('');
   return `
-    <p class="act-title">✏️ ${d.titulo||'¡Escritura!'}</p>
-    <p class="act-instruccion">${d.instruccion||'Escribe cómo se dice cada palabra en inglés.'}</p>
+    <p class="act-title">✏️ ${d.titulo||'Writing!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Write how each word is said in English.'}</p>
     <div class="writing-list">${ejercicios}</div>
   `;
 }
@@ -768,8 +768,8 @@ function renderMemoria(d) {
   `).join('');
 
   return `
-    <p class="act-title">🧠 ${d.titulo||'¡Memoria!'}</p>
-    <p class="act-instruccion">${d.instruccion||'Voltea las tarjetas y encuentra los pares que coinciden.'}</p>
+    <p class="act-title">🧠 ${d.titulo||'Memory!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Flip the cards and find the matching pairs.'}</p>
     <div class="memo-grid">${grid}</div>
     <div id="memoMsg" class="text-center fw-bold mt-2" style="color:var(--primary);min-height:1.5rem;font-size:1.3rem"></div>
   `;
@@ -795,7 +795,7 @@ function memoClick(card) {
     memoState.locked  = false;
     if (memoState.matched >= memoState.total) {
       memoState.done = true;
-      document.getElementById('memoMsg').textContent = '🎉 ¡Todos los pares encontrados!';
+      document.getElementById('memoMsg').textContent = '🎉 All pairs found!';
       document.getElementById('btnContinue').disabled = false;
     }
   } else {
@@ -818,22 +818,22 @@ function renderVerdaderoFalso(d) {
   const preguntas = [...(d.preguntas||[])].sort(() => Math.random() - .5);
   vfState = { preguntas, idx:0, respondidas:0 };
   return `
-    <p class="act-title">🤔 ${d.titulo||'¿Verdadero o Falso?'}</p>
-    <p class="act-instruccion">${d.instruccion||'Lee cada frase y elige si es verdadera o falsa.'}</p>
+    <p class="act-title">🤔 ${d.titulo||'True or False?'}</p>
+    <p class="act-instruccion">${d.instruccion||'Read each sentence and choose whether it is true or false.'}</p>
     <div id="vfWrap" style="display:flex;flex-direction:column;gap:16px">${_vfRenderPregunta()}</div>
   `;
 }
 
 function _vfRenderPregunta() {
   const total = vfState.preguntas.length;
-  if (vfState.idx >= total) return '<p class="text-center fw-bold" style="color:var(--primary)">🎉 ¡Completado!</p>';
+  if (vfState.idx >= total) return '<p class="text-center fw-bold" style="color:var(--primary)">🎉 Completed!</p>';
   const p = vfState.preguntas[vfState.idx];
   return `
     <p class="vf-progreso">${vfState.idx + 1} / ${total}</p>
     <div class="vf-afirmacion">${p.afirmacion}</div>
     <div class="vf-botones">
-      <button class="vf-btn verdadero" id="vfBtnV" onclick="vfResponder(true)">✅ Verdadero</button>
-      <button class="vf-btn falso"     id="vfBtnF" onclick="vfResponder(false)">❌ Falso</button>
+      <button class="vf-btn verdadero" id="vfBtnV" onclick="vfResponder(true)">✅ True</button>
+      <button class="vf-btn falso"     id="vfBtnF" onclick="vfResponder(false)">❌ False</button>
     </div>
     <div class="vf-explicacion" id="vfExpl"></div>
   `;
@@ -847,15 +847,9 @@ function vfResponder(respuesta) {
   btnV.disabled = true; btnF.disabled = true;
 
   const btnPulsado = respuesta ? btnV : btnF;
-  if (esCorrecta) {
-    btnPulsado.classList.add('correcto');
-  } else {
-    btnPulsado.classList.add('incorrecto-flash');
-    (respuesta ? btnF : btnV).classList.add('correcto');
-  }
-  document.getElementById('vfExpl').textContent = p.explicacion || '';
 
-  setTimeout(() => {
+  // Helper: avanzar a la siguiente pregunta VF
+  function _vfAvanzar() {
     vfState.idx++;
     vfState.respondidas++;
     const wrap = document.getElementById('vfWrap');
@@ -865,7 +859,29 @@ function vfResponder(respuesta) {
         document.getElementById('btnContinue').disabled = false;
       }
     }
-  }, 1600);
+  }
+
+  if (esCorrecta) {
+    btnPulsado.classList.add('correcto');
+    document.getElementById('vfExpl').textContent = p.explicacion || '';
+    setTimeout(_vfAvanzar, 1600);
+  } else {
+    btnPulsado.classList.add('incorrecto-flash');
+    (respuesta ? btnF : btnV).classList.add('correcto');
+    document.getElementById('vfExpl').textContent = p.explicacion || '';
+
+    // Incorrecto: Milo IA explica el error antes de avanzar
+    if (window.miloComentarista) {
+      window.miloComentarista('incorrecto', {
+        pregunta:           p.afirmacion || '',
+        respuesta_correcta: p.respuesta ? 'True ✅' : 'False ❌',
+        respuesta_dada:     respuesta   ? 'True ✅' : 'False ❌',
+        contexto:           'Adventure — true or false in English',
+      }, _vfAvanzar);
+    } else {
+      setTimeout(_vfAvanzar, 1600);
+    }
+  }
 }
 
 // ── Rellenar el espacio ───────────────────────────────────────────────────────
@@ -887,10 +903,10 @@ function renderRellenar(d) {
     return `<div class="rellenar-row"><span class="rellenar-emoji">${o.emoji||'📝'}</span>${contenido}</div>`;
   }).join('');
   return `
-    <p class="act-title">✍️ ${d.titulo||'Rellena el espacio'}</p>
-    <p class="act-instruccion">${d.instruccion||'Escribe la palabra que falta en cada oración.'}</p>
+    <p class="act-title">✍️ ${d.titulo||'Fill in the blank'}</p>
+    <p class="act-instruccion">${d.instruccion||'Write the missing word in each sentence.'}</p>
     <div class="rellenar-wrap">${filas}</div>
-    <div class="rellenar-hint">💡 No importa si usas mayúsculas o minúsculas.</div>
+    <div class="rellenar-hint">💡 Uppercase and lowercase don't matter.</div>
   `;
 }
 
@@ -922,7 +938,8 @@ const UNIR_COLORS = ['#e8e4ff','#fff0d4','#d4edda','#fde8f0','#d4edf5','#fdf4d4'
 
 function renderUnirPares(d) {
   const pares = d.pares || [];
-  unirState = { selectedLeft:null, matchedCount:0, total:pares.length, colores:UNIR_COLORS.slice() };
+  // Guardamos pares en el estado para que unirClick pueda acceder al contexto
+  unirState = { selectedLeft:null, matchedCount:0, total:pares.length, colores:UNIR_COLORS.slice(), pares };
 
   const izqItems = pares.map((p,i) => `
     <button class="unir-btn" id="unir-izq-${i}" data-idx="${i}" data-lado="izq" onclick="unirClick(this)">
@@ -936,8 +953,8 @@ function renderUnirPares(d) {
     </button>`).join('');
 
   return `
-    <p class="act-title">🔗 ${d.titulo||'Une los pares'}</p>
-    <p class="act-instruccion">${d.instruccion||'Toca una palabra de la columna izquierda y luego su pareja de la derecha.'}</p>
+    <p class="act-title">🔗 ${d.titulo||'Match the pairs'}</p>
+    <p class="act-instruccion">${d.instruccion||'Tap a word from the left column and then its match on the right.'}</p>
     <div class="unir-cols">
       <div class="unir-col" id="unirIzq">${izqItems}</div>
       <div class="unir-col" id="unirDer">${derItems}</div>
@@ -965,12 +982,25 @@ function unirClick(btn) {
       unirState.matchedCount++;
       unirState.selectedLeft = null;
       if (unirState.matchedCount >= unirState.total) {
-        document.getElementById('unirMsg').textContent = '🎉 ¡Todos los pares unidos!';
+        document.getElementById('unirMsg').textContent = '🎉 All pairs matched!';
         document.getElementById('btnContinue').disabled = false;
       }
     } else {
       btn.classList.add('error');
       setTimeout(() => btn.classList.remove('error'), 400);
+
+      // Milo IA: explica qué par era correcto para el ítem de la izquierda
+      if (window.miloComentarista && unirState.pares) {
+        const parIzq = unirState.pares[unirState.selectedLeft] || {};
+        const parDer = unirState.pares[idx]                   || {};
+        window.miloComentarista('incorrecto', {
+          pregunta:           `What goes with "${parIzq.izq || ''}"?`,
+          respuesta_correcta: parIzq.der || '',
+          respuesta_dada:     parDer.der || '',
+          contexto:           'Adventure — match the pairs in English',
+        }, function() { /* student keeps trying */ });
+      }
+
       izqBtn.classList.remove('selected');
       unirState.selectedLeft = null;
     }
@@ -990,15 +1020,15 @@ function renderOrdenarOracion(d) {
   ordenState = { oraciones, idx: 0, _actuales: [] };
 
   return `
-    <p class="act-title">🧩 ${d.titulo||'¡Arma la oración!'}</p>
-    <p class="act-instruccion">${d.instruccion||'Toca las palabras en el orden correcto para formar la oración.'}</p>
+    <p class="act-title">🧩 ${d.titulo||'Build the sentence!'}</p>
+    <p class="act-instruccion">${d.instruccion||'Tap the words in the correct order to form the sentence.'}</p>
     <div id="ordenWrap">${_ordenRenderActual()}</div>
   `;
 }
 
 function _ordenRenderActual() {
   if (ordenState.idx >= ordenState.oraciones.length) {
-    return `<p class="text-center fw-bold mt-3" style="color:var(--primary);font-size:1.3rem">🎉 ¡Todas las oraciones completadas!</p>`;
+    return `<p class="text-center fw-bold mt-3" style="color:var(--primary);font-size:1.3rem">🎉 All sentences completed!</p>`;
   }
   const oracion  = ordenState.oraciones[ordenState.idx];
   const palabras = oracion.split(' ').filter(Boolean);
@@ -1016,9 +1046,9 @@ function _ordenRenderActual() {
 
   return `
     ${progreso}
-    <div class="orden-zona-label">📦 Palabras disponibles</div>
+    <div class="orden-zona-label">📦 Available words</div>
     <div class="palabras-bank" id="palabrasBank">${chips}</div>
-    <div class="orden-zona-label" style="margin-top:14px">📝 Tu oración</div>
+    <div class="orden-zona-label" style="margin-top:14px">📝 Your sentence</div>
     <div class="palabras-zona" id="palabrasZona"></div>
     <div class="orden-resultado" id="ordenResultado"></div>
   `;
@@ -1063,7 +1093,7 @@ function ordenValidar() {
   const resEl     = document.getElementById('ordenResultado');
 
   if (respuesta === correcta) {
-    if (resEl) resEl.innerHTML = '<span style="color:#28a745;font-size:1.15rem">✅ ¡Correcto!</span>';
+    if (resEl) resEl.innerHTML = '<span style="color:#28a745;font-size:1.15rem">✅ Correct!</span>';
     return true;
   } else {
     if (resEl) resEl.innerHTML = `<span style="color:#dc3545">❌ Intenta de nuevo.</span>`;
@@ -1100,8 +1130,8 @@ function renderClasificar(d) {
   setTimeout(() => _initClasificarSortable(categorias.length), 50);
 
   return `
-    <p class="act-title">🗂️ ${d.titulo||'Organiza en grupos'}</p>
-    <p class="act-instruccion">${d.instruccion||'Arrastra cada palabra al grupo donde pertenece.'}</p>
+    <p class="act-title">🗂️ ${d.titulo||'Sort into groups'}</p>
+    <p class="act-instruccion">${d.instruccion||'Drag each word to the group where it belongs.'}</p>
     <div class="clasificar-bank" id="clasificarBank">${chips}</div>
     <div class="clasificar-cajones" style="grid-template-columns:${gridCols}">${cajones}</div>
     <div class="clasificar-msg" id="clasificarMsg"></div>
@@ -1147,9 +1177,9 @@ function clasificarValidar() {
   });
   const msg = document.getElementById('clasificarMsg');
   if (allOk) {
-    if (msg) msg.textContent = '🎉 ¡Todo en su lugar!';
+    if (msg) msg.textContent = '🎉 Everything in place!';
   } else {
-    if (msg) msg.textContent = '❌ Algunos no están en el lugar correcto.';
+    if (msg) msg.textContent = '❌ Some are not in the correct place.';
   }
   return allOk;
 }
@@ -1200,19 +1230,19 @@ function showCorrection(tipo, msg, sub, _duration, actDatos) {
     }
 
     if (tipo === 'correct') {
-      window.miloComentarista('correcto', { msg: msg || '¡Correcto! 🎉' }, makeOnce(3500));
+      window.miloComentarista('correcto', { msg: msg || 'Correct! 🎉' }, makeOnce(3500));
     } else if (tipo === 'incorrect') {
       // Incorrecto: el estudiante DEBE pulsar "Entendido" — sin timeout automático.
       window.miloComentarista('incorrecto', {
         pregunta:           d.pregunta || '',
         respuesta_correcta: d.respuesta_correcta || '',
         respuesta_dada:     d.respuesta_dada || '',
-        contexto:           'Aventura — inglés para primaria',
+        contexto:           'Adventure — English for primary school',
       }, resolve);
     } else {
       // Neutro (intro, vocabulario, dialogo…): avanza aunque el estudiante
       // haya cerrado la burbuja manualmente antes del autoclose de Milo.
-      window.miloComentarista('neutro', { msg: msg || '¡Muy bien! ✨' }, makeOnce(2500));
+      window.miloComentarista('neutro', { msg: msg || 'Very good! ✨' }, makeOnce(2500));
     }
   });
 }
@@ -1246,7 +1276,7 @@ function _extraerContextoActividad(act) {
     if (incorrectos.length) {
       const idx2 = parseInt(incorrectos[0].dataset.eidx);
       const ej = ejs[idx2] || {};
-      pregunta = '¿Cómo se dice "' + (ej.es || '') + '" en inglés?';
+      pregunta = 'How do you say "' + (ej.es || '') + '" in English?';
       respuesta_correcta = ej.en || '';
       respuesta_dada = incorrectos[0].value;
     }
@@ -1259,13 +1289,13 @@ function _extraerContextoActividad(act) {
 
     } else if (tipo === 'ordenar_oracion') {
       // Usa la oración actual en curso (puede ser multi-oración)
-      pregunta = 'Ordena las palabras para formar la oración correcta';
+      pregunta = 'Order the words to form the correct sentence';
       respuesta_correcta = ordenState._actuales.join(' ') || (d.oraciones && d.oraciones[0]) || '';
 
     } else if (tipo === 'verdadero_falso') {
       const p = vfState.preguntas[vfState.idx] || {};
       pregunta = p.afirmacion || '';
-      respuesta_correcta = p.respuesta ? 'Verdadero ✅' : 'Falso ❌';
+      respuesta_correcta = p.respuesta ? 'True ✅' : 'False ❌';
 
     } else if (tipo === 'unir_pares') {
       // El par seleccionado de la izquierda que no fue unido correctamente
@@ -1278,11 +1308,11 @@ function _extraerContextoActividad(act) {
 
     } else if (tipo === 'memoria') {
       // Contexto general; los pares específicos son difíciles de rastrear en tiempo real
-      pregunta = 'Encuentra los pares que coinciden';
+      pregunta = 'Find the matching pairs';
       respuesta_correcta = '';
 
     } else if (tipo === 'clasificar') {
-      pregunta = 'Clasifica cada palabra en su categoría correcta';
+      pregunta = 'Sort each word into its correct category';
       respuesta_correcta = '';
     }
   }
@@ -1335,7 +1365,7 @@ async function onContinue() {
         if (window.miloComentarista) {
           window.miloComentarista('incorrecto', {
             pregunta, respuesta_correcta, respuesta_dada,
-            contexto: 'Aventura — rellena el espacio en inglés',
+            contexto: 'Adventure — fill in the blank in English',
           }, function() { btn.disabled = false; });
         }
         return;
@@ -1353,10 +1383,10 @@ async function onContinue() {
         // Oración incorrecta → Milo comenta y el estudiante reintenta
         if (window.miloComentarista) {
           window.miloComentarista('incorrecto', {
-            pregunta: 'Ordena las palabras para formar la oración correcta',
+            pregunta: 'Order the words to form the correct sentence',
             respuesta_correcta: ordenState._actuales.join(' '),
             respuesta_dada,
-            contexto: 'Aventura — ordenar oración en inglés',
+            contexto: 'Adventure — arrange the sentence in English',
           }, function() { /* el estudiante reintenta */ });
         }
         return;
@@ -1378,12 +1408,27 @@ async function onContinue() {
       const esOk = clasificarValidar();
       if (!esOk) {
         if (window.miloComentarista) {
+          // Identificar el primer chip mal clasificado para dar contexto específico a la IA
+          const d2          = _activeMinijuegoDatos || {};
+          const catData     = d2.categorias || [];
+          const badChip     = document.querySelector('.clasificar-chip.incorrecto');
+          let pregunta          = 'Sort each word into its correct category';
+          let respuesta_correcta = '';
+          let respuesta_dada    = '';
+          if (badChip) {
+            const correctIdx  = parseInt(badChip.dataset.cat);
+            const correctNom  = (catData[correctIdx]  || {}).nombre || '';
+            const cajonActual = badChip.closest('.clasificar-cajon');
+            const currentIdx  = cajonActual ? parseInt(cajonActual.dataset.catidx) : -1;
+            const currentNom  = (catData[currentIdx] || {}).nombre || 'incorrect group';
+            pregunta           = `Where does "${badChip.dataset.item}" belong?`;
+            respuesta_correcta = correctNom;
+            respuesta_dada     = currentNom;
+          }
           window.miloComentarista('incorrecto', {
-            pregunta: 'Clasifica cada palabra en su categoría correcta',
-            respuesta_correcta: '',
-            respuesta_dada: '',
-            contexto: 'Aventura — clasificar palabras',
-          }, function() { /* el estudiante reintenta */ });
+            pregunta, respuesta_correcta, respuesta_dada,
+            contexto: 'Adventure — classify words in English',
+          }, function() { /* student retries */ });
         }
         return;
       }
@@ -1415,10 +1460,10 @@ async function onContinue() {
           '', 2000);
       } else {
         const actDatos = _extraerContextoActividad(act);
-        await showCorrection('incorrect', '¡Incorrecto!', '', 0, actDatos);
+        await showCorrection('incorrect', 'Incorrect!', '', 0, actDatos);
       }
     } else if (['vocabulario','dialogo','introduccion','pronunciacion'].includes(act.tipo)) {
-      await showCorrection('neutral', '¡Muy bien!', '', 1200);
+      await showCorrection('neutral', 'Well done!', '', 1200);
     }
 
     currentIdx++;
@@ -1472,7 +1517,7 @@ async function finalizarLeccion() {
     document.getElementById('recompensas').innerHTML = `
       <div class="recomp-pill">+${puntos_xp} XP</div>
       <div class="recomp-pill">+${huesos} 🦴</div>
-      ${nivel_subio ? `<div class="recomp-pill">🎉 ¡Nivel ${nivel_nuevo}!</div>` : ''}
+      ${nivel_subio ? `<div class="recomp-pill">🎉 Level ${nivel_nuevo}!</div>` : ''}
       ${esReplay ? '<div class="recomp-pill" style="background:#f0eeff;color:var(--primary)">🔄 Intento de mejora</div>' : ''}
     `;
 
@@ -1480,7 +1525,7 @@ async function finalizarLeccion() {
     if (logros.length) {
       document.getElementById('logrosNuevos').innerHTML = logros.map(l =>
         `<div class="nestgrow-card p-2 px-3 fw-bold" style="font-size:.9rem">
-           ${l.icono} ¡Nuevo logro! ${l.nombre}
+           ${l.icono} New achievement! ${l.nombre}
          </div>`
       ).join('');
     }

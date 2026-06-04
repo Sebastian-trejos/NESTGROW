@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Tienda de Milo - NestGrow{% endblock %}
+{% block title %}Milo's Store - NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -255,14 +255,14 @@
       <div class="shop-header-text">
         <div class="shop-title"><i class="bi bi-cart4"></i> Milo's store</div>
         <p class="shop-subtitle">
-          ¡Compra objetos únicos y<br>decora la Habitación de Milo!
+          Buy unique items and<br>decorate Milo's Room!
         </p>
         <!-- Huesos counter -->
         <div class="bones-display">
           <span style="font-size:1.6rem">🦴</span>
           <span id="bonesCounter" style="font-size:2rem">{{ huesos }}</span>
           <div style="text-align:left">
-            <div style="font-size:0.8rem;opacity:0.75;font-weight:600">Tienes</div>
+            <div style="font-size:0.8rem;opacity:0.75;font-weight:600">You have</div>
             <div style="font-size:0.9rem;opacity:0.9;font-weight:700">Milo's bones</div>
           </div>
         </div>
@@ -288,7 +288,7 @@
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl"><img src="{% static 'img/milo_hablando.png' %}" alt="Milo" style="width:50px;height:50px;object-fit:contain"></div>
     <div class="milo-banner-text">
-      ¡Cada objeto que compres aparecerá en mi habitación! Y algunos desbloquean minijuegos especiales <i class="bi bi-controller"></i>
+      Every item you buy will appear in my room! And some unlock special minigames <i class="bi bi-controller"></i>
     </div>
   </div>
 
@@ -336,11 +336,11 @@
             <button class="buy-btn"
                     style="background:linear-gradient(135deg,#8B4513,#a0522d);color:white"
                     onclick="comprarItem({{ item.id }}, '{{ item.nombre }}', {{ item.costo_huesos }}, this)"
-                    {% if huesos < item.costo_huesos %}disabled title="No tienes suficientes huesos"{% endif %}>
+                    {% if huesos < item.costo_huesos %}disabled title="Not enough bones"{% endif %}>
               {% if huesos < item.costo_huesos %}
-                🦴 Faltan {{ item.costo_huesos|add:"-huesos" }} huesos
+                🦴 Need {{ item.costo_huesos|add:"-huesos" }} more bones
               {% else %}
-                🦴 Comprar por {{ item.costo_huesos }}
+                🦴 Buy for {{ item.costo_huesos }}
               {% endif %}
             </button>
           {% endif %}
@@ -352,8 +352,8 @@
   {% else %}
   <div class="text-center py-5">
     <div style="font-size:5rem"><i class="bi bi-shop"></i></div>
-    <h4 class="font-fredoka mt-3" style="color:var(--primary)">¡La tienda está vacía!</h4>
-    <p class="text-muted fw-bold">No hay objetos disponibles en este momento.</p>
+    <h4 class="font-fredoka mt-3" style="color:var(--primary)">The store is empty!</h4>
+    <p class="text-muted fw-bold">No items available at this moment.</p>
   </div>
   {% endif %}
 
@@ -362,7 +362,7 @@
       <i class="bi bi-house-heart-fill"></i> See
     </a>
     <a href="{% url 'games:game_list' %}" class="btn btn-outline-secondary rounded-pill fw-bold">
-      <i class="bi bi-controller"></i> Ir a jugar
+      <i class="bi bi-controller"></i> Go play
     </a>
   </div>
 </div>
@@ -392,7 +392,7 @@ function showToast(msg, success=true) {
 
 async function comprarItem(itemId, nombre, costo, btn) {
   btn.disabled = true;
-  btn.textContent = '⏳ Comprando...';
+  btn.textContent = '⏳ Buying...';
   try {
     const resp = await fetch("{% url 'games:comprar_item' %}", {
       method: 'POST',
@@ -408,7 +408,7 @@ async function comprarItem(itemId, nombre, costo, btn) {
       // Update bones counter
       document.getElementById('bonesCounter').textContent = data.huesos_restantes;
       // Update button
-      btn.textContent = '✅ Ya lo tienes';
+      btn.textContent = '✅ Already yours';
       btn.style.background = '#e8f5e9';
       btn.style.color = '#4CAF50';
       // Add owned class to card
@@ -418,10 +418,10 @@ async function comprarItem(itemId, nombre, costo, btn) {
     } else {
       showToast(`❌ ${data.message}`, false);
       btn.disabled = false;
-      btn.textContent = `🦴 Comprar por ${costo}`;
+      btn.textContent = `🦴 Buy for ${costo}`;
     }
   } catch(e) {
-    showToast('❌ Error al conectar', false);
+    showToast('❌ Connection error', false);
     btn.disabled = false;
     btn.textContent = `🦴 Comprar por ${costo}`;
   }
@@ -439,12 +439,12 @@ function showPurchasePopup(nombre) {
   `;
   popup.innerHTML = `
     <div style="font-size:4rem;animation:bobble 1s infinite">🐺</div>
-    <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;margin:10px 0">¡Compra exitosa!</div>
-    <div style="font-size:1rem;opacity:0.9;margin-bottom:16px"><strong>${nombre}</strong> está en tu habitación</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;margin:10px 0">Purchase successful!</div>
+    <div style="font-size:1rem;opacity:0.9;margin-bottom:16px"><strong>${nombre}</strong> is in your room</div>
     <button onclick="this.closest('div[style]').remove();document.getElementById('backdropPurchase').remove()"
       style="background:white;color:#8B4513;border:none;border-radius:50px;padding:10px 28px;
              font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer">
-      🏠 Ver habitación
+      🏠 View room
     </button>
   `;
   const backdrop = document.createElement('div');

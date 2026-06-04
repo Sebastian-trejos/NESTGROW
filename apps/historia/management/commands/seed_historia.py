@@ -4,7 +4,7 @@ from apps.historia.models import SeccionHistoria, Leccion, ActividadLeccion
 
 SECCIONES = [
     {
-        'titulo': 'Capítulo 1: Saludos y Presentaciones',
+        'titulo': 'Chapter 1: Greetings and Introductions',
         'descripcion': 'Aprende a saludar y presentarte en inglés con Milo.',
         'orden': 1,
         'icono_emoji': '👋',
@@ -12,7 +12,7 @@ SECCIONES = [
         'is_desbloqueada_por_defecto': True,
         'lecciones': [
             {
-                'titulo': 'Hello! ¿Cómo te llamas?',
+                'titulo': "Hello! What's Your Name?",
                 'descripcion_corta': 'Saludos básicos y presentación personal',
                 'orden': 1,
                 'icono_emoji': '😊',
@@ -109,7 +109,7 @@ SECCIONES = [
                 ],
             },
             {
-                'titulo': 'How are you? Los sentimientos',
+                'titulo': 'How Are You? Feelings and Emotions',
                 'descripcion_corta': 'Aprende a expresar cómo te sientes',
                 'orden': 2,
                 'icono_emoji': '🎭',
@@ -175,7 +175,7 @@ SECCIONES = [
         ],
     },
     {
-        'titulo': 'Capítulo 2: Los Colores y Números',
+        'titulo': 'Chapter 2: Colours and Numbers',
         'descripcion': 'Aprende los colores y números del 1 al 20 en inglés.',
         'orden': 2,
         'icono_emoji': '🎨',
@@ -183,7 +183,7 @@ SECCIONES = [
         'is_desbloqueada_por_defecto': False,
         'lecciones': [
             {
-                'titulo': 'The Colors — Los colores',
+                'titulo': 'The Colours',
                 'descripcion_corta': 'Aprende los colores básicos en inglés',
                 'orden': 1,
                 'icono_emoji': '🌈',
@@ -269,7 +269,7 @@ SECCIONES = [
                 ],
             },
             {
-                'titulo': 'Numbers 1-20 — Los números',
+                'titulo': 'Numbers 1-20',
                 'descripcion_corta': 'Cuenta del 1 al 20 en inglés',
                 'orden': 2,
                 'icono_emoji': '🔢',

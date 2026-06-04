@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}🌍 Museo Global — NestGrow{% endblock %}
+{% block title %}🌍 Global Museum — NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -386,13 +386,13 @@
           <i class="bi bi-buildings-fill"></i> {{ salon.nombre }}
         </div>
         <h1 class="font-fredoka mb-1" style="color:white;font-size:2.5rem;line-height:1.05;text-shadow:0 3px 14px rgba(0,0,0,0.18)">
-          🌍 Museo Global<br><span style="font-size:1.6rem">¡Arte de todos! 🎨</span>
+          🌍 Global Museum<br><span style="font-size:1.6rem">Art from everyone! 🎨</span>
         </h1>
         <p class="fw-bold mb-3" style="color:rgba(255,255,255,0.93);font-size:1rem">
-          ¡Mira las pinturas increíbles de tus compañeros de clase!
+          Look at the incredible paintings from your classmates!
         </p>
         <div class="d-flex gap-2 flex-wrap">
-          <span class="stat-pill"><i class="bi bi-images"></i> {{ total_obras }} obra{{ total_obras|pluralize:"s" }}</span>
+          <span class="stat-pill"><i class="bi bi-images"></i> {{ total_obras }} artwork{{ total_obras|pluralize:"s" }}</span>
           <span class="stat-pill"><i class="bi bi-people-fill"></i> {{ autores|length }} artista{{ autores|length|pluralize:"s" }}</span>
         </div>
       </div>
@@ -407,7 +407,7 @@
     </a>
     <div class="search-input-wrap">
       <i class="bi bi-search search-icon"></i>
-      <input type="text" id="searchInput" placeholder="Buscar artista..." autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Search artist..." autocomplete="off">
     </div>
     <span class="search-count" id="searchCount" style="display:none"></span>
   </div>
@@ -436,7 +436,7 @@
         {% endif %}
         <div class="flex-grow-1">
           <div class="autor-name">✏️ {{ autor_data.user.get_full_name|default:autor_data.user.username }}</div>
-          <span class="obras-tag">🎨 {{ autor_data.obras|length }} obra{{ autor_data.obras|length|pluralize:"s" }}</span>
+          <span class="obras-tag">🎨 {{ autor_data.obras|length }} artwork{{ autor_data.obras|length|pluralize:"s" }}</span>
         </div>
         {% if forloop.counter == 1 %}
         {% elif forloop.counter == 2 %}
@@ -502,8 +502,8 @@
   {% else %}
   <div class="empty-global">
     <img src="{% static 'img/milo_duda2.png' %}" style="height:170px;animation:miloJump 3s ease-in-out infinite">
-    <h3 class="font-fredoka mt-3 mb-2" style="color:var(--primary)">¡El museo está vacío!</h3>
-    <p class="text-muted fw-bold fs-5">Ningún compañero ha publicado obras todavía.<br>¡Sé el primero en pintar algo! 🖌️</p>
+    <h3 class="font-fredoka mt-3 mb-2" style="color:var(--primary)">The museum is empty!</h3>
+    <p class="text-muted fw-bold fs-5">No classmate has published artworks yet.<br>Be the first to paint something! 🖌️</p>
     <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3">🎮 Ir a mis actividades</a>
   </div>
   {% endif %}
@@ -623,7 +623,7 @@
     // Contador de resultados
     if (query) {
       searchCount.style.display = '';
-      searchCount.textContent = visible === 1 ? '1 artista' : `${visible} artistas`;
+      searchCount.textContent = visible === 1 ? '1 artist' : `${visible} artists`;
     } else {
       searchCount.style.display = 'none';
     }

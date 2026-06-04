@@ -12,9 +12,9 @@
   <!-- Header -->
   <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
     {% if user.role == 'profesor' %}
-    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Back</a>
     {% else %}
-    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>
+    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Back</a>
     {% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🔗 {{ game.title }}</h3>
     <span class="badge rounded-pill fw-bold px-3 py-2
@@ -28,8 +28,8 @@
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los
-    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    To earn <strong>Milo's Bones</strong> and level up, play these minigames inside the
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Workshops</a>.
   </div>
   {% endif %}
 
@@ -51,7 +51,7 @@
     <div class="milo-banner mb-3">
       <div class="milo-banner-owl">🐺</div>
       <div class="milo-banner-text" id="miloInstruction">
-        ¡Haz clic en un emoji y luego en su palabra para conectarlos!
+        Click on an emoji and then on its word to connect them!
       </div>
     </div>
 
@@ -66,7 +66,7 @@
     <div id="memoryCountdown" class="text-center mb-3" style="display:none">
       <div class="alert py-2 px-4 d-inline-block fw-bold mb-0"
            style="background:linear-gradient(135deg,#fff9c4,#ffe0b2);border:2px solid #FFB347;border-radius:14px;color:#8B4513">
-        👁️ ¡Memoriza los emojis! Se ocultarán en <span id="countdownSecs">4</span>s…
+        👁️ Memorize the emojis! They will hide in <span id="countdownSecs">4</span>s…
       </div>
     </div>
 
@@ -74,11 +74,11 @@
     <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 connect-board-shell">
       <div class="row g-2 mb-2">
         <div class="col-5 text-center">
-          <span class="badge bg-light text-muted fw-bold" style="font-size:0.75rem">🖼️ Imágenes</span>
+          <span class="badge bg-light text-muted fw-bold" style="font-size:0.75rem">🖼️ Images</span>
         </div>
         <div class="col-2"></div>
         <div class="col-5 text-center">
-          <span class="badge bg-light text-muted fw-bold" style="font-size:0.75rem">🔤 Español</span>
+          <span class="badge bg-light text-muted fw-bold" style="font-size:0.75rem">🔤 English</span>
         </div>
       </div>
 
@@ -104,7 +104,7 @@
     <!-- Verify button -->
     <div class="text-center mt-4">
       <button class="btn btn-nestgrow btn-success-nestgrow px-5 py-2" id="checkBtn" style="display:none">
-        ✅ ¡Verificar conexiones!
+        ✅ Verify connections!
       </button>
     </div>
 
@@ -115,7 +115,7 @@
 <div class="win-overlay" id="winOverlay">
   <div class="win-card">
     <div class="win-owl">🐺</div>
-    <div class="win-title">¡Lo lograste!</div>
+    <div class="win-title">You did it!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="font-fredoka fs-2 mt-1" id="winClasif" style="color:var(--primary)"></div>
     <div class="fs-4 fw-bold mt-1" style="color:var(--primary)">
@@ -123,12 +123,12 @@
     </div>
     <div class="fw-bold mt-2" style="color:#8B4513" id="winHuesos"></div>
     <button class="btn btn-nestgrow btn-primary-nestgrow mt-4" onclick="location.reload()">
-      🔄 Jugar de nuevo
+      🔄 Play again
     </button>
     {% if user.role == 'profesor' %}
-    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Volver</a>
+    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">← Back</a>
     {% else %}
-    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">Ver más juegos →</a>
+    <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block">View more games →</a>
     {% endif %}
   </div>
 </div>

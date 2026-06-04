@@ -1,26 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mis Logros - NestGrow{% endblock %}
+{% block title %}My Achievements - NestGrow{% endblock %}
 
 {% block content %}
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill"></i> Volver</a>
-    <h3 class="font-fredoka mb-0" style="color:var(--primary)"> Mis Logros <i class="bi bi-trophy-fill"></i></h3>
+    <a href="{% url 'accounts:dashboard_estudiante' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill"></i> Back</a>
+    <h3 class="font-fredoka mb-0" style="color:var(--primary)"> My Achievements <i class="bi bi-trophy-fill"></i></h3>
   </div>
 
   <div class="milo-banner mb-4">
     <div class="milo-banner-owl"><img src="{% static 'img/milo_fest.png' %}" alt="Milo" style="width:50px;height:50px;object-fit:contain"></div>
     <div>
-      <div class="milo-banner-text">¡Desbloquea todos los logros jugando y aprendiendo! Cada uno vale Huesos de Milo.</div>
-      <div class="fw-bold small text-muted">{{ logros_obtenidos.count }} de {{ todos_logros.count }} logros desbloqueados</div>
+      <div class="milo-banner-text">Unlock all achievements by playing and learning! Each one is worth Milo's Bones.</div>
+      <div class="fw-bold small text-muted">{{ logros_obtenidos.count }} of {{ todos_logros.count }} achievements unlocked</div>
     </div>
   </div>
 
   <!-- Progress bar -->
   <div class="nestgrow-card p-4 mb-4">
     <div class="d-flex justify-content-between mb-2">
-      <span class="fw-bold" style="color:var(--primary)">Progreso total</span>
+      <span class="fw-bold" style="color:var(--primary)">Total progress</span>
       <span class="fw-bold">{{ logros_obtenidos.count }}/{{ todos_logros.count }}</span>
     </div>
     <div class="progress-bar-nestgrow">
@@ -39,7 +39,7 @@
         <div class="font-fredoka mt-2" style="color:{{ logro.color }}">{{ logro.nombre }}</div>
         <div class="text-muted small fw-bold mt-1">{{ logro.descripcion }}</div>
         <div class="mt-2">
-          <span class="badge rounded-pill" style="background:#d4edda;color:#155724;font-size:0.8rem">✅ Desbloqueado</span>
+          <span class="badge rounded-pill" style="background:#d4edda;color:#155724;font-size:0.8rem">✅ Unlocked</span>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@
         <div class="font-fredoka mt-2 text-muted">{{ logro.nombre }}</div>
         <div class="text-muted small fw-bold mt-1">{{ logro.descripcion }}</div>
         <div class="mt-2">
-          <span class="badge rounded-pill bg-light text-muted" style="font-size:0.8rem">🔒 Bloqueado</span>
+          <span class="badge rounded-pill bg-light text-muted" style="font-size:0.8rem">🔒 Locked</span>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@
     {% empty %}
     <div class="col-12 text-center py-5">
       <div style="font-size:4rem">🏅</div>
-      <p class="fw-bold text-muted mt-2">Aún no hay logros configurados. El profesor los añadirá pronto.</p>
+      <p class="fw-bold text-muted mt-2">No achievements configured yet. The teacher will add them soon.</p>
     </div>
     {% endfor %}
   </div>

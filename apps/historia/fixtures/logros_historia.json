@@ -1,20 +1,272 @@
 [
-  {"model": "games.logro", "pk": 101, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "primera leccion historia", "descripcion": "¡Completaste tu primera lección del Modo Historia!", "icono": "🌟", "categoria": "especial", "condicion_valor": 1, "color": "#6C63FF", "is_active": true}},
-  {"model": "games.logro", "pk": 102, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "aprendiz historia", "descripcion": "¡5 lecciones completadas en el Modo Historia!", "icono": "📖", "categoria": "especial", "condicion_valor": 5, "color": "#FF9F43", "is_active": true}},
-  {"model": "games.logro", "pk": 103, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "explorador historia", "descripcion": "¡10 lecciones completadas! ¡Eres un explorador!", "icono": "🗺️", "categoria": "especial", "condicion_valor": 10, "color": "#4ECDC4", "is_active": true}},
-  {"model": "games.logro", "pk": 104, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "aventurero historia", "descripcion": "¡25 lecciones completadas! ¡Eres un aventurero!", "icono": "⚡", "categoria": "especial", "condicion_valor": 25, "color": "#FECA57", "is_active": true}},
-  {"model": "games.logro", "pk": 105, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "maestro historia", "descripcion": "¡Completaste TODAS las lecciones del Modo Historia!", "icono": "🏆", "categoria": "especial", "condicion_valor": 52, "color": "#FF6B6B", "is_active": true}},
-  {"model": "games.logro", "pk": 106, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "primera seccion historia", "descripcion": "¡Completaste tu primera sección del Modo Historia!", "icono": "📕", "categoria": "especial", "condicion_valor": 1, "color": "#FF6B6B", "is_active": true}},
-  {"model": "games.logro", "pk": 107, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "mundo ampliado historia", "descripcion": "¡5 secciones completas! ¡Tu mundo en inglés crece!", "icono": "🌍", "categoria": "especial", "condicion_valor": 5, "color": "#54A0FF", "is_active": true}},
-  {"model": "games.logro", "pk": 108, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "gran viajero historia", "descripcion": "¡Completaste las 10 secciones del Modo Historia!", "icono": "👑", "categoria": "especial", "condicion_valor": 10, "color": "#6C63FF", "is_active": true}},
-  {"model": "games.logro", "pk": 109, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "tres estrellas historia", "descripcion": "¡Obtuviste 3 estrellas en una lección! ¡Perfecto!", "icono": "⭐", "categoria": "especial", "condicion_valor": 1, "color": "#FFE66D", "is_active": true}},
-  {"model": "games.logro", "pk": 110, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "maestro del arte historia", "descripcion": "¡3 estrellas en 10 lecciones! ¡Eres un maestro!", "icono": "🌠", "categoria": "especial", "condicion_valor": 10, "color": "#A8E6CF", "is_active": true}},
-  {"model": "games.logro", "pk": 111, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "estrella suprema historia", "descripcion": "¡3 estrellas en TODAS las lecciones! ¡Leyenda!", "icono": "✨", "categoria": "especial", "condicion_valor": 52, "color": "#FF9FF3", "is_active": true}},
-  {"model": "games.logro", "pk": 112, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "impecable historia", "descripcion": "¡Completaste una lección perfecta en el primer intento!", "icono": "💎", "categoria": "especial", "condicion_valor": 1, "color": "#4ECDC4", "is_active": true}},
-  {"model": "games.logro", "pk": 113, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "racha diaria historia", "descripcion": "¡Completaste 3 lecciones en un solo día!", "icono": "🔥", "categoria": "especial", "condicion_valor": 3, "color": "#FF6B6B", "is_active": true}},
-  {"model": "games.logro", "pk": 114, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "semana constante historia", "descripcion": "¡Completaste lecciones 7 días distintos!", "icono": "📅", "categoria": "especial", "condicion_valor": 7, "color": "#5F27CD", "is_active": true}},
-  {"model": "games.logro", "pk": 115, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "repasador historia", "descripcion": "¡3 estrellas en todas las lecciones de repaso!", "icono": "📝", "categoria": "especial", "condicion_valor": 10, "color": "#FF9F43", "is_active": true}},
-  {"model": "games.logro", "pk": 116, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "coleccionista historia", "descripcion": "¡50 estrellas totales en el Modo Historia!", "icono": "💫", "categoria": "especial", "condicion_valor": 50, "color": "#6C63FF", "is_active": true}},
-  {"model": "games.logro", "pk": 117, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "leyenda historia", "descripcion": "¡100 estrellas totales en el Modo Historia! ¡Eres una leyenda!", "icono": "🌟", "categoria": "especial", "condicion_valor": 100, "color": "#FFE66D", "is_active": true}},
-  {"model": "games.logro", "pk": 118, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "sin rendirse historia", "descripcion": "¡Completaste una lección después de 3 o más intentos! ¡Perseverancia!", "icono": "💪", "categoria": "especial", "condicion_valor": 3, "color": "#4ECDC4", "is_active": true}}
+  {
+    "model": "games.logro",
+    "pk": 101,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "first story lesson",
+      "descripcion": "You completed your first Story Mode lesson!",
+      "icono": "🌟",
+      "categoria": "especial",
+      "condicion_valor": 1,
+      "color": "#6C63FF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 102,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "story apprentice",
+      "descripcion": "5 lessons completed in Story Mode!",
+      "icono": "📖",
+      "categoria": "especial",
+      "condicion_valor": 5,
+      "color": "#FF9F43",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 103,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "story explorer",
+      "descripcion": "10 lessons completed! You're an explorer!",
+      "icono": "🗺️",
+      "categoria": "especial",
+      "condicion_valor": 10,
+      "color": "#4ECDC4",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 104,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "story adventurer",
+      "descripcion": "25 lessons completed! You're an adventurer!",
+      "icono": "⚡",
+      "categoria": "especial",
+      "condicion_valor": 25,
+      "color": "#FECA57",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 105,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "story master",
+      "descripcion": "You completed ALL Story Mode lessons!",
+      "icono": "🏆",
+      "categoria": "especial",
+      "condicion_valor": 52,
+      "color": "#FF6B6B",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 106,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "first story section",
+      "descripcion": "You completed your first Story Mode section!",
+      "icono": "📕",
+      "categoria": "especial",
+      "condicion_valor": 1,
+      "color": "#FF6B6B",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 107,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "expanding world",
+      "descripcion": "5 sections complete! Your English world is growing!",
+      "icono": "🌍",
+      "categoria": "especial",
+      "condicion_valor": 5,
+      "color": "#54A0FF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 108,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "great traveller",
+      "descripcion": "You completed all 10 Story Mode sections!",
+      "icono": "👑",
+      "categoria": "especial",
+      "condicion_valor": 10,
+      "color": "#6C63FF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 109,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "three stars",
+      "descripcion": "You got 3 stars on a lesson! Perfect!",
+      "icono": "⭐",
+      "categoria": "especial",
+      "condicion_valor": 1,
+      "color": "#FFE66D",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 110,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "star master",
+      "descripcion": "3 stars on 10 lessons! You're a master!",
+      "icono": "🌠",
+      "categoria": "especial",
+      "condicion_valor": 10,
+      "color": "#A8E6CF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 111,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "supreme star",
+      "descripcion": "3 stars on ALL lessons! Legend!",
+      "icono": "✨",
+      "categoria": "especial",
+      "condicion_valor": 52,
+      "color": "#FF9FF3",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 112,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "flawless",
+      "descripcion": "You completed a perfect lesson on the first try!",
+      "icono": "💎",
+      "categoria": "especial",
+      "condicion_valor": 1,
+      "color": "#4ECDC4",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 113,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "daily streak",
+      "descripcion": "You completed 3 lessons in a single day!",
+      "icono": "🔥",
+      "categoria": "especial",
+      "condicion_valor": 3,
+      "color": "#FF6B6B",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 114,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "consistent week",
+      "descripcion": "You completed lessons on 7 different days!",
+      "icono": "📅",
+      "categoria": "especial",
+      "condicion_valor": 7,
+      "color": "#5F27CD",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 115,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "review champion",
+      "descripcion": "3 stars on all review lessons!",
+      "icono": "📝",
+      "categoria": "especial",
+      "condicion_valor": 10,
+      "color": "#FF9F43",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 116,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "star collector",
+      "descripcion": "50 total stars in Story Mode!",
+      "icono": "💫",
+      "categoria": "especial",
+      "condicion_valor": 50,
+      "color": "#6C63FF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 117,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "story legend",
+      "descripcion": "100 total stars in Story Mode! You're a legend!",
+      "icono": "🌟",
+      "categoria": "especial",
+      "condicion_valor": 100,
+      "color": "#FFE66D",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 118,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "never give up",
+      "descripcion": "You completed a lesson after 3 or more attempts! Perseverance!",
+      "icono": "💪",
+      "categoria": "especial",
+      "condicion_valor": 3,
+      "color": "#4ECDC4",
+      "is_active": true
+    }
+  }
 ]

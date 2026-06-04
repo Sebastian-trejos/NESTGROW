@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Habitación de Milo - NestGrow{% endblock %}
+{% block title %}Milo's Room - NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -542,8 +542,8 @@
   <div class="room-hud hud-bones">
     🦴 <span class="hud-count">{{ huesos }}</span>
   </div>
-  <a href="{% url 'accounts:dashboard_estudiante' %}" class="room-hud hud-panel"><i class="bi bi-caret-left-fill"></i>Mi Panel</a>
-  <a href="{% url 'games:tienda' %}" class="room-hud hud-shop"><i class="bi bi-shop"></i> Tienda</a>
+  <a href="{% url 'accounts:dashboard_estudiante' %}" class="room-hud hud-panel"><i class="bi bi-caret-left-fill"></i>My Dashboard</a>
+  <a href="{% url 'games:tienda' %}" class="room-hud hud-shop"><i class="bi bi-shop"></i> Store</a>
 
 
   <!-- ── Hitbox invisible de la cama ─────────────────── -->
@@ -560,7 +560,7 @@
   <!-- ── Milo ────────────────────────────────────────── -->
   <div class="milo-lector" id="miloLector">
     <div class="milo-bubble" id="miloBubble" style="min-width:180px">
-      <span id="miloBubbleText">¡Bienvenid@ a mi cuarto! 🎉</span>
+      <span id="miloBubbleText">Welcome to my room! 🎉</span>
     </div>
   
     <div class="milo-lector-wrap">
@@ -582,7 +582,7 @@
       <div class="game-card-name">{{ inv.item.nombre }}</div>
       <button class="game-card-play-btn"
               onclick="abrirJuego('{{ inv.item.juego_entretenimiento }}', '{{ inv.item.nombre }}', '{{ inv.item.icono }}')">
-        ▶ ¡Jugar!
+        ▶ Play!
       </button>
     </div>
 
@@ -593,7 +593,7 @@
          data-pos-x="{{ inv.pos_x }}"
          data-pos-y="{{ inv.pos_y }}"
          data-escala="{{ inv.escala }}">
-      <div class="drag-handle" title="Arrastrar">⠿</div>
+      <div class="drag-handle" title="Drag">⠿</div>
       {% if inv.item.imagen %}
         <img src="{{ inv.item.imagen.url }}" class="item-img-room" alt="{{ inv.item.nombre }}">
       {% else %}
@@ -604,8 +604,8 @@
         <span class="item-emoji-big" style="display:none">{{ inv.item.icono }}</span>
       {% endif %}
       <div class="item-controls">
-        <button class="item-ctrl-btn" onclick="cambiarEscala(this.closest('.room-item-drag'), 0.15)" title="Agrandar">＋</button>
-        <button class="item-ctrl-btn" onclick="cambiarEscala(this.closest('.room-item-drag'), -0.15)" title="Encoger">－</button>
+        <button class="item-ctrl-btn" onclick="cambiarEscala(this.closest('.room-item-drag'), 0.15)" title="Enlarge">＋</button>
+        <button class="item-ctrl-btn" onclick="cambiarEscala(this.closest('.room-item-drag'), -0.15)" title="Shrink">－</button>
         <button class="item-ctrl-btn item-ctrl-info" onclick="verItemDrag(this)" title="Info">ℹ</button>
       </div>
       <span class="item-label">{{ inv.item.nombre }}</span>
@@ -618,15 +618,15 @@
   <div class="room-empty">
     <div class="room-empty-card">
       <span class="room-empty-emoji"><i class="bi bi-emoji-tear-fill"></i></span>
-      <div class="room-empty-title">¡Tu habitación está vacía!</div>
-      <div class="room-empty-sub">Gana huesos 🦴 jugando y cómprate cosas chéveres</div>
-      <a href="{% url 'games:tienda' %}"><i class="bi bi-bag-dash-fill"></i> Ir a la Tienda</a>
+      <div class="room-empty-title">Your room is empty!</div>
+      <div class="room-empty-sub">Earn bones 🦴 by playing and buy cool stuff</div>
+      <a href="{% url 'games:tienda' %}"><i class="bi bi-bag-dash-fill"></i> Go to the Store</a>
     </div>
   </div>
   {% else %}
   <!-- Contador de items -->
   <div class="room-item-count">
-    ✨ {{ inventario|length }} objeto{% if inventario|length != 1 %}s{% endif %} en tu habitación
+    ✨ {{ inventario|length }} item{% if inventario|length != 1 %}s{% endif %} in your room
   </div>
   {% endif %}
 
@@ -646,10 +646,10 @@
     </div>
     <div id="infoDesc" style="color:#555;font-size:0.95rem;font-weight:700;margin-bottom:4px;line-height:1.5"></div>
     <div style="margin-top:8px;font-size:0.8rem;color:#aaa;font-weight:600">
-      ¡Este objeto hace tu habitación más especial! ✨
+      This item makes your room more special! ✨
     </div>
     <button class="btn-game-action" onclick="cerrarInfo()" style="margin-top:20px;width:100%">
-      👍 ¡Genial!
+      👍 Cool!
     </button>
   </div>
 </div>
@@ -673,7 +673,7 @@
 <div class="room-toast" id="toast-{{ logro.pk }}" data-delay="{{ forloop.counter0 }}">
   <div class="room-toast-emoji">{{ logro.logro.icono }}</div>
   <div>
-    <div class="room-toast-title">¡Nuevo logro desbloqueado!</div>
+    <div class="room-toast-title">New achievement unlocked!</div>
     <div class="room-toast-sub">{{ logro.logro.nombre }}</div>
   </div>
 </div>
@@ -703,7 +703,7 @@
 ══════════════════════════════════════════════════════════ */
 const MILO_DEFAULT_IMG = "{% static 'img/milo_saludando.png' %}";
 const MILO_CLICK_IMG   = "{% static 'img/milo_asombrado2.png' %}";
-const MILO_HAB_MSG     = '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!';
+const MILO_HAB_MSG     = '🏠 This is your room, decorate it however you want with the Bones you have earned!';
 
 let miloIdx = 0, miloPhraseIdx = 0; // declaradas para evitar ReferenceError
 
@@ -752,7 +752,7 @@ function setKey(fn) {
 }
 
 function abrirJuego(tipo, nombre, emoji) {
-  const labels = { flappy_milo: '🐦 Flappy Milo', snake_milo: '🐍 Snake de Milo' };
+  const labels = { flappy_milo: '🐦 Flappy Milo', snake_milo: '🐍 Milo\'s Snake' };
   document.getElementById('gameContent').innerHTML = `
     <div style="font-size:2.6rem;margin-bottom:4px">${emoji}</div>
     <div style="font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--primary);margin-bottom:2px">${nombre}</div>
@@ -784,7 +784,7 @@ document.getElementById('gameModal').addEventListener('click', function(e) {
 function initFlappy() {
   document.getElementById('gameArea').innerHTML = `
     <canvas id="fc" width="460" height="300" style="cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.3)"></canvas>
-    <p class="game-hint">Clic · Espacio para volar 🐦</p>
+    <p class="game-hint">Click · Space to fly 🐦</p>
   `;
   const cv  = document.getElementById('fc');
   const ctx = cv.getContext('2d');
@@ -844,17 +844,17 @@ function initFlappy() {
     drawBg(); drawMilo();
     ctx.fillStyle='rgba(0,0,0,0.48)'; ctx.fillRect(0,0,W,H);
     ctx.textAlign='center';
-    ctx.fillStyle='white'; ctx.font='bold 30px Fredoka One,cursive'; ctx.fillText('¡Flappy Milo!', W/2, H/2-28);
-    ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.font='15px Nunito,sans-serif'; ctx.fillText('Clic o Espacio para volar', W/2, H/2+8);
-    ctx.fillStyle='#FFE66D'; ctx.font='13px Nunito,sans-serif'; ctx.fillText('Esquiva los obstáculos', W/2, H/2+34);
+    ctx.fillStyle='white'; ctx.font='bold 30px Fredoka One,cursive'; ctx.fillText('Flappy Milo!', W/2, H/2-28);
+    ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.font='15px Nunito,sans-serif'; ctx.fillText('Click or Space to fly', W/2, H/2+8);
+    ctx.fillStyle='#FFE66D'; ctx.font='13px Nunito,sans-serif'; ctx.fillText('Dodge the obstacles', W/2, H/2+34);
   }
   function gameOver() {
     running=false;
     ctx.fillStyle='rgba(0,0,0,0.6)'; ctx.fillRect(0,0,W,H);
     ctx.textAlign='center';
-    ctx.fillStyle='#FF6B6B'; ctx.font='bold 36px Fredoka One,cursive'; ctx.fillText('¡Fin!', W/2, H/2-30);
-    ctx.fillStyle='white'; ctx.font='bold 20px Nunito,sans-serif'; ctx.fillText('Puntaje: '+score+' 🏆', W/2, H/2+8);
-    ctx.fillStyle='#FFE66D'; ctx.font='13px Nunito,sans-serif'; ctx.fillText('Clic o Espacio para reiniciar', W/2, H/2+40);
+    ctx.fillStyle='#FF6B6B'; ctx.font='bold 36px Fredoka One,cursive'; ctx.fillText('Game Over!', W/2, H/2-30);
+    ctx.fillStyle='white'; ctx.font='bold 20px Nunito,sans-serif'; ctx.fillText('Score: '+score+' 🏆', W/2, H/2+8);
+    ctx.fillStyle='#FFE66D'; ctx.font='13px Nunito,sans-serif'; ctx.fillText('Click or Space to restart', W/2, H/2+40);
   }
   function flap() {
     if (!started) { started=true; reset(); loop(); return; }
@@ -888,7 +888,7 @@ function initSnake() {
   document.getElementById('gameArea').innerHTML = `
     <div id="snkScore" style="font-family:'Fredoka One',cursive;font-size:1.35rem;color:var(--primary);margin-bottom:10px">🦴 0</div>
     <canvas id="sc" width="400" height="400" style="background:#1a1a2e;box-shadow:0 8px 30px rgba(0,0,0,0.4)"></canvas>
-    <p class="game-hint">Flechas del teclado · Espacio para reiniciar 🐍</p>
+    <p class="game-hint">Arrow keys · Space to restart 🐍</p>
   `;
   const cv=document.getElementById('sc'), ctx=cv.getContext('2d');
   const COLS=20,ROWS=20,SZ=20;
@@ -950,10 +950,10 @@ function initSnake() {
     dir={...nextDir};
     const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
     if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS){
-      gameState='dead'; draw(); drawOverlay('¡Fin!','#FF6B6B','🦴 '+score+' huesos','Espacio para reiniciar'); return;
+      gameState='dead'; draw(); drawOverlay('Game Over!','#FF6B6B','🦴 '+score+' bones','Space to restart'); return;
     }
     if(snake.some(s=>s.x===head.x&&s.y===head.y)){
-      gameState='dead'; draw(); drawOverlay('¡Fin!','#FF6B6B','🦴 '+score+' huesos','Espacio para reiniciar'); return;
+      gameState='dead'; draw(); drawOverlay('Game Over!','#FF6B6B','🦴 '+score+' bones','Space to restart'); return;
     }
     snake.unshift(head);
     if(head.x===food.x&&head.y===food.y){score++;food=randFood();}else snake.pop();
@@ -961,7 +961,7 @@ function initSnake() {
   }
   if(snakeInterval) clearInterval(snakeInterval);
   gameState='idle'; food={x:10,y:10}; snake=[{x:10,y:10}]; dir={x:1,y:0}; score=0;
-  draw(); drawOverlay('🐍 Snake de Milo','white','Flechas del teclado para mover','Espacio para empezar');
+  draw(); drawOverlay('🐍 Milo\'s Snake','white','Arrow keys to move','Space to start');
   snakeInterval=setInterval(step,135);
   setKey(e=>{
     if(activeGame!=='snake_milo') return;
@@ -1125,7 +1125,7 @@ function scheduleItemSave(el) {
       headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_INV },
       body: JSON.stringify({ inv_id: parseInt(invId), pos_x: px, pos_y: py, escala })
     }).then(r => r.json()).then(d => {
-      if (d.status !== 'ok') console.warn('No se pudo guardar posición:', d);
+      if (d.status !== 'ok') console.warn('Could not save position:', d);
     });
   }, 600);
 }

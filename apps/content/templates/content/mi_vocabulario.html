@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mi Vocabulario - NestGrow{% endblock %}
+{% block title %}My Vocabulary - NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -396,18 +396,18 @@
                   filter:drop-shadow(0 4px 12px rgba(0,0,0,.2))">
       <div style="flex:1;min-width:200px">
         <div style="font-family:'Fredoka One',cursive;font-size:1.75rem;line-height:1.2">
-          📚 Mi Vocabulario
+          📚 My Vocabulary
         </div>
         <div style="font-size:.9rem;opacity:.9;font-weight:700;margin-top:4px">
-          {{ total_desbloqueadas }} de {{ total_palabras }} palabras desbloqueadas
+          {{ total_desbloqueadas }} of {{ total_palabras }} words unlocked
         </div>
         <div class="global-progress-bar mt-2" style="max-width:300px">
           <div class="global-progress-fill" style="width:{{ pct_global }}%"></div>
         </div>
         <div style="font-size:.75rem;opacity:.8;margin-top:4px">
-          {{ pct_global }}% completado
+          {{ pct_global }}% completed
           {% if proximo_hito %}
-            · Faltan <strong>{{ proximo_hito.faltan }}</strong> para ganar <strong>{{ proximo_hito.huesos }} 🦴</strong>
+            · <strong>{{ proximo_hito.faltan }}</strong> to go to earn <strong>{{ proximo_hito.huesos }} 🦴</strong>
           {% endif %}
         </div>
       </div>
@@ -433,7 +433,7 @@
       {% endwith %}
       <div>
         <div style="font-size:.75rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">
-          Palabra del Día
+          Word of the Day
         </div>
         <div style="font-family:'Fredoka One',cursive;font-size:1.75rem;color:#6C63FF">{{ palabra_del_dia.word_en }}</div>
         <div style="font-weight:700;color:#555;font-size:1rem">{{ palabra_del_dia.word_es }}</div>
@@ -456,14 +456,14 @@
     <span style="font-size:1.6rem">🏆</span>
     <div style="flex:1;min-width:180px">
       <div style="font-weight:800;color:#6C63FF;font-size:.85rem">
-        Próximo hito: {{ proximo_hito.cantidad }} palabras → {{ proximo_hito.huesos }} 🦴
+        Next milestone: {{ proximo_hito.cantidad }} words → {{ proximo_hito.huesos }} 🦴
       </div>
       <div style="height:8px;background:#ddd;border-radius:99px;overflow:hidden;margin-top:5px">
         <div style="height:100%;width:{{ proximo_hito.pct }}%;background:linear-gradient(90deg,#6C63FF,#a78bfa);
                     border-radius:99px;transition:width .8s;"></div>
       </div>
       <div style="font-size:.72rem;color:#888;margin-top:2px">
-        {{ proximo_hito.pct }}% — te faltan {{ proximo_hito.faltan }} palabras
+        {{ proximo_hito.pct }}% — {{ proximo_hito.faltan }} words to go
       </div>
     </div>
   </div>
@@ -474,7 +474,7 @@
   <div class="vocab-panel">
 
     {# Sidebar de categorías #}
-    <nav class="vocab-nav" id="vocabNav" aria-label="Categorías de vocabulario">
+    <nav class="vocab-nav" id="vocabNav" aria-label="Vocabulary Categories">
       {% for cd in categorias_data %}
       <button class="vocab-nav-item {% if forloop.first %}active{% endif %}"
               id="nav-{{ cd.categoria.pk }}"
@@ -508,7 +508,7 @@
             <span class="cat-panel-count" style="background:{{ cd.categoria.color }}">
               {{ cd.desbloqueadas|length }} / {{ cd.total }}
             </span>
-            <div class="cat-panel-pct mt-1">{{ cd.pct }}% completado</div>
+            <div class="cat-panel-pct mt-1">{{ cd.pct }}% completed</div>
           </div>
         </div>
 
@@ -537,7 +537,7 @@
                  '{{ img_url|default:''|escapejs }}')">
 
             <span class="wc-diff diff-{{ item.difficulty }}">
-              {% if item.difficulty == 1 %}Fácil{% elif item.difficulty == 2 %}Medio{% else %}Difícil{% endif %}
+              {% if item.difficulty == 1 %}Easy{% elif item.difficulty == 2 %}Medium{% else %}Hard{% endif %}
             </span>
 
             {% if img_url %}
@@ -565,7 +565,7 @@
               <span class="lock-icon">🔒</span>
             </div>
             <div class="wc-locked-body">
-              <span class="lock-label">Bloqueada</span>
+              <span class="lock-label">Locked</span>
             </div>
           </div>
           {% endfor %}
@@ -573,7 +573,7 @@
         </div>{# /vocab-grid #}
 
         {% if not cd.desbloqueadas and not cd.bloqueadas %}
-        <div class="text-center py-4 text-muted fw-bold">Esta categoría aún no tiene palabras.</div>
+        <div class="text-center py-4 text-muted fw-bold">This category has no words yet.</div>
         {% endif %}
 
       </div>{# /vocab-cat-panel #}
@@ -585,7 +585,7 @@
   {% else %}
   <div class="text-center py-5">
     <img src="{% static 'img/milo_duda1.png' %}" style="width:90px;opacity:.7;margin-bottom:1rem">
-    <p class="fw-bold text-muted">Aún no hay categorías de vocabulario cargadas.</p>
+    <p class="fw-bold text-muted">No vocabulary categories loaded yet.</p>
   </div>
   {% endif %}
 
@@ -601,7 +601,7 @@
     <div class="modal-pron" id="modalPron"></div>
     <div class="modal-desc" id="modalDesc" style="display:none"></div>
     <button class="btn btn-primary rounded-pill px-4 mt-2" onclick="closeWordModal(null)">
-      <i class="bi bi-x-lg me-1"></i> Cerrar
+      <i class="bi bi-x-lg me-1"></i> Close
     </button>
   </div>
 </div>

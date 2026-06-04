@@ -1,4 +1,5 @@
 """Vocabulary unlock logic and milestone rewards for Fase 5."""
+import random as _random
 from django.db import transaction
 
 
@@ -10,7 +11,10 @@ HITOS_VOCAB = [
     (200, 40),
 ]
 
-PALABRAS_POR_TALLER = 3  # palabras nuevas desbloqueadas al completar un taller
+PALABRAS_POR_MINIJUEGO  = 4   # palabras de la categoría del minijuego al completarlo por primera vez
+CATEGORIAS_POR_TALLER   = 5   # categorías aleatorias de las que se desbloquea vocab al completar un taller
+PALABRAS_MIN_POR_CAT    = 1   # mínimo de palabras desbloqueadas por categoría en taller
+PALABRAS_MAX_POR_CAT    = 3   # máximo de palabras desbloqueadas por categoría en taller
 
 
 def desbloquear_palabras_iniciales(estudiante):
@@ -41,46 +45,80 @@ def desbloquear_palabras_iniciales(estudiante):
         VocabularioDesbloqueado.objects.bulk_create(nuevos, ignore_conflicts=True)
 
 
-def desbloquear_vocabulario_taller(sesion, palabras_por_bloque=PALABRAS_POR_TALLER):
-    """Desbloquea N palabras de las categorías asociadas al taller al completarlo.
+def desbloquear_vocabulario_taller(sesion):
+    """Al completar un taller desbloquea palabras aleatorias de categorías aleatorias.
 
-    Selecciona las siguientes palabras ordenadas por `orden` que el estudiante
-    aún no ha desbloqueado.
+    Elige CATEGORIAS_POR_TALLER categorías al azar y de cada una desbloquea entre
+    PALABRAS_MIN_POR_CAT y PALABRAS_MAX_POR_CAT palabras que el estudiante aún no tenga.
+    No requiere configuración del profesor — funciona para cualquier taller.
     """
-    from .models import VocabularyItem, VocabularioDesbloqueado
-
-    taller = sesion.taller
-    categorias = taller.categorias_vocabulario.all()
-    if not categorias.exists():
-        return []
+    from .models import VocabularyItem, VocabularioDesbloqueado, Category
 
     estudiante = sesion.estudiante
+
     ya_desbloqueados = set(
         VocabularioDesbloqueado.objects.filter(
             estudiante=estudiante
         ).values_list('item_id', flat=True)
     )
 
-    items_candidatos = (
-        VocabularyItem.objects.filter(
-            category__in=categorias, is_active=True
-        )
-        .exclude(pk__in=ya_desbloqueados)
-        .order_by('category__order', 'orden')
-    )[:palabras_por_bloque]
+    # Elegir categorías activas al azar (excluir Pintura Libre que es especial)
+    todas = list(Category.active.exclude(name='Pintura Libre'))
+    elegidas = _random.sample(todas, min(CATEGORIAS_POR_TALLER, len(todas)))
 
-    nuevos = [
-        VocabularioDesbloqueado(
-            estudiante=estudiante,
-            item=item,
-            fuente='taller',
+    nuevos = []
+    for cat in elegidas:
+        candidatos = list(
+            VocabularyItem.objects.filter(category=cat, is_active=True)
+            .exclude(pk__in=ya_desbloqueados)
         )
-        for item in items_candidatos
+        if not candidatos:
+            continue
+        cantidad = _random.randint(
+            PALABRAS_MIN_POR_CAT, min(PALABRAS_MAX_POR_CAT, len(candidatos))
+        )
+        for item in _random.sample(candidatos, cantidad):
+            nuevos.append(
+                VocabularioDesbloqueado(estudiante=estudiante, item=item, fuente='taller')
+            )
+            ya_desbloqueados.add(item.pk)   # evitar duplicados entre categorías
+
+    if nuevos:
+        VocabularioDesbloqueado.objects.bulk_create(nuevos, ignore_conflicts=True)
+
+    return nuevos
+
+
+def desbloquear_vocabulario_minijuego(estudiante, game):
+    """Al completar un minijuego por primera vez desbloquea palabras de su categoría.
+
+    Desbloquea hasta PALABRAS_POR_MINIJUEGO palabras aleatorias de la categoría
+    del minijuego que el estudiante aún no haya desbloqueado.
+    """
+    from .models import VocabularyItem, VocabularioDesbloqueado
+
+    ya_desbloqueados = set(
+        VocabularioDesbloqueado.objects.filter(
+            estudiante=estudiante
+        ).values_list('item_id', flat=True)
+    )
+
+    candidatos = list(
+        VocabularyItem.objects.filter(category=game.category, is_active=True)
+        .exclude(pk__in=ya_desbloqueados)
+    )
+    if not candidatos:
+        return []
+
+    elegidos = _random.sample(candidatos, min(PALABRAS_POR_MINIJUEGO, len(candidatos)))
+    nuevos = [
+        VocabularioDesbloqueado(estudiante=estudiante, item=item, fuente='minijuego')
+        for item in elegidos
     ]
     if nuevos:
         VocabularioDesbloqueado.objects.bulk_create(nuevos, ignore_conflicts=True)
 
-    return list(items_candidatos)
+    return elegidos
 
 
 @transaction.atomic

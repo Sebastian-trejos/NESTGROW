@@ -669,9 +669,11 @@
         bob.setAttribute('aria-hidden', 'true');
       }
       const totalPairs = parseInt(document.getElementById('totalPairs').textContent, 10);
-      const maxScore = totalPairs * ptsPerAction;
-      const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
-      document.getElementById('winScore').textContent = score;
+      const _rawMax = totalPairs * ptsPerAction;
+      const _finalScore = _rawMax > 0 ? Math.round((score / _rawMax) * POINTS_REWARD) : 0;
+      const maxScore = POINTS_REWARD;
+      const pct = maxScore > 0 ? Math.round((_finalScore / maxScore) * 100) : 0;
+      document.getElementById('winScore').textContent = _finalScore;
       document.getElementById('winTime').textContent = timeSpent;
       const $ = id => document.getElementById(id);
       let tier, stars, miloFile, msg;
@@ -691,7 +693,7 @@
           headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF },
           body: JSON.stringify({
             game_id: GAME_ID,
-            score,
+            score: _finalScore,
             max_score: maxScore,
             time_spent: timeSpent,
             completed: true,

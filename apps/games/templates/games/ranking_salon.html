@@ -195,7 +195,7 @@
     <div class="text-center position-relative" style="z-index:1">
       <i class="bi bi-trophy-fill" style="font-size:3.5rem;color:#FFE66D;
                filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))"></i>
-      <h2 class="font-fredoka mt-2 mb-0" style="font-size:2rem">Ranking del Salón</h2>
+      <h2 class="font-fredoka mt-2 mb-0" style="font-size:2rem">Classroom Ranking</h2>
       <p class="fw-bold mb-0" style="opacity:0.9">{{ salon.nombre }}</p>
     </div>
   </div>
@@ -205,7 +205,7 @@
     <img src="{% static 'img/milo_fest.png' %}" alt="Milo"
          style="width:50px;height:50px;object-fit:contain">
     <div class="milo-banner-text">
-      ¡Sigue jugando para subir en el ranking! Cada punto cuenta
+      Keep playing to climb the ranking! Every point counts
       <i class="bi bi-lightning-charge-fill text-warning"></i>
     </div>
   </div>
@@ -303,11 +303,11 @@
           {{ est.user.get_full_name|default:est.user.username }}
           {% if est == mi_perfil %}
           <span class="badge rounded-pill ms-2"
-                style="background:var(--primary);color:white;font-size:0.7rem">¡Tú!</span>
+                style="background:var(--primary);color:white;font-size:0.7rem">You!</span>
           {% endif %}
         </div>
         <div class="text-muted small fw-bold">
-          <i class="bi bi-speedometer2 me-1"></i>Nivel {{ est.nivel }}
+          <i class="bi bi-speedometer2 me-1"></i>Level {{ est.nivel }}
         </div>
       </div>
 
@@ -326,7 +326,7 @@
   <div class="nestgrow-card p-5 text-center">
     <img src="{% static 'img/milo_preocupado.png' %}" alt="Milo"
          style="width:120px;filter:drop-shadow(0 8px 20px rgba(108,99,255,0.2));margin-bottom:1rem">
-    <p class="fw-bold text-muted mt-2">¡Aún no hay estudiantes en el salón!</p>
+    <p class="fw-bold text-muted mt-2">No students in the classroom yet!</p>
   </div>
   {% endif %}
 

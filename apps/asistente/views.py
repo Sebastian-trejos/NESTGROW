@@ -87,12 +87,12 @@ def milo_correccion(request):
     """Genera una corrección breve con IA para mostrar al estudiante vía el bubble de Milo."""
     was_limited = getattr(request, 'limited', False)
     if was_limited:
-        return JsonResponse({'correccion': '¡Sigue practicando! La constancia lleva al éxito. 💪'})
+        return JsonResponse({'correccion': 'Keep practicing! Consistency leads to success. 💪'})
 
     try:
         body = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({'correccion': '¡Inténtalo de nuevo! 💪'})
+        return JsonResponse({'correccion': 'Try again! 💪'})
 
     pregunta         = (body.get('pregunta') or '').strip()[:300]
     respuesta_correcta = (body.get('respuesta_correcta') or '').strip()[:200]
@@ -101,17 +101,17 @@ def milo_correccion(request):
 
     partes = []
     if contexto:
-        partes.append(f'Contexto: {contexto}.')
+        partes.append(f'Context: {contexto}.')
     if pregunta:
-        partes.append(f'Pregunta: "{pregunta}".')
+        partes.append(f'Question: "{pregunta}".')
     if respuesta_dada:
-        partes.append(f'El estudiante respondió: "{respuesta_dada}".')
+        partes.append(f'The student answered: "{respuesta_dada}".')
     if respuesta_correcta:
-        partes.append(f'La respuesta correcta era: "{respuesta_correcta}".')
+        partes.append(f'The correct answer was: "{respuesta_correcta}".')
     if not partes:
-        return JsonResponse({'correccion': '¡No te rindas! Cada error nos enseña algo nuevo. 💪'})
+        return JsonResponse({'correccion': "Don't give up! Every mistake teaches you something new. 💪"})
 
-    mensaje = ' '.join(partes) + ' Dame la corrección breve.'
+    mensaje = ' '.join(partes) + ' Give the brief correction.'
     messages = [{'role': 'user', 'content': mensaje}]
 
     milo = AsistenteMilo()
@@ -123,7 +123,7 @@ def milo_correccion(request):
     ))
     texto = resultado.get('texto', '').strip()
     if not texto or resultado.get('motor') == 'error':
-        texto = '¡Casi lo logras! La respuesta correcta era: ' + (respuesta_correcta or '…') + '. ¡Tú puedes! 💪'
+        texto = 'Almost there! The correct answer was: ' + (respuesta_correcta or '…') + '. You can do it! 💪'
 
     return JsonResponse({'correccion': texto})
 

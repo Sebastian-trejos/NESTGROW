@@ -251,6 +251,42 @@ function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty,
     checkSelection();
   });
 
+  // ── Vocab map: UPPERCASED-NO-SPACES → item ───────────────────
+  const vocabMap = {};
+  vocabulary.forEach(item => {
+    const key = item.word_en.toUpperCase().replace(/\s/g, '');
+    vocabMap[key] = item;
+  });
+
+  // ── Ghost image apparition ───────────────────────────────────
+  function showGhostImage(word) {
+    const item = vocabMap[word];
+    if (!item || (!item.image && !item.emoji)) return;
+
+    const ghost = document.createElement('div');
+    ghost.className = 'ws-ghost';
+
+    if (item.image) {
+      ghost.innerHTML = `<img src="${item.image}" alt="${item.word_en}">`;
+    } else {
+      ghost.innerHTML = `<span class="ws-ghost-emoji">${item.emoji}</span>`;
+    }
+
+    document.body.appendChild(ghost);
+
+    // Fade in (double rAF forces the initial style to be painted first)
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ghost.classList.add('ws-ghost--in');
+    }));
+
+    // Fade out after 700 ms, then remove
+    setTimeout(() => {
+      ghost.classList.remove('ws-ghost--in');
+      ghost.classList.add('ws-ghost--out');
+      setTimeout(() => ghost.remove(), 460);
+    }, 700);
+  }
+
   // ── Word check ───────────────────────────────────────────────
 
   function checkSelection() {
@@ -292,6 +328,7 @@ function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty,
       foundCountEl.textContent = foundWords.size;
       if (scoreDisplay) scoreDisplay.textContent = score;
       showScoreToast(ptsPerAction, true);
+      showGhostImage(match.word);
 
       if ('speechSynthesis' in window) {
         const u = new SpeechSynthesisUtterance(match.word.toLowerCase());
@@ -302,7 +339,8 @@ function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty,
       if (foundWords.size === placedWords.length) {
         setTimeout(() => {
           window.timeSpent = timer ? timer.getElapsed() : 0;
-          showWinScreen(score, placedWords.length * ptsPerAction, gameId);
+          const _wsMax = placedWords.length * ptsPerAction;
+          showWinScreen(_wsMax > 0 ? Math.round((score / _wsMax) * pointsReward) : 0, pointsReward, gameId);
         }, 500);
       }
     } else {
@@ -320,7 +358,8 @@ function initWordSearch(vocabulary, gameId, timeLimit, pointsReward, difficulty,
     const timerEl = document.getElementById('timerDisplay');
     timer = new GameTimer(timeLimit, timerEl, () => {
       window.timeSpent = timeLimit;
-      showWinScreen(score, placedWords.length * ptsPerAction, gameId);
+      const _wsMaxT = placedWords.length * ptsPerAction;
+      showWinScreen(_wsMaxT > 0 ? Math.round((score / _wsMaxT) * pointsReward) : 0, pointsReward, gameId);
     });
     timer.start();
   }

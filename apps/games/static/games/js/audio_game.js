@@ -55,14 +55,12 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
   // Inject per-difficulty cell size overrides
   const cellStyle = document.createElement('style');
   cellStyle.textContent = difficulty >= 3
-    ? `.ab-cell { min-height:72px; padding:5px 4px 4px; }
-       .ab-cell img { height:44px; margin-bottom:3px; }
-       .ab-cell-word { font-size:0.72rem; }
+    ? `.ab-cell { min-height:95px; padding:5px; }
+       .ab-cell img { height:72px; }
        .ab-cell-word-big { font-size:0.88rem; }`
     : difficulty === 2
-    ? `.ab-cell { min-height:80px; padding:6px 5px 5px; }
-       .ab-cell img { height:54px; }
-       .ab-cell-word { font-size:0.78rem; }
+    ? `.ab-cell { min-height:108px; padding:6px; }
+       .ab-cell img { height:84px; }
        .ab-cell-word-big { font-size:0.95rem; }`
     : '';
   if (cellStyle.textContent) document.head.appendChild(cellStyle);
@@ -76,9 +74,7 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
       cell.dataset.idx = idx;
 
       if (state.item.image) {
-        cell.innerHTML =
-          `<img src="${state.item.image}" alt="${state.item.word_en}">` +
-          `<div class="ab-cell-word">${state.item.word_en}</div>`;
+        cell.innerHTML = `<img src="${state.item.image}" alt="${state.item.word_en}">`;
       } else {
         cell.innerHTML = `<div class="ab-cell-word-big">${state.item.word_en}</div>`;
       }
@@ -222,9 +218,9 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
     waitingForSelection = true;
 
     if (currentBatch.length > 1) {
-      hintMsg.textContent = `¡Escucha las ${currentBatch.length} palabras y encuéntralas todas!`;
+      hintMsg.textContent = `Listen to the ${currentBatch.length} words and find them all!`;
     } else {
-      hintMsg.textContent = '🎯 ¡Encuentra esa palabra en la tarjeta!';
+      hintMsg.textContent = '🎯 Find that word on your card!';
     }
 
     updateBatchUI();
@@ -256,7 +252,7 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
       check.textContent = '✔';
       state.cellEl.appendChild(check);
 
-      hintMsg.textContent = `✅ ¡Correcto! "${state.item.word_en}" = ${state.item.word_es}`;
+      hintMsg.textContent = `✅ Correct! "${state.item.word_en}" means "${state.item.word_es}"`;
       updateBatchUI();
 
       // Win?
@@ -279,16 +275,16 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
         if (difficulty >= 2 && correctSinceLastShuffle >= SHUFFLE_EVERY) {
           correctSinceLastShuffle = 0;
           setTimeout(async () => {
-            hintMsg.textContent = '🔀 ¡Las palabras se están mezclando!';
+            hintMsg.textContent = '🔀 Shuffling the cards!';
             await triggerShuffle();
             bomboReady = true;
             abSpinBtn.disabled = false;
-            hintMsg.textContent = '¡Palabras mezcladas! Gira el bombo de nuevo.';
+            hintMsg.textContent = 'Cards shuffled! Spin the drum again.';
           }, 500);
         } else {
           bomboReady = true;
           abSpinBtn.disabled = false;
-          hintMsg.textContent = '¡Bien! Gira el bombo para continuar.';
+          hintMsg.textContent = 'Nice! Spin the drum to continue.';
         }
       } else {
         // More in batch to find
@@ -313,7 +309,7 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
         xEl.remove();
       }, 650);
 
-      hintMsg.textContent = '❌ ¡Oops! Esa no es, ¡inténtalo de nuevo!';
+      hintMsg.textContent = "❌ Oops! That's not it — try again!";
     }
   }
 
@@ -368,7 +364,7 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
   function showOopsToast() {
     const el = document.createElement('div');
     el.className = 'ab-oops-toast';
-    el.textContent = '😬 ¡Oops! Palabra incorrecta';
+    el.textContent = '😬 Oops! Wrong card!';
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 1350);
   }
@@ -376,7 +372,8 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
   // ── End game ──────────────────────────────────────────────
   function endGame() {
     window.timeSpent = 0;
-    showWinScreen(score, cardSize * ptsPerAction, gameId);
+    const _agMax = cardSize * ptsPerAction;
+    showWinScreen(_agMax > 0 ? Math.round((score / _agMax) * pointsReward) : 0, pointsReward, gameId);
   }
 
   // ── Wire up events ────────────────────────────────────────
@@ -384,5 +381,5 @@ function initAudioGame(vocabulary, gameId, pointsReward, penaltyAmount, difficul
   abDrum.addEventListener('click', triggerBombo);
 
   // Ready
-  hintMsg.textContent = '¡Gira el bombo para escuchar una palabra!';
+  hintMsg.textContent = 'Spin the drum to hear a word!';
 }

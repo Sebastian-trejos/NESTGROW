@@ -68,7 +68,7 @@
 {% block content %}
 <div class="container py-4">
   <div class="d-flex align-items-center gap-3 mb-4">
-    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>{% endif %}
+    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Back</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-caret-left-fill me-1"></i> Back</a>{% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--accent)">🧩 {{ game.title }}</h3>
   </div>
 
@@ -99,9 +99,9 @@
       <!-- Acciones -->
       <div class="d-flex gap-2 justify-content-center mt-4 flex-wrap">
         <button class="btn" style="background:#fff3cd;color:#856404;border-radius:50px;font-family:'Fredoka One',cursive"
-                onclick="shufflePieces()">🔀 Mezclar</button>
+                onclick="shufflePieces()">🔀 Shuffle</button>
         <button class="btn" style="background:linear-gradient(135deg,var(--accent),#2ecc71);color:white;border-radius:50px;font-family:'Fredoka One',cursive"
-                onclick="checkPuzzleComplete()">✅ Verificar</button>
+                onclick="checkPuzzleComplete()">✅ Verify</button>
       </div>
     </div>
 
@@ -114,9 +114,9 @@
     <div class="modal-content" style="border-radius:24px;border:none">
       <div class="modal-body text-center p-5">
         <div style="font-size:4rem">🧩😅</div>
-        <h3 class="font-fredoka mt-2" style="color:var(--secondary)">¡Casi lo logras!</h3>
+        <h3 class="font-fredoka mt-2" style="color:var(--secondary)">Almost there!</h3>
         <p class="fw-bold text-muted fs-5" id="errorMsg"></p>
-        <button class="btn btn-nestgrow btn-primary-nestgrow mt-2" data-bs-dismiss="modal">¡Seguir intentando! 💪</button>
+        <button class="btn btn-nestgrow btn-primary-nestgrow mt-2" data-bs-dismiss="modal">Keep trying! 💪</button>
       </div>
     </div>
   </div>
@@ -128,7 +128,7 @@
     <div class="modal-content" style="border-radius:24px;border:none">
       <div class="modal-body text-center p-5">
         <div style="font-size:4rem">🧩🎉</div>
-        <h3 class="font-fredoka mt-2" style="color:var(--accent)" id="nextTitle">¡Imagen armada!</h3>
+        <h3 class="font-fredoka mt-2" style="color:var(--accent)" id="nextTitle">Image assembled!</h3>
         <p class="fw-bold text-muted" id="nextMsg"></p>
         <div class="d-flex gap-3 justify-content-center mt-3" id="nextButtons"></div>
       </div>
@@ -143,19 +143,19 @@
       <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
     <div class="win-card-body">
-    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
-    <div class="win-title" id="winTitle">¡Rompecabezas completado!</div>
+    <div class="win-message" id="winMessage">Excellent work!</div>
+    <div class="win-title" id="winTitle">Puzzle completed!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="win-clasif font-fredoka" id="winClasif"></div>
     <div class="win-score"><span id="winScore">0</span> pts</div>
     <div class="win-huesos" id="winHuesos"></div>
     <button class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block" onclick="location.reload()">
-      🔄 Jugar de nuevo
+      🔄 Play again
     </button>
     {% if user.role == 'profesor' %}
-    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>
+    <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill mt-2 d-block"><i class="bi bi-caret-left-fill me-1"></i> Back</a>
     {% else %}
-    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2 d-block">✔️ Volver al panel</a>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-2 d-block">✔️ Back to dashboard</a>
     {% endif %}
     </div>
   </div>

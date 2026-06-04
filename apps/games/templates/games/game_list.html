@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Minijuegos - NestGrow{% endblock %}
+{% block title %}Minigames - NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -325,23 +325,23 @@
       <div class="col-md-8">
         <div class="d-inline-flex align-items-center gap-2 mb-3 px-4 py-2 rounded-pill fw-bold"
              style="background:rgba(255,255,255,0.25);color:white;font-size:0.9rem">
-          <i class="bi bi-controller"></i> Zona de juegos
+          <i class="bi bi-controller"></i> Game zone
         </div>
         <h2 class="font-fredoka mb-2" style="font-size:2.5rem;line-height:1.1">
-          ¡Elige tu minijuego y<br>aprende inglés!
+          Choose your minigame and<br>learn English!
         </h2>
         <p style="opacity:0.9;font-weight:700;font-size:1.1;margin-bottom:1.2rem">
-          Cada minijuego te da puntos y te acerca más al siguiente nivel.
+          Each minigame gives you points and brings you closer to the next level.
         </p>
         <div class="d-flex gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
-            <i class="bi bi-star-fill" style="color:#FFE66D;font-size:1.2rem"></i> Gana puntos
+            <i class="bi bi-star-fill" style="color:#FFE66D;font-size:1.2rem"></i> Earn points
           </div>
           <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
-            <i class="bi bi-award-fill" style="color:#FFE66D;font-size:1.2rem"></i> Desbloquea logros
+            <i class="bi bi-award-fill" style="color:#FFE66D;font-size:1.2rem"></i> Unlock achievements
           </div>
           <div class="d-flex align-items-center gap-2 fw-bold" style="color:rgba(255,255,255,0.95)">
-            <i class="bi bi-trophy-fill" style="color:#FFE66D;font-size:1.2rem"></i> Sube en el ranking
+            <i class="bi bi-trophy-fill" style="color:#FFE66D;font-size:1.2rem"></i> Climb the ranking
           </div>
         </div>
       </div>
@@ -356,12 +356,12 @@
   <!-- FILTROS -->
   <div class="d-flex gap-2 flex-wrap mb-4 align-items-center">
     <span class="fw-bold me-2" style="color:var(--primary);font-family:'Fredoka One',cursive;font-size:1.1rem">
-      <i class="bi bi-funnel-fill me-1"></i>Filtrar:
+      <i class="bi bi-funnel-fill me-1"></i>Filter:
     </span>
     <a href="{% url 'games:game_list' %}"
        class="filter-chip {% if not selected_category %}active{% else %}inactive all{% endif %}"
        style="text-decoration:none">
-      <i class="bi bi-grid-fill"></i>Todos
+      <i class="bi bi-grid-fill"></i>All
     </a>
     {% for cat in categories %}
     <a href="?categoria={{ cat.id }}"
@@ -414,15 +414,15 @@
 
           {# Nombre del tipo bien visible #}
           <span class="gb-type-name">
-            {% if game.game_type == 'drag_and_drop' %}Arrastrar
-            {% elif game.game_type == 'word_search' %}Sopa de letras
+            {% if game.game_type == 'drag_and_drop' %}Connect
+            {% elif game.game_type == 'word_search' %}Word Search
             {% elif game.game_type == 'puzzle' %}Puzzle
-            {% elif game.game_type == 'painting' %}Pintura libre
+            {% elif game.game_type == 'painting' %}Painting
             {% elif game.game_type == 'audio_matching' %}Audio
-            {% elif game.game_type == 'memoria' %}Memoria
-            {% elif game.game_type == 'ahorcado' %}Ahorcado
-            {% elif game.game_type == 'globos' %}Globos
-            {% else %}Minijuego{% endif %}
+            {% elif game.game_type == 'memoria' %}Memory
+            {% elif game.game_type == 'ahorcado' %}Hangman
+            {% elif game.game_type == 'globos' %}Balloons
+            {% else %}Minigame{% endif %}
           </span>
         </div>
 
@@ -434,9 +434,9 @@
               {{ game.category.icon|safe }} {{ game.category.name }}
             </span>
             <span class="diff-badge {% if game.difficulty == 1 %}diff-easy{% elif game.difficulty == 2 %}diff-medium{% else %}diff-hard{% endif %}">
-              {% if game.difficulty == 1 %}⭐ Fácil
-              {% elif game.difficulty == 2 %}⭐⭐ Medio
-              {% else %}⭐⭐⭐ Difícil{% endif %}
+              {% if game.difficulty == 1 %}⭐ Easy
+              {% elif game.difficulty == 2 %}⭐⭐ Medium
+              {% else %}⭐⭐⭐ Hard{% endif %}
             </span>
           </div>
           <p class="gc-title">{{ game.title }}</p>
@@ -446,7 +446,7 @@
               <i class="bi bi-star-fill" style="color:#FFB347"></i>+{{ game.points_reward }} pts
             </span>
             <span class="gc-play-btn">
-              <i class="bi bi-play-fill"></i>¡Jugar!
+              <i class="bi bi-play-fill"></i>Play!
             </span>
           </div>
         </div>
@@ -458,13 +458,13 @@
   {% else %}
   <div class="empty-state">
     <i class="bi bi-controller" style="font-size:4rem;color:#ccc;margin-bottom:1rem;display:block"></i>
-    <h3 class="font-fredoka mt-2 mb-2" style="color:var(--primary);font-size:1.6rem">¡Aún no hay juegos!</h3>
-    <p class="text-muted fw-bold mb-3">El profesor Miló está preparando nuevos juegos para esta categoría.</p>
+    <h3 class="font-fredoka mt-2 mb-2" style="color:var(--primary);font-size:1.6rem">No games yet!</h3>
+    <p class="text-muted fw-bold mb-3">Teacher Milo is preparing new games for this category.</p>
     <a href="{% url 'games:game_list' %}"
        class="btn fw-bold mt-2"
        style="background:linear-gradient(135deg,#6C63FF,#9c94ff);color:white;
               padding:12px 32px;font-family:'Fredoka One',cursive;border-radius:50px">
-      <i class="bi bi-caret-left-fill me-2"></i>Ver todos los juegos
+      <i class="bi bi-caret-left-fill me-2"></i>View all games
     </a>
   </div>
   {% endif %}

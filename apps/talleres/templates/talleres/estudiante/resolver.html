@@ -37,7 +37,7 @@
     <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
       <div>
         <div class="fw-bold" style="color:var(--primary)">📋 {{ taller.titulo }}</div>
-        <div class="text-muted small fw-bold">Bloque {{ bloque_idx|add:1 }} de {{ total_bloques }}</div>
+        <div class="text-muted small fw-bold">Block {{ bloque_idx|add:1 }} of {{ total_bloques }}</div>
       </div>
       <span class="badge rounded-pill"
             style="background:{% if bloque_actual.tipo == 'pregunta' %}#f0eeff;color:#6C63FF{% else %}#fff5f5;color:var(--secondary){% endif %}">
@@ -55,7 +55,7 @@
   {% with q=bloque_actual.bloque_pregunta %}
   <div class="nestgrow-card p-4 mb-4" id="bloque-contenido">
     <div class="mb-3">
-      <span class="badge rounded-pill mb-2" style="background:#f0eeff;color:#6C63FF">❓ Pregunta · {{ q.puntaje_parcial }} pts</span>
+      <span class="badge rounded-pill mb-2" style="background:#f0eeff;color:#6C63FF">❓ Question · {{ q.puntaje_parcial }} pts</span>
       {% if q.imagen %}
       <img src="{{ q.imagen.url }}" class="img-fluid rounded-3 d-block mb-3" style="max-height:220px">
       {% endif %}
@@ -69,7 +69,7 @@
 
     {% if q.tipo_respuesta == 'parrafo' %}
     <textarea id="respuesta-parrafo" class="form-control mb-3" rows="4"
-              placeholder="Escribe tu respuesta aquí..."></textarea>
+              placeholder="Write your answer here..."></textarea>
 
     {% elif q.tipo_respuesta == 'opcion_multiple' %}
     <div class="d-flex flex-column gap-2 mb-3" id="opciones-lista">
@@ -102,17 +102,17 @@
 
     {% elif q.tipo_respuesta == 'dibujo' %}
     <div class="mb-3">
-      <p class="small fw-bold text-muted mb-2">🎨 ¡Dibuja tu respuesta!</p>
+      <p class="small fw-bold text-muted mb-2">🎨 Draw your answer!</p>
       <div class="paint-wrapper">
 
         <!-- Herramientas -->
         <div class="draw-toolbar">
           <div style="font-size:0.6rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px">Tool</div>
-          <button class="tool-btn active" id="tool-brush"  onclick="setTool('brush')"  title="Pincel">🖌️</button>
-          <button class="tool-btn"        id="tool-pencil" onclick="setTool('pencil')" title="Lápiz">✏️</button>
-          <button class="tool-btn"        id="tool-marker" onclick="setTool('marker')" title="Marcador">🖊️</button>
-          <button class="tool-btn"        id="tool-fill"   onclick="setTool('fill')"   title="Relleno">🪣</button>
-          <button class="tool-btn"        id="tool-eraser" onclick="setTool('eraser')" title="Borrador">🧹</button>
+          <button class="tool-btn active" id="tool-brush"  onclick="setTool('brush')"  title="Brush">🖌️</button>
+          <button class="tool-btn"        id="tool-pencil" onclick="setTool('pencil')" title="Pencil">✏️</button>
+          <button class="tool-btn"        id="tool-marker" onclick="setTool('marker')" title="Marker">🖊️</button>
+          <button class="tool-btn"        id="tool-fill"   onclick="setTool('fill')"   title="Fill">🪣</button>
+          <button class="tool-btn"        id="tool-eraser" onclick="setTool('eraser')" title="Eraser">🧹</button>
           <hr style="width:100%;border-color:#e8e4ff;margin:2px 0">
           <div style="font-size:0.6rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:1px">Size</div>
           <input type="range" class="draw-size-slider" min="1" max="40" value="8" id="brushSize"
@@ -120,8 +120,8 @@
                  style="writing-mode:vertical-lr;direction:rtl;width:6px;height:80px">
           <div id="sizeDisplay" style="font-size:0.72rem;font-weight:700;color:var(--primary)">8px</div>
           <hr style="width:100%;border-color:#e8e4ff;margin:2px 0">
-          <button class="tool-btn" onclick="undoAction()" title="Deshacer">↩️</button>
-          <button class="tool-btn" onclick="clearCanvas()" title="Limpiar todo">🗑️</button>
+          <button class="tool-btn" onclick="undoAction()" title="Undo">↩️</button>
+          <button class="tool-btn" onclick="clearCanvas()" title="Clear all">🗑️</button>
         </div>
 
         <!-- Canvas -->
@@ -164,7 +164,7 @@
 
     <button id="btn-responder" class="btn btn-nestgrow btn-primary-nestgrow w-100 fw-bold"
             onclick="enviarRespuesta({{ bloque_actual.pk }}, '{{ q.tipo_respuesta }}')">
-      Confirmar respuesta →
+      Confirm answer →
     </button>
   </div>
   {% endwith %}
@@ -174,15 +174,15 @@
   {% with m=bloque_actual.bloque_minijuego %}
   <div class="nestgrow-card p-4 mb-4" id="bloque-contenido">
     <div class="mb-3">
-      <span class="badge rounded-pill mb-2" style="background:#fff5f5;color:var(--secondary)">🎮 Minijuego</span>
+      <span class="badge rounded-pill mb-2" style="background:#fff5f5;color:var(--secondary)">🎮 Minigame</span>
       {% if m.game.description %}
       <p class="text-muted small mt-2 mb-0">{{ m.game.description }}</p>
       {% endif %}
     </div>
 
     <div class="alert" style="background:#fff9e6;border:2px solid #ffe49c">
-      <div class="fw-bold">🐺 Instrucciones de Milo:</div>
-      <div class="small">Juega el minijuego y cuando hayas terminado, haz clic en <strong>"Continuar al siguiente bloque"</strong>.</div>
+      <div class="fw-bold">🐺 Milo's Instructions:</div>
+      <div class="small">Play the minigame and when you're done, click <strong>"Continue to the next block"</strong>.</div>
     </div>
 
     <div id="iframe-wrapper-{{ bloque_actual.pk }}" style="position:relative">
@@ -196,7 +196,7 @@
             class="btn w-100 fw-bold rounded-pill mt-3"
             style="background:var(--accent);color:white;font-size:1.1rem"
             onclick="completarMinijuego({{ bloque_actual.pk }})">
-      Continuar al siguiente bloque →
+      Continue to the next block →
     </button>
   </div>
   {% endwith %}
@@ -228,7 +228,7 @@ function marcarOpcionSeleccionada(radio) {
 async function enviarRespuesta(bloquePk, tipoRespuesta) {
   const btn = document.getElementById('btn-responder');
   btn.disabled = true;
-  btn.textContent = 'Enviando...';
+  btn.textContent = 'Sending...';
 
   const fd = new FormData();
   fd.append('csrfmiddlewaretoken', CSRF);
@@ -243,17 +243,17 @@ async function enviarRespuesta(bloquePk, tipoRespuesta) {
     blankCtx.fillStyle = '#ffffff';
     blankCtx.fillRect(0, 0, blank.width, blank.height);
     if (canvas.toDataURL() === blank.toDataURL()) {
-      alert('⚠️ ¡Dibuja algo antes de confirmar!');
-      btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return;
+      alert('⚠️ Draw something before confirming!');
+      btn.disabled = false; btn.textContent = 'Confirm answer →'; return;
     }
     fd.append('dibujo_data', canvas.toDataURL('image/png'));
   } else if (tipoRespuesta === 'opcion_multiple') {
     const sel = document.querySelector('input[name="opcion"]:checked');
-    if (!sel) { alert('⚠️ Selecciona una opción.'); btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return; }
+    if (!sel) { alert('⚠️ Select an option.'); btn.disabled = false; btn.textContent = 'Confirm answer →'; return; }
     fd.append('opciones', sel.value);
   } else { // casillas
     const checks = document.querySelectorAll('input[name="opcion"]:checked');
-    if (checks.length === 0) { alert('⚠️ Selecciona al menos una opción.'); btn.disabled = false; btn.textContent = 'Confirmar respuesta →'; return; }
+    if (checks.length === 0) { alert('⚠️ Select at least one option.'); btn.disabled = false; btn.textContent = 'Confirm answer →'; return; }
     checks.forEach(c => fd.append('opciones', c.value));
   }
 
@@ -265,9 +265,9 @@ async function enviarRespuesta(bloquePk, tipoRespuesta) {
     mostrarFeedback(data.es_correcta, data.puntos, data.next,
                     data.enunciado || '', data.respuesta_correcta || '');
   } else {
-    alert('❌ Error al enviar. Recarga la página e intenta de nuevo.');
+    alert('❌ Error sending. Reload the page and try again.');
     btn.disabled = false;
-    btn.textContent = 'Confirmar respuesta →';
+    btn.textContent = 'Confirm answer →';
   }
 }
 
@@ -311,12 +311,12 @@ function mostrarFeedback(esCorrecta, puntos, next, enunciado, respuestaCorrecta)
 
   if (esCorrecta === null || esDibujo) {
     window.miloComentarista('neutro',
-      { msg: esDibujo ? '🎨 ¡Dibujo enviado!' : '✍️ ¡Respuesta registrada!' },
+      { msg: esDibujo ? '🎨 Drawing sent!' : '✍️ Answer registered!' },
       () => _navegar(next)
     );
   } else if (esCorrecta) {
     window.miloComentarista('correcto',
-      { msg: `¡Correcto! +${puntos} puntos 🎉` },
+      { msg: `¡Correcto! +${puntos} points 🎉` },
       () => _navegar(next)
     );
   } else {
@@ -324,7 +324,7 @@ function mostrarFeedback(esCorrecta, puntos, next, enunciado, respuestaCorrecta)
       pregunta: enunciado,
       respuesta_correcta: respuestaCorrecta,
       respuesta_dada: '',
-      contexto: 'Taller de inglés',
+      contexto: 'English workshop',
     }, () => _navegar(next));
   }
 }

@@ -41,7 +41,8 @@ function initPuzzle(vocabulary, gameId, timeLimit, pointsReward, difficulty, pen
     if (timerEl) {
       timer = new GameTimer(timeLimit, timerEl, () => {
         window.timeSpent = timeLimit;
-        showWinScreen(totalScore, images.length * ptsPerAction, gameId);
+        const _pzMaxT = images.length * ptsPerAction;
+        showWinScreen(_pzMaxT > 0 ? Math.round((totalScore / _pzMaxT) * pointsReward) : 0, pointsReward, gameId);
       });
       timer.start();
     }
@@ -206,7 +207,8 @@ function initPuzzle(vocabulary, gameId, timeLimit, pointsReward, difficulty, pen
       // Último puzzle → win screen estándar
       if (timer) timer.stop();
       window.timeSpent = timer ? timer.getElapsed() : 0;
-      showWinScreen(totalScore, images.length * ptsPerAction, gameId);
+      const _pzMax = images.length * ptsPerAction;
+      showWinScreen(_pzMax > 0 ? Math.round((totalScore / _pzMax) * pointsReward) : 0, pointsReward, gameId);
       return;
     }
 

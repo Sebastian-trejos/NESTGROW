@@ -9,14 +9,14 @@
 {% block content %}
 <div class="container py-4 memoria-page">
   <div class="d-flex align-items-center gap-3 mb-4">
-    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Volver</a>{% endif %}
+    {% if user.role == 'profesor' %}<a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">← Back</a>{% else %}<a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">← Back</a>{% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🃏 {{ game.title }}</h3>
   </div>
 
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega estos minijuegos dentro de los <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    To earn <strong>Milo's Bones</strong> and level up, play these minigames inside the <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Workshops</a>.
   </div>
   {% endif %}
 
@@ -24,11 +24,11 @@
 
   <div id="gameSection" style="display:none">
     <div class="game-score-bar flex-wrap gap-2">
-      <span>🃏 Memorama</span>
+      <span>🃏 Memory</span>
       <span class="badge rounded-pill mem-diff-chip" title="Define el profesor al crear el minijuego">
-        {% if game.difficulty == 1 %}⭐ Fácil — 4 parejas{% elif game.difficulty == 2 %}⭐⭐ Medio — 6 parejas{% else %}⭐⭐⭐ Difícil — 8 parejas{% endif %}
+        {% if game.difficulty == 1 %}⭐ Easy — 4 pairs{% elif game.difficulty == 2 %}⭐⭐ Medium — 6 pairs{% else %}⭐⭐⭐ Hard — 8 pairs{% endif %}
       </span>
-      <span>Parejas: <strong id="matchCount">0</strong> / <strong id="totalPairs">0</strong></span>
+      <span>Pairs: <strong id="matchCount">0</strong> / <strong id="totalPairs">0</strong></span>
       <span>⏱ <span id="timerDisplay">00:00</span></span>
     </div>
 
@@ -36,21 +36,21 @@
       <div class="milo-banner-owl mem-milo-owl-wrap">
         <img src="{% static 'img/milo_hablando.png' %}" alt="" class="mem-milo-face" width="56" height="56" draggable="false">
       </div>
-      <div class="milo-banner-text" id="memBannerText">¡Encuentra todas las parejas! Voltea las tarjetas y memoriza.</div>
+      <div class="milo-banner-text" id="memBannerText">Find all the pairs! Flip the cards and memorize.</div>
     </div>
 
     {% if game.difficulty == 3 %}
-    <p class="text-center small text-muted mb-2">💡 Pasados 20 s, algunas cartas pueden cambiar de lugar. ¡En modo difícil también puede irse la luz!</p>
+    <p class="text-center small text-muted mb-2">💡 After 20 s, some cards may swap places. In hard mode the lights can also go out!</p>
     {% elif game.difficulty == 2 %}
-    <p class="text-center small text-muted mb-2">💡 Pasados 20 s, algunas cartas podrían cambiar de lugar. ¡Memoriza bien dónde están!</p>
+    <p class="text-center small text-muted mb-2">💡 After 20 s, some cards might swap places. Memorize their positions well!</p>
     {% elif game.difficulty == 1 %}
-    <p class="text-center small text-muted mb-2">💡 Cada ~15 s las cartas se reordenan solas ¡dentro del recuadro de Milo!</p>
+    <p class="text-center small text-muted mb-2">💡 Every ~15 s the cards reshuffle on their own inside Milo's box!</p>
     {% endif %}
 
     <div class="text-center mb-3">
       <div class="stat-card d-inline-block px-5 shadow-sm">
         <div class="stat-number mem-score-pop" id="scoreDisplay">0</div>
-        <div class="stat-label">Puntos</div>
+        <div class="stat-label">Points</div>
       </div>
     </div>
 
@@ -58,14 +58,14 @@
       <div class="mem-board-corner mem-board-corner-tl"></div>
       <div class="mem-board-corner mem-board-corner-br"></div>
       <p class="mem-board-tagline mb-0">
-        🎯 <strong>Arena de Milo</strong> — ¡todo pasa dentro de esta caja mágica!
+        🎯 <strong>Milo's Arena</strong> — everything happens inside this magic box!
       </p>
       <div class="mem-board-stage">
         <div id="memoryGrid" class="memory-grid" aria-label="Cartas Memorama dentro del tablero"></div>
         <div id="memBlackout" class="mem-blackout mem-blackout--board" aria-hidden="true">
           <div class="mem-blackout-inner animate__animated animate__pulse">
             <span class="mem-blackout-icon" aria-hidden="true">⚡</span>
-            <p class="mem-blackout-text">¡Se fue la luz!</p>
+            <p class="mem-blackout-text">Lights out!</p>
           </div>
         </div>
       </div>
@@ -80,13 +80,13 @@
     <div class="win-milo-wrap">
       <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
-    <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
-    <div class="win-title">¡Memorama increíble!</div>
+    <div class="win-message" id="winMessage">Excellent work!</div>
+    <div class="win-title">Incredible Memory!</div>
     <div class="win-stars" id="winStars">⭐⭐⭐</div>
     <div class="win-clasif font-fredoka" id="winClasif"></div>
     <div class="win-score"><span id="winScore">0</span> pts · <span id="winTime">0</span>s</div>
     <div class="win-huesos" id="winHuesos"></div>
-    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Volver al panel</a>
+    <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}" class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">✔️ Back to dashboard</a>
   </div>
 </div>
 {% endblock %}

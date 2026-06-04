@@ -92,11 +92,11 @@
   <div class="d-flex align-items-center gap-3 mb-4">
     {% if user.role == 'profesor' %}
       <a href="{% url 'talleres:lista_periodos' %}" class="btn btn-outline-secondary rounded-pill">
-        <i class="bi bi-caret-left-fill me-1"></i>Volver
+        <i class="bi bi-caret-left-fill me-1"></i>Back
       </a>
     {% else %}
       <a href="{% url 'talleres:mis_talleres' %}" class="btn btn-outline-secondary rounded-pill">
-        <i class="bi bi-caret-left-fill me-1"></i>Volver
+        <i class="bi bi-caret-left-fill me-1"></i>Back
       </a>
     {% endif %}
     <h3 class="font-fredoka mb-0" style="color:var(--primary)">🦴 {{ game.title }}</h3>
@@ -105,8 +105,8 @@
   {% if not embedded and user.role == 'estudiante' %}
   <div class="alert fw-bold mb-3" style="background:#fff9ee;border:2px solid #FFB347;border-radius:14px;color:#8B4513">
     <i class="bi bi-info-circle-fill me-2" style="color:#FFB347"></i>
-    Para ganar <strong>Huesos de Milo</strong> y subir de nivel, juega dentro de los
-    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Talleres</a>.
+    To earn <strong>Milo's Bones</strong> and level up, play inside the
+    <a href="{% url 'talleres:mis_talleres' %}" class="fw-bold text-decoration-none" style="color:#FFB347">Workshops</a>.
   </div>
   {% endif %}
 
@@ -116,11 +116,11 @@
   <div id="gameSection" style="display:none">
 
     <div class="game-score-bar">
-      <span>🦴 Ahorcado de Milo</span>
-      <span>Palabra <strong id="wordNum">1</strong> / <strong id="totalWords">0</strong></span>
+      <span>🦴 Milo's Hangman</span>
+      <span>Word <strong id="wordNum">1</strong> / <strong id="totalWords">0</strong></span>
       <span style="color:#e53935;font-weight:800">
         <i class="bi bi-x-circle-fill me-1"></i>
-        <span id="wrongCount">0</span> / <span id="maxLivesBar">0</span> fallos
+        <span id="wrongCount">0</span> / <span id="maxLivesBar">0</span> misses
       </span>
       <span>⭐ <strong id="scoreDisplay">0</strong> pts</span>
     </div>
@@ -131,7 +131,7 @@
       <div class="col-lg-4 col-md-5" style="display:flex;flex-direction:column">
         <div class="hangman-card" style="flex:1">
           <div class="fw-bold small mb-2" style="color:var(--primary)">
-            <i class="bi bi-person-fill me-1"></i>El Ahorcado
+            <i class="bi bi-person-fill me-1"></i>The Hangman
           </div>
 
           <!--
@@ -214,7 +214,7 @@
           <div>
             <div class="hint-word" id="hintEs">—</div>
             <div class="text-muted small fw-bold" style="font-size:.75rem">
-              ¿Cómo se dice en inglés?
+              How do you say it in English?
             </div>
           </div>
         </div>
@@ -232,7 +232,7 @@
         <div class="text-center mt-auto">
           <div class="stat-card d-inline-block px-5">
             <div class="stat-number" id="scoreDisplayBottom">0</div>
-            <div class="stat-label">Puntos</div>
+            <div class="stat-label">Points</div>
           </div>
         </div>
       </div>
@@ -248,15 +248,15 @@
       <img id="winMilo" class="win-milo-img" src="{% static 'img/milo_fest.png' %}" alt="Milo">
     </div>
     <div class="win-card-body">
-      <div class="win-message" id="winMessage">¡Excelente trabajo!</div>
-      <div class="win-title"   id="winTitle">¡Lo lograste!</div>
+      <div class="win-message" id="winMessage">Excellent work!</div>
+      <div class="win-title"   id="winTitle">You did it!</div>
       <div class="win-stars"   id="winStars">⭐⭐⭐</div>
       <div class="win-clasif font-fredoka" id="winClasif"></div>
       <div class="win-score"><span id="winScore">0</span> pts</div>
       <div class="win-huesos"  id="winHuesos"></div>
       <a id="btnVolverPanel" href="{% url 'talleres:mis_talleres' %}"
          class="btn btn-nestgrow btn-primary-nestgrow mt-3 d-block">
-        ✔️ Volver al panel
+        ✔️ Back to dashboard
       </a>
     </div>
   </div>
@@ -459,13 +459,13 @@ async function endGame(completed) {
   let tier, stars, miloFile, msg, title;
   if (pct >= 70) {
     tier='excelente'; stars='⭐⭐⭐'; miloFile='milo_fest.png';
-    msg='¡Excelente trabajo!'; title='¡Lo lograste!';
+    msg='Excellent work!'; title='You did it!';
   } else if (pct >= 40) {
     tier='regular'; stars='⭐⭐'; miloFile='milo_lupa1.png';
-    msg='¡Buen intento! Sigue practicando.'; title='¡Casi!';
+    msg='Good try! Keep practicing.'; title='Almost!';
   } else {
     tier='mal'; stars='⭐'; miloFile='milo_llorando.png';
-    msg='¡No te rindas! Tú puedes.'; title='¡Sigue intentando!';
+    msg='Don\'t give up! You can do it.'; title='Keep trying!';
   }
 
   if ($('winMilo'))    $('winMilo').src           = STATIC_URL + 'img/' + miloFile;
@@ -494,7 +494,7 @@ async function endGame(completed) {
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   if (VOCABULARY.length === 0) {
-    $('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ No hay palabras en esta categoría. Pídele al profesor que las añada.</div>';
+    $('gameSection').innerHTML = '<div class="alert alert-warning text-center">⚠️ No words in this category. Ask the teacher to add some.</div>';
     $('gameSection').style.display = 'block';
     return;
   }

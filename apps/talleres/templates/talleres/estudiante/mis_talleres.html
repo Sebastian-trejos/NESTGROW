@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mis Actividades{% endblock %}
+{% block title %}My Activities{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -391,12 +391,12 @@
     <div class="d-flex align-items-center gap-3 flex-wrap position-relative" style="z-index:1">
       <img src="{% static 'img/milo_fest.png' %}" class="act-hero-milo" alt="Milo">
       <div>
-        <div class="act-hero-name">¡Hola, {{ user.first_name|default:user.username }}! <i class="bi bi-mortarboard-fill"></i></div>
-        <div class="act-hero-sub">Aquí están tus actividades y minijuegos del período.</div>
+        <div class="act-hero-name">Hello, {{ user.first_name|default:user.username }}! <i class="bi bi-mortarboard-fill"></i></div>
+        <div class="act-hero-sub">Here are your activities and minigames for the period.</div>
       </div>
       <div class="ms-auto d-flex gap-2 flex-wrap">
         <div class="vocab-stat-pill" style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.3);font-family:'Fredoka One',cursive;padding:6px 16px;border-radius:50px;font-size:.88rem">
-          🦴 {{ user.huesos }} Huesos
+          🦴 {{ user.huesos }} Bones
         </div>
       </div>
     </div>
@@ -410,13 +410,13 @@
     <div class="flex-grow-1">
       <div class="periodo-title">{{ periodo_activo.titulo }}</div>
       <div class="periodo-sub">
-        Fecha límite: <strong>{{ periodo_activo.fecha_fin|date:"d \d\e F \d\e Y" }}</strong>
+        Deadline: <strong>{{ periodo_activo.fecha_fin|date:"d \d\e F \d\e Y" }}</strong>
         &nbsp;·&nbsp; {{ periodo_activo.salon }}
       </div>
     </div>
     {% if periodo_activo.meta_historia > 0 %}
     <div class="taller-meta-badge" style="background:#fff9c4;color:#f57f17">
-      ⭐ Meta: {{ periodo_activo.meta_historia }} estrellas
+      ⭐ Goal: {{ periodo_activo.meta_historia }} stars
     </div>
     {% endif %}
   </div>
@@ -425,7 +425,7 @@
 
     <!-- ── Talleres ── -->
     {% if talleres_pendientes %}
-    <div class="section-title">🎓 Talleres</div>
+    <div class="section-title">🎓 Workshops</div>
     <div class="row g-3 mb-4">
       {% for item in talleres_pendientes %}
       {% with t=item.taller s=item.sesion %}
@@ -435,9 +435,9 @@
           <div class="taller-card-inner d-flex flex-column h-100">
 
             <div class="taller-badge {% if item.completado %}listo{% elif item.en_progreso %}progreso{% else %}nuevo{% endif %}">
-              {% if item.completado %}✅ Ver resultado
-              {% elif item.en_progreso %}⏳ En progreso
-              {% else %}🆕 Nuevo{% endif %}
+              {% if item.completado %}✅ View result
+              {% elif item.en_progreso %}⏳ In progress
+              {% else %}🆕 New{% endif %}
             </div>
 
             <h5 class="font-fredoka mb-1" style="color:var(--primary);font-size:1.15rem">{{ t.titulo }}</h5>
@@ -446,7 +446,7 @@
             {% endif %}
 
             <div class="d-flex gap-2 flex-wrap mb-2">
-              <span class="taller-meta-badge" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} bloques</span>
+              <span class="taller-meta-badge" style="background:#f0eeff;color:var(--primary)">🧩 {{ t.total_bloques }} blocks</span>
               <span class="taller-meta-badge" style="background:#f0f8ff;color:#4a90d9">⭐ {{ t.puntos_xp }} XP</span>
               <span class="taller-meta-badge" style="background:#fff3e0;color:#8B4513">🦴 {{ t.huesos_recompensa }}</span>
             </div>
@@ -454,7 +454,7 @@
             {% if s and not item.completado %}
             <div class="mb-2">
               <div class="d-flex justify-content-between" style="font-size:.78rem;font-weight:800;color:#999;margin-bottom:4px">
-                <span>Progreso</span>
+                <span>Progress</span>
                 <span>{{ s.bloque_actual }}/{{ t.total_bloques }}</span>
               </div>
               <div class="prog-wrap">
@@ -467,18 +467,18 @@
               {% if item.completado %}
               <a href="{% url 'talleres:resultado_sesion' pk=s.pk %}"
                  class="btn btn-outline-warning rounded-pill w-100 fw-bold" style="font-family:'Fredoka One',cursive">
-                📊 Ver resultado →
+                📊 View result →
               </a>
               {% elif item.en_progreso %}
               <a href="{% url 'talleres:resolver' pk=t.pk %}"
                  class="btn rounded-pill w-100 fw-bold"
                  style="background:linear-gradient(135deg,#FFB347,#ffd200);color:white;border:none;font-family:'Fredoka One',cursive">
-                ▶ Continuar →
+                ▶ Continue →
               </a>
               {% else %}
               <a href="{% url 'talleres:resolver' pk=t.pk %}"
                  class="btn rounded-pill w-100 fw-bold btn-jugar">
-                🚀 Iniciar →
+                🚀 Start →
               </a>
               {% endif %}
             </div>
@@ -492,7 +492,7 @@
 
     <!-- ── Minijuegos ── -->
     {% if minijuegos_pendientes %}
-    <div class="section-title"><i class="bi bi-controller"></i> Minijuegos asignados</div>
+    <div class="section-title"><i class="bi bi-controller"></i> Assigned Minigames</div>
     <div class="row g-3 mb-4">
       {% for item in minijuegos_pendientes %}
       {% with g=item.game r=item.registro %}
@@ -549,20 +549,20 @@
                 {% else %}bi-controller{% endif %}"></i>
             </div>
             <span class="mini-type-badge">
-              {% if g.game_type == 'drag_and_drop' %}Arrastrar
-              {% elif g.game_type == 'word_search' %}Sopa letras
+              {% if g.game_type == 'drag_and_drop' %}Connect
+              {% elif g.game_type == 'word_search' %}Word Search
               {% elif g.game_type == 'puzzle' %}Puzzle
-              {% elif g.game_type == 'painting' %}Pintura
+              {% elif g.game_type == 'painting' %}Painting
               {% elif g.game_type == 'audio_matching' %}Audio
-              {% elif g.game_type == 'memoria' %}Memoria
-              {% elif g.game_type == 'ahorcado' %}Ahorcado
+              {% elif g.game_type == 'memoria' %}Memory
+              {% elif g.game_type == 'ahorcado' %}Hangman
               {% elif g.game_type == 'quiz' %}Quiz
-              {% elif g.game_type == 'ordenar_letras' %}Ordenar
-              {% elif g.game_type == 'globos' %}Globos
-              {% else %}Minijuego{% endif %}
+              {% elif g.game_type == 'ordenar_letras' %}Order
+              {% elif g.game_type == 'globos' %}Balloons
+              {% else %}Minigame{% endif %}
             </span>
             {% if item.completado %}
-              <span class="mini-done-badge"><i class="bi bi-check-lg me-1"></i>Listo</span>
+              <span class="mini-done-badge"><i class="bi bi-check-lg me-1"></i>Done</span>
             {% endif %}
           </div>
 
@@ -573,23 +573,23 @@
                 {{ g.category.icon|safe }} {{ g.category.name }}
               </span>
               <span class="taller-meta-badge" style="background:#f8f9fa;color:#888;font-size:.72rem">
-                {% if g.difficulty == 1 %}⭐ Fácil
-                {% elif g.difficulty == 2 %}⭐⭐ Medio
-                {% else %}⭐⭐⭐ Difícil{% endif %}
+                {% if g.difficulty == 1 %}⭐ Easy
+                {% elif g.difficulty == 2 %}⭐⭐ Medium
+                {% else %}⭐⭐⭐ Hard{% endif %}
               </span>
             </div>
             <div class="mini-title">{{ g.title }}</div>
             {% if r and r.completado and r.max_score > 0 %}
-            <div class="mini-desc">Puntaje: {{ r.score }}/{{ r.max_score }} ({{ r.porcentaje }}%)</div>
+            <div class="mini-desc">Score: {{ r.score }}/{{ r.max_score }} ({{ r.porcentaje }}%)</div>
             {% else %}
             <div class="mini-desc">{{ g.description|truncatewords:8 }}</div>
             {% endif %}
             <div class="mini-footer">
               <span class="mini-pts">⭐ +{{ g.points_reward }} pts</span>
               {% if item.completado %}
-              <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}" class="btn-listo">✔️ Entendido</a>
+              <a href="{% url 'talleres:mis_talleres' %}?revisado={{ r.pk }}" class="btn-listo">✔️ Got it</a>
               {% else %}
-              <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1" class="btn-jugar">▶ ¡Jugar!</a>
+              <a href="{% url 'games:game_detail' g.pk %}?from_periodo=1" class="btn-jugar">▶ Play!</a>
               {% endif %}
             </div>
           </div>
@@ -604,8 +604,8 @@
   <!-- Todo completado -->
   <div class="done-card mb-4">
     <div style="font-size:4.5rem">🎉</div>
-    <h4 class="font-fredoka mt-3" style="color:#059669">¡Todo listo!</h4>
-    <p class="fw-bold" style="color:#64748b">Completaste todas las actividades de este período. ¡Eres increíble!</p>
+    <h4 class="font-fredoka mt-3" style="color:#059669">All done!</h4>
+    <p class="fw-bold" style="color:#64748b">You completed all the activities for this period. You are incredible!</p>
   </div>
   {% endif %}
 
@@ -615,20 +615,20 @@
     <div style="font-size:5rem">📋</div>
     <h4 class="font-fredoka mt-3" style="color:var(--primary)">
       {% if request.user.estudiante_profile.salon %}
-        Tu profesor no ha asignado actividades todavía
+        Your teacher has not assigned activities yet
       {% else %}
-        Primero únete a un salón
+        First join a classroom
       {% endif %}
     </h4>
     <p class="text-muted fw-bold">
       {% if request.user.estudiante_profile.salon %}
-        Cuando tu profesor cree un período con actividades, aparecerán aquí.
+        When your teacher creates a period with activities, they will appear here.
       {% else %}
-        Pídele el código de clase a tu profe y únete para ver las actividades.
+        Ask your teacher for the class code and join to see the activities.
       {% endif %}
     </p>
     {% if not request.user.estudiante_profile.salon %}
-    <a href="{% url 'accounts:unirse_clase' %}" class="btn-jugar mt-3">Unirme a una clase →</a>
+    <a href="{% url 'accounts:unirse_clase' %}" class="btn-jugar mt-3">Join a class →</a>
     {% endif %}
   </div>
   {% endif %}

@@ -354,6 +354,7 @@ def save_score(request):
 
         # Update progress
         progress, _ = UserProgress.objects.get_or_create(user=request.user, game=game)
+        primera_vez_completado = completed and not progress.completed   # True solo en la 1ª completion
         progress.attempts += 1
         progress.time_spent += time_spent
         progress.max_score = max_score_val
@@ -368,6 +369,7 @@ def save_score(request):
         subio_nivel = False
         nuevo_nivel = 0
         registro_pk = None
+        vocab_nuevas = 0
         if request.user.role == 'estudiante':
             # Otorgar XP igual al puntaje obtenido en el juego
             perfil = request.user.estudiante_profile
@@ -375,6 +377,17 @@ def save_score(request):
             subio_nivel = perfil.actualizar_nivel()
             nuevo_nivel = perfil.nivel
             nuevos_logros = verificar_logros(request.user)
+
+            # Desbloquear vocabulario en la primera completion del minijuego
+            if primera_vez_completado:
+                try:
+                    from apps.content.utils import desbloquear_vocabulario_minijuego, verificar_hitos_vocabulario
+                    nuevas = desbloquear_vocabulario_minijuego(request.user, game)
+                    vocab_nuevas = len(nuevas)
+                    if vocab_nuevas:
+                        verificar_hitos_vocabulario(request.user)
+                except Exception:
+                    pass   # nunca interrumpir el flujo del juego
 
             # Registrar completado en período activo (si existe asignación)
             registro_pk = None
@@ -419,6 +432,7 @@ def save_score(request):
             'subio_nivel': subio_nivel,
             'nuevo_nivel': nuevo_nivel,
             'registro_pk': registro_pk,  # pk del RegistroMinijuegoPeriodo, o null si no hay periodo
+            'vocab_nuevas': vocab_nuevas,  # palabras desbloqueadas en esta partida (0 si no es 1ª vez)
             'nuevos_logros': [
                 {'nombre': l.nombre, 'icono': l.icono, 'descripcion': l.descripcion}
                 for l in nuevos_logros

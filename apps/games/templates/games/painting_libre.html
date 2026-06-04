@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}🎨 Pintura Libre — NestGrow{% endblock %}
+{% block title %}🎨 Free Painting — NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -95,25 +95,25 @@
     <img src="{% static 'img/milo_apuntes.png' %}" class="libre-milo" alt="Milo pintando">
     <div class="libre-banner-text">
       <h2 class="font-fredoka mb-0" style="color:white;font-size:1.9rem;text-shadow:0 2px 8px rgba(0,0,0,0.15)">
-        🎨 ¡Pintura Libre!
+        🎨 Free Painting!
       </h2>
       <p class="fw-bold mb-0" style="color:rgba(255,255,255,0.9);font-size:0.95rem">
-        Dibuja lo que quieras y guárdalo en tu museo 🏛️
+        Draw whatever you want and save it to your museum 🏛️
       </p>
     </div>
     <div class="d-flex gap-2 flex-wrap" style="position:relative;z-index:1">
       <a href="{% url 'games:museo_virtual' %}"
          class="action-btn fw-bold"
          style="background:rgba(255,255,255,0.9);color:#6C63FF;font-size:0.9rem;padding:8px 18px; text-decoration:none">
-        <i class="bi bi-caret-left-fill"></i> Mi Museo
+        <i class="bi bi-caret-left-fill"></i> My Museum
       </a>
     </div>
   </div>
 
   <!-- Campo de título -->
   <div class="title-input-wrap">
-    <label for="obraTitle">🖼️ Título:</label>
-    <input type="text" id="obraTitle" maxlength="80" placeholder="¿Qué estás dibujando? (ej: Mi perro, Un arcoíris...)">
+    <label for="obraTitle">🖼️ Title:</label>
+    <input type="text" id="obraTitle" maxlength="80" placeholder="What are you drawing? (e.g.: My dog, A rainbow...)">
   </div>
 
   <div class="paint-wrapper justify-content-center">
@@ -121,13 +121,13 @@
     <!-- Toolbar izquierda -->
     <div class="toolbar">
       <div style="font-size:0.7rem;font-weight:700;color:#aaa;text-transform:uppercase">Tool</div>
-      <button class="tool-btn active" id="tool-brush"   onclick="setTool('brush')"   title="Pincel">🖌️</button>
-      <button class="tool-btn"        id="tool-pencil"  onclick="setTool('pencil')"  title="Lápiz">✏️</button>
-      <button class="tool-btn"        id="tool-marker"  onclick="setTool('marker')"  title="Marcador">🖊️</button>
-      <button class="tool-btn"        id="tool-fill"    onclick="setTool('fill')"    title="Relleno">🪣</button>
-      <button class="tool-btn"        id="tool-eraser"  onclick="setTool('eraser')"  title="Borrador">🧹</button>
+      <button class="tool-btn active" id="tool-brush"   onclick="setTool('brush')"   title="Brush">🖌️</button>
+      <button class="tool-btn"        id="tool-pencil"  onclick="setTool('pencil')"  title="Pencil">✏️</button>
+      <button class="tool-btn"        id="tool-marker"  onclick="setTool('marker')"  title="Marker">🖊️</button>
+      <button class="tool-btn"        id="tool-fill"    onclick="setTool('fill')"    title="Fill">🪣</button>
+      <button class="tool-btn"        id="tool-eraser"  onclick="setTool('eraser')"  title="Eraser">🧹</button>
       <hr style="width:100%;border-color:#e8e4ff">
-      <div style="font-size:0.7rem;font-weight:700;color:#aaa;text-transform:uppercase">Tamaño</div>
+      <div style="font-size:0.7rem;font-weight:700;color:#aaa;text-transform:uppercase">Size</div>
       <input type="range" class="brush-size-slider" min="1" max="40" value="8" id="brushSize"
              oninput="updateSize(this.value)"
              style="writing-mode:vertical-lr;direction:rtl;width:6px;height:80px">
@@ -140,12 +140,12 @@
         <canvas id="paintCanvas" width="520" height="480"></canvas>
       </div>
       <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
-        <button class="action-btn" style="background:#fff3cd;color:#856404" onclick="undoAction()">↩️ Deshacer</button>
-        <button class="action-btn" style="background:#f8d7da;color:#721c24" onclick="clearCanvas()">🗑️ Limpiar</button>
+        <button class="action-btn" style="background:#fff3cd;color:#856404" onclick="undoAction()">↩️ Undo</button>
+        <button class="action-btn" style="background:#f8d7da;color:#721c24" onclick="clearCanvas()">🗑️ Clear</button>
         <button class="action-btn"
                 style="background:linear-gradient(135deg,var(--primary),#9c94ff);color:white"
                 onclick="guardarObra()">
-          💾 Guardar en mi Museo
+          💾 Save to my Museum
         </button>
       </div>
     </div>
@@ -189,17 +189,17 @@
            style="background:linear-gradient(135deg,#f8f6ff,#fff8f0)">
         <img src="{% static 'img/milo_aplaudiendo.png' %}"
              style="height:130px;animation:miloFloat 3s ease-in-out infinite">
-        <h3 class="font-fredoka mt-3" style="color:var(--primary)">¡Obra guardada! 🎉</h3>
+        <h3 class="font-fredoka mt-3" style="color:var(--primary)">Artwork saved! 🎉</h3>
         <p class="fw-bold text-muted" id="savedMsg"></p>
         <div class="d-flex gap-3 justify-content-center mt-3 flex-wrap">
           <a href="{% url 'games:museo_virtual' %}"
              class="btn btn-nestgrow btn-primary-nestgrow">
-            🏛️ Ver mi Museo
+            🏛️ View my Museum
           </a>
           <button class="btn fw-bold rounded-pill px-4"
                   style="background:#f0eeff;color:var(--primary);border:2px solid #e0d8ff"
                   onclick="nuevaObra()">
-            🎨 Pintar otra
+            🎨 Paint another
           </button>
         </div>
       </div>
@@ -213,10 +213,10 @@
     <div class="modal-content" style="border-radius:24px;border:none">
       <div class="modal-body text-center p-4">
         <img src="{% static 'img/milo_preocupado.png' %}" style="height:100px">
-        <h4 class="font-fredoka mt-2" style="color:#FF6B6B">¡Ups! Algo salió mal</h4>
+        <h4 class="font-fredoka mt-2" style="color:#FF6B6B">Oops! Something went wrong</h4>
         <p class="fw-bold text-muted" id="errorMsg"></p>
         <button class="btn btn-nestgrow btn-primary-nestgrow mt-2"
-                data-bs-dismiss="modal">Intentar de nuevo</button>
+                data-bs-dismiss="modal">Try again</button>
       </div>
     </div>
   </div>
@@ -343,7 +343,7 @@ function clearCanvas() {
 }
 
 function guardarObra() {
-  const title = document.getElementById('obraTitle').value.trim() || 'Sin título';
+  const title = document.getElementById('obraTitle').value.trim() || 'Untitled';
   const canvasData = canvas.toDataURL('image/png');
 
   fetch("{% url 'games:guardar_obra_libre' %}", {
@@ -357,15 +357,15 @@ function guardarObra() {
   .then(r => r.json())
   .then(data => {
     if (data.status === 'ok') {
-      document.getElementById('savedMsg').textContent = `"${title}" ya está en tu museo. 🎨`;
+      document.getElementById('savedMsg').textContent = `"${title}" is now in your museum. 🎨`;
       new bootstrap.Modal(document.getElementById('savedModal')).show();
     } else {
-      document.getElementById('errorMsg').textContent = data.message || 'Error desconocido.';
+      document.getElementById('errorMsg').textContent = data.message || 'Unknown error.';
       new bootstrap.Modal(document.getElementById('errorModal')).show();
     }
   })
   .catch(() => {
-    document.getElementById('errorMsg').textContent = 'No se pudo conectar. Intenta de nuevo.';
+    document.getElementById('errorMsg').textContent = 'Could not connect. Please try again.';
     new bootstrap.Modal(document.getElementById('errorModal')).show();
   });
 }

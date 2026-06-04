@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Registrarse - NestGrow{% endblock %}
+{% block title %}Sign Up - NestGrow{% endblock %}
 
 {% block extra_css %}
 
@@ -303,8 +303,8 @@
         <div class="login-card">
 
           <div class="text-center mb-4">
-            <h2 class="login-title">¡Comienza tu aventura!</h2>
-            <p class="text-muted fw-bold small">Crea tu cuenta y empieza a aprender o enseñar.</p>
+            <h2 class="login-title">Start your adventure!</h2>
+            <p class="text-muted fw-bold small">Create your account and start learning or teaching.</p>
           </div>
 
           <form method="post" onsubmit="window.scrollTo(0,0)">
@@ -314,7 +314,7 @@
             {% if form.errors %}
             <div class="alert mb-3 rounded-3 fw-bold"
                  style="background:#fff0f0;border:2px solid #FF6B6B;color:#c0392b;font-size:0.9rem">
-              <div class="mb-1">⚠️ Corrige los siguientes errores:</div>
+              <div class="mb-1">⚠️ Please fix the following errors:</div>
               <ul class="mb-0 ps-3">
                 {% for field in form %}
                   {% for error in field.errors %}
@@ -331,7 +331,7 @@
             <!-- ROLES -->
             <div class="mb-4">
               <label class="fw-bold mb-2">
-                <p>Selecciona tu rol</p>
+                <p>Select your role</p>
               </label>
               <div class="row g-3">
                 <div class="col-6">
@@ -341,7 +341,7 @@
                     <div style="font-size:2rem">
                       <i class="bi bi-person-workspace" style="color:var(--primary)"></i>
                     </div>
-                    <div class="fw-bold">Profesor</div>
+                    <div class="fw-bold">Teacher</div>
                   </label>
                 </div>
                 <div class="col-6">
@@ -351,7 +351,7 @@
                     <div style="font-size:2rem">
                       <i class="bi bi-backpack3-fill" style="color:var(--primary)"></i>
                     </div>
-                    <div class="fw-bold">Estudiante</div>
+                    <div class="fw-bold">Student</div>
                   </label>
                 </div>
               </div>
@@ -360,7 +360,7 @@
             <div class="row">
 
               <div class="col-md-7">
-                <label class="fw-bold small">Nombre</label>
+                <label class="fw-bold small">First name</label>
                 <div class="input-group-nestgrow">
                   <i class="bi bi-person-fill input-icon"></i>
                   {{ form.first_name }}
@@ -368,7 +368,7 @@
               </div>
 
               <div class="col-md-9">
-                <label class="fw-bold small">Apellido</label>
+                <label class="fw-bold small">Last name</label>
                 <div class="input-group-nestgrow">
                   <i class="bi bi-person-fill input-icon"></i>
                   {{ form.last_name }}
@@ -378,7 +378,7 @@
               <!-- Grado (solo para estudiantes) -->
               <div class="col-12" id="campoGrado" style="display:none">
                 <label class="fw-bold small" style="color:var(--primary)">
-                  <i class="bi bi-mortarboard-fill me-1"></i>Grado
+                  <i class="bi bi-mortarboard-fill me-1"></i>Grade
                 </label>
                 {{ form.grado }}
                 {% if form.grado.errors %}
@@ -389,7 +389,7 @@
               </div>
 
               <div class="col-12">
-                <label class="fw-bold small" style="color:var(--primary)">Nombre de usuario</label>
+                <label class="fw-bold small" style="color:var(--primary)">Username</label>
                 <div class="input-group-nestgrow">
                   <i class="bi bi-person-circle input-icon"></i>
                   {{ form.username }}
@@ -397,7 +397,7 @@
               </div>
 
               <div class="col-md-6">
-                <label class="fw-bold small" style="color:var(--primary)">Contraseña</label>
+                <label class="fw-bold small" style="color:var(--primary)">Password</label>
                 <div class="input-group-nestgrow">
                   <i class="bi bi-lock-fill input-icon"></i>
                   {{ form.password1 }}
@@ -405,7 +405,7 @@
               </div>
 
               <div class="col-md-6">
-                <label class="fw-bold small" style="color:var(--primary)">Confirmar contraseña</label>
+                <label class="fw-bold small" style="color:var(--primary)">Confirm password</label>
                 <div class="input-group-nestgrow">
                   <i class="bi bi-shield-lock-fill input-icon"></i>
                   {{ form.password2 }}
@@ -415,17 +415,17 @@
             </div>
 
             <button type="submit" class="btn-login mt-4">
-              <i class="bi bi-star-fill me-2"></i> Crear mi cuenta
+              <i class="bi bi-star-fill me-2"></i> Create my account
             </button>
           </form>
 
           <div class="text-center mt-4 pt-3" style="border-top:2px solid #f0eeff">
             <p class="text-muted fw-bold small mb-0">
-              ¿Ya tienes cuenta?
+              Already have an account?
               <a href="{% url 'accounts:login' %}"
                  class="text-decoration-none fw-bold ms-1"
                  style="color:var(--primary)">
-                <i class="bi bi-box-arrow-in-right me-1"></i>¡Inicia sesión!
+                <i class="bi bi-box-arrow-in-right me-1"></i>Log in!
               </a>
             </p>
           </div>
@@ -465,27 +465,27 @@
       </div>
 
       <h2 class="font-fredoka mb-3" style="font-size:2rem;color:var(--primary);line-height:1.2">
-        ¡Únete a la<br>manada!
+        Join the<br>pack!
       </h2>
 
       <p class="fw-bold text-muted mb-4" style="font-size:1rem">
-        Ingresa a NestGrow y aprende inglés jugando con Milo y tus compañeros.
+        Join NestGrow and learn English by playing with Milo and your classmates.
       </p>
 
       <div class="d-flex justify-content-center gap-3 flex-wrap">
         <div style="text-align:center">
           <div class="fw-bold" style="font-size:1.5rem;color:var(--primary);font-family:'Fredoka One',cursive">4+</div>
-          <div class="text-muted fw-bold" style="font-size:0.78rem">Minijuegos</div>
+          <div class="text-muted fw-bold" style="font-size:0.78rem">Minigames</div>
         </div>
         <div style="width:1px;background:#e8e4ff"></div>
         <div style="text-align:center">
           <div class="fw-bold" style="font-size:1.5rem;color:var(--secondary);font-family:'Fredoka One',cursive"><i class="bi bi-award-fill"></i></div>
-          <div class="text-muted fw-bold" style="font-size:0.78rem">Niveles</div>
+          <div class="text-muted fw-bold" style="font-size:0.78rem">Levels</div>
         </div>
         <div style="width:1px;background:#e8e4ff"></div>
         <div style="text-align:center">
           <div class="fw-bold" style="font-size:1.5rem;color:var(--accent);font-family:'Fredoka One',cursive"><i class="bi bi-magic"></i></div>
-          <div class="text-muted fw-bold" style="font-size:0.78rem">Diversión</div>
+          <div class="text-muted fw-bold" style="font-size:0.78rem">Fun</div>
         </div>
       </div>
     </div>

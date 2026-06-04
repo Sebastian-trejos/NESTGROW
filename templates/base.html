@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}NestGrow - Aprende Inglés Jugando{% endblock %}</title>
+  <title>{% block title %}NestGrow - Learn English Playing{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -87,7 +87,7 @@
      style="background:#fff0f0;color:#FF6B6B;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,107,107,0.25)';this.style.background='#ffd9d9'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff0f0'">
-    <i class="bi bi-book"></i> Vocabulario
+    <i class="bi bi-book"></i> Vocabulary
   </a>
 </li>
 {% endif %}
@@ -97,7 +97,7 @@
      style="background:#f0eeff;color:#6C63FF;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(108,99,255,0.25)';this.style.background='#ddd8ff'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0eeff'">
-    <i class="bi bi-binoculars-fill"></i> Aventura
+    <i class="bi bi-binoculars-fill"></i> Adventure
   </a>
 </li>
 <li class="nav-item">
@@ -105,7 +105,7 @@
      style="background:#e8f4fd;color:#1e88e5;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(30,136,229,0.25)';this.style.background='#c8e6fb'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#e8f4fd'">
-    <i class="bi bi-journal-bookmark-fill"></i> Mis Actividades
+    <i class="bi bi-journal-bookmark-fill"></i> My Activities
   </a>
 </li>
 <li class="nav-item">
@@ -113,7 +113,7 @@
      style="background:#fff9ee;color:#FFB347;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,179,71,0.25)';this.style.background='#ffecd9'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff9ee'">
-    <i class="bi bi-house-heart-fill"></i> Habitación
+    <i class="bi bi-house-heart-fill"></i> My Room
   </a>
 </li>
 <li class="nav-item">
@@ -121,7 +121,7 @@
      style="background:#f0fff4;color:#4caf50;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(76,175,80,0.25)';this.style.background='#d9f7dd'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0fff4'">
-    <i class="bi bi-shop"></i> Tienda
+    <i class="bi bi-shop"></i> Store
   </a>
 </li>
 <li class="nav-item">
@@ -129,7 +129,7 @@
      style="background:#f0fffe;color:#4ECDC4;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(78,205,196,0.25)';this.style.background='#d9f7f5'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#f0fffe'">
-    <i class="bi bi-palette-fill me-1"></i> Museo
+    <i class="bi bi-palette-fill me-1"></i> Museum
   </a>
 </li>
 {% elif user.role == 'profesor' %}
@@ -171,7 +171,7 @@
      style="background:#fff9ee;color:#FFB347;transition:all 0.3s"
      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(255,179,71,0.25)';this.style.background='#ffecd9'"
      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';this.style.background='#fff9ee'">
-    <i class="bi bi-grid-fill me-1"></i> Mi Panel
+    <i class="bi bi-grid-fill me-1"></i> My Dashboard
   </a>
 </li>
             <li class="nav-item dropdown">
@@ -187,20 +187,20 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 {% if user.role == 'estudiante' %}
-                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-user me-2"></i>Ver Perfil</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-user me-2"></i>View Profile</a></li>
                 {% else %}
                 <li><a class="dropdown-item fw-bold dropdown-item-azul" href="{% url 'accounts:editar_perfil' %}"><i class="fas fa-edit me-2"></i>Editar Perfil</a></li>
                 {% endif %}
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                <li><a class="dropdown-item fw-bold dropdown-item-rojo" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Log Out</a></li>
               </ul>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="{% url 'accounts:login' %}" style="font-family:'Fredoka One',cursive;font-size:1rem">Iniciar Sesión</a>
+              <a class="btn btn-outline-primary btn-sm rounded-pill px-3" href="{% url 'accounts:login' %}" style="font-family:'Fredoka One',cursive;font-size:1rem">Log In</a>
             </li>
             <li class="nav-item">
-              <a class="btn btn-primary btn-sm rounded-pill px-3" href="{% url 'accounts:registro' %}" style="font-family:'Fredoka One',cursive;font-size:1rem">Registrarse</a>
+              <a class="btn btn-primary btn-sm rounded-pill px-3" href="{% url 'accounts:registro' %}" style="font-family:'Fredoka One',cursive;font-size:1rem">Sign Up</a>
             </li>
           {% endif %}
         </ul>
@@ -267,9 +267,9 @@
                       box-shadow:0 16px 48px rgba(108,99,255,.30);
                       max-width:320px;margin:auto">
             <div style="font-size:4.5rem;line-height:1;margin-bottom:.5rem">🎉</div>
-            <div style="font-size:2rem;color:#6C63FF;font-family:'Fredoka One',cursive;font-weight:900">¡Bien hecho!</div>
+            <div style="font-size:2rem;color:#6C63FF;font-family:'Fredoka One',cursive;font-weight:900">Well done!</div>
             <p style="color:#888;font-size:.9rem;margin-top:.6rem;font-family:'Nunito',sans-serif">
-              Completaste el minijuego.<br>Pulsa el botón de abajo para continuar.
+              You completed the minigame.<br>Press the button below to continue.
             </p>
           </div>`;
       }
@@ -296,9 +296,9 @@
     <div class="container text-center">
       <p class="mb-1">
         <i class="bi bi-easel2-fill"></i>
-        <strong>NestGrow</strong> — Aprende Inglés Jugando
+        <strong>NestGrow</strong> — Learn English Playing
       </p>
-      <p class="footer-sub">Hecho con <i class="bi bi-heart-fill" style="color:var(--secondary)"></i> para niños de primaria en Colombia</p>
+      <p class="footer-sub">Made with <i class="bi bi-heart-fill" style="color:var(--secondary)"></i> for primary school children in Colombia</p>
     </div>
   </footer>
   {% endif %}{# /embedded footer #}
@@ -360,29 +360,29 @@
         default:        { msg: '¡Estoy aquí para ayudarte, profe! 🤖 Usa el Asistente IA para planear tus clases.', img: IMG.idle },
       },
       estudiante: {
-        dashboard:      { msg: '¡Bienvenido de vuelta! 🎉 ¿Listo para aprender inglés hoy con Milo?', img: IMG.saludando },
-        mis_talleres:   { msg: '📋 Aquí están tus actividades del período. ¡Completa todas para ganar puntos y subir de nivel!', img: IMG.preocupado },
-        juegos:         { msg: '🔍 ¡Explora los minijuegos y elige el que más te guste para aprender inglés!', img: IMG.buscando },
-        minijuego:      { msg: '🎮 ¡Concéntrate! Cada respuesta correcta te da puntos y huesos para la tienda. ¡Tú puedes!', img: IMG.emociontotal },
-        historia:       { msg: '🗺️ ¡Increíble! ¡Avanza en la Aventura con Milo y desbloquea nuevas secciones!', img: IMG.asombrado },
-        leccion:        { msg: '📖 ¡Atención! Lee bien cada actividad. Completar la lección con 3 estrellas te da recompensas especiales.', img: IMG.leyendo },
-        contenido:      { msg: '📚 ¡Qué curioso! ¿Sabes todas estas palabras en inglés? Cada categoría tiene imágenes y audio.', img: IMG.curioso },
-        mi_vocabulario: { msg: '⭐ ¡Tu vocabulario crece con cada actividad! Completa talleres y minijuegos para desbloquear más palabras.', img: IMG.celebrando },
-        habitacion:     { msg: '🏠 ¡Esta es tu habitación, decórala como quieras con los Huesos que has ganado!', img: IMG.orgulloso },
-        museo:          { msg: '🎨 ¡Este es tu museo personal! Aquí viven todas las obras que pintaste con Milo Pintor.', img: IMG.asombrado },
-        logros:         { msg: '🏅 ¡Mira todos los logros que puedes desbloquear! Cada uno tiene un reto diferente. ¿Cuántos tienes?', img: IMG.orgulloso },
-        tienda:         { msg: '🛍️ ¡Mira todo lo que puedes conseguir! Gasta tus Huesos y desbloquea nuevos juegos.', img: IMG.celebrando },
-        ranking:        { msg: '🏆 ¡Tú puedes llegar al primer lugar! Juega más para ganar puntos y escalar en el ranking.', img: IMG.pulgar },
-        perfil:         { msg: '👤 Aquí puedes cambiar tu avatar y ver tus estadísticas. ¡Personaliza tu perfil de Milo!', img: IMG.idle },
-        login:          { msg: '¡Hola! 👋 Inicia sesión para continuar tu aventura en NestGrow.', img: IMG.saludando },
-        registro:       { msg: '¡Hola! 🐾 Soy Milo. Regístrate y únete a tu salón para empezar a aprender inglés.', img: IMG.timido },
-        default:        { msg: '¡Hola! Soy Milo 🐾 ¡Estoy aquí para ayudarte a aprender inglés!', img: IMG.idle },
+        dashboard:      { msg: 'Welcome back! 🎉 Ready to learn English today with Milo?', img: IMG.saludando },
+        mis_talleres:   { msg: '📋 Here are your period activities. Complete them all to earn points and level up!', img: IMG.preocupado },
+        juegos:         { msg: '🔍 Explore the minigames and pick your favorite to learn English!', img: IMG.buscando },
+        minijuego:      { msg: '🎮 Focus! Every correct answer gives you points and bones for the store. You can do it!', img: IMG.emociontotal },
+        historia:       { msg: '🗺️ Amazing! Advance in the Adventure with Milo and unlock new sections!', img: IMG.asombrado },
+        leccion:        { msg: '📖 Attention! Read each activity carefully. Completing the lesson with 3 stars gives you special rewards.', img: IMG.leyendo },
+        contenido:      { msg: '📚 How curious! Do you know all these words in English? Each category has images and audio.', img: IMG.curioso },
+        mi_vocabulario: { msg: '⭐ Your vocabulary grows with every activity! Complete workshops and minigames to unlock more words.', img: IMG.celebrando },
+        habitacion:     { msg: '🏠 This is your room, decorate it however you want with the Bones you have earned!', img: IMG.orgulloso },
+        museo:          { msg: '🎨 This is your personal museum! Here live all the artworks you painted with Milo Painter.', img: IMG.asombrado },
+        logros:         { msg: '🏅 Look at all the achievements you can unlock! Each one has a different challenge. How many do you have?', img: IMG.orgulloso },
+        tienda:         { msg: '🛍️ Look at everything you can get! Spend your Bones and unlock new games.', img: IMG.celebrando },
+        ranking:        { msg: '🏆 You can reach first place! Play more to earn points and climb the ranking.', img: IMG.pulgar },
+        perfil:         { msg: '👤 Here you can change your avatar and view your stats. Customize your Milo profile!', img: IMG.idle },
+        login:          { msg: 'Hello! 👋 Log in to continue your adventure in NestGrow.', img: IMG.saludando },
+        registro:       { msg: 'Hello! 🐾 I\'m Milo. Sign up and join your classroom to start learning English.', img: IMG.timido },
+        default:        { msg: 'Hello! I\'m Milo 🐾 I\'m here to help you learn English!', img: IMG.idle },
       },
       none: {
-        login:    { msg: '¡Hola! 👋 Soy Milo, tu guía en NestGrow. Inicia sesión para continuar tu aventura.', img: IMG.saludando },
-        registro: { msg: '¡Qué emocionante! 🎉 ¡Un nuevo amigo en NestGrow! Crea tu cuenta y empieza a aprender inglés.', img: IMG.asombrado },
-        dashboard: { msg: '¡Hola! 🌟 Soy Milo. En NestGrow aprendes inglés jugando con minijuegos y aventuras. ¡Regístrate gratis!', img: IMG.idle },
-        default:  { msg: '¡Bienvenido a NestGrow! 🐾 Aprende inglés jugando con Milo. ¡Es completamente gratis!', img: IMG.saludando },
+        login:    { msg: 'Hello! 👋 I\'m Milo, your guide in NestGrow. Log in to continue your adventure.', img: IMG.saludando },
+        registro: { msg: 'How exciting! 🎉 A new friend in NestGrow! Create your account and start learning English.', img: IMG.asombrado },
+        dashboard: { msg: 'Hello! 🌟 I\'m Milo. In NestGrow you learn English by playing minigames and adventures. Sign up for free!', img: IMG.idle },
+        default:  { msg: 'Welcome to NestGrow! 🐾 Learn English playing with Milo. It\'s completely free!', img: IMG.saludando },
       },
     };
 
@@ -504,13 +504,13 @@
       const total = (data.talleres || 0) + (data.minijuegos || 0);
 
       if (!data.periodo) {
-        speech.textContent = '😊 No hay un período activo en este momento. ¡Sigue practicando!';
+        speech.textContent = '😊 There is no active period right now. Keep practicing!';
         setImg(IMG.idle);
       } else if (total === 0) {
-        speech.textContent = '🎉 ¡Todo al día! No tienes actividades pendientes. ¡Excelente trabajo!';
+        speech.textContent = '🎉 All caught up! You have no pending activities. Excellent work!';
         setImg(IMG.celebrando);
       } else {
-        speech.textContent = '📅 ' + data.periodo + ' · vence ' + data.fecha_fin;
+        speech.textContent = '📅 ' + data.periodo + ' · due ' + data.fecha_fin;
         setImg(IMG.preocupado);
         const list = document.createElement('ul');
         list.className = 'milo-pendientes-list';
@@ -528,7 +528,7 @@
       const btnAct = document.createElement('a');
       btnAct.href = "{% url 'talleres:mis_talleres' %}";
       btnAct.className = 'milo-btn milo-btn-primary';
-      btnAct.textContent = '📋 Mis Actividades';
+      btnAct.textContent = '📋 My Activities';
       footer.appendChild(btnAct);
       extra.appendChild(footer);
     }
@@ -550,7 +550,7 @@
       }
 
       if (tipo === 'correcto') {
-        speech.innerHTML = d.msg || '¡Excelente! ¡Respuesta correcta! 🎉';
+        speech.innerHTML = d.msg || 'Excellent! Correct answer! 🎉';
         extra.innerHTML = '';
         setImg(IMG.aplaudiendo);
         bubble.classList.add('show');
@@ -563,7 +563,7 @@
         }, 2000);
 
       } else if (tipo === 'incorrecto') {
-        speech.textContent = '🔍 Revisando tu respuesta…';
+        speech.textContent = '🔍 Reviewing your answer…';
         extra.innerHTML = '';
         setImg(IMG.apuntes);
         bubble.classList.add('show');
@@ -581,18 +581,18 @@
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {
-          speech.textContent = data.correccion || '¡Sigue practicando! 💪';
+          speech.textContent = data.correccion || 'Keep practicing! 💪';
           setImg(IMG.leyendo);
           _mostrarBotonContinuar(function() { _done(onContinuar); });
         })
         .catch(function() {
-          speech.textContent = '¡No te rindas! La práctica lleva a la perfección. 💪';
+          speech.textContent = 'Don\'t give up! Practice makes perfect. 💪';
           setImg(IMG.pulgar);
           _mostrarBotonContinuar(function() { _done(onContinuar); });
         });
 
       } else {
-        speech.textContent = d.msg || '¡Muy bien! ✨';
+        speech.textContent = d.msg || 'Very good! ✨';
         extra.innerHTML = '';
         setImg(IMG.pulgar);
         bubble.classList.add('show');
@@ -612,7 +612,7 @@
       footer.className = 'milo-bubble-footer';
       const btn = document.createElement('button');
       btn.className = 'milo-btn milo-btn-primary';
-      btn.textContent = 'Entendido, continuar →';
+      btn.textContent = 'Got it, continue →';
       btn.onclick = function() {
         bubble.classList.remove('show');
         isOpen = false;

@@ -3,7 +3,7 @@
     "model": "historia.seccionhistoria",
     "pk": 1,
     "fields": {
-      "titulo": "Los Colores del Mundo",
+      "titulo": "The Colours of the World",
       "descripcion": "Aprende los colores básicos y cómo describirlos en inglés.",
       "orden": 1,
       "icono_emoji": "🎨",
@@ -17,7 +17,7 @@
     "model": "historia.seccionhistoria",
     "pk": 2,
     "fields": {
-      "titulo": "Mi Familia y Yo",
+      "titulo": "My Family and I",
       "descripcion": "Presenta a los miembros de tu familia en inglés.",
       "orden": 2,
       "icono_emoji": "👨‍👩‍👧‍👦",
@@ -31,7 +31,7 @@
     "model": "historia.seccionhistoria",
     "pk": 3,
     "fields": {
-      "titulo": "Los Números Mágicos",
+      "titulo": "The Magic Numbers",
       "descripcion": "Cuenta, suma y describe cantidades en inglés.",
       "orden": 3,
       "icono_emoji": "🔢",
@@ -45,7 +45,7 @@
     "model": "historia.seccionhistoria",
     "pk": 4,
     "fields": {
-      "titulo": "Animales del Mundo",
+      "titulo": "Animals of the World",
       "descripcion": "Conoce los animales y sus sonidos en inglés.",
       "orden": 4,
       "icono_emoji": "🦁",
@@ -59,7 +59,7 @@
     "model": "historia.seccionhistoria",
     "pk": 5,
     "fields": {
-      "titulo": "Mi Cuerpo",
+      "titulo": "My Body",
       "descripcion": "Nombra las partes del cuerpo y habla de cómo te sientes.",
       "orden": 5,
       "icono_emoji": "🧍",
@@ -73,7 +73,7 @@
     "model": "historia.seccionhistoria",
     "pk": 6,
     "fields": {
-      "titulo": "La Comida Rica",
+      "titulo": "Yummy Food",
       "descripcion": "Descubre cómo pedir y describir comidas en inglés.",
       "orden": 6,
       "icono_emoji": "🍎",
@@ -87,7 +87,7 @@
     "model": "historia.seccionhistoria",
     "pk": 7,
     "fields": {
-      "titulo": "Mi Casa y mis Cosas",
+      "titulo": "My Home and My Things",
       "descripcion": "Describe los lugares y objetos de tu hogar.",
       "orden": 7,
       "icono_emoji": "🏠",
@@ -101,7 +101,7 @@
     "model": "historia.seccionhistoria",
     "pk": 8,
     "fields": {
-      "titulo": "El Tiempo y las Estaciones",
+      "titulo": "Weather and Seasons",
       "descripcion": "Habla del clima y los cambios del año.",
       "orden": 8,
       "icono_emoji": "☀️",
@@ -115,7 +115,7 @@
     "model": "historia.seccionhistoria",
     "pk": 9,
     "fields": {
-      "titulo": "Mis Actividades Favoritas",
+      "titulo": "My Favourite Activities",
       "descripcion": "Describe lo que te gusta hacer en tu tiempo libre.",
       "orden": 9,
       "icono_emoji": "⚽",
@@ -129,7 +129,7 @@
     "model": "historia.seccionhistoria",
     "pk": 10,
     "fields": {
-      "titulo": "Mi Pueblo, Mi Mundo",
+      "titulo": "My Town, My World",
       "descripcion": "Habla de los lugares de tu comunidad y cómo ir a ellos.",
       "orden": 10,
       "icono_emoji": "🗺️",
@@ -144,7 +144,7 @@
     "pk": 1,
     "fields": {
       "seccion": 1,
-      "titulo": "Colores Primarios",
+      "titulo": "Primary Colours",
       "descripcion_corta": "Red, blue and yellow — the building blocks.",
       "orden": 1,
       "puntos_xp": 15,
@@ -541,7 +541,7 @@
     "pk": 2,
     "fields": {
       "seccion": 1,
-      "titulo": "Colores Secundarios",
+      "titulo": "Secondary Colours",
       "descripcion_corta": "Mix two colors and get something new!",
       "orden": 2,
       "puntos_xp": 15,
@@ -908,7 +908,7 @@
     "pk": 3,
     "fields": {
       "seccion": 1,
-      "titulo": "Colores Oscuros y Claros",
+      "titulo": "Dark and Light Colours",
       "descripcion_corta": "Dark and light shades of color.",
       "orden": 3,
       "puntos_xp": 20,
@@ -1269,7 +1269,7 @@
     "pk": 4,
     "fields": {
       "seccion": 1,
-      "titulo": "¿De qué color es?",
+      "titulo": "What Colour Is It?",
       "descripcion_corta": "Ask and answer about object colors.",
       "orden": 4,
       "puntos_xp": 20,
@@ -1660,7 +1660,7 @@
     "pk": 5,
     "fields": {
       "seccion": 1,
-      "titulo": "Repaso: Los Colores",
+      "titulo": "Review: Colours",
       "descripcion_corta": "Review everything you learned about colors!",
       "orden": 5,
       "puntos_xp": 25,
@@ -2008,7 +2008,7 @@
     "pk": 6,
     "fields": {
       "seccion": 2,
-      "titulo": "Papá y Mamá",
+      "titulo": "Mum and Dad",
       "descripcion_corta": "Father, mother and immediate family.",
       "orden": 1,
       "puntos_xp": 15,
@@ -2381,7 +2381,7 @@
     "pk": 7,
     "fields": {
       "seccion": 2,
-      "titulo": "Hermanos y Hermanas",
+      "titulo": "Brothers and Sisters",
       "descripcion_corta": "Brother, sister and siblings.",
       "orden": 2,
       "puntos_xp": 15,
@@ -2778,7 +2778,7 @@
     "pk": 8,
     "fields": {
       "seccion": 2,
-      "titulo": "Abuelos y Tíos",
+      "titulo": "Grandparents and Relatives",
       "descripcion_corta": "Grandparents, aunts, uncles and cousins.",
       "orden": 3,
       "puntos_xp": 20,
@@ -3145,7 +3145,7 @@
     "pk": 9,
     "fields": {
       "seccion": 2,
-      "titulo": "This is my family",
+      "titulo": "This Is My Family",
       "descripcion_corta": "Present your family in English.",
       "orden": 4,
       "puntos_xp": 20,
@@ -3506,7 +3506,7 @@
     "pk": 10,
     "fields": {
       "seccion": 2,
-      "titulo": "Repaso: Mi Familia",
+      "titulo": "Review: My Family",
       "descripcion_corta": "Review family vocabulary and expressions.",
       "orden": 5,
       "puntos_xp": 25,
@@ -3905,7 +3905,7 @@
     "pk": 11,
     "fields": {
       "seccion": 3,
-      "titulo": "Del 1 al 10",
+      "titulo": "From 1 to 10",
       "descripcion_corta": "Count from one to ten.",
       "orden": 1,
       "puntos_xp": 15,
@@ -4250,7 +4250,7 @@
     "pk": 12,
     "fields": {
       "seccion": 3,
-      "titulo": "Del 11 al 20",
+      "titulo": "From 11 to 20",
       "descripcion_corta": "Count from eleven to twenty.",
       "orden": 2,
       "puntos_xp": 15,
@@ -4635,7 +4635,7 @@
     "pk": 13,
     "fields": {
       "seccion": 3,
-      "titulo": "Decenas: 10, 20, 30...",
+      "titulo": "Tens: 10, 20, 30...",
       "descripcion_corta": "Ten, twenty, thirty and multiples of ten.",
       "orden": 3,
       "puntos_xp": 20,
@@ -5032,7 +5032,7 @@
     "pk": 14,
     "fields": {
       "seccion": 3,
-      "titulo": "¿Cuántos hay?",
+      "titulo": "How Many Are There?",
       "descripcion_corta": "Ask and answer 'How many?' questions.",
       "orden": 4,
       "puntos_xp": 20,
@@ -5414,7 +5414,7 @@
     "pk": 15,
     "fields": {
       "seccion": 3,
-      "titulo": "Números Ordinales",
+      "titulo": "Ordinal Numbers",
       "descripcion_corta": "First, second, third — order matters!",
       "orden": 5,
       "puntos_xp": 20,
@@ -5795,7 +5795,7 @@
     "pk": 16,
     "fields": {
       "seccion": 3,
-      "titulo": "Repaso: Los Números",
+      "titulo": "Review: Numbers",
       "descripcion_corta": "Review all number concepts.",
       "orden": 6,
       "puntos_xp": 25,
@@ -6200,7 +6200,7 @@
     "pk": 17,
     "fields": {
       "seccion": 4,
-      "titulo": "Animales de la Granja",
+      "titulo": "Farm Animals",
       "descripcion_corta": "Cow, pig, horse, chicken and more.",
       "orden": 1,
       "puntos_xp": 15,
@@ -6545,7 +6545,7 @@
     "pk": 18,
     "fields": {
       "seccion": 4,
-      "titulo": "Animales de la Selva",
+      "titulo": "Jungle Animals",
       "descripcion_corta": "Lion, elephant, monkey and jungle animals.",
       "orden": 2,
       "puntos_xp": 15,
@@ -6930,7 +6930,7 @@
     "pk": 19,
     "fields": {
       "seccion": 4,
-      "titulo": "Animales del Mar",
+      "titulo": "Ocean Animals",
       "descripcion_corta": "Fish, shark, dolphin and ocean animals.",
       "orden": 3,
       "puntos_xp": 20,
@@ -7327,7 +7327,7 @@
     "pk": 20,
     "fields": {
       "seccion": 4,
-      "titulo": "Sonidos de Animales",
+      "titulo": "Animal Sounds",
       "descripcion_corta": "What sound does each animal make?",
       "orden": 4,
       "puntos_xp": 20,
@@ -7709,7 +7709,7 @@
     "pk": 21,
     "fields": {
       "seccion": 4,
-      "titulo": "Repaso: Los Animales",
+      "titulo": "Review: Animals",
       "descripcion_corta": "Review all animal vocabulary.",
       "orden": 5,
       "puntos_xp": 25,
@@ -8093,7 +8093,7 @@
     "pk": 22,
     "fields": {
       "seccion": 5,
-      "titulo": "La Cabeza",
+      "titulo": "The Head",
       "descripcion_corta": "Head, eyes, ears, nose and mouth.",
       "orden": 1,
       "puntos_xp": 15,
@@ -8494,7 +8494,7 @@
     "pk": 23,
     "fields": {
       "seccion": 5,
-      "titulo": "El Cuerpo",
+      "titulo": "The Body",
       "descripcion_corta": "Arms, hands, legs, feet and body parts.",
       "orden": 2,
       "puntos_xp": 15,
@@ -8839,7 +8839,7 @@
     "pk": 24,
     "fields": {
       "seccion": 5,
-      "titulo": "¿Cómo te sientes?",
+      "titulo": "How Do You Feel?",
       "descripcion_corta": "Happy, sad, tired, hungry — how do you feel?",
       "orden": 3,
       "puntos_xp": 20,
@@ -9224,7 +9224,7 @@
     "pk": 25,
     "fields": {
       "seccion": 5,
-      "titulo": "Me duele...",
+      "titulo": "It Hurts...",
       "descripcion_corta": "Describe aches and pains in English.",
       "orden": 4,
       "puntos_xp": 20,
@@ -9621,7 +9621,7 @@
     "pk": 26,
     "fields": {
       "seccion": 5,
-      "titulo": "Repaso: Mi Cuerpo",
+      "titulo": "Review: My Body",
       "descripcion_corta": "Review body parts and feelings.",
       "orden": 5,
       "puntos_xp": 25,
@@ -10006,7 +10006,7 @@
     "pk": 27,
     "fields": {
       "seccion": 6,
-      "titulo": "Frutas y Verduras",
+      "titulo": "Fruits and Vegetables",
       "descripcion_corta": "Apple, banana, carrot, tomato and more.",
       "orden": 1,
       "puntos_xp": 15,
@@ -10387,7 +10387,7 @@
     "pk": 28,
     "fields": {
       "seccion": 6,
-      "titulo": "Desayuno",
+      "titulo": "Breakfast",
       "descripcion_corta": "Breakfast foods: eggs, bread, milk, cereal.",
       "orden": 2,
       "puntos_xp": 15,
@@ -10790,7 +10790,7 @@
     "pk": 29,
     "fields": {
       "seccion": 6,
-      "titulo": "Almuerzo y Cena",
+      "titulo": "Lunch and Dinner",
       "descripcion_corta": "Lunch and dinner vocabulary.",
       "orden": 3,
       "puntos_xp": 20,
@@ -11139,7 +11139,7 @@
     "pk": 30,
     "fields": {
       "seccion": 6,
-      "titulo": "Me gusta / No me gusta",
+      "titulo": "I Like / I Don't Like",
       "descripcion_corta": "I like / I don't like — food preferences.",
       "orden": 4,
       "puntos_xp": 20,
@@ -11536,7 +11536,7 @@
     "pk": 31,
     "fields": {
       "seccion": 6,
-      "titulo": "En el Restaurante",
+      "titulo": "At the Restaurant",
       "descripcion_corta": "Order food at a restaurant in English.",
       "orden": 5,
       "puntos_xp": 20,
@@ -11948,7 +11948,7 @@
     "pk": 32,
     "fields": {
       "seccion": 6,
-      "titulo": "Repaso: La Comida",
+      "titulo": "Review: Food",
       "descripcion_corta": "Review all food vocabulary and expressions.",
       "orden": 6,
       "puntos_xp": 25,
@@ -12333,7 +12333,7 @@
     "pk": 33,
     "fields": {
       "seccion": 7,
-      "titulo": "Cuartos de la Casa",
+      "titulo": "Rooms of the House",
       "descripcion_corta": "Living room, bedroom, kitchen, bathroom.",
       "orden": 1,
       "puntos_xp": 15,
@@ -12714,7 +12714,7 @@
     "pk": 34,
     "fields": {
       "seccion": 7,
-      "titulo": "Muebles y Objetos",
+      "titulo": "Furniture and Objects",
       "descripcion_corta": "Table, chair, bed, lamp and home objects.",
       "orden": 2,
       "puntos_xp": 15,
@@ -13116,7 +13116,7 @@
     "pk": 35,
     "fields": {
       "seccion": 7,
-      "titulo": "¿Dónde está?",
+      "titulo": "Where Is It?",
       "descripcion_corta": "In, on, under, next to — prepositions of place.",
       "orden": 3,
       "puntos_xp": 20,
@@ -13465,7 +13465,7 @@
     "pk": 36,
     "fields": {
       "seccion": 7,
-      "titulo": "Mi Habitación",
+      "titulo": "My Room",
       "descripcion_corta": "Describe your own bedroom in English.",
       "orden": 4,
       "puntos_xp": 20,
@@ -13862,7 +13862,7 @@
     "pk": 37,
     "fields": {
       "seccion": 7,
-      "titulo": "Repaso: Mi Casa",
+      "titulo": "Review: My Home",
       "descripcion_corta": "Review home vocabulary and prepositions.",
       "orden": 5,
       "puntos_xp": 25,
@@ -14277,7 +14277,7 @@
     "pk": 38,
     "fields": {
       "seccion": 8,
-      "titulo": "El Tiempo Hoy",
+      "titulo": "Today's Weather",
       "descripcion_corta": "Sunny, cloudy, rainy, windy — today's weather.",
       "orden": 1,
       "puntos_xp": 15,
@@ -14659,7 +14659,7 @@
     "pk": 39,
     "fields": {
       "seccion": 8,
-      "titulo": "Las Cuatro Estaciones",
+      "titulo": "The Four Seasons",
       "descripcion_corta": "Spring, summer, fall and winter.",
       "orden": 2,
       "puntos_xp": 15,
@@ -15040,7 +15040,7 @@
     "pk": 40,
     "fields": {
       "seccion": 8,
-      "titulo": "¿Qué ropa usar?",
+      "titulo": "What to Wear?",
       "descripcion_corta": "Dress for the weather — clothes vocabulary.",
       "orden": 3,
       "puntos_xp": 20,
@@ -15436,7 +15436,7 @@
     "pk": 41,
     "fields": {
       "seccion": 8,
-      "titulo": "Los Meses del Año",
+      "titulo": "Months of the Year",
       "descripcion_corta": "January through December.",
       "orden": 4,
       "puntos_xp": 20,
@@ -15785,7 +15785,7 @@
     "pk": 42,
     "fields": {
       "seccion": 8,
-      "titulo": "Repaso: El Tiempo",
+      "titulo": "Review: The Weather",
       "descripcion_corta": "Review weather, seasons and months.",
       "orden": 5,
       "puntos_xp": 25,
@@ -16185,7 +16185,7 @@
     "pk": 43,
     "fields": {
       "seccion": 9,
-      "titulo": "Deportes",
+      "titulo": "Sports",
       "descripcion_corta": "Soccer, basketball, swimming and more sports.",
       "orden": 1,
       "puntos_xp": 15,
@@ -17009,7 +17009,7 @@
     "pk": 45,
     "fields": {
       "seccion": 9,
-      "titulo": "Días de la Semana",
+      "titulo": "Days of the Week",
       "descripcion_corta": "Monday through Sunday and daily routines.",
       "orden": 3,
       "puntos_xp": 20,
@@ -17410,7 +17410,7 @@
     "pk": 46,
     "fields": {
       "seccion": 9,
-      "titulo": "¿Qué haces después del colegio?",
+      "titulo": "What Do You Do After School?",
       "descripcion_corta": "Describe your after-school activities.",
       "orden": 4,
       "puntos_xp": 20,
@@ -17809,7 +17809,7 @@
     "pk": 47,
     "fields": {
       "seccion": 9,
-      "titulo": "Repaso: Actividades",
+      "titulo": "Review: Activities",
       "descripcion_corta": "Review all activities and daily routine vocabulary.",
       "orden": 5,
       "puntos_xp": 25,
@@ -18165,7 +18165,7 @@
     "pk": 48,
     "fields": {
       "seccion": 10,
-      "titulo": "Lugares del Pueblo",
+      "titulo": "Places in Town",
       "descripcion_corta": "School, park, market, hospital, church.",
       "orden": 1,
       "puntos_xp": 15,
@@ -18574,7 +18574,7 @@
     "pk": 49,
     "fields": {
       "seccion": 10,
-      "titulo": "¿Cómo llego?",
+      "titulo": "How Do I Get There?",
       "descripcion_corta": "Turn left, turn right, go straight — giving directions.",
       "orden": 2,
       "puntos_xp": 15,
@@ -19001,7 +19001,7 @@
     "pk": 50,
     "fields": {
       "seccion": 10,
-      "titulo": "Transporte",
+      "titulo": "Transport",
       "descripcion_corta": "Bus, car, bicycle, motorcycle and transport.",
       "orden": 3,
       "puntos_xp": 20,
@@ -19398,7 +19398,7 @@
     "pk": 51,
     "fields": {
       "seccion": 10,
-      "titulo": "Mi Comunidad",
+      "titulo": "My Community",
       "descripcion_corta": "Describe your neighborhood and community.",
       "orden": 4,
       "puntos_xp": 20,
@@ -19799,7 +19799,7 @@
     "pk": 52,
     "fields": {
       "seccion": 10,
-      "titulo": "¡Gran Repaso Final!",
+      "titulo": "Grand Final Review!",
       "descripcion_corta": "Review everything from the whole journey!",
       "orden": 5,
       "puntos_xp": 30,

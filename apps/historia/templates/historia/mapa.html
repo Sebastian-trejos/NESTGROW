@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Aventura — NestGrow{% endblock %}
+{% block title %}Adventure — NestGrow{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -575,18 +575,18 @@
     <div class="hero-content">
       <div>
         <div style="font-size:.8rem;font-weight:800;opacity:.7;letter-spacing:2px;text-transform:uppercase;margin-bottom:.3rem">
-          <i class="bi bi-map-fill me-1"></i> NestGrow · Aventura
+          <i class="bi bi-map-fill me-1"></i> NestGrow · Adventure
         </div>
         <h2 class="font-fredoka mb-1" style="font-size:2.1rem;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,0.2)">
-          Aventura
+          Adventure
         </h2>
         <p class="fw-bold mb-2" style="opacity:.88;font-size:.9rem">
-          Aprende inglés viajando por el mundo de Milo
+          Learn English traveling through Milo's world
         </p>
       </div>
       <div class="estrellas-contador">
         <i class="bi bi-star-fill" style="color:#FFE66D"></i>
-        {{ total_estrellas }} estrellas ganadas
+        {{ total_estrellas }} stars earned
       </div>
     </div>
     <img src="{% static 'img/milo_avent.png' %}" class="hero-milo-img" alt="Milo">
@@ -598,9 +598,9 @@
     {% if not secciones_data %}
     <div class="historia-locked-state">
       <i class="bi bi-lock-fill" style="font-size:3.5rem;color:rgba(255,255,255,0.5)"></i>
-      <h5 class="font-fredoka mt-3">Aún no tienes secciones disponibles</h5>
+      <h5 class="font-fredoka mt-3">No sections available yet</h5>
       <p style="opacity:.6;font-weight:700;font-size:.9rem">
-        Tu profesor desbloqueará las secciones cuando estés listo.
+        Your teacher will unlock the sections when you're ready.
       </p>
     </div>
     {% endif %}
@@ -632,7 +632,7 @@
         </div>
         {% if item.desbloqueada %}
         <div class="station-progress">
-          {{ item.completadas }}/{{ item.total }} lec &nbsp;·&nbsp;
+          {{ item.completadas }}/{{ item.total }} les &nbsp;·&nbsp;
           <i class="bi bi-star-fill" style="color:#FFE66D;font-size:.65rem"></i> {{ item.estrellas }}
         </div>
         {% endif %}
@@ -765,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sp = document.getElementById('miloSpeech');
         const bb = document.getElementById('miloBubble');
         if (sp && bb) {
-          sp.textContent = `🎉 Nueva sección: ${d.seccion_emoji} ${d.seccion_titulo}`;
+          sp.textContent = `🎉 New section: ${d.seccion_emoji} ${d.seccion_titulo}`;
           bb.classList.add('show');
         }
         setTimeout(() => location.reload(), 2800);

@@ -1,9 +1,107 @@
 [
-  {"model": "games.logro", "pk": 1, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "primera victoria", "descripcion": "¡Completaste tu primer juego!", "icono": "🌟", "categoria": "juegos", "condicion_valor": 1, "color": "#6C63FF", "is_active": true}},
-  {"model": "games.logro", "pk": 2, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "cinco juegos", "descripcion": "¡Completaste 5 juegos! ¡Eres increíble!", "icono": "🎮", "categoria": "juegos", "condicion_valor": 5, "color": "#FF6B6B", "is_active": true}},
-  {"model": "games.logro", "pk": 3, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "diez juegos", "descripcion": "¡10 juegos completados! ¡Eres un campeón!", "icono": "🏆", "categoria": "juegos", "condicion_valor": 10, "color": "#FFB347", "is_active": true}},
-  {"model": "games.logro", "pk": 4, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "50 puntos", "descripcion": "¡Alcanzaste 50 puntos totales!", "icono": "⭐", "categoria": "puntaje", "condicion_valor": 50, "color": "#4ECDC4", "is_active": true}},
-  {"model": "games.logro", "pk": 5, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "100 puntos", "descripcion": "¡100 puntos! ¡Milo está muy orgulloso!", "icono": "💯", "categoria": "puntaje", "condicion_valor": 100, "color": "#A8E6CF", "is_active": true}},
-  {"model": "games.logro", "pk": 6, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "perfeccionista", "descripcion": "¡Obtuviste una puntuación Perfecta en un juego!", "icono": "✨", "categoria": "puntaje", "condicion_valor": 1, "color": "#6C63FF", "is_active": true}},
-  {"model": "games.logro", "pk": 7, "fields": {"created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-01T00:00:00Z", "nombre": "tres perfectos", "descripcion": "¡3 puntuaciones Perfectas! ¡Eres una estrella!", "icono": "🌠", "categoria": "puntaje", "condicion_valor": 3, "color": "#FF6B6B", "is_active": true}}
+  {
+    "model": "games.logro",
+    "pk": 1,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "first victory",
+      "descripcion": "You completed your first game!",
+      "icono": "🌟",
+      "categoria": "juegos",
+      "condicion_valor": 1,
+      "color": "#6C63FF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 2,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "five games",
+      "descripcion": "You completed 5 games! Amazing!",
+      "icono": "🎮",
+      "categoria": "juegos",
+      "condicion_valor": 5,
+      "color": "#FF6B6B",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 3,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "ten games",
+      "descripcion": "10 games completed! You're a champion!",
+      "icono": "🏆",
+      "categoria": "juegos",
+      "condicion_valor": 10,
+      "color": "#FFB347",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 4,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "50 points",
+      "descripcion": "You reached 50 total points!",
+      "icono": "⭐",
+      "categoria": "puntaje",
+      "condicion_valor": 50,
+      "color": "#4ECDC4",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 5,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "100 points",
+      "descripcion": "100 points! Milo is so proud of you!",
+      "icono": "💯",
+      "categoria": "puntaje",
+      "condicion_valor": 100,
+      "color": "#A8E6CF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 6,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "perfectionist",
+      "descripcion": "You got a Perfect score on a game!",
+      "icono": "✨",
+      "categoria": "puntaje",
+      "condicion_valor": 1,
+      "color": "#6C63FF",
+      "is_active": true
+    }
+  },
+  {
+    "model": "games.logro",
+    "pk": 7,
+    "fields": {
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z",
+      "nombre": "three perfects",
+      "descripcion": "3 Perfect scores! You're a star!",
+      "icono": "🌠",
+      "categoria": "puntaje",
+      "condicion_valor": 3,
+      "color": "#FF6B6B",
+      "is_active": true
+    }
+  }
 ]

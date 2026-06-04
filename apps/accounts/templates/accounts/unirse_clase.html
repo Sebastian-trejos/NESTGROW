@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Unirse a Clase - NestGrow{% endblock %}
+{% block title %}Join Class - NestGrow{% endblock %}
 
 {% block content %}
 <div class="auth-page">
   <div class="auth-card text-center">
     <div style="font-size:3.5rem; animation:bobble 2s infinite">🏫</div>
-    <h2 class="auth-title">¡Únete a tu Clase!</h2>
-    <p class="text-muted fw-bold mb-4">Ingresa el código que te dio tu profesor/a</p>
+    <h2 class="auth-title">Join your Class!</h2>
+    <p class="text-muted fw-bold mb-4">Enter the code your teacher gave you</p>
     <form method="post">
       {% csrf_token %}
       <div class="mb-4">
@@ -16,10 +16,10 @@
         {% endif %}
       </div>
       <button type="submit" class="btn btn-nestgrow btn-primary-nestgrow w-100">
-        🚪 ¡Entrar a la clase!
+        🚪 Join the class!
       </button>
     </form>
-    <a href="{% url 'accounts:dashboard' %}" class="btn btn-link mt-3 text-muted fw-bold"><i class="bi bi-caret-left-fill me-1"></i> Volver</a>
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-link mt-3 text-muted fw-bold"><i class="bi bi-caret-left-fill me-1"></i> Back</a>
   </div>
 </div>
 <script>
